@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.com/mobilabsolutions/payment-sdk-android-open.svg?token=FD4eibz3gzcfCVXeJm9e&branch=master)](https://travis-ci.com/mobilabsolutions/payment-sdk-android-open)
 # Android Payment SDK
 
 This repository contains code providing Payment SDK API to Android platform
