@@ -1,0 +1,26 @@
+package com.mobilabsolutions.payment.android.psdk.internal.psphandler
+
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
+import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+import com.mobilabsolutions.payment.android.psdk.model.SepaData
+
+/**
+ * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
+ */
+interface RegistrationRequest {
+    fun getStandardizedData() : StandardizedData
+
+    fun getAdditionalData() : AdditionalRegistrationData
+}
+
+interface StandardizedData
+
+data class CreditCardRegistrationRequest(
+        val creditCardData: CreditCardData,
+        val billingData: BillingData?
+) : StandardizedData
+
+data class SepaRegistrationRequest(
+        val sepaData: SepaData,
+        val billingData: BillingData?
+) : StandardizedData

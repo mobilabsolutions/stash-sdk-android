@@ -1,0 +1,68 @@
+buildscript {
+    ext.kotlin_version = '1.3.11'
+    ext.kotlin_version = '1.2.41'
+    ext.versions = [
+            'buildToolsVersion': '28.0.3',
+            'compileSdkVersion': 28,
+            'targetSdkVersion' : 28,
+            'minSdkVersion'    : 21,
+            'support_library'  : '27.1.1',
+            'kotlin'           : '1.3.11',
+            'dagger'           : '2.16',
+            'retrofit'         : '2.4.0',
+            'okHttp'           : '3.10.0',
+            'stetho'           : '1.5.0',
+            'room'             : '1.1.1'
+    ]
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        maven {
+            credentials {
+                username mobilabNexusUser
+                password mobilabNexusPassword
+            }
+            url "https://nexus.mblb.net/repository/mblb-internal/"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.3.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
+        classpath "org.jetbrains.kotlin:kotlin-android-extensions:${versions.kotlin}"
+        classpath 'io.fabric.tools:gradle:1.25.4'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://maven.fabric.io/public' }
+        maven {
+            credentials {
+                username mobilabNexusUser
+                password mobilabNexusPassword
+            }
+            url "https://nexus.mblb.net/repository/mblb-internal/"
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+
+String propOrDef(String propertyName, String defaultValue) {
+    def propertyValue = project.properties[propertyName]
+    return propertyValue != null ? propertyValue : defaultValue
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+}
+
+
+
+

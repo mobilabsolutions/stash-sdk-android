@@ -1,0 +1,180 @@
+apply plugin: 'com.android.library'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-kapt'
+
+apply plugin: 'kotlin-android-extensions'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def mobilabBackendDevelopmentUrl = properties.getProperty("backend.development")
+def oldBsTestKey = properties.getProperty("bs.test_public_key")
+def oldBsApiUrl = properties.getProperty("bs.test_api_url")
+def oldBsExistingSepaAlias = properties.getProperty("bs.existing_sepa_alias")
+def oldBsExistingCcAlias = properties.getProperty("bs.existing_cc_alias")
+
+def newBsApiUrl = properties.getProperty("new_bs.api_url")
+def newBsTestKey = properties.getProperty("new_bs.test_public_key")
+
+def hyperchargeTestKey = properties.getProperty("hc.test_public_key")
+
+println("oldBsTestKey : $oldBsTestKey ")
+println("oldBsApiUrl : $oldBsApiUrl ")
+println("oldBsExistingSepaAlias : $oldBsExistingSepaAlias ")
+println("oldBsExistingCcAlias : $oldBsExistingCcAlias ")
+println("mobilabBackendDevelopmentUrl: $mobilabBackendDevelopmentUrl")
+
+println("newBsApiUrl : $newBsApiUrl ")
+
+println("hyperchargeTestKey: $hyperchargeTestKey")
+android {
+    buildToolsVersion versions.buildToolsVersion
+    compileSdkVersion versions.compileSdkVersion
+
+    defaultConfig {
+        minSdkVersion versions.minSdkVersion
+        targetSdkVersion versions.targetSdkVersion
+        versionCode 1
+        versionName "1.2.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "String" , "mobilabBackendUrl" ,  mobilabBackendDevelopmentUrl
+            buildConfigField "String" , "oldBsTestKey " ,  oldBsTestKey
+            buildConfigField "String" , "oldBsApiUrl " ,  oldBsApiUrl
+            buildConfigField "String" , "oldBsExistingSepaAlias " ,  oldBsExistingSepaAlias
+            buildConfigField "String" , "oldBsExistingCcAlias " ,  oldBsExistingCcAlias
+
+            buildConfigField "String" , "newBsApiUrl" ,  newBsApiUrl
+            buildConfigField "String" , "newBsTestKey" ,  newBsTestKey
+
+            buildConfigField "String" , "hyperchargeTestKey" ,  newBsApiUrl
+        }
+        acceptance {
+
+        }
+        production {
+
+        }
+        release {
+
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+    implementation 'com.squareup.okhttp3:okhttp:3.12.1'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.1'
+    implementation('org.simpleframework:simple-xml:2.7.1') {
+        exclude group: 'stax', module: 'stax-api'
+        exclude group: 'stax', module: 'stax'
+        exclude group: 'xpp3', module: 'xpp3'
+    }
+    implementation ('com.mobilabsolutions.payment:payment-protocol:1.1-SNAPSHOT@jar') {
+        changing = true;
+    }
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'com.squareup.okhttp3:mockwebserver:3.11.0'
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:3.11.0'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.23.4'
+
+    testImplementation "org.powermock:powermock-module-junit4:2.0.0-beta.5"
+    testImplementation "org.powermock:powermock-api-mockito2:2.0.0-beta.5"
+
+    api 'com.jakewharton.threetenabp:threetenabp:1.1.1'
+
+    api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    api 'io.reactivex.rxjava2:rxjava:2.2.5'
+    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+//    implementation "com.tspoon.traceur:traceur:1.0.1"
+
+    implementation "com.squareup.retrofit2:retrofit:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:converter-gson:${versions.retrofit}"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:${versions.retrofit}"
+    implementation ("com.squareup.retrofit2:converter-simplexml:${versions.retrofit}"){
+        exclude group: 'xpp3', module: 'xpp3'
+    }
+
+    implementation 'com.google.code.gson:gson:2.8.5'
+
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'org.iban4j:iban4j:3.2.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    //Dagger
+    implementation 'com.google.dagger:dagger:2.16'
+    kapt 'com.google.dagger:dagger-compiler:2.16'
+    kaptTest 'com.google.dagger:dagger-compiler:2.16'
+    kaptAndroidTest 'com.google.dagger:dagger-compiler:2.16'
+}
+
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadoc/")
+    options.overview = "overview.html"
+    failOnError false
+}
+
+task javadocPublic(type: Javadoc) {
+    Set<File> psdkSources = android.sourceSets.main.java.srcDirs.stream()
+            .filter { dir ->
+        System.out.println(dir.path)
+        def foundPsdk = false
+        dir.traverse {
+            if (it.path.contains("psdk")) {
+                foundPsdk = true
+            }
+        }
+        return foundPsdk
+    }.map { dir ->
+        new File(dir.path + "/com/mobilabsolutions/payment/android/psdk")
+    }.collect().toSet()
+    psdkSources.forEach { System.out.println(it) }
+    source = psdkSources
+    exclude '**/internal/**'
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    destinationDir = file("../javadocPublic/")
+    options.overview = "overview.html"
+    failOnError false
+}
+
+configurations.all {
+    resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+}
+repositories {
+    mavenCentral()
+}
