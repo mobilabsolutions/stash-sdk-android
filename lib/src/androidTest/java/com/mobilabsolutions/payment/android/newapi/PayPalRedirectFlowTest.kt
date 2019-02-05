@@ -42,9 +42,6 @@ class PayPalRedirectFlowTest {
     lateinit var paymentManager: NewPaymentManager
 
 
-
-
-
     var payPalPaymentResponse = """{
   "result": {
     "mappedTransactionId" : "123",
@@ -55,11 +52,11 @@ class PayPalRedirectFlowTest {
   }
 }"""
 
-    lateinit var payPalMockWebServer : MockWebServer
-    lateinit var backendMockWebServer : MockWebServer
+    lateinit var payPalMockWebServer: MockWebServer
+    lateinit var backendMockWebServer: MockWebServer
 
-    lateinit var payPalBaseUrl : URL
-    lateinit var backendBaseUrl : URL
+    lateinit var payPalBaseUrl: URL
+    lateinit var backendBaseUrl: URL
 
     private var paymentData: PaymentData = PaymentData(
             amount = 100,
@@ -117,7 +114,7 @@ class PayPalRedirectFlowTest {
         backendMockWebServer.enqueue(MockResponse().setResponseCode(200))
 
         val paypalMockPage = MockResponse()
-        paypalMockPage.setBody( "<html> <body> MOCK PAYPAL </body> </html>")
+        paypalMockPage.setBody("<html> <body> MOCK PAYPAL </body> </html>")
         paypalMockPage.setHeader("Location", "http://pd.mblb.net/api/v1/success/123456789")
         paypalMockPage.setResponseCode(302)
         payPalMockWebServer.enqueue(paypalMockPage)
@@ -135,7 +132,6 @@ class PayPalRedirectFlowTest {
         latch.await()
     }
 }
-
 
 
 @Singleton

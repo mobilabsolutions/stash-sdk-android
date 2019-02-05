@@ -12,7 +12,7 @@ import io.reactivex.Single;
  */
 public class PaymentManagerMock implements PaymentManager {
     @Override
-    public Single<String> executeCreditCardPayment(CreditCardData creditCardData, BillingData billingData, PaymentData paymentData) {
+    public Single<String> executeCreditCardPayment(CreditCardData creditCardData, PaymentData paymentData) {
         return Single.just("123");
     }
 

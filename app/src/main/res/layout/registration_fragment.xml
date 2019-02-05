@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
 
 
         <EditText
@@ -21,7 +19,7 @@
             android:inputType="textPersonName"
             android:text="Adress 123"
             app:layout_constraintStart_toStartOf="@+id/holderNameEditText"
-            app:layout_constraintTop_toBottomOf="@+id/holderNameEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/holderNameEditText" />
 
         <EditText
             android:id="@+id/billingCityEditText"
@@ -33,7 +31,7 @@
             android:inputType="textPersonName"
             android:text="Cityopolis"
             app:layout_constraintStart_toStartOf="@+id/billingAddressEditText"
-            app:layout_constraintTop_toBottomOf="@+id/billingAddressEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/billingAddressEditText" />
 
         <EditText
             android:id="@+id/billingCountryEditText"
@@ -45,7 +43,7 @@
             android:inputType="textPersonName"
             android:text="Countryia"
             app:layout_constraintStart_toStartOf="@+id/billingCityEditText"
-            app:layout_constraintTop_toBottomOf="@+id/billingCityEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/billingCityEditText" />
 
         <EditText
             android:id="@+id/billingPhoneEditText"
@@ -57,7 +55,7 @@
             android:inputType="textPersonName"
             android:text="+123456"
             app:layout_constraintStart_toStartOf="@+id/billingCountryEditText"
-            app:layout_constraintTop_toBottomOf="@+id/billingCountryEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/billingCountryEditText" />
 
         <Button
             android:id="@+id/registerCreditCardButton"
@@ -67,7 +65,7 @@
             android:layout_marginTop="16dp"
             android:text="Register Credit Card"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bicEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/bicEditText" />
 
         <TextView
             android:id="@+id/registrationStatusTextView"
@@ -76,7 +74,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/registerCreditCardButton"/>
+            app:layout_constraintTop_toBottomOf="@+id/registerCreditCardButton" />
 
         <EditText
             android:id="@+id/creditCardNumberEditText"
@@ -89,7 +87,7 @@
             android:inputType="textPersonName"
             android:text="4111111111111111"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/billingPhoneEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/billingPhoneEditText" />
 
         <EditText
             android:id="@+id/cvvEditText"
@@ -101,7 +99,7 @@
             android:inputType="textPersonName"
             android:text="123"
             app:layout_constraintStart_toStartOf="@+id/creditCardNumberEditText"
-            app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText" />
 
         <EditText
             android:id="@+id/expiryDateEditText"
@@ -113,7 +111,7 @@
             android:inputType="date"
             android:text="11-11-2021"
             app:layout_constraintStart_toStartOf="@+id/cvvEditText"
-            app:layout_constraintTop_toBottomOf="@+id/cvvEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/cvvEditText" />
 
         <Button
             android:id="@+id/registerSepaButton"
@@ -122,15 +120,15 @@
             android:layout_marginStart="16dp"
             android:text="Register Sepa"
             app:layout_constraintStart_toEndOf="@+id/registerCreditCardButton"
-            app:layout_constraintTop_toTopOf="@+id/registerCreditCardButton"/>
+            app:layout_constraintTop_toTopOf="@+id/registerCreditCardButton" />
 
         <RadioGroup
             android:id="@+id/methodSelectorGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:orientation="horizontal"
             app:layout_constraintBottom_toTopOf="@+id/holderNameEditText"
             app:layout_constraintEnd_toEndOf="parent"
@@ -143,14 +141,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:checked="true"
-                android:text="CreditCard"/>
+                android:text="CreditCard" />
 
             <RadioButton
                 android:id="@+id/sepaSelectedRadio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="SEPA"/>
+                android:text="SEPA" />
         </RadioGroup>
 
         <EditText
@@ -163,7 +161,7 @@
             android:inputType="textPersonName"
             android:text="DE63123456791212121212"
             app:layout_constraintStart_toStartOf="@+id/billingPhoneEditText"
-            app:layout_constraintTop_toBottomOf="@+id/expiryDateEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/expiryDateEditText" />
 
         <EditText
             android:id="@+id/bicEditText"
@@ -175,7 +173,7 @@
             android:inputType="textPersonName"
             android:text="PBNKDEFF"
             app:layout_constraintStart_toStartOf="@+id/ibanEditText"
-            app:layout_constraintTop_toBottomOf="@+id/ibanEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/ibanEditText" />
 
         <EditText
             android:id="@+id/holderNameEditText"
@@ -188,7 +186,7 @@
             android:inputType="textPersonName"
             android:text="Holder Holderman"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/methodSelectorGroup"/>
+            app:layout_constraintTop_toBottomOf="@+id/methodSelectorGroup" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -20,8 +20,7 @@ class PublicApiTest {
 //    val paymentSdk : PaymentSdk = NewPaymentSdk("123")
 
     @Before
-    fun setUp()
-    {
+    fun setUp() {
         NewPaymentSdk.reset()
     }
 
@@ -29,7 +28,6 @@ class PublicApiTest {
     fun testCardRegistration() {
 
     }
-
 
 
 }
