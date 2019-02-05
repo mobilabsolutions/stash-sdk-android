@@ -7,7 +7,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PaymentRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import com.stripe.android.Stripe
 import io.reactivex.Single
 
@@ -16,28 +15,28 @@ import io.reactivex.Single
  */
 class StripeIntegration : Integration {
 
-    lateinit var stripe : Stripe
+    lateinit var stripe: Stripe
 
     override fun initialize(context: Context) {
         stripe = StripeInitializer.initialize(context)
     }
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest) : Single<String> {
+
+    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
 
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun handlePaymentRequest(paymentRequest: PaymentRequest) : Single<String> {
+    override fun handlePaymentRequest(paymentRequest: PaymentRequest): Single<String> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun handleDeletionRequest(deletionRequest: DeletionRequest) : Single<String>  {
+    override fun handleDeletionRequest(deletionRequest: DeletionRequest): Single<String> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    fun RegistrationManager.registerCreditCard(creditCardData: CreditCardData, stripeAdditionalRegistrationData: StripeAdditionalRegistrationData) : Single<String> {
+    fun RegistrationManager.registerCreditCard(creditCardData: CreditCardData, stripeAdditionalRegistrationData: StripeAdditionalRegistrationData): Single<String> {
         return Single.just("Test")
     }
-
 
 
 }

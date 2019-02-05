@@ -2,12 +2,10 @@ package com.mobilabsolutions.payment.android.newapi
 
 import android.app.Application
 import android.content.SharedPreferences
-
+import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import org.junit.Before
-
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -29,7 +27,7 @@ class NewApiInitializationMockTest {
 
     internal var application = PowerMockito.mock(Application::class.java)
     lateinit var sharedPreferences: SharedPreferences
-    lateinit var mockedEditor : SharedPreferences.Editor
+    lateinit var mockedEditor: SharedPreferences.Editor
 
     @Before
     fun setUp() {

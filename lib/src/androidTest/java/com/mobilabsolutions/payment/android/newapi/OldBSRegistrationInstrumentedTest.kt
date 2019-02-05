@@ -34,10 +34,10 @@ import javax.inject.Singleton
  */
 class OldBSRegistrationInstrumentedTest {
 
-    val testPublicKey : String = BuildConfig.oldBsTestKey
-    val MOBILAB_BE_URL : String = BuildConfig.mobilabBackendUrl
-    val OLD_BS_PAYONE_URL : String = BuildConfig.oldBsApiUrl
-    val NEW_BS_PAYONE_URL : String = BuildConfig.newBsApiUrl
+    val testPublicKey: String = BuildConfig.oldBsTestKey
+    val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
+    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
+    val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
 
     private var validCreditCardData: CreditCardData = CreditCardData(
             "4111111111111111",

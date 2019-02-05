@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.newapi
 
+//import com.tspoon.traceur.Traceur
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
@@ -13,21 +14,18 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalActivityCustomization
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-//import com.tspoon.traceur.Traceur
 import dagger.Component
 import io.reactivex.rxkotlin.subscribeBy
-import org.junit.Assert
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
+import org.junit.Assert
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.*
-import org.mockito.Mockito
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.api.mockito.PowerMockito.`when`
-import org.powermock.api.mockito.PowerMockito.mock
 import org.powermock.core.classloader.annotations.PowerMockIgnore
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
@@ -80,11 +78,11 @@ class BsPayoneApiTest {
     @Inject
     internal lateinit var newUiCustomizationManager: NewUiCustomizationManager
 
-    lateinit var payoneMockWebServer : MockWebServer
-    lateinit var backendMockWebServer : MockWebServer
+    lateinit var payoneMockWebServer: MockWebServer
+    lateinit var backendMockWebServer: MockWebServer
 
-    lateinit var payoneBaseUrl : URL
-    lateinit var backendBaseUrl : URL
+    lateinit var payoneBaseUrl: URL
+    lateinit var backendBaseUrl: URL
 
     val validCreditCardData = CreditCardData(
             "4111111111111111",
@@ -95,12 +93,11 @@ class BsPayoneApiTest {
 
     val billingData = BillingData.fromName("Holder holderman")
 
-    var applicationContext : Application = PowerMockito.mock(Application::class.java)
+    var applicationContext: Application = PowerMockito.mock(Application::class.java)
 
     lateinit var sharedPreferences: SharedPreferences
-    lateinit var mockedApplication : Application
-    lateinit var mockedEditor : SharedPreferences.Editor
-
+    lateinit var mockedApplication: Application
+    lateinit var mockedEditor: SharedPreferences.Editor
 
 
     @Before
@@ -110,7 +107,6 @@ class BsPayoneApiTest {
         `when`(Base64.encode(any(), anyInt())).thenAnswer({ invocation -> java.util.Base64.getEncoder().encode(invocation.getArguments()[0] as ByteArray) })
         `when`(Base64.decode(anyString(), anyInt())).thenAnswer({ invocation -> java.util.Base64.getMimeDecoder().decode(invocation.getArguments()[0] as String) })
         //Traceur.enableLogging()
-
 
 
         payoneMockWebServer = MockWebServer()
@@ -158,7 +154,7 @@ class BsPayoneApiTest {
 
         registrationManager.registerCreditCard(validCreditCardData, billingData).subscribeBy(
                 onSuccess = { alias ->
-                    System.out.print("Alias -> $alias" )
+                    System.out.print("Alias -> $alias")
                     Assert.assertEquals(alias, "PSEUDO-CARD-PAN")
                     latch.countDown()
                 },
@@ -288,10 +284,6 @@ class BsPayoneApiTest {
         assertTrue(paypalCustomization.showUpNavigation)
         assertTrue(paypalCustomization.showAppBar)
     }
-
-
-
-
 
 
 }
