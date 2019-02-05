@@ -1,6 +1,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
+    kotlin("kapt")
 }
 
 val stripePublicKey = propOrDefWithTravis(PaymentSdkRelease.stripePublicKey, "")
@@ -34,10 +35,15 @@ dependencies {
     implementation(Libs.Kotlin.stdlib)
     implementation(Libs.stripe)
 
+    implementation(Libs.Dagger.dagger)
+    kapt(Libs.Dagger.compiler)
+
     testImplementation(Libs.junit)
+    kaptTest(Libs.Dagger.compiler)
 
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    kaptAndroidTest(Libs.Dagger.compiler)
 
 }
 repositories {

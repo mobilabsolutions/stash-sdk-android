@@ -15,7 +15,7 @@ import io.reactivex.Single
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-internal class StripeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
+class StripeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
     companion object {
         fun activate() {
 

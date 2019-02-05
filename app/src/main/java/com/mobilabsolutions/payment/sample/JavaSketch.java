@@ -34,8 +34,8 @@ public class JavaSketch {
         StripeAdditionalRegistrationData stripeAdditionalRegistrationData = new StripeAdditionalRegistrationData();
 
 
-        StripeIntegration stripeIntegration = new StripeIntegration();
-        stripeIntegration.registerCreditCard(null, creditCardData, stripeAdditionalRegistrationData);
+//        StripeIntegration stripeIntegration = new StripeIntegration();
+//        stripeIntegration.registerCreditCard(null, creditCardData, stripeAdditionalRegistrationData);
 
 
 //        PaymentSdk.getRegistrationManager().registerCreditCard(creditCardData, billingData);
