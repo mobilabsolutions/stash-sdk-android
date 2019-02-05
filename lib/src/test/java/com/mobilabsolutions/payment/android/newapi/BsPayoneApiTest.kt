@@ -152,7 +152,7 @@ class BsPayoneApiTest {
                 .build()
         graph.injectTest(this)
 
-        registrationManager.registerCreditCard(validCreditCardData, billingData).subscribeBy(
+        registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
                 onSuccess = { alias ->
                     System.out.print("Alias -> $alias")
                     Assert.assertEquals(alias, "PSEUDO-CARD-PAN")
@@ -188,7 +188,7 @@ class BsPayoneApiTest {
                 .build()
         graph.injectTest(this)
 
-        registrationManager.registerCreditCard(validCreditCardData, billingData).subscribeBy(
+        registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
                 onSuccess = { alias ->
 
                     Assert.fail("Success not expected in this test case")
@@ -221,7 +221,7 @@ class BsPayoneApiTest {
                 .build()
         graph.injectTest(this)
 
-        registrationManager.registerCreditCard(validCreditCardData, billingData).subscribeBy(
+        registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
                 onSuccess = { alias ->
 
                     Assert.fail("Success not expected in this test case")

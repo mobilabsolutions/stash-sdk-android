@@ -15,12 +15,12 @@ import io.reactivex.Single;
  */
 public class RegistrationManagerMock implements RegistrationManager{
     @Override
-    public Single<String> registerCreditCard(CreditCardData creditCardData, BillingData billingData) {
+    public Single<String> registerCreditCard(CreditCardData creditCardData) {
         return Single.just("1234-CC");
     }
 
     @Override
-    public Single<String> registerSepa(SepaData sepaData, BillingData billingData) {
+    public Single<String> registerSepa(SepaData sepaData) {
         return Single.just("1234-SEPA");
     }
 
