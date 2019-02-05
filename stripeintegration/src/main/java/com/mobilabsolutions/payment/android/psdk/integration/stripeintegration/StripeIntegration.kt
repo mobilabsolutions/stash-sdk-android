@@ -2,6 +2,8 @@ package com.mobilabsolutions.payment.android.psdk.integration.stripeintegration
 
 import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
+import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentManager
+import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.DeletionRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PaymentRequest
@@ -13,7 +15,20 @@ import io.reactivex.Single
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class StripeIntegration : Integration {
+class StripeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
+    companion object {
+        fun activate() {
+
+        }
+    }
+
+    val stripeIntegrationComponent : StripeIntegrationComponent
+
+    init {
+        stripeIntegrationComponent = DaggerStripeIntegrationComponent.builder()
+                .paymentSdkComponent(paymentSdkComponent)
+                .build()
+    }
 
     lateinit var stripe: Stripe
 

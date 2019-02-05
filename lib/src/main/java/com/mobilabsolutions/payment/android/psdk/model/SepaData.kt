@@ -10,6 +10,7 @@ class SepaData(
         var bic: String = "",
         iban: String = "",
         val holder : String
+
 ) {
     var iban: String = iban
         set(iban) {

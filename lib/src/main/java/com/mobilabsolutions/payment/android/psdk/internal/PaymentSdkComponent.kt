@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
@@ -12,8 +13,10 @@ import javax.inject.Singleton
  */
 @Singleton
 @Component(modules = arrayOf(SslSupportModule::class, PaymentSdkModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class))
-internal interface PaymentSdkComponent {
+interface PaymentSdkComponent {
     fun inject(paymentSdk: NewPaymentSdk)
 
     fun inject(payPalRedirectActivity: PayPalRedirectActivity)
+
+    fun inject(integration: Integration)
 }

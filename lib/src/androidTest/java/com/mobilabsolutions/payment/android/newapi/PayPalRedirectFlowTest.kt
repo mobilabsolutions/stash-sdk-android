@@ -16,6 +16,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import timber.log.Timber
 import java.net.URL
@@ -27,6 +28,7 @@ import javax.inject.Singleton
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
+@Ignore("Paypal is not planned for mvp")
 class PayPalRedirectFlowTest {
     val testPublicKey = "PD-PO-nhnEiKIFQiZeVjGCM0HZY3xvaI"
     private val MOBILAB_BE_URL = BuildConfig.mobilabBackendUrl

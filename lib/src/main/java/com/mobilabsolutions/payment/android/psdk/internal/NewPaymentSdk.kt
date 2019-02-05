@@ -21,7 +21,7 @@ import javax.net.ssl.X509TrustManager
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-internal class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
+class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
     val NEW_BS_PAYONE_URL : String = BuildConfig.newBsApiUrl
