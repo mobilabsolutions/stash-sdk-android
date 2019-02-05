@@ -32,7 +32,7 @@ class OldBSPaymentInstrumentationTests {
     val testPublicKey: String = BuildConfig.oldBsTestKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
-    val NEW_BS_PAYONE_URL : String = BuildConfig.newBsApiUrl
+    val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
 
     var creditCardAlias = BuildConfig.oldBsExistingCcAlias
     var sepaAlias = BuildConfig.oldBsExistingSepaAlias

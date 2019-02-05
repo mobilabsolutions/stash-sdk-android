@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -16,7 +14,7 @@
         android:hint="Amount"
         android:inputType="textPersonName|numberDecimal"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/paymentMethodSpinner"/>
+        app:layout_constraintTop_toBottomOf="@+id/paymentMethodSpinner" />
 
     <EditText
         android:id="@+id/currencyEditText"
@@ -28,7 +26,7 @@
         android:hint="Currency"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/amountEditText"/>
+        app:layout_constraintTop_toBottomOf="@+id/amountEditText" />
 
     <EditText
         android:id="@+id/reasonEditText"
@@ -40,7 +38,7 @@
         android:hint="Reason"
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/currencyEditText"/>
+        app:layout_constraintTop_toBottomOf="@+id/currencyEditText" />
 
     <Button
         android:id="@+id/executePaymentButton"
@@ -50,19 +48,19 @@
         android:layout_marginTop="16dp"
         android:text="Execute Payment"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statusTextView"/>
+        app:layout_constraintTop_toBottomOf="@+id/statusTextView" />
 
     <Spinner
         android:id="@+id/paymentMethodSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/statusTextView"
@@ -72,6 +70,6 @@
         android:layout_marginTop="16dp"
         android:text="Status"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reasonEditText"/>
+        app:layout_constraintTop_toBottomOf="@+id/reasonEditText" />
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

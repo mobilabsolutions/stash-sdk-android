@@ -19,9 +19,12 @@ package com.mobilabsolutions.payment.android.newapi;
 import org.iban4j.CountryCode;
 import org.iban4j.bban.BbanEntryType;
 import org.iban4j.bban.BbanStructureEntry;
-import org.junit.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
 
 import io.reactivex.Observable;
 
@@ -29,7 +32,6 @@ import io.reactivex.Observable;
 /**
  * Class which represents bban structure, we used this to extract data for objective c code patterns
  * not really a test, but let's keep it as we might need to help out on objective c side as well
- *
  */
 public class BbanStructureForObjCParser {
 
@@ -522,7 +524,7 @@ public class BbanStructureForObjCParser {
 
                             System.out.println(
                                     "\t@\"" + entry.getKey().getAlpha2() + "\" : " + "@{"
-                                            +"\n\t\t @\"bankNumberStart\" : @" + bankNumberStart + "," +
+                                            + "\n\t\t @\"bankNumberStart\" : @" + bankNumberStart + "," +
                                             "\n\t\t @\"bankNumberEnd:\" : @" + bankNumberEnd + "," +
                                             "\n\t\t @\"accountStart:\" : @" + accountBorderStart + ", " +
                                             "\n\t\t @\"accountEnd:\" : @" + accountBorderEnd +
@@ -537,18 +539,14 @@ public class BbanStructureForObjCParser {
     }
 
 
-
-
-
-    private static int extractBorderStart(BbanStructureForObjCParser bbanStructureForObjCParser, BbanEntryType entryType){
+    private static int extractBorderStart(BbanStructureForObjCParser bbanStructureForObjCParser, BbanEntryType entryType) {
 
         int bbanEntryOffset = 4;
-        for(final BbanStructureEntry entry : bbanStructureForObjCParser.getEntries()) {
+        for (final BbanStructureEntry entry : bbanStructureForObjCParser.getEntries()) {
             final int entryLength = entry.getLength();
 
 
-
-            if(entry.getEntryType() == entryType) {
+            if (entry.getEntryType() == entryType) {
                 return bbanEntryOffset;
             }
             bbanEntryOffset = bbanEntryOffset + entryLength;
@@ -556,15 +554,15 @@ public class BbanStructureForObjCParser {
         return -1;
     }
 
-    private static int extractBorderEnd(BbanStructureForObjCParser bbanStructureForObjCParser, BbanEntryType entryType){
+    private static int extractBorderEnd(BbanStructureForObjCParser bbanStructureForObjCParser, BbanEntryType entryType) {
 
         int bbanEntryOffset = 4;
-        for(final BbanStructureEntry entry : bbanStructureForObjCParser.getEntries()) {
+        for (final BbanStructureEntry entry : bbanStructureForObjCParser.getEntries()) {
             final int entryLength = entry.getLength();
 
 
             bbanEntryOffset = bbanEntryOffset + entryLength;
-            if(entry.getEntryType() == entryType) {
+            if (entry.getEntryType() == entryType) {
                 return bbanEntryOffset;
             }
         }

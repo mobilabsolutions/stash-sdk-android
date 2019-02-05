@@ -15,7 +15,7 @@ import javax.net.ssl.TrustManager;
 /**
  * @author <a href="joao@mobilabsolutions.com">joao</a>
  */
-public class TLSSocketFactoryCompat extends SSLSocketFactory{
+public class TLSSocketFactoryCompat extends SSLSocketFactory {
 
     private SSLSocketFactory delegate;
 
@@ -72,10 +72,10 @@ public class TLSSocketFactoryCompat extends SSLSocketFactory{
     }
 
     private Socket enableTLSOnSocket(Socket socket) {
-        if(socket != null && (socket instanceof SSLSocket)) {
+        if (socket != null && (socket instanceof SSLSocket)) {
             //Create list of supported protocols
             ArrayList<String> supportedProtocols = new ArrayList<>();
-            for (String protocol : ((SSLSocket)socket).getEnabledProtocols()) {
+            for (String protocol : ((SSLSocket) socket).getEnabledProtocols()) {
                 System.out.println("Supported: " + protocol);
                 //Only add TLS protocols (don't want ot support older SSL versions)
                 if (protocol.toUpperCase().contains("TLS")) {
@@ -93,7 +93,7 @@ public class TLSSocketFactoryCompat extends SSLSocketFactory{
             String[] protocolArray = supportedProtocols.toArray(new String[supportedProtocols.size()]);
 
             //enable protocols in our list
-            ((SSLSocket)socket).setEnabledProtocols(protocolArray);
+            ((SSLSocket) socket).setEnabledProtocols(protocolArray);
         }
         return socket;
     }

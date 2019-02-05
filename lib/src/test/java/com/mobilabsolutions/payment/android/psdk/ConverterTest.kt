@@ -1,7 +1,5 @@
 package com.mobilabsolutions.payment.android.psdk
 
-import com.mobilabsolutions.payment.android.psdk.internal.api.payone.BsPayoneBaseRequest
-import com.mobilabsolutions.payment.android.psdk.internal.api.payone.PayoneKeyPairConverterFactory
 import org.junit.Test
 
 /**
