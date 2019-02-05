@@ -4,7 +4,7 @@ import java.util.*
 object PaymentSdkRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
     val travisTag = "TRAVIS_TAG"
-    val stripePublicKey = "STRIPE_PUBLI_CKEY"
+    val stripePublicKey = "STRIPE_PUBLIC_KEY"
     val mobilabBackendUrl = "BACKEND_DEVELOPMENT"
     val oldBsTestKey = "BS_TEST_PUBLIC_KEY"
     val oldBsApiUrl = "BS_TEST_API_URL"

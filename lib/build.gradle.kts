@@ -32,29 +32,29 @@ android {
     buildTypes {
 
         getByName("debug") {
-            buildConfigField("String", "mobilabBackendUrl", propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, ""))
-            buildConfigField("String", "oldBsTestKey", propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, ""))
-            buildConfigField("String", "oldBsApiUrl", propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, ""))
-            buildConfigField("String", "oldBsExistingSepaAlias", propOrDefWithTravis(PaymentSdkRelease.oldBsExistingSepaAlias, ""))
-            buildConfigField("String", "oldBsExistingCcAlias", propOrDefWithTravis(PaymentSdkRelease.oldBsExistingCcAlias, ""))
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
+            buildConfigField("String", "oldBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, "") + "\"")
+            buildConfigField("String", "oldBsExistingSepaAlias", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsExistingSepaAlias, "") + "\"")
+            buildConfigField("String", "oldBsExistingCcAlias", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsExistingCcAlias, "") + "\"")
 
-            buildConfigField("String", "newBsApiUrl", propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, ""))
-            buildConfigField("String", "newBsTestKey", propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, ""))
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
+            buildConfigField("String", "newBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, "") + "\"")
 
-            buildConfigField("String", "hyperchargeTestKey", propOrDefWithTravis(PaymentSdkRelease.hyperchargeTestKey, ""))
+            buildConfigField("String", "hyperchargeTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.hyperchargeTestKey, "") + "\"")
         }
 
         getByName("release") {
-            buildConfigField("String", "mobilabBackendUrl", propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, ""))
-            buildConfigField("String", "oldBsTestKey", propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, ""))
-            buildConfigField("String", "oldBsApiUrl", propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, ""))
-            buildConfigField("String", "oldBsExistingSepaAlias", propOrDefWithTravis(PaymentSdkRelease.oldBsExistingSepaAlias, ""))
-            buildConfigField("String", "oldBsExistingCcAlias", propOrDefWithTravis(PaymentSdkRelease.oldBsExistingCcAlias, ""))
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
+            buildConfigField("String", "oldBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, "") + "\"")
+            buildConfigField("String", "oldBsExistingSepaAlias", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsExistingSepaAlias, "") + "\"")
+            buildConfigField("String", "oldBsExistingCcAlias", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsExistingCcAlias, "") + "\"")
 
-            buildConfigField("String", "newBsApiUrl", propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, ""))
-            buildConfigField("String", "newBsTestKey", propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, ""))
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
+            buildConfigField("String", "newBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, "") + "\"")
 
-            buildConfigField("String", "hyperchargeTestKey", propOrDefWithTravis(PaymentSdkRelease.hyperchargeTestKey, ""))
+            buildConfigField("String", "hyperchargeTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.hyperchargeTestKey, "") + "\"")
         }
     }
 

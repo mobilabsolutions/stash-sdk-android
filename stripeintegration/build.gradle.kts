@@ -19,11 +19,11 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "stripe_public_key", stripePublicKey)
+            resValue("string", "stripe_public_key", "\""+stripePublicKey+"\"")
         }
         getByName("release") {
             isMinifyEnabled = false
-            resValue("string", "stripe_public_key", stripePublicKey)
+            resValue("string", "stripe_public_key", "\""+stripePublicKey+"\"")
         }
     }
 

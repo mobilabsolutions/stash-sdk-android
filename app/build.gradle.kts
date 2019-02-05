@@ -24,16 +24,16 @@ android {
 
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "mobilabBackendUrl", propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, ""))
-            buildConfigField("String", "oldBsTestKey", propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, ""))
-            buildConfigField("String", "oldBsApiUrl", propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, ""))
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
+            buildConfigField("String", "oldBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, "") + "\"")
             applicationIdSuffix = ".debug"
             versionNameSuffix = ".debug"
         }
         getByName("release") {
-            buildConfigField("String", "mobilabBackendUrl", propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, ""))
-            buildConfigField("String", "oldBsTestKey", propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, ""))
-            buildConfigField("String", "oldBsApiUrl", propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, ""))
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
+            buildConfigField("String", "oldBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, "") + "\"")
         }
     }
 
