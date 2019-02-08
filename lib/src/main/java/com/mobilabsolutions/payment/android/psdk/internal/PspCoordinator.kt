@@ -132,10 +132,10 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleExecuteSepaPaymentWithAlias(
-            creditCardAlias: String,
+            sepaAlias: String,
             paymentData: PaymentData): Single<String> {
         val paymentWithAliasRequest = PaymentWithAliasRequest(
-                paymentAlias = creditCardAlias,
+                paymentAlias = sepaAlias,
                 amount = paymentData.amount,
                 currency = paymentData.currency!!,
                 customerId = paymentData.customerId,
@@ -147,7 +147,8 @@ class PspCoordinator @Inject constructor(
 
 
     }
-
+    //NOTE: This waws never tested and is only an initial implementation of psp managed paypal payment
+    //It is not complete.
     fun handleExecutePaypalPayment(
             paymentData: PaymentData,
             billingData: BillingData
