@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone
 
+import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
 import com.mobilabsolutions.payment.android.psdk.internal.api.payone.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
@@ -26,7 +27,7 @@ class BsPayoneHandler @Inject constructor(
         val baseRequest =
                 payoneSpecificData.let {
                     BsPayoneBaseRequest.instance(
-                            paymentMethodRegistrationResponse.merchantId,
+                            it.merchantId,
                             it.portalId,
                             it.apiVersion,
                             it.mode,
@@ -49,7 +50,19 @@ class BsPayoneHandler @Inject constructor(
 
                     )
                 }
-        return bsPayoneApi.registerCreditCard(request).map {
+//        return bsPayoneApi.executePayoneRequest(request).map {
+//            when(it) {
+//                is BsPayoneVerificationSuccessResponse -> {
+//                    val updatePaymentAliasRequest = UpdatePaymentAliasRequest(paymentMethodRegistrationResponse.panAlias, it.cardAlias)
+//                    mobilabApi.updatePaymentMethodAlias(updatePaymentAliasRequest).blockingAwait()
+//                    it.cardAlias
+//                }
+//                is BsPayoneVerificationErrorResponse -> throw BsPayoneErrorHandler.handleError(it)
+//                is BsPayoneVerificationInvalidResponse -> throw BsPayoneErrorHandler.handleError(it)
+//                else -> throw RuntimeException("Unknown responsewhen trying to register credit card: $it")
+//            }
+//        }
+        return bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
             when(it) {
                 is BsPayoneVerificationSuccessResponse -> {
                     val updatePaymentAliasRequest = UpdatePaymentAliasRequest(paymentMethodRegistrationResponse.panAlias, it.cardAlias)

@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.integration.stripeintegration
+package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration
 
 import dagger.Module
 

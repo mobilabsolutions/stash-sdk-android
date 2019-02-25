@@ -1,5 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
+import com.mobilabsolutions.payment.android.psdk.internal.api.oldbspayone.OldBsPayoneApi
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
@@ -18,5 +20,7 @@ interface PaymentSdkComponent {
 
     fun inject(payPalRedirectActivity: PayPalRedirectActivity)
 
-    fun inject(integration: Integration)
+    fun provideOldBsApi() : OldBsPayoneApi
+
+    fun provideMobilabApi() : MobilabApi
 }

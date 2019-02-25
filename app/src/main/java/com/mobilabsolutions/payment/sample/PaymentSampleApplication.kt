@@ -4,6 +4,7 @@ import com.facebook.stetho.Stetho
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.commonsv3_dagger.mvp.presenter.DaggerPresenterManager
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
+import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.BsOldIntegration
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import io.reactivex.plugins.RxJavaPlugins
@@ -16,7 +17,7 @@ class PaymentSampleApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        PaymentSdk.initalize(BuildConfig.oldBsTestKey, this);
+        PaymentSdk.initalize(BuildConfig.oldBsTestKey, this, BsOldIntegration.initialization());
 
 
         if (BuildConfig.DEBUG) {

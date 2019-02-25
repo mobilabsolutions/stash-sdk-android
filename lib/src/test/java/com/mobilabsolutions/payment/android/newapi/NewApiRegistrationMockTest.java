@@ -76,7 +76,7 @@
 //        CountDownLatch latch = new CountDownLatch(1);
 //
 //        RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
-//        Disposable registrationDisposable = registrationManager.registerCreditCard(
+//        Disposable registrationDisposable = registrationManager.executePayoneRequest(
 //                validCreditCardData,
 //                validBillingData
 //        )

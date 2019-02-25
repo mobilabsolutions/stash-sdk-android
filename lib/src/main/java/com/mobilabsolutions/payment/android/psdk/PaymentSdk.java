@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException;
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
+import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent;
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -30,11 +32,11 @@ public final class PaymentSdk {
      * @param applicationContext context of the application
      */
     public static void initalize(String publicKey, Application applicationContext) {
-        initialize(publicKey, applicationContext, "0000", "0000");
+        initalize(publicKey, applicationContext, null);
     }
 
-    public static void initialize(String publicKey, Application applicationContext, String seed, String pin) {
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext);
+    public static void initalize(String publicKey, Application applicationContext, IntegrationInitialization integration) {
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integration);
     }
 
     /**
@@ -46,7 +48,7 @@ public final class PaymentSdk {
      * @param applicationContext context of the application
      */
     public static void initalize(String publicKey, Application applicationContext,  SSLSocketFactory sslSocketFactory, X509TrustManager x509TrustManager) {
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, sslSocketFactory, x509TrustManager);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, null, sslSocketFactory, x509TrustManager);
     }
 
     /**
@@ -84,13 +86,5 @@ public final class PaymentSdk {
             return prefix;
         }
     }
-
-//    public static String generateRandomSeed()  {
-//        try {
-//            return KeyGenerator.getInstance("AES").generateKey().getEncoded();
-//        } catch (NoSuchAlgorithmException e) {
-//            Timber.e(e, "Key generation algorithm not available");
-//        }
-//    }
 
 }

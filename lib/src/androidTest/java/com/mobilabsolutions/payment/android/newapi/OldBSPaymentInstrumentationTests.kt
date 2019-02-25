@@ -28,15 +28,19 @@ import javax.inject.Singleton
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
 class OldBSPaymentInstrumentationTests {
+    //QEvuprLEfAesqaVxfHOmNxRtKFNAaVyX
+    //mOQIxngxMduuvqgTlBycdKHfCpMqwTCy
 
     val testPublicKey: String = BuildConfig.oldBsTestKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
     val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
 
-    var creditCardAlias = BuildConfig.oldBsExistingCcAlias
-    var sepaAlias = BuildConfig.oldBsExistingSepaAlias
-
+    //    var creditCardAlias = BuildConfig.oldBsExistingCcAlias
+    var creditCardAlias = "QEvuprLEfAesqaVxfHOmNxRtKFNAaVyX"
+//    var sepaAlias = BuildConfig.oldBsExistingSepaAlias
+    var sepaAlias = "YUJokVWXCbvGTLVNxhBtoYdpcoNzCGMr"
+//    var sepaAlias = "wIChkvSAAPLLhLrAHNdvTjeDjibfhoDc"
     var paymentData: PaymentData = PaymentData(
             amount = 100,
             currency = "EUR",

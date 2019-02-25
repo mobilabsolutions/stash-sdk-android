@@ -1,6 +1,8 @@
 package com.mobilabsolutions.payment.android.psdk.internal.psphandler
 
 import android.content.Context
+import com.mobilabsolutions.payment.android.psdk.PaymentSdk
+import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import io.reactivex.Single
 
 /**
@@ -8,7 +10,7 @@ import io.reactivex.Single
  */
 interface Integration {
 
-    fun initialize(context: Context)
+    fun initialize(context: Context, appDaggerGraph : PaymentSdkComponent)
 
     fun handleRegistrationRequest(registrationRequest: RegistrationRequest) : Single<String>
 

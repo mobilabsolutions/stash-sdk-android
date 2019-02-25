@@ -35,10 +35,10 @@ public class JavaSketch {
 
 
 //        StripeIntegration stripeIntegration = new StripeIntegration();
-//        stripeIntegration.registerCreditCard(null, creditCardData, stripeAdditionalRegistrationData);
+//        stripeIntegration.executePayoneRequest(null, creditCardData, stripeAdditionalRegistrationData);
 
 
-//        PaymentSdk.getRegistrationManager().registerCreditCard(creditCardData, billingData);
+//        PaymentSdk.getRegistrationManager().executePayoneRequest(creditCardData, billingData);
 //        ProviderOriginatedException exception = new TemporaryException();
 //        switch (exception.getCode()) {
 //            case TemporaryException.CODE:

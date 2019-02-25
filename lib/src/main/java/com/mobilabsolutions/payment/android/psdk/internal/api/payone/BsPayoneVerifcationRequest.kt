@@ -11,16 +11,35 @@ data class BsPayoneVerifcationRequest(
         @Transient
         val baseRequest: BsPayoneBaseRequest,
         @SerializedName("aid")
-        val accountId : String,
+        val accountId: String,
         @SerializedName("cardpan")
-        val cardPan : String,
+        val cardPan: String,
         @SerializedName("cardtype")
-        val cardType : String,
+        val cardType: String,
         @SerializedName("cardexpiredate")//TODO add custom expiry date serializer
-        val cardExpireDate : LocalDate,
+        val cardExpireDate: LocalDate,
         @SerializedName("cardcvc2")
-        val cardCvc : String,
+        val cardCvc: String,
         @SerializedName("storecarddata")
-        val storeCardData : String = "yes"
+        val storeCardData: String = "yes"
 
-) : BsPayoneBaseRequest(baseRequest)
+) : BsPayoneBaseRequest(baseRequest) {
+    override fun toMap(): MutableMap<String, String> {
+        var map = baseRequest.toMap()
+        map.putAll(
+                mapOf(
+                        "aid" to accountId,
+                        "cardpan" to cardPan,
+                        "cardtype" to cardType,
+                        "cardexpiredate" to cardExpireDate.toString(),
+                        "cardcvc2" to cardCvc,
+                        "storecarddata" to storeCardData
+
+                )
+        )
+
+
+
+        return map
+    }
+}
