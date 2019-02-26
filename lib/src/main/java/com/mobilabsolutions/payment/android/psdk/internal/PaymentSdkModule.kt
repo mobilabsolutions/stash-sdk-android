@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
 import dagger.Module
 import dagger.Provides
@@ -35,7 +36,8 @@ import javax.inject.Singleton
  */
 @Module
 open class PaymentSdkModule(private val publicKey: String, private val mobilabUrl: String,
-                            private val applicationContext: Application) {
+                            private val applicationContext: Application,
+                            private val integrationInitializers : List<IntegrationInitialization>) {
     val MOBILAB_TIMEOUT = 60L
     val TIMEOUT_UNIT = TimeUnit.SECONDS
 
@@ -198,6 +200,14 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
             newUiCustomizationManager = NewUiCustomizationManager(gson, sharedPreferences)
         }
         return newUiCustomizationManager as NewUiCustomizationManager
+    }
+
+    @Provides
+    @Singleton
+    fun providePspIntegrationsRegistered() : Set<Integration> {
+        return integrationInitializers.filter { it.initializedOrNull() == null  }
+                .map { it.initializedOrNull() as Integration }
+                .toSet()
     }
 
 

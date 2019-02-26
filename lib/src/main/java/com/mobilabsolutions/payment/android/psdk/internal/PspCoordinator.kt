@@ -4,6 +4,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.SepaValidationException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeHandler
@@ -25,13 +26,19 @@ class PspCoordinator @Inject constructor(
         private val bsPayoneHandler: BsPayoneHandler,
         private val mobilabApi: MobilabApi,
         private val paymentProvider:PaymentSdk.Provider,
-        private val exceptionMapper: BackendExceptionMapper
+        private val exceptionMapper: BackendExceptionMapper,
+        private val integrations : Set<Integration>
 ) {
-
 
 
     fun handleRegisterCreditCard(
             creditCardData: CreditCardData): Single<String> {
+        return handleRegisterCreditCard(creditCardData, integrations.first().identifier)
+    }
+
+    fun handleRegisterCreditCard(
+            creditCardData: CreditCardData, chosenPsp : PspIdentifier): Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
         val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
         if (creditCardData.number.length < 16) {
             return Single.error(RuntimeException("Invalid card number length"))
@@ -39,11 +46,20 @@ class PspCoordinator @Inject constructor(
         paymentMethodRegistrationRequest.cardMask = creditCardData.number?.substring(0..5)
         paymentMethodRegistrationRequest.oneTimePayment = false
 
+
         return mobilabApi.registerCreditCard(paymentMethodRegistrationRequest)
                 .subscribeOn(Schedulers.io())
                 .processErrors()
                 .map { it.result }
                 .flatMap {
+
+                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.panAlias)
+                    val additionalData = AdditionalRegistrationData(mapOf("action" to it.action!!))
+                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+
+                    chosenIntegration.handleRegistrationRequest(registrationRequest)
+
+
                     when (paymentProvider) {
                         PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.registerCreditCard(
                                 it, creditCardData
@@ -59,6 +75,11 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterSepa(sepaData: SepaData): Single<String> {
+        handleRegisterSepa(sepaData, integrations.first().identifier)
+    }
+
+    fun handleRegisterSepa(sepaData: SepaData, chosenPsp : PspIdentifier): Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
         val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
         paymentMethodRegistrationRequest.accountData = sepaData
         paymentMethodRegistrationRequest.cardMask = "SEPA-${sepaData.iban?.substring(0 .. 5)}"

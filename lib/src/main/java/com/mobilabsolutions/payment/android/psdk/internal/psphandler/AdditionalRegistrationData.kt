@@ -8,10 +8,4 @@ package com.mobilabsolutions.payment.android.psdk.internal.psphandler
  *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-interface AdditionalRegistrationData{
-    /**
-     * Some PSPs might require data that we cannot foresee or standardise.
-     * Such that should be contained in a map, that particular integrationInitialization knows how to use.
-     */
-    fun getAdditionalData() : Map<String, String>
-}
+data class AdditionalRegistrationData(val extraData : Map<String,String>)

@@ -8,10 +8,12 @@ import io.reactivex.Single
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-interface Integration {
+typealias PspIdentifier = String
 
-    fun initialize(appDaggerGraph : PaymentSdkComponent)
+interface Integration {
+    val identifier : PspIdentifier
 
     fun handleRegistrationRequest(registrationRequest: RegistrationRequest) : Single<String>
 
 }
+

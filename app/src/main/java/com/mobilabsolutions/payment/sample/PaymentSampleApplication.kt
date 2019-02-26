@@ -16,7 +16,7 @@ class PaymentSampleApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        PaymentSdk.initalize(BuildConfig.oldBsTestKey, this, BsOldIntegration.create());
+        PaymentSdk.initalize(BuildConfig.oldBsTestKey, this, listOf(BsOldIntegration.create()));
 
 
         if (BuildConfig.DEBUG) {

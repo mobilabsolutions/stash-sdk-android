@@ -8,10 +8,8 @@ import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-import com.mobilabsolutions.payment.android.psdk.IntegrationInitialization
 ////import com.tspoon.traceur.Traceur
 import timber.log.Timber
 import javax.inject.Inject
@@ -25,12 +23,14 @@ import javax.net.ssl.X509TrustManager
 class NewPaymentSdk(
         publicKey: String,
         applicationContext: Application,
-        integrationInitialization: IntegrationInitialization,
+        integrationList : List<IntegrationInitialization>,
         sslSocketFactory: SSLSocketFactory?,
         x509TrustManager: X509TrustManager?) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
     val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
+
+
 
     @Inject
     lateinit var newRegistrationManager: NewRegistrationManager
@@ -46,19 +46,24 @@ class NewPaymentSdk(
 
     val daggerGraph: PaymentSdkComponent
 
-    private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, NO_INTEGRATION,null, null)
+    private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, emptyList(),null, null)
 
     init {
 
+
         daggerGraph = DaggerPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-                .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext))
+                .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext, integrationList))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
                 .build()
+
+        integrationList.map { it.initialize(daggerGraph) }
+
         daggerGraph.inject(this)
 
-        integrationInitialization.initialize(daggerGraph)
+
+
 
 
     }
@@ -72,21 +77,13 @@ class NewPaymentSdk(
 
         internal var testComponent: PaymentSdkComponent? = null
 
-        val NO_INTEGRATION = object : IntegrationInitialization {
-            override fun initialize(paymentSdkComponent: PaymentSdkComponent?): Integration {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-
+        @Synchronized
+        fun initialize(publicKey: String?, applicationContext: Application?, integrationList : List<IntegrationInitialization>) {
+            initialize(publicKey, applicationContext, integrationList, null, null)
         }
 
         @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?, integrationInitialization : IntegrationInitialization?) {
-            initialize(publicKey, applicationContext, integrationInitialization, null, null)
-        }
-
-        @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?, integrationInitialization: IntegrationInitialization?, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
+        fun initialize(publicKey: String?, applicationContext: Application?, integrationList : List<IntegrationInitialization>, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
             if (publicKey == null) {
                 throw InvalidPublicKeyException("Public key not supplied")
             }
@@ -99,15 +96,10 @@ class NewPaymentSdk(
                 Timber.w("Already initialized")
                 return
             }
-            val concreteIntegration = if (integrationInitialization == null) {
-                NO_INTEGRATION
-            } else {
-                integrationInitialization
-            }
 
             Timber.plant(Timber.DebugTree())
 //            //Traceur.enableLogging()
-            NewPaymentSdk.instance = NewPaymentSdk(publicKey, applicationContext, concreteIntegration, sslSocketFactory, x509TrustManager)
+            NewPaymentSdk.instance = NewPaymentSdk(publicKey, applicationContext, integrationList, sslSocketFactory, x509TrustManager)
 
             NewPaymentSdk.initialized = true
         }

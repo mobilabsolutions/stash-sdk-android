@@ -2,19 +2,14 @@ package com.mobilabsolutions.payment.android.psdk;
 
 import android.app.Application;
 
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException;
+import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization;
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent;
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.crypto.KeyGenerator;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
-
-import timber.log.Timber;
 
 /**
  * This is a main interface to Payment SDK.
@@ -30,13 +25,23 @@ public final class PaymentSdk {
      * Used to initializa the SDK by providing public key
      * @param publicKey
      * @param applicationContext context of the application
+     * @param integration PSP integration
      */
-    public static void initalize(String publicKey, Application applicationContext) {
-        initalize(publicKey, applicationContext, null);
+    public static void initalize(String publicKey, Application applicationContext, IntegrationInitialization integration) {
+        LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
+        integrationList.add(integration);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
     }
 
-    public static void initalize(String publicKey, Application applicationContext, IntegrationInitialization integration) {
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integration);
+    /**
+     * Used to initializa the SDK by providing public key
+     * @param publicKey
+     * @param applicationContext context of the application
+     * @param integrationList list of PSPs the SDK will be using
+     */
+    //TODO we're keeping this private for mvp, later on we might decide to have a server side psp chooser, or offer per request psp choice
+    private static void initalize(String publicKey, Application applicationContext, List<IntegrationInitialization> integrationList) {
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
     }
 
     /**
