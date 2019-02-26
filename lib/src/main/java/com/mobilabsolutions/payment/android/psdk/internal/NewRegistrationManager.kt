@@ -24,12 +24,4 @@ class NewRegistrationManager @Inject constructor(
         return pspCoordinator.handleRegisterSepa(sepaData)
     }
 
-    override fun removeCreditCardAlias(alias: String): Completable {
-        return pspCoordinator.handleRemoveCreditCardAlias(alias)
-    }
-
-    override fun removeSepaAlias(alias: String): Completable {
-        return pspCoordinator.handleRemoveSepaAlias(alias)
-    }
-
 }

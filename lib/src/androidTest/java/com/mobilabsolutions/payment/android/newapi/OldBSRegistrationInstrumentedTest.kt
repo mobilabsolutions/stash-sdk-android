@@ -149,89 +149,89 @@ class OldBSRegistrationInstrumentedTest {
         registrationDisposable.dispose()
     }
 
-    @Test
-    fun testCreditCardRemoval() {
-        Timber.d("Starting remove card alias test")
+//    @Test
+//    fun testCreditCardRemoval() {
+//        Timber.d("Starting remove card alias test")
+//
+//        val latch = CountDownLatch(1)
+//
+//        val registrationDisposable = registrationManager.registerCreditCard(
+//                validCreditCardData
+//        )
+//                .subscribeOn(Schedulers.io())
+//                .flatMap { alias ->
+//                    Timber.d("Got alias: $alias")
+//                    registrationManager.removeCreditCardAlias(alias).andThen(Single.just(alias))
+//                }.flatMap { alias -> paymentManager.executeCreditCardPaymentWithAlias(alias, paymentData) }
+//                .subscribeBy(
+//                        onSuccess = { transactionId ->
+//                            Timber.d("Got transaction id after alias deletion!")
+//                            latch.countDown()
+//                        },
+//                        onError = { error ->
+//                            Timber.d("Removing alias reported an error")
+//
+//                            Assert.assertTrue(error is UnknownBackendException)
+//                            Assert.assertEquals(error.message, "Payment method is inactive")
+////                            if (error is HttpException) {
+////                                if (error.code() != 400) {
+////                                    Assert.fail(error.message)
+////                                    Timber.e(error, "Removing alias reported an error")
+////                                }
+////                            } else {
+////                                Assert.fail(error.message)
+////                                Timber.e(error, "Removing alias reported an error")
+////                            }
+//
+//                            latch.countDown()
+//                        }
+//
+//                )
+//        try {
+//            latch.await()
+//        } catch (e: InterruptedException) {
+//            e.printStackTrace()
+//        }
+//
+//        registrationDisposable.dispose()
+//    }
 
-        val latch = CountDownLatch(1)
-
-        val registrationDisposable = registrationManager.registerCreditCard(
-                validCreditCardData
-        )
-                .subscribeOn(Schedulers.io())
-                .flatMap { alias ->
-                    Timber.d("Got alias: $alias")
-                    registrationManager.removeCreditCardAlias(alias).andThen(Single.just(alias))
-                }.flatMap { alias -> paymentManager.executeCreditCardPaymentWithAlias(alias, paymentData) }
-                .subscribeBy(
-                        onSuccess = { transactionId ->
-                            Timber.d("Got transaction id after alias deletion!")
-                            latch.countDown()
-                        },
-                        onError = { error ->
-                            Timber.d("Removing alias reported an error")
-
-                            Assert.assertTrue(error is UnknownBackendException)
-                            Assert.assertEquals(error.message, "Payment method is inactive")
-//                            if (error is HttpException) {
-//                                if (error.code() != 400) {
-//                                    Assert.fail(error.message)
-//                                    Timber.e(error, "Removing alias reported an error")
-//                                }
-//                            } else {
-//                                Assert.fail(error.message)
-//                                Timber.e(error, "Removing alias reported an error")
-//                            }
-
-                            latch.countDown()
-                        }
-
-                )
-        try {
-            latch.await()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        }
-
-        registrationDisposable.dispose()
-    }
-
-    @Test
-    fun testSepaRemoval() {
-        Timber.d("Starting remove card alias test")
-
-        val latch = CountDownLatch(1)
-
-        val registrationDisposable = registrationManager.registerSepa(
-                validSepaData
-        )
-                .subscribeOn(Schedulers.io())
-                .flatMap { alias ->
-                    Timber.d("Got alias: $alias")
-                    registrationManager.removeSepaAlias(alias).andThen(Single.just(alias))
-                }.flatMap { alias -> paymentManager.executeCreditCardPaymentWithAlias(alias, paymentData) }
-                .subscribeBy(
-                        onSuccess = { transactionId ->
-                            Timber.d("Got transaction id after alias deletion!")
-                            latch.countDown()
-                        },
-                        onError = { error ->
-                            Timber.d("Removing alias reported an error")
-
-                            Assert.assertTrue(error is UnknownBackendException)
-                            Assert.assertEquals(error.message, "Payment method is inactive")
-
-                            latch.countDown()
-                        }
-                )
-        try {
-            latch.await()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        }
-
-        registrationDisposable.dispose()
-    }
+//    @Test
+//    fun testSepaRemoval() {
+//        Timber.d("Starting remove card alias test")
+//
+//        val latch = CountDownLatch(1)
+//
+//        val registrationDisposable = registrationManager.registerSepa(
+//                validSepaData
+//        )
+//                .subscribeOn(Schedulers.io())
+//                .flatMap { alias ->
+//                    Timber.d("Got alias: $alias")
+//                    registrationManager.removeSepaAlias(alias).andThen(Single.just(alias))
+//                }.flatMap { alias -> paymentManager.executeCreditCardPaymentWithAlias(alias, paymentData) }
+//                .subscribeBy(
+//                        onSuccess = { transactionId ->
+//                            Timber.d("Got transaction id after alias deletion!")
+//                            latch.countDown()
+//                        },
+//                        onError = { error ->
+//                            Timber.d("Removing alias reported an error")
+//
+//                            Assert.assertTrue(error is UnknownBackendException)
+//                            Assert.assertEquals(error.message, "Payment method is inactive")
+//
+//                            latch.countDown()
+//                        }
+//                )
+//        try {
+//            latch.await()
+//        } catch (e: InterruptedException) {
+//            e.printStackTrace()
+//        }
+//
+//        registrationDisposable.dispose()
+//    }
 
 
 }

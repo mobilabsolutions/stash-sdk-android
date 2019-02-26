@@ -90,63 +90,6 @@ class PspCoordinator @Inject constructor(
                 }
     }
 
-    fun handleRemoveCreditCardAlias(alias : String) : Completable {
-        val deletionRequest = RemoveAliasRequest()
-        deletionRequest.paymentAlias = alias
-        return mobilabApi.deleteCreditCard(deletionRequest).subscribeOn(Schedulers.io())
-
-    }
-
-    fun handleRemoveSepaAlias(alias : String) : Completable {
-        val deletionRequest = RemoveAliasRequest()
-        deletionRequest.paymentAlias = alias
-        return mobilabApi.deleteSepa(deletionRequest).subscribeOn(Schedulers.io())
-
-    }
-
-    fun handleExecuteCreditCardPayment(
-            creditCardData: CreditCardData,
-            paymentData: PaymentData): Single<String>
-    {
-        return handleRegisterCreditCard(creditCardData)
-                .processErrors()
-                .flatMap { handleExecuteCreditCardPaymentWithAlias(it, paymentData) }
-    }
-
-    fun handleExecuteCreditCardPaymentWithAlias(
-            creditCardAlias: String,
-            paymentData: PaymentData): Single<String> {
-        val paymentWithAliasRequest = PaymentWithAliasRequest(
-                paymentAlias = creditCardAlias,
-                amount = paymentData.amount,
-                currency = paymentData.currency!!,
-                customerId = paymentData.customerId,
-                reason = paymentData.reason!!
-        )
-
-        return mobilabApi.executePaymentWithCreditCardAlias(paymentWithAliasRequest)
-                .processErrors()
-                .map { it.result.transactionId }
-
-
-    }
-
-    fun handleExecuteSepaPaymentWithAlias(
-            sepaAlias: String,
-            paymentData: PaymentData): Single<String> {
-        val paymentWithAliasRequest = PaymentWithAliasRequest(
-                paymentAlias = sepaAlias,
-                amount = paymentData.amount,
-                currency = paymentData.currency!!,
-                customerId = paymentData.customerId,
-                reason = paymentData.reason!!
-        )
-
-        return mobilabApi.executePaymentWithSepaAlias(paymentWithAliasRequest)
-                .map { it.result.transactionId }
-
-
-    }
     //NOTE: This waws never tested and is only an initial implementation of psp managed paypal payment
     //It is not complete.
     fun handleExecutePaypalPayment(

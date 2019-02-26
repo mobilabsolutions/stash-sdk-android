@@ -14,24 +14,6 @@ class NewPaymentManager @Inject constructor(
         private val pspCoordinator: PspCoordinator
 ) : PaymentManager {
 
-
-    override fun executeCreditCardPayment(
-            creditCardData: CreditCardData,
-            paymentData: PaymentData): Single<String> {
-        return pspCoordinator.handleExecuteCreditCardPayment(creditCardData, paymentData)
-    }
-
-    override fun executeCreditCardPaymentWithAlias(
-            creditCardAlias: String,
-            paymentData: PaymentData): Single<String> {
-        return pspCoordinator.handleExecuteCreditCardPaymentWithAlias(creditCardAlias, paymentData)
-    }
-
-    override fun executeSepaPaymentWithAlias(
-            sepaAlias: String, paymentData: PaymentData): Single<String> {
-        return pspCoordinator.handleExecuteSepaPaymentWithAlias(sepaAlias, paymentData)
-    }
-
     override fun executePayPalPayment(paymentData: PaymentData, billingData: BillingData): Single<String> {
         return pspCoordinator.handleExecutePaypalPayment(paymentData, billingData)
     }

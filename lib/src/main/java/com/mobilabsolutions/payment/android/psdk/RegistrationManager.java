@@ -26,17 +26,4 @@ public interface RegistrationManager {
      */
     Single<String> registerSepa(SepaData sepaData);
 
-    /**
-     * Remove credit card alias, deregistering it from your payment service provider
-     * @param alias payment alias to deregister
-     * @return Observable signifying success or failure
-     */
-    Completable removeCreditCardAlias(String alias);
-
-    /**
-     * Remove Sepa alias, deregistering it from your payment service provider
-     * @param alias payment alias to deregister
-     * @return Observable signifying success or failure
-     */
-    Completable removeSepaAlias(String alias);
 }

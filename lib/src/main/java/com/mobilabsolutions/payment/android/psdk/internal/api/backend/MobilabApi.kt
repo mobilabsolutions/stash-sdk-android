@@ -22,24 +22,8 @@ interface MobilabApi {
             @Body paymentMethodRegistrationRequest: PaymentMethodRegistrationRequest
     ): Single<SuccessResponse<PaymentMethodRegistrationResponse>>
 
-    @HTTP(method = "DELETE", path = "v1/remove/creditcard", hasBody = true)
-    fun deleteCreditCard(@Body cardAlias: RemoveAliasRequest): Completable
-
-    @HTTP(method = "DELETE", path = "v1/remove/sepa", hasBody = true)
-    fun deleteSepa(@Body paymentAlias: RemoveAliasRequest): Completable
-
     @PUT("v1/update/panalias")
     fun updatePaymentMethodAlias(@Body updatePaymentAliasRequest: UpdatePaymentAliasRequest): Completable
-
-    @POST("v1/payment/creditcard")
-    fun executePaymentWithCreditCardAlias(
-            @Body paymentWithAliasRequest: PaymentWithAliasRequest
-    ) : Single<SuccessResponse<PaymentWithAliasResponse>>
-
-    @POST("v1/payment/sepa")
-    fun executePaymentWithSepaAlias(
-            @Body paymentWithAliasRequest: PaymentWithAliasRequest
-    ) : Single<SuccessResponse<PaymentWithAliasResponse>>
 
     @POST("v1/payment/creditcard")
     fun executePaypalPayment(

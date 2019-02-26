@@ -24,13 +24,4 @@ public class RegistrationManagerMock implements RegistrationManager{
         return Single.just("1234-SEPA");
     }
 
-    @Override
-    public Completable removeCreditCardAlias(String alias) {
-        return Completable.complete();
-    }
-
-    @Override
-    public Completable removeSepaAlias(String alias) {
-        return Completable.complete();
-    }
 }

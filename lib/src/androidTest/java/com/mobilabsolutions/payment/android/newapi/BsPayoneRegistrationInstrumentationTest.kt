@@ -100,34 +100,34 @@ class BsPayoneRegistrationInstrumentationTest {
 
     }
 
-    @Test
-    fun testBSCreditCardPayment() {
-        val latch = CountDownLatch(1)
-
-        val paymentDisposable = paymentManager.executeCreditCardPaymentWithAlias(
-                ccAlias,
-                paymentData
-        )
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                        { transactionId ->
-                            Assert.assertNotNull(transactionId)
-                            println("Transaction: $transactionId")
-                            latch.countDown()
-
-                        }
-                ) { error ->
-                    Timber.e(error, "BS credit card payment failed")
-                    Assert.fail(error.message)
-                }
-        try {
-            latch.await()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        }
-
-        paymentDisposable.dispose()
-    }
+//    @Test
+//    fun testBSCreditCardPayment() {
+//        val latch = CountDownLatch(1)
+//
+//        val paymentDisposable = paymentManager.executeCreditCardPaymentWithAlias(
+//                ccAlias,
+//                paymentData
+//        )
+//                .subscribeOn(Schedulers.io())
+//                .subscribe(
+//                        { transactionId ->
+//                            Assert.assertNotNull(transactionId)
+//                            println("Transaction: $transactionId")
+//                            latch.countDown()
+//
+//                        }
+//                ) { error ->
+//                    Timber.e(error, "BS credit card payment failed")
+//                    Assert.fail(error.message)
+//                }
+//        try {
+//            latch.await()
+//        } catch (e: InterruptedException) {
+//            e.printStackTrace()
+//        }
+//
+//        paymentDisposable.dispose()
+//    }
 
 
     @Test
