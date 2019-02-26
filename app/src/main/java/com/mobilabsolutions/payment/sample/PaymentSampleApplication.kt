@@ -7,7 +7,6 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.BsOldIntegration
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
-import io.reactivex.plugins.RxJavaPlugins
 import timber.log.Timber
 
 /**
@@ -17,7 +16,7 @@ class PaymentSampleApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        PaymentSdk.initalize(BuildConfig.oldBsTestKey, this, BsOldIntegration.initialization());
+        PaymentSdk.initalize(BuildConfig.oldBsTestKey, this, BsOldIntegration.create());
 
 
         if (BuildConfig.DEBUG) {

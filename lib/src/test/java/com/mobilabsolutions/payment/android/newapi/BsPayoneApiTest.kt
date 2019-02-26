@@ -10,7 +10,7 @@ import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneModule
+import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalActivityCustomization
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -64,7 +64,7 @@ class BsPayoneApiTest {
                     .bufferedReader().use { it.readText() }
 
     @Singleton
-    @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+    @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
     internal interface UnitTestPaymentSdkComponent : PaymentSdkComponent {
         fun injectTest(test: BsPayoneApiTest)
     }
@@ -146,7 +146,7 @@ class BsPayoneApiTest {
         val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context))
-                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
+                .oldBsPayoneModule(com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule(OLD_BS_PAYONE_URL))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
                 .build()
@@ -182,7 +182,7 @@ class BsPayoneApiTest {
         val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context))
-                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
+                .oldBsPayoneModule(com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule(OLD_BS_PAYONE_URL))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
                 .build()
@@ -215,7 +215,7 @@ class BsPayoneApiTest {
         val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context))
-                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
+                .oldBsPayoneModule(com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule(OLD_BS_PAYONE_URL))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
                 .build()
@@ -245,7 +245,7 @@ class BsPayoneApiTest {
         val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context))
-                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
+                .oldBsPayoneModule(com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule(OLD_BS_PAYONE_URL))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
                 .build()
@@ -264,7 +264,7 @@ class BsPayoneApiTest {
         val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context))
-                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
+                .oldBsPayoneModule(com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule(OLD_BS_PAYONE_URL))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
                 .build()

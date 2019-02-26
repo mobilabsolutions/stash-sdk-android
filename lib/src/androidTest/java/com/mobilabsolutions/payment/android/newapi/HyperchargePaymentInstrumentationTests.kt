@@ -6,7 +6,7 @@
 //import com.mobilabsolutions.payment.android.psdk.internal.*
 //import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 //import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-//import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneModule
+//import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
 //import com.mobilabsolutions.payment.android.psdk.model.BillingData
 //import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 //import com.mobilabsolutions.payment.android.psdk.model.PaymentData

@@ -6,7 +6,7 @@ import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.internal.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneModule
+import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -17,7 +17,6 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.LocalDate
-import timber.log.Timber
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -67,7 +66,7 @@ class BsPayoneRegistrationInstrumentationTest {
         val context = InstrumentationRegistry.getContext().applicationContext as Application
         val graph = DaggerTestPaymentSdkComponent.builder()
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context))
-                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
+                .oldBsPayoneModule(com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule(OLD_BS_PAYONE_URL))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
                 .build()
@@ -190,7 +189,7 @@ class BsPayoneRegistrationInstrumentationTest {
 }
 
 @Singleton
-@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
 internal interface TestPaymentSdkComponent : PaymentSdkComponent {
     fun injectTest(test: BsPayoneRegistrationInstrumentationTest)
 }

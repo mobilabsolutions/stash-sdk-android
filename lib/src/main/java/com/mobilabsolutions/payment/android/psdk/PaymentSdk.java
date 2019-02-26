@@ -72,7 +72,6 @@ public final class PaymentSdk {
     }
 
     public enum Provider {
-        OLD_BS_PAYONE("BS"),
         HYPERCHARGE("HC"),
         NEW_PAYONE("NP");
 

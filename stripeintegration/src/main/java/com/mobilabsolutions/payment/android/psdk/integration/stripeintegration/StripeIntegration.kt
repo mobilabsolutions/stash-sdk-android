@@ -32,7 +32,7 @@ class StripeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration 
 
     lateinit var stripe: Stripe
 
-    override fun initialize(context: Context, appObjectGraph : PaymentSdkComponent) {
+    override fun initialize(appObjectGraph : PaymentSdkComponent) {
         stripe = StripeInitializer.initialize(context)
     }
 

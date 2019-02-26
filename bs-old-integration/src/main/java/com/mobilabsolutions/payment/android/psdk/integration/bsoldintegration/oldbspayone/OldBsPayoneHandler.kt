@@ -1,10 +1,10 @@
-package com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone
+package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone
 
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationResponse
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.UpdatePaymentAliasRequest
-import com.mobilabsolutions.payment.android.psdk.internal.api.oldbspayone.OldBsPayoneApi
-import com.mobilabsolutions.payment.android.psdk.internal.api.oldbspayone.BsPayonePaymentRequest
+import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.pspapi.BsPayonePaymentRequest
+import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.pspapi.OldBsPayoneApi
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.util.BSUtils
 import io.reactivex.Single

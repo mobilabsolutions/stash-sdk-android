@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.internal.api.oldbspayone
+package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.pspapi
 
 import io.reactivex.Single
 import retrofit2.http.Body

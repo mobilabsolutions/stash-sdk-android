@@ -10,11 +10,8 @@ import io.reactivex.Single
  */
 interface Integration {
 
-    fun initialize(context: Context, appDaggerGraph : PaymentSdkComponent)
+    fun initialize(appDaggerGraph : PaymentSdkComponent)
 
     fun handleRegistrationRequest(registrationRequest: RegistrationRequest) : Single<String>
 
-    fun handlePaymentRequest(paymentRequest: PaymentRequest) : Single<String>
-
-    fun handleDeletionRequest(deletionRequest: DeletionRequest) : Single<String>
 }

@@ -15,6 +15,7 @@ interface BsOldIntegrationComponent {
     @Component.Builder
     interface Builder {
         fun coreComponent(paymentSdkComponent: PaymentSdkComponent) : Builder
+        fun bsOldModule(bsOldModule: BsOldModule) : Builder
         fun build() : BsOldIntegrationComponent
     }
 

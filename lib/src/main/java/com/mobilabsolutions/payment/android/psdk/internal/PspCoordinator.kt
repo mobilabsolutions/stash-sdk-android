@@ -6,12 +6,10 @@ import com.mobilabsolutions.payment.android.psdk.exceptions.validation.SepaValid
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneHandler
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeHandler
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneHandler
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
-import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.iban4j.CountryCode
@@ -23,7 +21,6 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
-        private val oldBsPayoneHandler: OldBsPayoneHandler,
         private val hyperchageHandler : HyperchargeHandler,
         private val bsPayoneHandler: BsPayoneHandler,
         private val mobilabApi: MobilabApi,
@@ -48,9 +45,6 @@ class PspCoordinator @Inject constructor(
                 .map { it.result }
                 .flatMap {
                     when (paymentProvider) {
-                        PaymentSdk.Provider.OLD_BS_PAYONE -> oldBsPayoneHandler.registerCreditCard(
-                                it, creditCardData
-                        )
                         PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.registerCreditCard(
                                 it, creditCardData
                         )
@@ -83,7 +77,6 @@ class PspCoordinator @Inject constructor(
                 .map { it.result }
                 .flatMap {
                     when (paymentProvider) {
-                        PaymentSdk.Provider.OLD_BS_PAYONE -> Single.just(it.paymentAlias)
                         PaymentSdk.Provider.NEW_PAYONE -> Single.just(it.paymentAlias)
                         PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerSepa(it, sepaData)
                     }
@@ -108,7 +101,6 @@ class PspCoordinator @Inject constructor(
                 .flatMap {
                     val mappedTransactionId = it.result.mappedTransactionId
                     when (paymentProvider) {
-                        PaymentSdk.Provider.OLD_BS_PAYONE -> throw RuntimeException("Not supported at the moment")
                         PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.handlePayPalRedirectRequest(it.result.redirectUrl)
                         PaymentSdk.Provider.HYPERCHARGE -> throw RuntimeException("Not supported at the moment")
                     }.map {

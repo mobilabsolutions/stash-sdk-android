@@ -1,10 +1,10 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration
 
-import android.content.Context
+import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneHandler
+import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneHandler
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -16,9 +16,11 @@ import javax.inject.Inject
 
 class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
 
+    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
+
 
     companion object {
-        fun initialization() : IntegrationInitialization {
+        fun create() : IntegrationInitialization {
             return object : IntegrationInitialization {
                 override fun initialize(paymentSdkComponent: PaymentSdkComponent?): Integration {
                     return BsOldIntegration(paymentSdkComponent!!)
@@ -31,25 +33,23 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
     @Inject
     lateinit var oldBsPayoneHandler : OldBsPayoneHandler
 
-    override fun initialize(context: Context, appDaggerGraph : PaymentSdkComponent) {
+    init {
+        initialize(paymentSdkComponent)
+    }
+
+    override fun initialize(appDaggerGraph : PaymentSdkComponent) {
         val graph = DaggerBsOldIntegrationComponent.builder()
+                .bsOldModule(BsOldModule(OLD_BS_PAYONE_URL))
                 .coreComponent(appDaggerGraph)
                 .build()
         graph.inject(this)
-        println("$oldBsPayoneHandler")
+        println("Got handler: $oldBsPayoneHandler")
     }
 
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun handlePaymentRequest(paymentRequest: PaymentRequest): Single<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun handleDeletionRequest(deletionRequest: DeletionRequest): Single<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
 
 }

@@ -11,7 +11,6 @@ import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPu
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.IntegrationInitialization
 ////import com.tspoon.traceur.Traceur
 import timber.log.Timber
@@ -54,13 +53,12 @@ class NewPaymentSdk(
         daggerGraph = DaggerPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
                 .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext))
-                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
                 .build()
         daggerGraph.inject(this)
 
-        integrationInitialization.initialize(daggerGraph).initialize(applicationContext, daggerGraph)
+        integrationInitialization.initialize(daggerGraph)
 
 
     }
@@ -147,7 +145,7 @@ class NewPaymentSdk(
             val parts = publicKey.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             if (parts.size == 3) {
                 if (parts[1] == "BS") {
-                    return PaymentSdk.Provider.OLD_BS_PAYONE
+                    TODO()
                 }
                 if (parts[1] == "HC") {
                     return PaymentSdk.Provider.HYPERCHARGE

@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.internal.api.oldbspayone
+package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.pspapi
 
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationResponse
