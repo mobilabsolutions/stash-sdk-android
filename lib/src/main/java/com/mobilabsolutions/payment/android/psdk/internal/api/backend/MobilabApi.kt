@@ -1,11 +1,10 @@
 package com.mobilabsolutions.payment.android.psdk.internal.api.backend
 
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasResponse
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.http.Body
-import retrofit2.http.HTTP
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -36,4 +35,12 @@ interface MobilabApi {
     ) : Completable
 
 
+}
+
+interface MobilabApiV2 {
+    @POST("v2/alias")
+    fun createAlias(psp : String, mask : String) : AliasResponse
+
+    @PUT("v2/alias/{aliasId}")
+    fun updateAlias(@Path("aliasId") aliasId : String, billingData: BillingData) : AliasResponse
 }

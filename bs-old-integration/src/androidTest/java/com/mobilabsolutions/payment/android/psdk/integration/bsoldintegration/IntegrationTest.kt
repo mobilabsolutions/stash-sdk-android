@@ -31,8 +31,12 @@ class IntegrationTest {
     @Test
     fun testIntegration() {
         val context = InstrumentationRegistry.getContext().applicationContext as Application
+
+        val integrationInitialization = BsOldIntegration.create()
+
+
         val graphBuilder = DaggerTestOldBsIntegrationSdkComponent.builder()
-                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context))
+                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, listOf(integrationInitialization)))
                 .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
 
@@ -43,7 +47,7 @@ class IntegrationTest {
         }
         val graph = graphBuilder.build()
 
-        val integrationInitialization = BsOldIntegration.create()
+
         integrationInitialization.initialize(graph)
 
     }

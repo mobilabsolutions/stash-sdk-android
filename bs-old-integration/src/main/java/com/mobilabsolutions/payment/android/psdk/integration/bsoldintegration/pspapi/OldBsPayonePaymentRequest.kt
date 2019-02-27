@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.pspapi
 
+import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.BsOldRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationResponse
 import org.simpleframework.xml.*
@@ -22,6 +23,35 @@ data class BsPayonePaymentRequest(
         val soapBody: SoapBody
 ) {
     companion object {
+
+        fun fromBsOldPaymentRequest(
+                bsOldRegistrationRequest : BsOldRegistrationRequest
+        ): BsPayonePaymentRequest {
+            val creditCardData = bsOldRegistrationRequest.creditCardData
+            val bsPayoneCreditCardExpiryDate = BsPayoneCreditCardExpiryDate(
+                    creditCardData.expiryDate?.monthValue ?: -1,
+                    creditCardData.expiryDate?.year ?: -1
+            )
+            val bsPayoneCreditCard = BsPayoneCreditCard(
+                    creditCardData.number!!,
+                    PanAlias(bsOldRegistrationRequest.panAlias!!),
+                    creditCardData.holder!!,
+                    creditCardData.cvv!!,
+                    bsPayoneCreditCardExpiryDate
+            )
+            val paymentRequest = PaymentRequest(
+                    bsOldRegistrationRequest.merchantId!!,
+                    bsOldRegistrationRequest.eventExtId!!,
+                    "creditcard",
+                    bsOldRegistrationRequest.action!!,
+                    bsOldRegistrationRequest.amount!!,
+                    bsOldRegistrationRequest.currency!!,
+                    bsPayoneCreditCard
+            )
+            val xmlApiRequest = XmlApiRequest(paymentRequest)
+            val soapBody = SoapBody(xmlApiRequest)
+            return BsPayonePaymentRequest(SoapHeader(), soapBody)
+        }
 
         fun fromPaymentMethodResponseWithCreditCardData(
                 paymentMethodRegistrationResponse: PaymentMethodRegistrationResponse,
@@ -51,6 +81,13 @@ data class BsPayonePaymentRequest(
             val soapBody = SoapBody(xmlApiRequest)
             return BsPayonePaymentRequest(SoapHeader(), soapBody)
 
+
+        }
+
+        fun fromBackendResponse(
+                creditCardData: CreditCardData,
+                pspExtra : Map<String, String>
+        ) {
 
         }
     }

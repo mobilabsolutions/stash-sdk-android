@@ -84,6 +84,25 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
+    fun provideMobilabApiV2(mobilabBackendOkHttpClient: OkHttpClient,
+                            @Named("mobilabBackendGsonConverterFactory")
+                            gsonConverterFactory: GsonConverterFactory,
+                            rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
+    ): MobilabApiV2 {
+        val mobilabBackendRetrofit = Retrofit.Builder()
+                .addConverterFactory(gsonConverterFactory)
+                .addCallAdapterFactory(rxJava2CallAdapterFactory)
+                .client(mobilabBackendOkHttpClient)
+                .baseUrl(mobilabUrl)
+                .build()
+
+        val mobilabApiV2 = mobilabBackendRetrofit.create(MobilabApiV2::class.java)
+        return mobilabApiV2
+
+    }
+
+    @Provides
+    @Singleton
     fun provideMobilabHttpClient(
             httpLoggingInterceptor: HttpLoggingInterceptor,
             sslSupportPackage: SslSupportPackage
@@ -205,7 +224,7 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
     @Provides
     @Singleton
     fun providePspIntegrationsRegistered() : Set<Integration> {
-        return integrationInitializers.filter { it.initializedOrNull() == null  }
+        return integrationInitializers.filter { it.initializedOrNull() != null  }
                 .map { it.initializedOrNull() as Integration }
                 .toSet()
     }

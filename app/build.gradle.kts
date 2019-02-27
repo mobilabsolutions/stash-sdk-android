@@ -49,9 +49,9 @@ android {
 }
 
 dependencies {
-    implementation(project(Modules.paymentSdk))
-    implementation(project(Modules.stripeIntegration))
-    implementation(project(Modules.bsOldIntegration))
+    implementation(project(Modules.paymentSdk)) //Core
+//    implementation(project(Modules.stripeIntegration))
+    implementation(project(Modules.bsOldIntegration)) //BSOLD Module
 
     implementation(Libs.Kotlin.stdlib)
 

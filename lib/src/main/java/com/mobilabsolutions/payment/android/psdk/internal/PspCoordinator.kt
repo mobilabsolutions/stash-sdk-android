@@ -27,7 +27,7 @@ class PspCoordinator @Inject constructor(
         private val mobilabApi: MobilabApi,
         private val paymentProvider:PaymentSdk.Provider,
         private val exceptionMapper: BackendExceptionMapper,
-        private val integrations : Set<Integration>
+        private val integrations : Set<@JvmSuppressWildcards Integration>
 ) {
 
 
@@ -43,7 +43,7 @@ class PspCoordinator @Inject constructor(
         if (creditCardData.number.length < 16) {
             return Single.error(RuntimeException("Invalid card number length"))
         }
-        paymentMethodRegistrationRequest.cardMask = creditCardData.number?.substring(0..5)
+        paymentMethodRegistrationRequest.cardMask = creditCardData.number.substring(0..5)
         paymentMethodRegistrationRequest.oneTimePayment = false
 
 
@@ -57,7 +57,7 @@ class PspCoordinator @Inject constructor(
                     val additionalData = AdditionalRegistrationData(mapOf("action" to it.action!!))
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
-                    chosenIntegration.handleRegistrationRequest(registrationRequest)
+                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
 
 
                     when (paymentProvider) {
@@ -75,7 +75,7 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterSepa(sepaData: SepaData): Single<String> {
-        handleRegisterSepa(sepaData, integrations.first().identifier)
+        return handleRegisterSepa(sepaData, integrations.first().identifier)
     }
 
     fun handleRegisterSepa(sepaData: SepaData, chosenPsp : PspIdentifier): Single<String> {
@@ -97,6 +97,13 @@ class PspCoordinator @Inject constructor(
                 .subscribeOn(Schedulers.io())
                 .map { it.result }
                 .flatMap {
+
+                    val standardizedData = SepaRegistrationRequest(sepaData = sepaData, aliasId = it.panAlias)
+                    val additionalData = AdditionalRegistrationData(mapOf("action" to it.action!!))
+                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+
+                    chosenIntegration.handleRegistrationRequest(registrationRequest)
+
                     when (paymentProvider) {
                         PaymentSdk.Provider.NEW_PAYONE -> Single.just(it.paymentAlias)
                         PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerSepa(it, sepaData)
@@ -104,7 +111,7 @@ class PspCoordinator @Inject constructor(
                 }
     }
 
-    //NOTE: This waws never tested and is only an initial implementation of psp managed paypal payment
+    //NOTE: This was never tested and is only an initial implementation of psp managed paypal payment
     //It is not complete.
     fun handleExecutePaypalPayment(
             paymentData: PaymentData,

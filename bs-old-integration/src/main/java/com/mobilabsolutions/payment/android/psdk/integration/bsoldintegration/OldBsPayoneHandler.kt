@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone
+package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration
 
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationResponse
@@ -15,30 +15,29 @@ import javax.inject.Inject
  */
 class OldBsPayoneHandler @Inject constructor(private val oldBsPayoneApi: OldBsPayoneApi, private val mobilabApi: MobilabApi) {
 
-    fun registerCreditCard(paymentMethodRegistrationResponse: PaymentMethodRegistrationResponse, creditCardData: CreditCardData): Single<String> {
+    fun registerCreditCard(requestedAlias : String, bsOldRegistrationRequest: BsOldRegistrationRequest): Single<String> {
 
         return oldBsPayoneApi.registerCreditCard(
-                authorization = getAuthorizationString(paymentMethodRegistrationResponse),
+                authorization = getAuthorizationString(bsOldRegistrationRequest),
                 bsPayonePaymentRequest = BsPayonePaymentRequest
-                        .fromPaymentMethodResponseWithCreditCardData(
-                                paymentMethodRegistrationResponse,
-                                creditCardData
+                        .fromBsOldPaymentRequest(
+                                bsOldRegistrationRequest
                         )
         ).map {
             val responseCode = it.apiResponse?.response?.rc ?: -1
             when (responseCode) {
                 -1 -> throw RuntimeException("Missing response code")//TODO specify error
                 0 -> {
-                    paymentMethodRegistrationResponse.paymentAlias
+                    it.apiResponse?.aliasResponse?.alias
                 }
                 1343 -> {
                     mobilabApi.updatePaymentMethodAlias(
                             UpdatePaymentAliasRequest(
                                     it.apiResponse?.response?.creditCard?.panAlias.toString(),
-                                    paymentMethodRegistrationResponse.paymentAlias
+                                    requestedAlias
                             )
                     ).blockingAwait()
-                    paymentMethodRegistrationResponse.paymentAlias
+                    requestedAlias
                 }
                 else -> throw RuntimeException("Unexpected response from BS Api")//TODO specify error
             }
@@ -46,8 +45,8 @@ class OldBsPayoneHandler @Inject constructor(private val oldBsPayoneApi: OldBsPa
         }
     }
 
-    private fun getAuthorizationString(paymentMethodRegistrationResponse: PaymentMethodRegistrationResponse): String {
-        return "Basic ${BSUtils.getBasicAuthString(paymentMethodRegistrationResponse.username, paymentMethodRegistrationResponse.password)}"
+    private fun getAuthorizationString(pbsOldRegistrationRequest: BsOldRegistrationRequest): String {
+        return "Basic ${BSUtils.getBasicAuthString(pbsOldRegistrationRequest.username, pbsOldRegistrationRequest.password)}"
     }
 }
 

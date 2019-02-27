@@ -1,11 +1,12 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration
 
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -54,15 +55,24 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
                 .coreComponent(appDaggerGraph)
                 .build()
         graph.inject(this)
-        println("Got handler: $oldBsPayoneHandler")
     }
 
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+        val standardizedData = registrationRequest.standardizedData
 
-        val additionaLData = registrationRequest.getAdditionalData()
-        val standardizedData = registrationRequest.getStandardizedData()
-//        oldBsPayoneHandler.registerCreditCard()
-        return Single.just("TODO")
+        return when (standardizedData) {
+            is CreditCardRegistrationRequest -> {
+                val additionalData = registrationRequest.additionalData
+                val bsOldRegistrationRequest = BsOldRegistrationRequest.fromMapWitchCCData(additionalData.extraData, standardizedData.creditCardData)
+                oldBsPayoneHandler.registerCreditCard(standardizedData.aliasId, bsOldRegistrationRequest)
+                return Single.just("xasdaskdf32341")
+            }
+            is SepaRegistrationRequest -> {
+                return Single.just("123")
+            }
+            else -> throw BsOldIntegrationException("Invalid standardized data type")
+        }
+
     }
 
 
