@@ -1,16 +1,9 @@
 package com.mobilabsolutions.payment.sample;
 
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk;
-import com.mobilabsolutions.payment.android.psdk.exceptions.ProviderOriginatedException;
-import com.mobilabsolutions.payment.android.psdk.exceptions.other.TemporaryException;
-import com.mobilabsolutions.payment.android.psdk.integration.stripeintegration.StripeAdditionalRegistrationData;
-import com.mobilabsolutions.payment.android.psdk.integration.stripeintegration.StripeIntegration;
 import com.mobilabsolutions.payment.android.psdk.model.BillingData;
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
 
 import org.threeten.bp.LocalDate;
-
-import timber.log.Timber;
 
 /**
  *
@@ -31,7 +24,7 @@ public class JavaSketch {
                 "Bla"
         );
 
-        StripeAdditionalRegistrationData stripeAdditionalRegistrationData = new StripeAdditionalRegistrationData();
+//        StripeAdditionalRegistrationData stripeAdditionalRegistrationData = new StripeAdditionalRegistrationData();
 
 
 //        StripeIntegration stripeIntegration = new StripeIntegration();
