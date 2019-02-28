@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone
+package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.exceptions.other.UnknownError
 import com.mobilabsolutions.payment.android.psdk.exceptions.registration.CreditCardRegistrationException

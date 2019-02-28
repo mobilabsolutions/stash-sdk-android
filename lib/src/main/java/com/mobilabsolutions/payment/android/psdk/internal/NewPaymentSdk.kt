@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+////import com.tspoon.traceur.Traceur
 import android.app.Application
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentManager
@@ -8,9 +9,7 @@ import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-////import com.tspoon.traceur.Traceur
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
@@ -28,7 +27,6 @@ class NewPaymentSdk(
         x509TrustManager: X509TrustManager?) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
-    val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
 
 
 
@@ -55,7 +53,6 @@ class NewPaymentSdk(
                 .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
                 .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext, integrationList))
                 .hyperchargeModule(HyperchargeModule())
-                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
                 .build()
 
         integrationList.map { it.initialize(daggerGraph) }
@@ -143,7 +140,7 @@ class NewPaymentSdk(
                     return PaymentSdk.Provider.HYPERCHARGE
                 }
                 if (parts[1] == "BS2") {//BS2
-                    return PaymentSdk.Provider.NEW_PAYONE
+                    TODO()
                 }
             }
             throw InvalidPublicKeyException("Unknown provider")

@@ -1,10 +1,7 @@
-package com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone
+package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.google.gson.GsonBuilder
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PayoneSpecificData
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.ProviderSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.RuntimeTypeAdapterFactory
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.SketchSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.api.payone.*
 import dagger.Module
 import dagger.Provides
@@ -21,7 +18,8 @@ import javax.inject.Singleton
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Module
-class BsPayoneModule(private val newBsPayoneUrl : String){
+class BsPayoneModule(private val newBsPayoneUrl : String) {
+
     @Provides
     @Singleton
     fun provideNewBsPayoneConverterFactory() : PayoneKeyPairConverterFactory {
@@ -76,4 +74,5 @@ class BsPayoneModule(private val newBsPayoneUrl : String){
                 .create()
         return GsonConverterFactory.create(gson)
     }
+
 }

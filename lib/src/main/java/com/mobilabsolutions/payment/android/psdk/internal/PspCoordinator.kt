@@ -3,12 +3,12 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.SepaValidationException
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
-import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeHandler
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneHandler
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
+import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
@@ -23,7 +23,6 @@ import javax.inject.Inject
  */
 class PspCoordinator @Inject constructor(
         private val hyperchageHandler : HyperchargeHandler,
-        private val bsPayoneHandler: BsPayoneHandler,
         private val mobilabApi: MobilabApi,
         private val paymentProvider:PaymentSdk.Provider,
         private val exceptionMapper: BackendExceptionMapper,
@@ -61,9 +60,9 @@ class PspCoordinator @Inject constructor(
 
 
                     when (paymentProvider) {
-                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.registerCreditCard(
-                                it, creditCardData
-                        )
+//                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.registerCreditCard(
+//                                it, creditCardData
+//                        )
                         PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerCreditCard(
                                 it, creditCardData
                         )
@@ -105,7 +104,7 @@ class PspCoordinator @Inject constructor(
                     chosenIntegration.handleRegistrationRequest(registrationRequest)
 
                     when (paymentProvider) {
-                        PaymentSdk.Provider.NEW_PAYONE -> Single.just(it.paymentAlias)
+//                        PaymentSdk.Provider.NEW_PAYONE -> Single.just(it.paymentAlias)
                         PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerSepa(it, sepaData)
                     }
                 }
@@ -117,34 +116,35 @@ class PspCoordinator @Inject constructor(
             paymentData: PaymentData,
             billingData: BillingData
     ) : Single<String> {
-        val paymentWithPaypalRequest = PaymentWithPayPalRequest(
-                amount = paymentData.amount,
-                currency = paymentData.currency!!,
-                customerId = paymentData.customerId,
-                reason = paymentData.reason!!,
-                billingData = billingData
-        )
-        return mobilabApi.executePaypalPayment(paymentWithPaypalRequest)
-                .subscribeOn(Schedulers.io())
-                .flatMap {
-                    val mappedTransactionId = it.result.mappedTransactionId
-                    when (paymentProvider) {
-                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.handlePayPalRedirectRequest(it.result.redirectUrl)
-                        PaymentSdk.Provider.HYPERCHARGE -> throw RuntimeException("Not supported at the moment")
-                    }.map {
-                        Pair(it, mappedTransactionId)
-                    }
-                }.flatMap {
-                    val mappedTransactionId = it.second
-                    val responseResult = it.first
-                    mobilabApi.reportPayPalResult(
-                            PayPalConfirmationRequest(
-                                    mappedTransactionId,
-                                    responseResult.redirectState.name.toLowerCase(),
-                                    responseResult.code)
-                    ).subscribeOn(Schedulers.io())
-                            .andThen(Single.just(mappedTransactionId))
-                }
+//        val paymentWithPaypalRequest = PaymentWithPayPalRequest(
+//                amount = paymentData.amount,
+//                currency = paymentData.currency!!,
+//                customerId = paymentData.customerId,
+//                reason = paymentData.reason!!,
+//                billingData = billingData
+//        )
+//        return mobilabApi.executePaypalPayment(paymentWithPaypalRequest)
+//                .subscribeOn(Schedulers.io())
+//                .flatMap {
+//                    val mappedTransactionId = it.result.mappedTransactionId
+//                    when (paymentProvider) {
+////                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.handlePayPalRedirectRequest(it.result.redirectUrl)
+//                        PaymentSdk.Provider.HYPERCHARGE -> throw RuntimeException("Not supported at the moment")
+//                    }.map {
+//                        Pair(it, mappedTransactionId)
+//                    }
+//                }.flatMap {
+//                    val mappedTransactionId = it.second
+//                    val responseResult = it.first
+//                    mobilabApi.reportPayPalResult(
+//                            PayPalConfirmationRequest(
+//                                    mappedTransactionId,
+//                                    responseResult.redirectState.name.toLowerCase(),
+//                                    responseResult.code)
+//                    ).subscribeOn(Schedulers.io())
+//                            .andThen(Single.just(mappedTransactionId))
+//                }
+        return Single.just("TODO")
     }
 
     fun <T> Single<T>.processErrors() : Single<T> {

@@ -1,6 +1,5 @@
-package com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone
+package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
-import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
 import com.mobilabsolutions.payment.android.psdk.internal.api.payone.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler

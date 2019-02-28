@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.integration.stripeintegration
+package com.mobilabsolutions.payment.android.psdk.integration.stripe
 
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent

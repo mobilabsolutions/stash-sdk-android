@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.internal.*
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import dagger.Component
 import org.junit.Before

@@ -1,14 +1,15 @@
-package com.mobilabsolutions.payment.android.psdk.integration.stripeintegration
+package com.mobilabsolutions.payment.android.psdk.integration.stripe
 
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.DaggerStripeIntegrationComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
+import com.stripe.android.Stripe
 import io.reactivex.Single
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class BsPayoneIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
+class StripeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
     override val identifier = "Stripe"
 
 
@@ -18,14 +19,15 @@ class BsPayoneIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         }
     }
 
-    val stripeIntegrationComponent : BsPayoneIntegrationComponent
+    val stripeIntegrationComponent : StripeIntegrationComponent
 
     init {
-        stripeIntegrationComponent = DaggerBsPayoneIntegrationComponent.builder()
+        stripeIntegrationComponent = DaggerStripeIntegrationComponent.builder()
                 .paymentSdkComponent(paymentSdkComponent)
                 .build()
     }
 
+    lateinit var stripe: Stripe
 
 
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {

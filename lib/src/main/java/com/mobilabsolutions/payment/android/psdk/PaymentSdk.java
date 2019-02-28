@@ -77,8 +77,8 @@ public final class PaymentSdk {
     }
 
     public enum Provider {
-        HYPERCHARGE("HC"),
-        NEW_PAYONE("NP");
+        HYPERCHARGE("HC");
+//        NEW_PAYONE("NP");
 
         private String prefix;
 

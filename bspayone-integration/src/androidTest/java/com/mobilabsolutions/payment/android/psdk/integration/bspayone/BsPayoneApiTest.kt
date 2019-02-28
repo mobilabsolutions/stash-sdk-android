@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.newapi
+package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 //import com.tspoon.traceur.Traceur
 import android.app.Application
@@ -8,9 +8,7 @@ import android.util.Base64
 import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.*
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalActivityCustomization
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -64,7 +62,7 @@ class BsPayoneApiTest {
                     .bufferedReader().use { it.readText() }
 
     @Singleton
-    @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+    @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, HyperchargeModule::class, BsPayoneModule::class])
     internal interface UnitTestPaymentSdkComponent : PaymentSdkComponent {
         fun injectTest(test: BsPayoneApiTest)
     }
@@ -74,9 +72,9 @@ class BsPayoneApiTest {
 
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
-
-    @Inject
-    internal lateinit var newUiCustomizationManager: NewUiCustomizationManager
+//
+//    @Inject
+//    internal lateinit var newUiCustomizationManager: NewUiCustomizationManager
 
     lateinit var payoneMockWebServer: MockWebServer
     lateinit var backendMockWebServer: MockWebServer

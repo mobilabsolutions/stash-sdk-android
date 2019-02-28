@@ -1,6 +1,7 @@
-package com.mobilabsolutions.payment.android.psdk.integration.stripeintegration
+package com.mobilabsolutions.payment.android.psdk.integration.stripe
 
 import android.content.Context
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.stripe.android.Stripe
 
 /**

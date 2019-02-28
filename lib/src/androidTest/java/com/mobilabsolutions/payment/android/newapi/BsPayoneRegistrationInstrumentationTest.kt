@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.internal.*
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData

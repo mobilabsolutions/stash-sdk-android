@@ -40,6 +40,14 @@ dependencies {
     testImplementation(Libs.junit)
     kaptTest(Libs.Dagger.compiler)
 
+    testImplementation(Libs.junit)
+    testImplementation(Libs.mockitoCore)
+    testImplementation(Libs.mockwebserver)
+    testImplementation(Libs.PowerMock.module)
+    testImplementation(Libs.PowerMock.api)
+    kaptTest(Libs.Dagger.compiler)
+
+    androidTestImplementation(Libs.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     kaptAndroidTest(Libs.Dagger.compiler)
