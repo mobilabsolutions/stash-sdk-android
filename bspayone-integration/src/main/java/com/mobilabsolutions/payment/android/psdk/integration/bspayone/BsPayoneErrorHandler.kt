@@ -2,8 +2,8 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.exceptions.other.UnknownError
 import com.mobilabsolutions.payment.android.psdk.exceptions.registration.CreditCardRegistrationException
-import com.mobilabsolutions.payment.android.psdk.internal.api.payone.BsPayoneVerificationErrorResponse
-import com.mobilabsolutions.payment.android.psdk.internal.api.payone.BsPayoneVerificationInvalidResponse
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationErrorResponse
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationInvalidResponse
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>

@@ -76,19 +76,4 @@ public final class PaymentSdk {
         return NewPaymentSdk.Companion.getUiCustomizationManager();
     }
 
-    public enum Provider {
-        HYPERCHARGE("HC");
-//        NEW_PAYONE("NP");
-
-        private String prefix;
-
-        Provider(String prefix){
-            this.prefix = prefix;
-        }
-
-        public String getPrefix() {
-            return prefix;
-        }
-    }
-
 }

@@ -1,7 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.*
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
-import com.mobilabsolutions.payment.android.psdk.internal.api.payone.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import io.reactivex.Single

@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.internal.api.payone
+package com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi
 
 import com.google.gson.annotations.SerializedName
 import java.time.LocalDate

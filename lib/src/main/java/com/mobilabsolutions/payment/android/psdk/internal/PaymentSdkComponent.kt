@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectActivity
@@ -24,4 +25,6 @@ interface PaymentSdkComponent {
     fun provideXmlConverterFactory() : SimpleXmlConverterFactory
     fun provideRxJava2Converter() : RxJava2CallAdapterFactory
     fun provideHttpLoggingInterceptor() : HttpLoggingInterceptor
+
+    fun provideUiCustomizationManager() : UiCustomizationManager
 }

@@ -4,7 +4,6 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.app.Application
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentManager
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
@@ -35,9 +34,6 @@ class NewPaymentSdk(
 
     @Inject
     lateinit var newPaymentManager: NewPaymentManager
-
-    @Inject
-    lateinit var paymentProvider: PaymentSdk.Provider
 
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
@@ -122,28 +118,6 @@ class NewPaymentSdk(
                         "Payment SDK is not initialized, make sure you called initialize method before using"
                 )
             }
-        }
-
-        fun getProviderFromKey(publicKey: String?): PaymentSdk.Provider {
-            if (publicKey == null) {
-                throw InvalidPublicKeyException("Public key not supplied")
-            }
-            if (publicKey.length < 3) {
-                throw InvalidPublicKeyException("Public key length is not valid")
-            }
-            val parts = publicKey.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            if (parts.size == 3) {
-                if (parts[1] == "BS") {
-                    TODO()
-                }
-                if (parts[1] == "HC") {
-                    return PaymentSdk.Provider.HYPERCHARGE
-                }
-                if (parts[1] == "BS2") {//BS2
-                    TODO()
-                }
-            }
-            throw InvalidPublicKeyException("Unknown provider")
         }
 
         internal fun getInjector(): PaymentSdkComponent {

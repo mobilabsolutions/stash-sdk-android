@@ -17,6 +17,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
     }
+    lintOptions {
+        isAbortOnError = false
+    }
+
 
     buildTypes {
         getByName("debug") {
@@ -34,6 +38,8 @@ dependencies {
     implementation(project(Modules.paymentSdk))
     implementation(Libs.Kotlin.stdlib)
 
+    implementation(Libs.AndroidX.appcompat)
+
     implementation(Libs.Dagger.dagger)
     kapt(Libs.Dagger.compiler)
 
@@ -47,6 +53,8 @@ dependencies {
     testImplementation(Libs.PowerMock.api)
     kaptTest(Libs.Dagger.compiler)
 
+    androidTestImplementation(Libs.junit)
+    androidTestImplementation(Libs.mockitoCore)
     androidTestImplementation(Libs.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)

@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.android.psdk.integration.stripe
 
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.DaggerStripeIntegrationComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.stripe.android.Stripe

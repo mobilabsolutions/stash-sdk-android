@@ -24,7 +24,6 @@ import javax.inject.Inject
 class PspCoordinator @Inject constructor(
         private val hyperchageHandler : HyperchargeHandler,
         private val mobilabApi: MobilabApi,
-        private val paymentProvider:PaymentSdk.Provider,
         private val exceptionMapper: BackendExceptionMapper,
         private val integrations : Set<@JvmSuppressWildcards Integration>
 ) {
@@ -58,15 +57,15 @@ class PspCoordinator @Inject constructor(
 
                     val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
 
-
-                    when (paymentProvider) {
-//                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.registerCreditCard(
+                    pspAliasSingle
+//                    when (paymentProvider) {
+////                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.registerCreditCard(
+////                                it, creditCardData
+////                        )
+//                        PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerCreditCard(
 //                                it, creditCardData
 //                        )
-                        PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerCreditCard(
-                                it, creditCardData
-                        )
-                    }
+//                    }
                 }
 
 
@@ -85,12 +84,12 @@ class PspCoordinator @Inject constructor(
         paymentMethodRegistrationRequest.oneTimePayment = false
 
         //Hypercharge currenlty can support only german SEPA
-        if (paymentProvider == PaymentSdk.Provider.HYPERCHARGE) {
-            val iban = Iban.valueOf(sepaData.iban)
-            if (iban.countryCode != CountryCode.DE) {
-                throw SepaValidationException("Only German SEPA accounts are supported with Hypercharge provider")
-            }
-        }
+//        if (paymentProvider == PaymentSdk.Provider.HYPERCHARGE) {
+//            val iban = Iban.valueOf(sepaData.iban)
+//            if (iban.countryCode != CountryCode.DE) {
+//                throw SepaValidationException("Only German SEPA accounts are supported with Hypercharge provider")
+//            }
+//        }
 
         return mobilabApi.registerSepa(paymentMethodRegistrationRequest)
                 .subscribeOn(Schedulers.io())
@@ -103,10 +102,10 @@ class PspCoordinator @Inject constructor(
 
                     chosenIntegration.handleRegistrationRequest(registrationRequest)
 
-                    when (paymentProvider) {
-//                        PaymentSdk.Provider.NEW_PAYONE -> Single.just(it.paymentAlias)
-                        PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerSepa(it, sepaData)
-                    }
+//                    when (paymentProvider) {
+////                        PaymentSdk.Provider.NEW_PAYONE -> Single.just(it.paymentAlias)
+//                        PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerSepa(it, sepaData)
+//                    }
                 }
     }
 

@@ -167,10 +167,6 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
-    fun providePaymentProviderType() = NewPaymentSdk.getProviderFromKey(publicKey)
-
-    @Provides
-    @Singleton
     fun provideDefaultGson() : Gson = Gson()
 
     @Provides

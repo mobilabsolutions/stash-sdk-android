@@ -1,8 +1,7 @@
-package com.mobilabsolutions.payment.android.psdk.internal.api.payone
+package com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDate
-import java.time.LocalDateTime
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>

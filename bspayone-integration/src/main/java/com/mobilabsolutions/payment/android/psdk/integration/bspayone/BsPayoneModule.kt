@@ -1,8 +1,9 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.google.gson.GsonBuilder
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.*
+import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.RuntimeTypeAdapterFactory
-import com.mobilabsolutions.payment.android.psdk.internal.api.payone.*
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -21,14 +22,14 @@ import javax.inject.Singleton
 class BsPayoneModule(private val newBsPayoneUrl : String) {
 
     @Provides
-    @Singleton
+    @IntegrationScope
     fun provideNewBsPayoneConverterFactory() : PayoneKeyPairConverterFactory {
         return PayoneKeyPairConverterFactory.create()
     }
 
 
     @Provides
-    @Singleton
+    @IntegrationScope
     @Named("newBsPayoneOkHttpClient")
     fun provideBsPayoneHttpClient(httpLoggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         val bsPayoneOkHttpClient = OkHttpClient.Builder()
@@ -38,7 +39,7 @@ class BsPayoneModule(private val newBsPayoneUrl : String) {
     }
 
     @Provides
-    @Singleton
+    @IntegrationScope
     fun provideBSPayoneApi(
             @Named("newBsPayoneOkHttpClient") bsPayoneOkHttpClient: OkHttpClient,
             payoneKeyPairConverterFactory: PayoneKeyPairConverterFactory,
@@ -60,7 +61,7 @@ class BsPayoneModule(private val newBsPayoneUrl : String) {
 
     @Named("bsPayoneGsonConverterFactory")
     @Provides
-    @Singleton
+    @IntegrationScope
     fun provideBackendGsonConverterFactory(): GsonConverterFactory {
         val runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
                 .of(BsPayoneVerificationBaseResponse::class.java, "status")
