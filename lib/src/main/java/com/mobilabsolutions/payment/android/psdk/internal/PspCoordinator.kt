@@ -1,9 +1,8 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.SepaValidationException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeHandler
@@ -13,8 +12,6 @@ import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import org.iban4j.CountryCode
-import org.iban4j.Iban
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -24,6 +21,7 @@ import javax.inject.Inject
 class PspCoordinator @Inject constructor(
         private val hyperchageHandler : HyperchargeHandler,
         private val mobilabApi: MobilabApi,
+        private val mobilabApiV2 : MobilabApiV2,
         private val exceptionMapper: BackendExceptionMapper,
         private val integrations : Set<@JvmSuppressWildcards Integration>
 ) {
@@ -44,15 +42,14 @@ class PspCoordinator @Inject constructor(
         paymentMethodRegistrationRequest.cardMask = creditCardData.number.substring(0..5)
         paymentMethodRegistrationRequest.oneTimePayment = false
 
-
-        return mobilabApi.registerCreditCard(paymentMethodRegistrationRequest)
+        //TODO proper PSP type
+        return mobilabApiV2.createAlias("BSPayone")
                 .subscribeOn(Schedulers.io())
                 .processErrors()
-                .map { it.result }
                 .flatMap {
 
-                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.panAlias)
-                    val additionalData = AdditionalRegistrationData(mapOf("action" to it.action!!))
+                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.aliasId)
+                    val additionalData = AdditionalRegistrationData(it.extra.pspExtra)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -91,13 +88,13 @@ class PspCoordinator @Inject constructor(
 //            }
 //        }
 
-        return mobilabApi.registerSepa(paymentMethodRegistrationRequest)
+        //TODO proper psp strings
+        return mobilabApiV2.createAlias("BSPayone")
                 .subscribeOn(Schedulers.io())
-                .map { it.result }
                 .flatMap {
 
-                    val standardizedData = SepaRegistrationRequest(sepaData = sepaData, aliasId = it.panAlias)
-                    val additionalData = AdditionalRegistrationData(mapOf("action" to it.action!!))
+                    val standardizedData = SepaRegistrationRequest(sepaData = sepaData, aliasId = it.aliasId)
+                    val additionalData = AdditionalRegistrationData(it.extra.pspExtra)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     chosenIntegration.handleRegistrationRequest(registrationRequest)

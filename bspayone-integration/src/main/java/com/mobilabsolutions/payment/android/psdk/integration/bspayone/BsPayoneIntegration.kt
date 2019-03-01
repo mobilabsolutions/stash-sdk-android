@@ -13,11 +13,11 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class BsPayoneIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
-    override val identifier = "Stripe"
-
-
-    val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
+class BsPayoneIntegration(
+        paymentSdkComponent: PaymentSdkComponent,
+        val url : String = BuildConfig.newBsApiUrl
+) : Integration {
+    override val identifier = "BSPayone"
 
     @Inject
     lateinit var bsPayoneHandler: BsPayoneHandler
@@ -32,9 +32,13 @@ class BsPayoneIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
                     return integration
                 }
 
-                override fun initialize(paymentSdkComponent: PaymentSdkComponent): Integration {
+                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url : String): Integration {
                     if (integration == null) {
-                        integration = BsPayoneIntegration(paymentSdkComponent)
+                        if(url.isEmpty()) {
+                            integration = BsPayoneIntegration(paymentSdkComponent)
+                        } else {
+                            integration = BsPayoneIntegration(paymentSdkComponent, url)
+                        }
                     }
                     return integration as Integration
                 }
@@ -49,7 +53,7 @@ class BsPayoneIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
     init {
         bsPayoneIntegrationComponent = DaggerBsPayoneIntegrationComponent.builder()
                 .paymentSdkComponent(paymentSdkComponent)
-                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
+                .bsPayoneModule(BsPayoneModule(url))
                 .build()
 
         bsPayoneIntegrationComponent.inject(this)

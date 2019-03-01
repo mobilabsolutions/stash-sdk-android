@@ -46,7 +46,7 @@ class BsPayoneApiTest {
     val classLoader = this.javaClass.classLoader
 
     val registerCreditCardMLBackendResponse =
-            classLoader.getResourceAsStream("backend/PayoneRegisterCreditCardSuccessResponse.json")
+            classLoader.getResourceAsStream("backend/PayoneRegisterCreditCardSuccessV2Response.json")
                     .bufferedReader().use { it.readText() }
     val cardVerificationSuccessResponse =
             classLoader.getResourceAsStream("CardVerificationSuccessResponse.json")
@@ -59,7 +59,7 @@ class BsPayoneApiTest {
                     .bufferedReader().use { it.readText() }
 
     @Singleton
-    @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, HyperchargeModule::class, BsPayoneModule::class])
+    @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, HyperchargeModule::class])
     internal interface BsPayoneTestIntegrationComponent : PaymentSdkComponent {
         fun injectTest(test: BsPayoneApiTest)
     }
@@ -143,10 +143,9 @@ class BsPayoneApiTest {
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
                 .hyperchargeModule(HyperchargeModule())
-                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
                 .build()
 
-        integration.initialize(graph)
+        integration.initialize(graph, payoneBaseUrl.toString())
 
         graph.injectTest(this)
 
@@ -184,8 +183,10 @@ class BsPayoneApiTest {
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
                 .hyperchargeModule(HyperchargeModule())
-                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
                 .build()
+
+        integration.initialize(graph, payoneBaseUrl.toString())
+
         graph.injectTest(this)
 
         registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
@@ -219,8 +220,10 @@ class BsPayoneApiTest {
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
                 .hyperchargeModule(HyperchargeModule())
-                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
                 .build()
+
+        integration.initialize(graph, payoneBaseUrl.toString())
+
         graph.injectTest(this)
 
         registrationManager.registerCreditCard(validCreditCardData).subscribeBy(

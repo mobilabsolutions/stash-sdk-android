@@ -13,16 +13,16 @@ import io.reactivex.Single;
 public interface RegistrationManager {
 
     /**
-     * Register a credit card so you can use payment alias for future payments
+     * Register a credit card so you can use payment aliasId for future payments
      * @param creditCardData credit card information
-     * @return string representing payment alias
+     * @return string representing payment aliasId
      */
     Single<String> registerCreditCard(CreditCardData creditCardData);
 
     /**
-     * Register a sepa debit account so you can use payment alias for future payments
+     * Register a sepa debit account so you can use payment aliasId for future payments
      * @param sepaData sepa card information
-     * @return string representing payment alias
+     * @return string representing payment aliasId
      */
     Single<String> registerSepa(SepaData sepaData);
 

@@ -4,7 +4,7 @@ import java.util.*
 
 /**
  * This class models the billing data needed when registering
- * a credit card or a sepa direct debit method as a payment alias
+ * a credit card or a sepa direct debit method as a payment aliasId
  *
  * @author [Ugi](ugi@mobilabsolutions.com)
  */

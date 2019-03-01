@@ -106,7 +106,7 @@
 //                .subscribeOn(Schedulers.io())
 //                .subscribe { paymentAlias ->
 //                    Assert.assertNotNull(paymentAlias)
-//                    println("Payment alias: $paymentAlias")
+//                    println("Payment aliasId: $paymentAlias")
 //                    latch.countDown()
 //
 //                }
@@ -129,7 +129,7 @@
 //                .subscribe { paymentAlias ->
 //                    Assert.assertNotNull(paymentAlias)
 //                    //                            Assert.assertEquals("1234-SEPA", paymentAlias);
-//                    println("Payment alias: $paymentAlias")
+//                    println("Payment aliasId: $paymentAlias")
 //                    latch.countDown()
 //
 //                }
@@ -178,7 +178,7 @@
 //
 //    @Test
 //    fun testCreditCardRemoval() {
-//        Timber.d("Starting remove card alias test")
+//        Timber.d("Starting remove card aliasId test")
 //
 //        val latch = CountDownLatch(1)
 //
@@ -186,26 +186,26 @@
 //                validCreditCardData
 //        )
 //                .subscribeOn(Schedulers.io())
-//                .flatMap { alias ->
-//                    Timber.d("Got alias: $alias")
-//                    registrationManager.removeCreditCardAlias(alias).andThen(Single.just(alias))
-//                }.flatMap { alias -> paymentManager.executeCreditCardPaymentWithAlias(alias, paymentData) }
+//                .flatMap { aliasId ->
+//                    Timber.d("Got aliasId: $aliasId")
+//                    registrationManager.removeCreditCardAlias(aliasId).andThen(Single.just(aliasId))
+//                }.flatMap { aliasId -> paymentManager.executeCreditCardPaymentWithAlias(aliasId, paymentData) }
 //                .subscribe(
 //                        { transactionId ->
-//                            Timber.d("Got transaction id after alias deletion!")
+//                            Timber.d("Got transaction id after aliasId deletion!")
 //                            latch.countDown()
 //                        }
 //                ) { error ->
-//                    Timber.d("Removing alias reported an error")
+//                    Timber.d("Removing aliasId reported an error")
 //
 //                    if (error is HttpException) {
 //                        if (error.code() != 400) {
 //                            Assert.fail(error.message)
-//                            Timber.e(error, "Removing alias reported an error")
+//                            Timber.e(error, "Removing aliasId reported an error")
 //                        }
 //                    } else {
 //                        Assert.fail(error.message)
-//                        Timber.e(error, "Removing alias reported an error")
+//                        Timber.e(error, "Removing aliasId reported an error")
 //                    }
 //
 //
@@ -222,7 +222,7 @@
 //
 //    @Test
 //    fun testSepaRemoval() {
-//        Timber.d("Starting remove card alias test")
+//        Timber.d("Starting remove card aliasId test")
 //
 //        val latch = CountDownLatch(1)
 //
@@ -231,26 +231,26 @@
 //                validSepaData
 //        )
 //                .subscribeOn(Schedulers.io())
-//                .flatMap { alias ->
-//                    Timber.d("Got alias: $alias")
-//                    registrationManager.removeSepaAlias(alias).andThen(Single.just(alias))
-//                }.flatMap { alias -> paymentManager.executeCreditCardPaymentWithAlias(alias, paymentData) }
+//                .flatMap { aliasId ->
+//                    Timber.d("Got aliasId: $aliasId")
+//                    registrationManager.removeSepaAlias(aliasId).andThen(Single.just(aliasId))
+//                }.flatMap { aliasId -> paymentManager.executeCreditCardPaymentWithAlias(aliasId, paymentData) }
 //                .subscribe(
 //                        { transactionId ->
-//                            Timber.d("Got transaction id after alias deletion!")
+//                            Timber.d("Got transaction id after aliasId deletion!")
 //                            latch.countDown()
 //                        }
 //                ) { error ->
-//                    Timber.d("Removing alias reported an error")
+//                    Timber.d("Removing aliasId reported an error")
 //
 //                    if (error is HttpException) {
 //                        if (error.code() != 400) {
 //                            Assert.fail(error.message)
-//                            Timber.e(error, "Removing alias reported an error")
+//                            Timber.e(error, "Removing aliasId reported an error")
 //                        }
 //                    } else {
 //                        Assert.fail(error.message)
-//                        Timber.e(error, "Removing alias reported an error")
+//                        Timber.e(error, "Removing aliasId reported an error")
 //                    }
 //
 //                    latch.countDown()

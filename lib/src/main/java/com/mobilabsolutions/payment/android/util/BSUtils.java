@@ -20,7 +20,7 @@ public final class BSUtils {
     private static final String SUB_PARENT_ELEMENT = "paymentRequest";
     private static final String SUB_PARENT_ELEMENT_ID = "b1";
 
-    //alias request sub_parent_element
+    //aliasId request sub_parent_element
     private static final String REPEATED_SUB_PARENT_ELEMENT = "panAliasRequest";
     private static final String REPEATED_SUB_PARENT_ELEMENT_ID = "a12";
 

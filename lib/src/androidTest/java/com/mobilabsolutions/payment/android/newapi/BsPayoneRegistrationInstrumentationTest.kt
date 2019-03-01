@@ -84,7 +84,7 @@
 //                .subscribeOn(Schedulers.io())
 //                .subscribe { paymentAlias ->
 //                    Assert.assertNotNull(paymentAlias)
-//                    println("Payment alias: $paymentAlias")
+//                    println("Payment aliasId: $paymentAlias")
 //                    latch.countDown()
 //
 //                }
@@ -138,7 +138,7 @@
 //                .subscribe(
 //                        { paymentAlias ->
 //                            Assert.assertNotNull(paymentAlias)
-//                            println("Payment alias: $paymentAlias")
+//                            println("Payment aliasId: $paymentAlias")
 //                            latch.countDown()
 //
 //                        }
@@ -172,7 +172,7 @@
 //        )
 //
 //        registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
-//                onSuccess = { alias ->
+//                onSuccess = { aliasId ->
 //                    System.out.print("Test")
 //                    latch.countDown()
 //                },

@@ -8,7 +8,7 @@ import io.reactivex.Single;
 
 /**
  * Payment manager enables you to execute payments either by providing credit card data,
- * or by providing a payment alias you have already configure using {@link RegistrationManager}
+ * or by providing a payment aliasId you have already configure using {@link RegistrationManager}
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 public interface PaymentManager {

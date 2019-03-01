@@ -16,7 +16,7 @@ import javax.inject.Inject
 
 
 
-class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
+class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : String = BuildConfig.oldBsApiUrl ) : Integration {
     override val identifier = "BsOld"
 
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
@@ -31,9 +31,13 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
                     return integration
                 }
 
-                override fun initialize(paymentSdkComponent: PaymentSdkComponent): Integration {
+                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url : String): Integration {
                     if (integration == null) {
-                        integration = BsOldIntegration(paymentSdkComponent)
+                        if (url.isEmpty()) {
+                            integration = BsOldIntegration(paymentSdkComponent)
+                        } else {
+                            integration = BsOldIntegration(paymentSdkComponent, url)
+                        }
                     }
                     return integration as Integration
                 }

@@ -84,7 +84,7 @@ class BsPayoneRegistrationInstrumentationTest {
                 .subscribeOn(Schedulers.io())
                 .subscribe { paymentAlias ->
                     Assert.assertNotNull(paymentAlias)
-                    println("Payment alias: $paymentAlias")
+                    println("Payment aliasId: $paymentAlias")
                     latch.countDown()
 
                 }
@@ -138,7 +138,7 @@ class BsPayoneRegistrationInstrumentationTest {
                 .subscribe(
                         { paymentAlias ->
                             Assert.assertNotNull(paymentAlias)
-                            println("Payment alias: $paymentAlias")
+                            println("Payment aliasId: $paymentAlias")
                             latch.countDown()
 
                         }
