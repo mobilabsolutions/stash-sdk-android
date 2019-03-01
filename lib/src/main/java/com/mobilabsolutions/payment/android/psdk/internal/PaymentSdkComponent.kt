@@ -1,7 +1,9 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import android.app.Application
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectActivity
 import dagger.Component
@@ -20,7 +22,10 @@ interface PaymentSdkComponent {
 
     fun inject(payPalRedirectActivity: PayPalRedirectActivity)
 
+    fun provideApplication() : Application
+
     fun provideMobilabApi() : MobilabApi
+    fun provideMobilabApiV2() : MobilabApiV2
 
     fun provideXmlConverterFactory() : SimpleXmlConverterFactory
     fun provideRxJava2Converter() : RxJava2CallAdapterFactory

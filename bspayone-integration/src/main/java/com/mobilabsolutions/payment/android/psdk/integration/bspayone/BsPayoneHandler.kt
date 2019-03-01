@@ -13,18 +13,17 @@ import javax.inject.Inject
 class BsPayoneHandler @Inject constructor(
         private val bsPayoneApi: BsPayoneApi,
         private val mobilabApi: MobilabApi,
-        private val payPalRedirectHandler: PayPalRedirectHandler
+        private val mobilabApiV2: MobilabApiV2
 
 ) {
     fun registerCreditCard(
-            paymentMethodRegistrationResponse: PaymentMethodRegistrationResponse,
+            aliasId : String,
+            bsPayoneCreditCardRegistrationRequest: BsPayoneCreditCardRegistrationRequest,
             creditCardData: CreditCardData)
             : Single<String> {
 
-        val payoneSpecificData = paymentMethodRegistrationResponse.providerSpecificData!! as PayoneSpecificData
-
         val baseRequest =
-                payoneSpecificData.let {
+                bsPayoneCreditCardRegistrationRequest.let {
                     BsPayoneBaseRequest.instance(
                             it.merchantId,
                             it.portalId,
@@ -32,12 +31,12 @@ class BsPayoneHandler @Inject constructor(
                             it.mode,
                             it.request,
                             it.responseType,
-                            payoneSpecificData.hash,
+                            it.hash,
                             "utf-8"
                     )
                 }
         val request =
-                payoneSpecificData.let {
+                bsPayoneCreditCardRegistrationRequest.let {
                     BsPayoneVerifcationRequest(
                             baseRequest,
                             it.accountId,
@@ -64,18 +63,18 @@ class BsPayoneHandler @Inject constructor(
         return bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
             when(it) {
                 is BsPayoneVerificationSuccessResponse -> {
-                    val updatePaymentAliasRequest = UpdatePaymentAliasRequest(paymentMethodRegistrationResponse.panAlias, it.cardAlias)
+                    val updatePaymentAliasRequest = UpdatePaymentAliasRequest(aliasId, it.cardAlias)
                     mobilabApi.updatePaymentMethodAlias(updatePaymentAliasRequest).blockingAwait()
                     it.cardAlias
                 }
                 is BsPayoneVerificationErrorResponse -> throw BsPayoneErrorHandler.handleError(it)
                 is BsPayoneVerificationInvalidResponse -> throw BsPayoneErrorHandler.handleError(it)
-                else -> throw RuntimeException("Unknown responsewhen trying to register credit card: $it")
+                else -> throw RuntimeException("Unknown response when trying to register credit card: $it")
             }
         }
     }
 
-    fun handlePayPalRedirectRequest(redirectUrl : String) : Single<PayPalRedirectHandler.RedirectResult> {
-        return payPalRedirectHandler.handlePayPalRedirect(redirectUrl)
-    }
+//    fun handlePayPalRedirectRequest(redirectUrl : String) : Single<PayPalRedirectHandler.RedirectResult> {
+//        return payPalRedirectHandler.handlePayPalRedirect(redirectUrl)
+//    }
 }

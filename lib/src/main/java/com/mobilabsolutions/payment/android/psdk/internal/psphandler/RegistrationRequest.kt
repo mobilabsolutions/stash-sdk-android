@@ -16,6 +16,8 @@ interface StandardizedData {
     val aliasId : String
 }
 
+
+
 data class CreditCardRegistrationRequest(
         val creditCardData: CreditCardData,
         override val aliasId: String

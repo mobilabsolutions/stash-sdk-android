@@ -129,12 +129,6 @@ class BsPayoneApiTest {
     }
 
     @Test
-    fun mockTest() {
-        assertTrue(true)
-    }
-
-
-    @Test
     fun testCardRegistrationSuccess() {
         val latch = CountDownLatch(1)
 

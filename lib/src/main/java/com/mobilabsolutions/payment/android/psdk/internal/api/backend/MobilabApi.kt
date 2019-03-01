@@ -42,5 +42,5 @@ interface MobilabApiV2 {
     fun createAlias(@Header("psp_type") psp : String) : AliasResponse
 
     @PUT("v1/alias/{aliasId}")
-    fun updateAlias(@Path("aliasId") aliasId : String, billingData: BillingData) : AliasResponse
+    fun updateAlias(@Path("aliasId") aliasId : String, pspAlias : String, billingData: BillingData) : AliasResponse
 }
