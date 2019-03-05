@@ -4,7 +4,6 @@ import android.app.Application
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectActivity
 import dagger.Component
 import okhttp3.logging.HttpLoggingInterceptor
@@ -16,7 +15,7 @@ import javax.inject.Singleton
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Singleton
-@Component(modules = arrayOf(SslSupportModule::class, PaymentSdkModule::class, HyperchargeModule::class))
+@Component(modules = arrayOf(SslSupportModule::class, PaymentSdkModule::class))
 interface PaymentSdkComponent {
     fun inject(paymentSdk: NewPaymentSdk)
 

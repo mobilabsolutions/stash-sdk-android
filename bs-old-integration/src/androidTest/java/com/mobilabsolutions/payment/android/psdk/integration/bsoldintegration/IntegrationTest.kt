@@ -4,14 +4,12 @@ import android.app.Application
 import android.os.Build
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.internal.SupportX509TrustManager
 import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.internal.TLSSocketFactoryCompat
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.PspCoordinator
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
@@ -72,7 +70,6 @@ class IntegrationTest {
 
         val graphBuilder = DaggerTestOldBsIntegrationSdkComponent.builder()
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, listOf(integrationInitialization)))
-                .hyperchargeModule(HyperchargeModule())
 
         if (Build.VERSION.SDK_INT < 20) {
             graphBuilder.sslSupportModule(SslSupportModule(TLSSocketFactoryCompat(), SupportX509TrustManager.getTrustManager()))
@@ -107,7 +104,7 @@ class IntegrationTest {
 }
 
 @Singleton
-@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, HyperchargeModule::class])
+@Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
 internal interface TestOldBsIntegrationSdkComponent : PaymentSdkComponent {
     fun inject(integrationTest : IntegrationTest)
 
