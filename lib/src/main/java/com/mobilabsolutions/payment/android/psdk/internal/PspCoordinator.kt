@@ -35,15 +35,12 @@ class PspCoordinator @Inject constructor(
     fun handleRegisterCreditCard(
             creditCardData: CreditCardData, chosenPsp : PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
-        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
+
         if (creditCardData.number.length < 16) {
             return Single.error(RuntimeException("Invalid card number length"))
         }
-        paymentMethodRegistrationRequest.cardMask = creditCardData.number.substring(0..5)
-        paymentMethodRegistrationRequest.oneTimePayment = false
 
-        //TODO proper PSP type
-        return mobilabApiV2.createAlias("BS_PAYONE")
+        return mobilabApiV2.createAlias(chosenIntegration.identifier)
                 .subscribeOn(Schedulers.io())
                 .processErrors()
                 .flatMap {
@@ -55,14 +52,6 @@ class PspCoordinator @Inject constructor(
                     val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
 
                     pspAliasSingle
-//                    when (paymentProvider) {
-////                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.registerCreditCard(
-////                                it, creditCardData
-////                        )
-//                        PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerCreditCard(
-//                                it, creditCardData
-//                        )
-//                    }
                 }
 
 
@@ -75,18 +64,12 @@ class PspCoordinator @Inject constructor(
 
     fun handleRegisterSepa(sepaData: SepaData, chosenPsp : PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
-        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
-        paymentMethodRegistrationRequest.accountData = sepaData
-        paymentMethodRegistrationRequest.cardMask = "SEPA-${sepaData.iban?.substring(0 .. 5)}"
-        paymentMethodRegistrationRequest.oneTimePayment = false
+//        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
+//        paymentMethodRegistrationRequest.accountData = sepaData
+//        paymentMethodRegistrationRequest.cardMask = "SEPA-${sepaData.iban?.substring(0 .. 5)}"
+//        paymentMethodRegistrationRequest.oneTimePayment = false
 
-        //Hypercharge currenlty can support only german SEPA
-//        if (paymentProvider == PaymentSdk.Provider.HYPERCHARGE) {
-//            val iban = Iban.valueOf(sepaData.iban)
-//            if (iban.countryCode != CountryCode.DE) {
-//                throw SepaValidationException("Only German SEPA accounts are supported with Hypercharge provider")
-//            }
-//        }
+
 
         //TODO proper psp strings
         return mobilabApiV2.createAlias("BSPayone")
@@ -99,10 +82,6 @@ class PspCoordinator @Inject constructor(
 
                     chosenIntegration.handleRegistrationRequest(registrationRequest)
 
-//                    when (paymentProvider) {
-////                        PaymentSdk.Provider.NEW_PAYONE -> Single.just(it.paymentAlias)
-//                        PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerSepa(it, sepaData)
-//                    }
                 }
     }
 
