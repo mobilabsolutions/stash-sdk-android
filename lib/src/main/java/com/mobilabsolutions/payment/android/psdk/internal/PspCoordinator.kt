@@ -43,13 +43,13 @@ class PspCoordinator @Inject constructor(
         paymentMethodRegistrationRequest.oneTimePayment = false
 
         //TODO proper PSP type
-        return mobilabApiV2.createAlias("BSPayone")
+        return mobilabApiV2.createAlias("BS_PAYONE")
                 .subscribeOn(Schedulers.io())
                 .processErrors()
                 .flatMap {
 
                     val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.aliasId)
-                    val additionalData = AdditionalRegistrationData(it.extra.pspExtra)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -94,7 +94,7 @@ class PspCoordinator @Inject constructor(
                 .flatMap {
 
                     val standardizedData = SepaRegistrationRequest(sepaData = sepaData, aliasId = it.aliasId)
-                    val additionalData = AdditionalRegistrationData(it.extra.pspExtra)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     chosenIntegration.handleRegistrationRequest(registrationRequest)

@@ -84,7 +84,8 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
-    fun provideMobilabApiV2(mobilabBackendOkHttpClient: OkHttpClient,
+    fun provideMobilabApiV2(@Named("mobilabV2HttpClient")
+                            mobilabBackendOkHttpClient: OkHttpClient,
                             @Named("mobilabBackendGsonConverterFactory")
                             gsonConverterFactory: GsonConverterFactory,
                             rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
@@ -113,6 +114,35 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
                 .addInterceptor { chain ->
                     val request = chain.request().newBuilder()
                             .addHeader("Authorization", "Bearer " + Base64.encodeToString(publicKey.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT).trim { it <= ' ' })
+                            .build()
+                    chain.proceed(request)
+                }
+                .connectTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+                .readTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+                .writeTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+        if (sslSupportPackage.useCustomSslSocketFactory) {
+            mobilabBackendOkHttpClientBuilder.sslSocketFactory(sslSupportPackage.sslSocketFactory!!, sslSupportPackage.x509TrustManager!!)
+            val connectionSpec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                    .tlsVersions(TlsVersion.TLS_1_2)
+                    .build()
+            mobilabBackendOkHttpClientBuilder.connectionSpecs(listOf(connectionSpec))
+        }
+        return mobilabBackendOkHttpClientBuilder.build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("mobilabV2HttpClient")
+    fun provideMobilabV2HttpClient(
+            httpLoggingInterceptor: HttpLoggingInterceptor,
+            sslSupportPackage: SslSupportPackage
+    ): OkHttpClient {
+
+        val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor)
+                .addInterceptor { chain ->
+                    val request = chain.request().newBuilder()
+                            .addHeader("Public-Key", " " + publicKey)
                             .build()
                     chain.proceed(request)
                 }
