@@ -41,7 +41,7 @@ class BsPayoneRegistrationInstrumentationTest {
 
     val validCreditCardData = CreditCardData(
             "4111111111111111",
-            LocalDate.of(2021, 1, 1),
+            LocalDate.of(2021, 11, 1),
             "123",
             "Holder Holderman"
     )

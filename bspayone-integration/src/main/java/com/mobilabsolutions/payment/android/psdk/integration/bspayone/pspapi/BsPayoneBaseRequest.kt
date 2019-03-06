@@ -50,7 +50,7 @@ abstract class BsPayoneBaseRequest(
         val map = mutableMapOf(
         "mid" to merchantId,
         "portalid" to portalId,
-        "apiv_version" to apiVersion,
+        "api_version" to apiVersion,
         "mode" to mode,
         "request" to request,
         "responsetype" to responseType,

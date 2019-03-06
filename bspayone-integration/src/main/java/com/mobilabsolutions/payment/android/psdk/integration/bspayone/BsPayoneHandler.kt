@@ -41,7 +41,7 @@ class BsPayoneHandler @Inject constructor(
                             baseRequest,
                             it.accountId,
                             creditCardData.number,
-                            "C",
+                            "V",
                             creditCardData.expiryDate,
                             creditCardData.cvv,
                             "yes"
@@ -60,6 +60,7 @@ class BsPayoneHandler @Inject constructor(
 //                else -> throw RuntimeException("Unknown responsewhen trying to register credit card: $it")
 //            }
 //        }
+
         return bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
             when(it) {
                 is BsPayoneVerificationSuccessResponse -> {

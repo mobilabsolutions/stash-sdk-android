@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -30,7 +31,7 @@ data class BsPayoneVerifcationRequest(
                         "aid" to accountId,
                         "cardpan" to cardPan,
                         "cardtype" to cardType,
-                        "cardexpiredate" to cardExpireDate.toString(),
+                        "cardexpiredate" to cardExpireDate.format(DateTimeFormatter.ofPattern("yyMM")),
                         "cardcvc2" to cardCvc,
                         "storecarddata" to storeCardData
 

@@ -15,7 +15,7 @@ import javax.inject.Inject
  */
 class BsPayoneIntegration(
         paymentSdkComponent: PaymentSdkComponent,
-        val url : String = BuildConfig.newBsApiUrl
+        val url: String = BuildConfig.newBsApiUrl
 ) : Integration {
     override val identifier = "BS_PAYONE"
 
@@ -24,17 +24,17 @@ class BsPayoneIntegration(
 
 
     companion object {
-        var integration : BsPayoneIntegration? = null
+        var integration: BsPayoneIntegration? = null
 
-        fun create() : IntegrationInitialization {
+        fun create(): IntegrationInitialization {
             return object : IntegrationInitialization {
                 override fun initializedOrNull(): Integration? {
                     return integration
                 }
 
-                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url : String): Integration {
+                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url: String): Integration {
                     if (integration == null) {
-                        if(url.isEmpty()) {
+                        if (url.isEmpty()) {
                             integration = BsPayoneIntegration(paymentSdkComponent)
                         } else {
                             integration = BsPayoneIntegration(paymentSdkComponent, url)
@@ -48,7 +48,7 @@ class BsPayoneIntegration(
     }
 
 
-    val bsPayoneIntegrationComponent : BsPayoneIntegrationComponent
+    val bsPayoneIntegrationComponent: BsPayoneIntegrationComponent
 
     init {
         bsPayoneIntegrationComponent = DaggerBsPayoneIntegrationComponent.builder()
@@ -60,15 +60,24 @@ class BsPayoneIntegration(
     }
 
 
-
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
+        val fakeAdditionalData = mapOf(
+                "merchantId" to "42865",
+                "portalId" to "2030968",
+                "apiVersion" to "3.11",
+                "mode" to "test",
+                "request" to "creditcardcheck",
+                "responseType" to "JSON",
+                "hash" to "35996f45100c40d51cffedcddc471f8189fc3568c287871568dc6c8bae1c4d732ded416b502f6191fb6085a2d767ef6f",
+                "accountId" to "42949"
+        )
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
                 bsPayoneHandler.registerCreditCard(
                         registrationRequest.standardizedData.aliasId,
-                        BsPayoneCreditCardRegistrationRequest.fromMap(additionalData.extraData),
+                        BsPayoneCreditCardRegistrationRequest.fromMap(fakeAdditionalData),
                         standardizedData.creditCardData
                 )
             }

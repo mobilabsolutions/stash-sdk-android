@@ -19,7 +19,6 @@ import javax.inject.Inject
 class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : String = BuildConfig.oldBsApiUrl ) : Integration {
     override val identifier = "BsOld"
 
-    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
 
 
     companion object {
@@ -55,7 +54,7 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : Strin
 
     private fun initialize(appDaggerGraph : PaymentSdkComponent) {
         val graph = DaggerBsOldIntegrationComponent.builder()
-                .bsOldModule(BsOldModule(OLD_BS_PAYONE_URL))
+                .bsOldModule(BsOldModule(url))
                 .coreComponent(appDaggerGraph)
                 .build()
         graph.inject(this)

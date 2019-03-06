@@ -69,7 +69,7 @@ class IntegrationTest {
         val integrationInitialization = BsOldIntegration.create()
 
         val graphBuilder = DaggerTestOldBsIntegrationSdkComponent.builder()
-                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, listOf(integrationInitialization)))
+                .paymentSdkModule(PaymentSdkModule(testPublicKey, "https://pd.mblb.net/api/", context, listOf(integrationInitialization)))
 
         if (Build.VERSION.SDK_INT < 20) {
             graphBuilder.sslSupportModule(SslSupportModule(TLSSocketFactoryCompat(), SupportX509TrustManager.getTrustManager()))
@@ -84,11 +84,6 @@ class IntegrationTest {
     }
 
 
-    @Test
-    fun testIntegration() {
-
-
-    }
 
     @Test
     fun testCardRegistration() {
