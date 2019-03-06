@@ -52,6 +52,7 @@ dependencies {
     implementation(project(Modules.paymentSdk)) //Core
 //    implementation(project(Modules.stripeIntegration))
     implementation(project(Modules.bsOldIntegration)) //BSOLD Module
+//    implementation(project(Modules.bsPayoneIntegration))
 
     implementation(Libs.Kotlin.stdlib)
 

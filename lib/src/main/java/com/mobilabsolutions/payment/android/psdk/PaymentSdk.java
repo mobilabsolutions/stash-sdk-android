@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization;
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,6 +31,12 @@ public final class PaymentSdk {
     public static void initalize(String publicKey, Application applicationContext, IntegrationInitialization integration) {
         LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
         integrationList.add(integration);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
+    }
+
+    public static void initalize(String publicKey, Application applicationContext, IntegrationCompanion integrationComp) {
+        LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
+        integrationList.add(integrationComp.create());
         NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
     }
 

@@ -3,10 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -23,10 +20,10 @@ class BsPayoneIntegration(
     lateinit var bsPayoneHandler: BsPayoneHandler
 
 
-    companion object {
+    companion object : IntegrationCompanion {
         var integration: BsPayoneIntegration? = null
 
-        fun create(): IntegrationInitialization {
+        override fun create(): IntegrationInitialization {
             return object : IntegrationInitialization {
                 override fun initializedOrNull(): Integration? {
                     return integration
