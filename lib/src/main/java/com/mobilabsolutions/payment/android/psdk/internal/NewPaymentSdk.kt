@@ -8,7 +8,6 @@ import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
@@ -48,7 +47,6 @@ class NewPaymentSdk(
         daggerGraph = DaggerPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
                 .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext, integrationList))
-                .hyperchargeModule(HyperchargeModule())
                 .build()
 
         integrationList.map { it.initialize(daggerGraph) }

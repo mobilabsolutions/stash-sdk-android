@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.internal.*
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -63,7 +62,6 @@ class BsPayoneRegistrationInstrumentationTest {
         val graph = DaggerBsPayoneTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
                 .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, listOf(integration)))
-                .hyperchargeModule(HyperchargeModule())
                 .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
                 .build()
 
@@ -188,7 +186,7 @@ class BsPayoneRegistrationInstrumentationTest {
 }
 
 @Singleton
-@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, HyperchargeModule::class, BsPayoneModule::class])
+@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, BsPayoneModule::class])
 internal interface BsPayoneTestPaymentSdkComponent : PaymentSdkComponent {
     fun injectTest(test: BsPayoneRegistrationInstrumentationTest)
 }

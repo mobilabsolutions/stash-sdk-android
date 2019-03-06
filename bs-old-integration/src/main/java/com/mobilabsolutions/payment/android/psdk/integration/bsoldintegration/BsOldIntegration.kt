@@ -68,8 +68,7 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : Strin
             is CreditCardRegistrationRequest -> {
                 val additionalData = registrationRequest.additionalData
                 val bsOldRegistrationRequest = BsOldRegistrationRequest.fromMapWitchCCData(additionalData.extraData, standardizedData.creditCardData)
-                oldBsPayoneHandler.registerCreditCard(standardizedData.aliasId, bsOldRegistrationRequest)
-                return Single.just("xasdaskdf32341")
+                return oldBsPayoneHandler.registerCreditCard(standardizedData.aliasId, bsOldRegistrationRequest)
             }
             is SepaRegistrationRequest -> {
                 return Single.just("123")

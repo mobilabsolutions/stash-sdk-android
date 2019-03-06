@@ -17,7 +17,7 @@ class BsPayoneIntegration(
         paymentSdkComponent: PaymentSdkComponent,
         val url : String = BuildConfig.newBsApiUrl
 ) : Integration {
-    override val identifier = "BSPayone"
+    override val identifier = "BS_PAYONE"
 
     @Inject
     lateinit var bsPayoneHandler: BsPayoneHandler
