@@ -1,8 +1,10 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -18,11 +20,72 @@ import javax.inject.Inject
  */
 class PspCoordinator @Inject constructor(
         private val mobilabApi: MobilabApi,
-        private val mobilabApiV2 : MobilabApiV2,
+        private val mobilabApiV2: MobilabApiV2,
         private val exceptionMapper: BackendExceptionMapper,
-        private val integrations : Set<@JvmSuppressWildcards Integration>
+        private val integrations: Set<@JvmSuppressWildcards Integration>
 ) {
 
+
+    fun handleRegisterCreditCardOld(
+            creditCardData: CreditCardData): Single<String> {
+        return handleRegisterCreditCardOld(creditCardData, integrations.first().identifier)
+    }
+
+    fun handleRegisterCreditCardOld(
+            creditCardData: CreditCardData, chosenPsp: PspIdentifier): Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
+
+        if (creditCardData.number.length < 16) {
+            return Single.error(RuntimeException("Invalid card number length"))
+        }
+        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
+        if (creditCardData.number.length < 16) {
+            return Single.error(RuntimeException("Invalid card number length"))
+        }
+        paymentMethodRegistrationRequest.cardMask = creditCardData.number?.substring(0..5)
+        paymentMethodRegistrationRequest.oneTimePayment = false
+
+        return mobilabApi.registerCreditCard(paymentMethodRegistrationRequest)
+                .subscribeOn(Schedulers.io())
+                .processErrors()
+                .map { it.result }
+                .flatMap {
+                    //TODO temporary for validation, to be removed before going public
+                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.paymentAlias)
+                    val mappedValues = mapOf(
+                            "paymentAlias" to it.paymentAlias!!,
+                            "url" to it.url!!,
+                            "merchantId" to it.merchantId!!,
+                            "action" to it.action!!,
+                            "panAlias" to it.panAlias!!,
+                            "username" to it.username!!,
+                            "password" to it.password!!,
+                            "eventExtId" to it.eventExtId!!,
+                            "amount" to it.amount!!,
+                            "currency" to it.currency!!
+                    )
+                    val additionalData = AdditionalRegistrationData(mappedValues)
+                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+
+                    chosenIntegration.handleRegistrationRequest(registrationRequest)
+                }
+
+//        return mobilabApiV2.createAlias(chosenIntegration.identifier)
+//                .subscribeOn(Schedulers.io())
+//                .processErrors()
+//                .flatMap {
+//
+//                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.aliasId)
+//                    val additionalData = AdditionalRegistrationData(it.pspExtra)
+//                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+//
+//                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
+//
+//                    pspAliasSingle
+//                }
+
+
+    }
 
     fun handleRegisterCreditCard(
             creditCardData: CreditCardData): Single<String> {
@@ -30,7 +93,7 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData, chosenPsp : PspIdentifier): Single<String> {
+            creditCardData: CreditCardData, chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
         if (creditCardData.number.length < 16) {
@@ -52,20 +115,18 @@ class PspCoordinator @Inject constructor(
                 }
 
 
-
     }
 
     fun handleRegisterSepa(sepaData: SepaData): Single<String> {
         return handleRegisterSepa(sepaData, integrations.first().identifier)
     }
 
-    fun handleRegisterSepa(sepaData: SepaData, chosenPsp : PspIdentifier): Single<String> {
+    fun handleRegisterSepa(sepaData: SepaData, chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 //        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
 //        paymentMethodRegistrationRequest.accountData = sepaData
 //        paymentMethodRegistrationRequest.cardMask = "SEPA-${sepaData.iban?.substring(0 .. 5)}"
 //        paymentMethodRegistrationRequest.oneTimePayment = false
-
 
 
         //TODO proper psp strings
@@ -87,7 +148,7 @@ class PspCoordinator @Inject constructor(
     fun handleExecutePaypalPayment(
             paymentData: PaymentData,
             billingData: BillingData
-    ) : Single<String> {
+    ): Single<String> {
 //        val paymentWithPaypalRequest = PaymentWithPayPalRequest(
 //                amount = paymentData.amount,
 //                currency = paymentData.currency!!,
@@ -119,9 +180,9 @@ class PspCoordinator @Inject constructor(
         return Single.just("TODO")
     }
 
-    fun <T> Single<T>.processErrors() : Single<T> {
+    fun <T> Single<T>.processErrors(): Single<T> {
         return onErrorResumeNext {
-            when(it) {
+            when (it) {
                 is HttpException -> Single.error(exceptionMapper.mapError(it))
                 else -> Single.error(RuntimeException("Unknown exception ${it.message}"))
             }

@@ -93,7 +93,7 @@ class IntegrationTest {
     @Test
     fun testCardRegistration() {
         val latch = CountDownLatch(1)
-        pspCoordinator.handleRegisterCreditCard(validCreditCardData).subscribeBy(
+        pspCoordinator.handleRegisterCreditCardOld(validCreditCardData).subscribeBy(
                 onSuccess = {
                     assert(it.isNotEmpty()) { "Empty alias" }
                     latch.countDown()

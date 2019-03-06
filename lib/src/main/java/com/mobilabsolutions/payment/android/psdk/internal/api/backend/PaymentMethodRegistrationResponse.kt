@@ -18,6 +18,6 @@ class PaymentMethodRegistrationResponse(
         var currency: String? = null,
         var kind: String? = null,
         @SerializedName("extra")
-        val providerSpecificData : PayoneSpecificData?
+        val providerSpecificData : Map<String,String> = emptyMap()
 
 )

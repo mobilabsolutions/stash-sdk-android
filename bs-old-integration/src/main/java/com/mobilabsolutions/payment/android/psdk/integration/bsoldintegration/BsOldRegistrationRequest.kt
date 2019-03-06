@@ -39,7 +39,7 @@ data class BsOldRegistrationRequest(
                     currency = extraData["currency"]
                             ?: throw BsOldIntegrationException("currency parameter missing"),
                     kind = extraData["kind"]
-                            ?: throw BsOldIntegrationException("kind parameter missing"),
+                            ?: "creditcard",
                     creditCardData = creditCardData
             )
         }
