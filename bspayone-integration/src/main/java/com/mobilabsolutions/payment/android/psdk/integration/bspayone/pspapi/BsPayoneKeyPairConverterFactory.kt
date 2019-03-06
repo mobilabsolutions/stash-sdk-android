@@ -3,6 +3,8 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi
 import com.google.gson.annotations.SerializedName
 import okhttp3.MediaType
 import okhttp3.RequestBody
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import retrofit2.Converter
 import retrofit2.Retrofit
 import java.lang.reflect.Field
@@ -58,7 +60,11 @@ class PayoneKeyPairRequestConverter : Converter<Any, RequestBody> {
                 } else {
                     field.name
                 }
-                acc + "${memberName}=${field.get(data)}&"
+                if (field.type == LocalDate::class.java) {
+                    acc + "${memberName}=${((field.get(data)) as LocalDate).format(DateTimeFormatter.ofPattern("MMyy"))}&"
+                } else {
+                    acc + "${memberName}=${field.get(data)}&"
+                }
             } else acc
         }).removeSuffix("&")
         return RequestBody.create(MEDIA_TYPE, request)
