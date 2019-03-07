@@ -12,10 +12,3 @@ data class AliasResponse(
         val pspExtra : Map<String, String>
 )
 
-data class AliasExtra(
-        val ccExpiry : String,
-        val ccMask : String,
-        val ccType : String,
-        val email : String,
-        val ibanMaskval : String
-)

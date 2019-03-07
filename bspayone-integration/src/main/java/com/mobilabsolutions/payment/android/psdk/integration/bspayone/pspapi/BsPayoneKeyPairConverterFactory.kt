@@ -25,7 +25,7 @@ class PayoneKeyPairConverterFactory private constructor(val requestConverter: Pa
         fun create() = PayoneKeyPairConverterFactory(REQUEST_CONVERTER_INSTANCE)
     }
 
-    override fun requestBodyConverter(type: Type?, parameterAnnotations: Array<out Annotation>?, methodAnnotations: Array<out Annotation>?, retrofit: Retrofit?): Converter<*, RequestBody>? {
+    override fun requestBodyConverter(type: Type, parameterAnnotations: Array<out Annotation>, methodAnnotations: Array<out Annotation>, retrofit: Retrofit): Converter<*, RequestBody>? {
         return requestConverter
     }
 }

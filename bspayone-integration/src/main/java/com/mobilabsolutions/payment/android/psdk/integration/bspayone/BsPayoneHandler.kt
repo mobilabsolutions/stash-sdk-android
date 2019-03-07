@@ -2,7 +2,9 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.*
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import io.reactivex.Single
 import javax.inject.Inject
@@ -65,7 +67,7 @@ class BsPayoneHandler @Inject constructor(
             when(it) {
                 is BsPayoneVerificationSuccessResponse -> {
                     val updatePaymentAliasRequest = UpdatePaymentAliasRequest(aliasId, it.cardAlias)
-                    mobilabApi.updatePaymentMethodAlias(updatePaymentAliasRequest).blockingAwait()
+                    mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(it.cardAlias)).blockingGet()
                     it.cardAlias
                 }
                 is BsPayoneVerificationErrorResponse -> throw BsPayoneErrorHandler.handleError(it)

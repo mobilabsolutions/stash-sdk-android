@@ -1,6 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.internal.api.backend
 
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasResponse
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -42,5 +43,5 @@ interface MobilabApiV2 {
     fun createAlias(@Header("PSP-Type") psp : String) : Single<AliasResponse>
 
     @PUT("v1/alias/{aliasId}")
-    fun updateAlias(@Path("aliasId") aliasId : String, pspAlias : String, billingData: BillingData) : Single<AliasResponse>
+    fun updateAlias(@Path("aliasId") aliasId : String, @Body aliasUpdateRequest: AliasUpdateRequest) : Completable
 }
