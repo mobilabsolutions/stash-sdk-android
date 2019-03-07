@@ -60,21 +60,21 @@ class BsPayoneIntegration(
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
-        val fakeAdditionalData = mapOf(
-                "merchantId" to "42865",
-                "portalId" to "2030968",
-                "apiVersion" to "3.11",
-                "mode" to "test",
-                "request" to "creditcardcheck",
-                "responseType" to "JSON",
-                "hash" to "35996f45100c40d51cffedcddc471f8189fc3568c287871568dc6c8bae1c4d732ded416b502f6191fb6085a2d767ef6f",
-                "accountId" to "42949"
-        )
+//        val fakeAdditionalData = mapOf(
+//                "merchantId" to "42865",
+//                "portalId" to "2030968",
+//                "apiVersion" to "3.11",
+//                "mode" to "test",
+//                "request" to "creditcardcheck",
+//                "responseType" to "JSON",
+//                "hash" to "35996f45100c40d51cffedcddc471f8189fc3568c287871568dc6c8bae1c4d732ded416b502f6191fb6085a2d767ef6f",
+//                "accountId" to "42949"
+//        )
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
                 bsPayoneHandler.registerCreditCard(
                         registrationRequest.standardizedData.aliasId,
-                        BsPayoneCreditCardRegistrationRequest.fromMap(fakeAdditionalData),
+                        BsPayoneCreditCardRegistrationRequest.fromMap(additionalData.extraData),
                         standardizedData.creditCardData
                 )
             }

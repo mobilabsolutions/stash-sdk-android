@@ -27,6 +27,7 @@ android {
             buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
             buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
             buildConfigField("String", "oldBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, "") + "\"")
+            buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, "") + "\"")
             applicationIdSuffix = ".debug"
             versionNameSuffix = ".debug"
         }
@@ -51,8 +52,8 @@ android {
 dependencies {
     implementation(project(Modules.paymentSdk)) //Core
 //    implementation(project(Modules.stripeIntegration))
-    implementation(project(Modules.bsOldIntegration)) //BSOLD Module
-//    implementation(project(Modules.bsPayoneIntegration))
+//    implementation(project(Modules.bsOldIntegration)) //BSOLD Module
+    implementation(project(Modules.bsPayoneIntegration))
 
     implementation(Libs.Kotlin.stdlib)
 

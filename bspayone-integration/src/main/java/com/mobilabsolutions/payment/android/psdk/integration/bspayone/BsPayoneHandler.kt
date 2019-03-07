@@ -66,7 +66,6 @@ class BsPayoneHandler @Inject constructor(
         return bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
             when(it) {
                 is BsPayoneVerificationSuccessResponse -> {
-                    val updatePaymentAliasRequest = UpdatePaymentAliasRequest(aliasId, it.cardAlias)
                     mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(it.cardAlias)).blockingGet()
                     it.cardAlias
                 }

@@ -11,9 +11,11 @@ import dagger.Component
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.LocalDate
+import timber.log.Timber
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -80,17 +82,23 @@ class BsPayoneRegistrationInstrumentationTest {
                 validCreditCardData
         )
                 .subscribeOn(Schedulers.io())
-                .subscribe { paymentAlias ->
-                    Assert.assertNotNull(paymentAlias)
-                    println("Payment aliasId: $paymentAlias")
-                    latch.countDown()
+                .subscribeBy(
+                        onSuccess = { paymentAlias ->
+                            Assert.assertNotNull(paymentAlias)
+                            println("Payment aliasId: $paymentAlias")
+                            latch.countDown()
 
-                }
-        try {
-            latch.await()
-        } catch (e: InterruptedException) {
-            e.printStackTrace()
-        }
+
+                        },
+                        onError = {
+                            Timber.e(it, "Failed")
+                            fail(it.message)
+                            latch.countDown()
+                        }
+                )
+
+        latch.await()
+
 
         registrationDisposable.dispose()
 
