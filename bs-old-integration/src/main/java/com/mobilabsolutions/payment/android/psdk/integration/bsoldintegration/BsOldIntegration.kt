@@ -64,9 +64,6 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : Strin
                 val bsOldRegistrationRequest = BsOldRegistrationRequest.fromMapWitchCCData(additionalData.extraData, standardizedData.creditCardData)
                 return oldBsPayoneHandler.registerCreditCard(standardizedData.aliasId, bsOldRegistrationRequest)
             }
-            is SepaRegistrationRequest -> {
-                return Single.just("123")
-            }
             else -> throw BsOldIntegrationException("Invalid standardized data type")
         }
 

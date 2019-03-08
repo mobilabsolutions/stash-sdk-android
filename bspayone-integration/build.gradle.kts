@@ -28,7 +28,6 @@ android {
         }
         getByName("release") {
             isMinifyEnabled = false
-            resValue("string", "stripe_public_key", "\""+stripePublicKey+"\"")
         }
     }
 

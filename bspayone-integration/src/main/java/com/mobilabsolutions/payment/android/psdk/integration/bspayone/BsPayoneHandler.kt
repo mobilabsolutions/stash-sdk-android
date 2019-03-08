@@ -2,10 +2,12 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.*
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -20,12 +22,12 @@ class BsPayoneHandler @Inject constructor(
 ) {
     fun registerCreditCard(
             aliasId : String,
-            bsPayoneCreditCardRegistrationRequest: BsPayoneCreditCardRegistrationRequest,
+            bsPayoneRegistrationRequest: BsPayoneRegistrationRequest,
             creditCardData: CreditCardData)
             : Single<String> {
 
         val baseRequest =
-                bsPayoneCreditCardRegistrationRequest.let {
+                bsPayoneRegistrationRequest.let {
                     BsPayoneBaseRequest.instance(
                             it.merchantId,
                             it.portalId,
@@ -38,8 +40,8 @@ class BsPayoneHandler @Inject constructor(
                     )
                 }
         val request =
-                bsPayoneCreditCardRegistrationRequest.let {
-                    BsPayoneVerifcationRequest(
+                bsPayoneRegistrationRequest.let {
+                    BsPayoneCreditCardVerifcationRequest(
                             baseRequest,
                             it.accountId,
                             creditCardData.number,
@@ -50,18 +52,7 @@ class BsPayoneHandler @Inject constructor(
 
                     )
                 }
-//        return bsPayoneApi.executePayoneRequest(request).map {
-//            when(it) {
-//                is BsPayoneVerificationSuccessResponse -> {
-//                    val updatePaymentAliasRequest = UpdatePaymentAliasRequest(paymentMethodRegistrationResponse.panAlias, it.cardAlias)
-//                    mobilabApi.updatePaymentMethodAlias(updatePaymentAliasRequest).blockingAwait()
-//                    it.cardAlias
-//                }
-//                is BsPayoneVerificationErrorResponse -> throw BsPayoneErrorHandler.handleError(it)
-//                is BsPayoneVerificationInvalidResponse -> throw BsPayoneErrorHandler.handleError(it)
-//                else -> throw RuntimeException("Unknown responsewhen trying to register credit card: $it")
-//            }
-//        }
+
 
         return bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
             when(it) {
@@ -74,6 +65,31 @@ class BsPayoneHandler @Inject constructor(
                 else -> throw RuntimeException("Unknown response when trying to register credit card: $it")
             }
         }
+    }
+
+    fun registerSepa(
+            aliasId : String,
+            sepaData: SepaData,
+            billingData: BillingData
+    ) : Single<String> {
+
+
+        val sepaConfig = SepaConfig(
+                iban = sepaData.iban,
+                bic = sepaData.bic,
+                name = billingData.firstName,
+                lastname = billingData.lastName,
+                street = billingData.address1,
+                zip = billingData.zip,
+                city = billingData.city,
+                country = billingData.country
+        )
+        return mobilabApiV2.updateAlias(
+                aliasId,
+                AliasUpdateRequest(
+                        extra = AliasExtra(sepaConfig = sepaConfig)
+                )
+        ).andThen(Single.just(aliasId))
     }
 
 //    fun handlePayPalRedirectRequest(redirectUrl : String) : Single<PayPalRedirectHandler.RedirectResult> {

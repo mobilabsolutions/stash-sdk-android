@@ -117,11 +117,11 @@ class PspCoordinator @Inject constructor(
 
     }
 
-    fun handleRegisterSepa(sepaData: SepaData): Single<String> {
-        return handleRegisterSepa(sepaData, integrations.first().identifier)
+    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData): Single<String> {
+        return handleRegisterSepa(sepaData, billingData, integrations.first().identifier)
     }
 
-    fun handleRegisterSepa(sepaData: SepaData, chosenPsp: PspIdentifier): Single<String> {
+    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData, chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 //        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
 //        paymentMethodRegistrationRequest.accountData = sepaData
@@ -129,12 +129,11 @@ class PspCoordinator @Inject constructor(
 //        paymentMethodRegistrationRequest.oneTimePayment = false
 
 
-        //TODO proper psp strings
-        return mobilabApiV2.createAlias("BSPayone")
+        return mobilabApiV2.createAlias(chosenIntegration.identifier)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
 
-                    val standardizedData = SepaRegistrationRequest(sepaData = sepaData, aliasId = it.aliasId)
+                    val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
                     val additionalData = AdditionalRegistrationData(it.pspExtra)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 

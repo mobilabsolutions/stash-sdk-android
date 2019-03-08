@@ -7,7 +7,7 @@ import org.threeten.bp.format.DateTimeFormatter
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-data class BsPayoneVerifcationRequest(
+data class BsPayoneCreditCardVerifcationRequest(
         @Transient
         val baseRequest: BsPayoneBaseRequest,
         @SerializedName("aid")

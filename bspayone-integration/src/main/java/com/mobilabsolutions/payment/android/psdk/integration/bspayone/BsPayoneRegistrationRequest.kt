@@ -3,7 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-data class BsPayoneCreditCardRegistrationRequest(
+data class BsPayoneRegistrationRequest(
         val merchantId : String,
         val hash : String,
         val portalId : String,
@@ -14,8 +14,8 @@ data class BsPayoneCreditCardRegistrationRequest(
         val accountId : String
 ) {
     companion object {
-        fun fromMap(map : Map<String,String>) : BsPayoneCreditCardRegistrationRequest {
-            return BsPayoneCreditCardRegistrationRequest(
+        fun fromMap(map : Map<String,String>) : BsPayoneRegistrationRequest {
+            return BsPayoneRegistrationRequest(
             merchantId = map["merchantId"] ?: throw RuntimeException("merchantId missing"),
             hash = map["hash"] ?: throw RuntimeException("hash missing"),
             portalId = map["portalId"] ?: throw RuntimeException("portalId missing"),

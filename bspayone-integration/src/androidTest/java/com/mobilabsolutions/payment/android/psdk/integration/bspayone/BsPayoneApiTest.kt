@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.internal.*
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -55,6 +56,15 @@ class BsPayoneRegistrationInstrumentationTest {
             reason = "Test payment"
     )
 
+    private var validBillingData: BillingData = BillingData(
+            city = "Cologne",
+            email = "holder@email.test",
+            address1 = "Street 1",
+            country = "Germany",
+            firstName = "Holder",
+            lastName = "Holderman"
+    )
+
     @Before
     fun setUp() {
         val context = InstrumentationRegistry.getContext().applicationContext as Application
@@ -104,42 +114,13 @@ class BsPayoneRegistrationInstrumentationTest {
 
     }
 
-//    @Test
-//    fun testBSCreditCardPayment() {
-//        val latch = CountDownLatch(1)
-//
-//        val paymentDisposable = paymentManager.executeCreditCardPaymentWithAlias(
-//                ccAlias,
-//                paymentData
-//        )
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(
-//                        { transactionId ->
-//                            Assert.assertNotNull(transactionId)
-//                            println("Transaction: $transactionId")
-//                            latch.countDown()
-//
-//                        }
-//                ) { error ->
-//                    Timber.e(error, "BS credit card payment failed")
-//                    Assert.fail(error.message)
-//                }
-//        try {
-//            latch.await()
-//        } catch (e: InterruptedException) {
-//            e.printStackTrace()
-//        }
-//
-//        paymentDisposable.dispose()
-//    }
-
 
     @Test
     fun testBSSepaRegistration() {
         val latch = CountDownLatch(1)
 
         val registrationDisposable = registrationManager.registerSepa(
-                validSepaData)
+                validSepaData, validBillingData)
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                         { paymentAlias ->

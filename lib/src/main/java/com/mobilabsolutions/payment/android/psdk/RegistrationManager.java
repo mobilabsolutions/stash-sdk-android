@@ -24,6 +24,6 @@ public interface RegistrationManager {
      * @param sepaData sepa card information
      * @return string representing payment aliasId
      */
-    Single<String> registerSepa(SepaData sepaData);
+    Single<String> registerSepa(SepaData sepaData, BillingData billingData);
 
 }

@@ -74,12 +74,16 @@ class BsPayoneIntegration(
             is CreditCardRegistrationRequest -> {
                 bsPayoneHandler.registerCreditCard(
                         registrationRequest.standardizedData.aliasId,
-                        BsPayoneCreditCardRegistrationRequest.fromMap(additionalData.extraData),
+                        BsPayoneRegistrationRequest.fromMap(additionalData.extraData),
                         standardizedData.creditCardData
                 )
             }
             is SepaRegistrationRequest -> {
-                TODO()
+                bsPayoneHandler.registerSepa(
+                        registrationRequest.standardizedData.aliasId,
+                        standardizedData.sepaData,
+                        standardizedData.billingData
+                )
             }
             else -> {
                 TODO()

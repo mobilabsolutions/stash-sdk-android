@@ -25,5 +25,6 @@ data class CreditCardRegistrationRequest(
 
 data class SepaRegistrationRequest(
         val sepaData: SepaData,
+        val billingData: BillingData,
         override val aliasId: String
 ) : StandardizedData

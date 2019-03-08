@@ -20,8 +20,8 @@ class NewRegistrationManager @Inject constructor(
     }
 
 
-    override fun registerSepa(sepaData: SepaData): Single<String> {
-        return pspCoordinator.handleRegisterSepa(sepaData)
+    override fun registerSepa(sepaData: SepaData, billingData : BillingData): Single<String> {
+        return pspCoordinator.handleRegisterSepa(sepaData, billingData)
     }
 
 }

@@ -20,7 +20,7 @@ public class RegistrationManagerMock implements RegistrationManager{
     }
 
     @Override
-    public Single<String> registerSepa(SepaData sepaData) {
+    public Single<String> registerSepa(SepaData sepaData, BillingData billingData) {
         return Single.just("1234-SEPA");
     }
 

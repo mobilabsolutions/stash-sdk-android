@@ -11,7 +11,10 @@ import retrofit2.http.QueryMap
  */
 interface BsPayoneApi {
     @POST("/client-api")
-    fun executePayoneRequest(@Body registrationRequest: BsPayoneVerifcationRequest) : Single<BsPayoneVerificationBaseResponse>
+    fun executePayoneRequest(@Body registrationRequestCreditCard: BsPayoneCreditCardVerifcationRequest) : Single<BsPayoneVerificationBaseResponse>
+
+    @POST("/client-api")
+    fun executePayoneRequest(@Body registrationRequestSepa: BsPayoneSepaVerifcationRequest) : Single<BsPayoneVerificationBaseResponse>
 
     @GET("/client-api")
     fun executePayoneRequestGet(@QueryMap queryMap : Map<String, String>) : Single<BsPayoneVerificationBaseResponse>
