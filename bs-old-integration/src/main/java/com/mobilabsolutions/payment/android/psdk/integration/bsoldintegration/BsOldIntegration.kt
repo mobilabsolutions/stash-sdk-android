@@ -4,6 +4,7 @@ import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodUiDefinition
 import io.reactivex.Single
 import timber.log.Timber
 import javax.inject.Inject
@@ -67,6 +68,10 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : Strin
             else -> throw BsOldIntegrationException("Invalid standardized data type")
         }
 
+    }
+
+    override fun getPaymentMethodUiDefinitions(): List<PaymentMethodUiDefinition> {
+        return emptyList()
     }
 
 

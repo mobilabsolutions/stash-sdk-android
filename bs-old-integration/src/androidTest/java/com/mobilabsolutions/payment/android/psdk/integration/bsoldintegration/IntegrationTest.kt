@@ -96,7 +96,7 @@ class IntegrationTest {
         )
         latch.await()
     }
-    
+
 }
 
 @Singleton

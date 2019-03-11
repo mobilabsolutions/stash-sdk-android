@@ -19,7 +19,8 @@ class BillingData (
     var zip: String? = null,
     var city: String? = null,
     var country: String? = null,
-    val languageId : String = Locale.getDefault().isO3Language
+    val languageId : String = Locale.getDefault().isO3Language,
+    val additionalUserData : Map<String, String> = emptyMap()
     ) {
 
     companion object {
@@ -28,6 +29,9 @@ class BillingData (
         @JvmStatic
         fun fromName(name : String) = BillingData(name.split(' ')[0], name.split(' ')[1]) //TODO well it's obvious this is just a placeholder
 
+        @JvmStatic
+        fun empty() = BillingData()
+
 
 
 
@@ -35,8 +39,6 @@ class BillingData (
 
     class Builder {
 
-
-        //TODO also obvious
         fun build() = BillingData()
 
     }

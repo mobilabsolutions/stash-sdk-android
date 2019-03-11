@@ -89,7 +89,6 @@ class NewPaymentSdk(
             }
 
             Timber.plant(Timber.DebugTree())
-//            //Traceur.enableLogging()
             NewPaymentSdk.instance = NewPaymentSdk(publicKey, applicationContext, integrationList, sslSocketFactory, x509TrustManager)
 
             NewPaymentSdk.initialized = true

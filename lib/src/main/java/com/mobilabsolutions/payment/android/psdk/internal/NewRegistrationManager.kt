@@ -15,13 +15,17 @@ class NewRegistrationManager @Inject constructor(
         private val pspCoordinator: PspCoordinator
 
 ) : RegistrationManager {
-    override fun registerCreditCard(creditCardData: CreditCardData): Single<String> {
-        return pspCoordinator.handleRegisterCreditCard(creditCardData)
+    override fun registerCreditCardUsingUIComponent(): Single<String> {
+        return pspCoordinator.handleRegisterCreditCardUsingUIComponent()
+    }
+
+    override fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData): Single<String> {
+        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, billingData = billingData ?: BillingData())
     }
 
 
     override fun registerSepa(sepaData: SepaData, billingData : BillingData): Single<String> {
-        return pspCoordinator.handleRegisterSepa(sepaData, billingData)
+        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData ?: BillingData())
     }
 
 }

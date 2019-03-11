@@ -53,7 +53,6 @@ class RegistrationController @Inject constructor() : Controller() {
                         holder = holderName
                 )
 
-
         ).doOnSuccess {
             paymentMethodStateSubject.apply {
                 val paymentMethodState = take(1).blockingLast()

@@ -13,15 +13,15 @@ import io.reactivex.Single;
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-public class RegistrationManagerMock implements RegistrationManager{
-    @Override
-    public Single<String> registerCreditCard(CreditCardData creditCardData) {
-        return Single.just("1234-CC");
-    }
-
-    @Override
-    public Single<String> registerSepa(SepaData sepaData, BillingData billingData) {
-        return Single.just("1234-SEPA");
-    }
-
-}
+//public class RegistrationManagerMock implements RegistrationManager{
+//    @Override
+//    public Single<String> registerCreditCard(CreditCardData creditCardData) {
+//        return Single.just("1234-CC");
+//    }
+//
+//    @Override
+//    public Single<String> registerSepa(SepaData sepaData, BillingData billingData) {
+//        return Single.just("1234-SEPA");
+//    }
+//
+//}
