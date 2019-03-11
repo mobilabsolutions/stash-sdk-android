@@ -36,7 +36,8 @@ public class JavaSketch {
                     "123",
                 LocalDate.of(2011,11,1),
                 "123",
-                "Bla"
+                "Bla",
+                null
         );
 
         Disposable disposable = registrationManager.registerCreditCard(creditCardData, BillingData.empty())

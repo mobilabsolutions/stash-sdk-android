@@ -1,5 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
@@ -21,6 +23,3 @@ enum class UiDetailType {
     NAME, ADDRESS, NUMBER
 }
 
-enum class PaymentMethodType {
-    CREDITCARD, SEPA, PAYPAL
-}

@@ -28,4 +28,8 @@ interface RegistrationManager {
 
     fun registerCreditCardUsingUIComponent(): Single<String>
 
+    fun registerSepaUsingUIComponent(): Single<String>
+
+    fun askUseToPickAPaymentMethod() : Single<PaymentMethodType>
+
 }

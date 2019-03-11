@@ -1,12 +1,11 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -109,7 +108,7 @@ class PspCoordinator @Inject constructor(
                 .flatMap {
 
                     val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.aliasId)
-                    val additionalData = AdditionalRegistrationData(it.pspExtra + billingData.additionalUserData)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -120,11 +119,11 @@ class PspCoordinator @Inject constructor(
 
     }
 
-    fun handleRegisterSepa(sepaData: SepaData, additionalUserData : Map<String, String> = emptyMap(), billingData: BillingData): Single<String> {
-        return handleRegisterSepa(sepaData, additionalUserData, billingData, integrations.first().identifier)
+    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData): Single<String> {
+        return handleRegisterSepa(sepaData, billingData, integrations.first().identifier)
     }
 
-    fun handleRegisterSepa(sepaData: SepaData, additionalUserData : Map<String, String> = emptyMap(), billingData: BillingData, chosenPsp: PspIdentifier): Single<String> {
+    fun handleRegisterSepa(sepaData: SepaData,  billingData: BillingData, chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 //        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
 //        paymentMethodRegistrationRequest.accountData = sepaData
@@ -137,7 +136,7 @@ class PspCoordinator @Inject constructor(
                 .flatMap {
 
                     val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
-                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUserData)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -157,8 +156,31 @@ class PspCoordinator @Inject constructor(
 
     }
 
+    fun handleRegisterSepaUsingUIComponent(chosenPsp: PspIdentifier) : Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
+        val definitions =
+                chosenIntegration.getPaymentMethodUiDefinitions()
+                        .filter { it.paymentMethodType == PaymentMethodType.SEPA }
+                        .first()
+        val (sepaData, billingData ) =
+                uiRequestHandler.handleSepadMethodEntryRequest(definitions)
+        return handleRegisterSepa(sepaData, billingData)
+
+    }
+
     fun handleRegisterCreditCardUsingUIComponent() : Single<String> {
         return handleRegisterCreditCardUsingUIComponent(integrations.first().identifier)
+    }
+
+    fun handleRegisterSepaUsingUIComponent() : Single<String> {
+        return handleRegisterSepaUsingUIComponent(integrations.first().identifier)
+    }
+
+    fun handleAskUserToChoosePaymentMethod() : Single<PaymentMethodType> {
+        val chosenIntegration = integrations.first()
+        val definitions =
+                chosenIntegration.getPaymentMethodUiDefinitions()
+        return uiRequestHandler.askUserToChosePaymentMethod(definitions.map {it.paymentMethodType})
     }
 
     //NOTE: This was never tested and is only an initial implementation of psp managed paypal payment
@@ -167,34 +189,7 @@ class PspCoordinator @Inject constructor(
             paymentData: PaymentData,
             billingData: BillingData
     ): Single<String> {
-//        val paymentWithPaypalRequest = PaymentWithPayPalRequest(
-//                amount = paymentData.amount,
-//                currency = paymentData.currency!!,
-//                customerId = paymentData.customerId,
-//                reason = paymentData.reason!!,
-//                billingData = billingData
-//        )
-//        return mobilabApi.executePaypalPayment(paymentWithPaypalRequest)
-//                .subscribeOn(Schedulers.io())
-//                .flatMap {
-//                    val mappedTransactionId = it.result.mappedTransactionId
-//                    when (paymentProvider) {
-////                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.handlePayPalRedirectRequest(it.result.redirectUrl)
-//                        PaymentSdk.Provider.HYPERCHARGE -> throw RuntimeException("Not supported at the moment")
-//                    }.map {
-//                        Pair(it, mappedTransactionId)
-//                    }
-//                }.flatMap {
-//                    val mappedTransactionId = it.second
-//                    val responseResult = it.first
-//                    mobilabApi.reportPayPalResult(
-//                            PayPalConfirmationRequest(
-//                                    mappedTransactionId,
-//                                    responseResult.redirectState.name.toLowerCase(),
-//                                    responseResult.code)
-//                    ).subscribeOn(Schedulers.io())
-//                            .andThen(Single.just(mappedTransactionId))
-//                }
+
         return Single.just("TODO")
     }
 

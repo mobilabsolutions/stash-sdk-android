@@ -1,8 +1,10 @@
 package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
+import io.reactivex.Single
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -33,8 +35,8 @@ class UiRequestHandler @Inject constructor() {
         return Pair("", mapOf("TEST" to "test"))
     }
 
-    fun askUserToChosePaymentMethod(availableMethods : List<PaymentMethodType>) : PaymentMethodType {
-        return PaymentMethodType.CREDITCARD
+    fun askUserToChosePaymentMethod(availableMethods : List<PaymentMethodType>) : Single<PaymentMethodType> {
+        return Single.just(PaymentMethodType.CREDITCARD)
     }
 
 }
