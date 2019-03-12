@@ -19,8 +19,7 @@ class BillingData (
     var zip: String? = null,
     var city: String? = null,
     var country: String? = null,
-    val languageId : String = Locale.getDefault().isO3Language,
-    val additionalUserData : Map<String, String> = emptyMap()
+    val languageId : String = Locale.getDefault().isO3Language
     ) {
 
     companion object {

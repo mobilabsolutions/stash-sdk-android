@@ -9,8 +9,7 @@ import org.iban4j.Iban
 class SepaData(
         var bic: String = "",
         iban: String = "",
-        val holder : String,
-        val additionalData : Map<String, String> = emptyMap()
+        val holder : String
 
 ) {
     var iban: String = iban

@@ -23,7 +23,7 @@ class NewRegistrationManager @Inject constructor(
 
 
     override fun registerSepa(sepaData: SepaData, billingData : BillingData): Single<String> {
-        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData ?: BillingData())
+        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData )
     }
 
     override fun registerCreditCardUsingUIComponent(): Single<String> {

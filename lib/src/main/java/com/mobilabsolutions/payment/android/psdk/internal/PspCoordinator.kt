@@ -90,12 +90,12 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData, billingData: BillingData): Single<String> {
-        return handleRegisterCreditCard(creditCardData, billingData, integrations.first().identifier)
+            creditCardData: CreditCardData, billingData: BillingData = BillingData(), additionalUIData : Map<String, String> = emptyMap()): Single<String> {
+        return handleRegisterCreditCard(creditCardData, billingData, additionalUIData, integrations.first().identifier)
     }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData, billingData: BillingData, chosenPsp: PspIdentifier): Single<String> {
+            creditCardData: CreditCardData, billingData: BillingData = BillingData(), additionalUIData : Map<String, String>, chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
         if (creditCardData.number.length < 16) {
@@ -107,8 +107,8 @@ class PspCoordinator @Inject constructor(
                 .processErrors()
                 .flatMap {
 
-                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.aliasId)
-                    val additionalData = AdditionalRegistrationData(it.pspExtra)
+                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -119,24 +119,19 @@ class PspCoordinator @Inject constructor(
 
     }
 
-    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData): Single<String> {
-        return handleRegisterSepa(sepaData, billingData, integrations.first().identifier)
+    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData = BillingData(), additionalUIData : Map<String, String> = emptyMap()): Single<String> {
+        return handleRegisterSepa(sepaData, billingData, additionalUIData, integrations.first().identifier)
     }
 
-    fun handleRegisterSepa(sepaData: SepaData,  billingData: BillingData, chosenPsp: PspIdentifier): Single<String> {
+    fun handleRegisterSepa(sepaData: SepaData,  billingData: BillingData, additionalUIData : Map<String, String> = emptyMap(), chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
-//        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
-//        paymentMethodRegistrationRequest.accountData = sepaData
-//        paymentMethodRegistrationRequest.cardMask = "SEPA-${sepaData.iban?.substring(0 .. 5)}"
-//        paymentMethodRegistrationRequest.oneTimePayment = false
-
 
         return mobilabApiV2.createAlias(chosenIntegration.identifier)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
 
                     val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
-                    val additionalData = AdditionalRegistrationData(it.pspExtra)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -150,9 +145,9 @@ class PspCoordinator @Inject constructor(
                 chosenIntegration.getPaymentMethodUiDefinitions()
                         .filter { it.paymentMethodType == PaymentMethodType.CREDITCARD }
                         .first()
-        val (creditCardData, billingData ) =
+        val (creditCardData, additionalUIData ) =
                 uiRequestHandler.handleCreditCardMethodEntryRequest(definitions)
-        return handleRegisterCreditCard(creditCardData, billingData)
+        return handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData)
 
     }
 
@@ -162,9 +157,9 @@ class PspCoordinator @Inject constructor(
                 chosenIntegration.getPaymentMethodUiDefinitions()
                         .filter { it.paymentMethodType == PaymentMethodType.SEPA }
                         .first()
-        val (sepaData, billingData ) =
+        val (sepaData, additionalUIData ) =
                 uiRequestHandler.handleSepadMethodEntryRequest(definitions)
-        return handleRegisterSepa(sepaData, billingData)
+        return handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData)
 
     }
 

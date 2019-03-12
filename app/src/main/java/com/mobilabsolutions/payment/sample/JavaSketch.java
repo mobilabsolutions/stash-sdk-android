@@ -14,6 +14,8 @@ import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
 
 import org.threeten.bp.LocalDate;
 
+import java.util.Collections;
+
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -32,12 +34,11 @@ public class JavaSketch {
         PaymentSdk.initalize(BuildConfig.newBsApiKey, context, BsPayoneIntegration.Companion);
         RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 
-        CreditCardData creditCardData = new CreditCardData(
+        CreditCardData creditCardData = CreditCardData.create(
                     "123",
                 LocalDate.of(2011,11,1),
                 "123",
-                "Bla",
-                null
+                "Bla"
         );
 
         Disposable disposable = registrationManager.registerCreditCard(creditCardData, BillingData.empty())

@@ -12,14 +12,19 @@ data class PaymentMethodUiDefinition(
 
 )
 
+interface ValidationRules {
+    fun verify(data : String) : Pair<Boolean, String>
+}
+
 data class UiDetail(
         val identifier : String,
         val type : UiDetailType,
         val title : String,
-        val hint : String
+        val hint : String,
+        val validationRules: ValidationRules
 )
 
 enum class UiDetailType {
-    NAME, ADDRESS, NUMBER
+    NAME, ADDRESS, NUMBER, DATE
 }
 

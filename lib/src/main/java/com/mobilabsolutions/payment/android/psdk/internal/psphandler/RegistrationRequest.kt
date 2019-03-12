@@ -20,11 +20,12 @@ interface StandardizedData {
 
 data class CreditCardRegistrationRequest(
         val creditCardData: CreditCardData,
+        val billingData: BillingData = BillingData(),
         override val aliasId: String
 ) : StandardizedData
 
 data class SepaRegistrationRequest(
         val sepaData: SepaData,
-        val billingData: BillingData,
+        val billingData: BillingData = BillingData(),
         override val aliasId: String
 ) : StandardizedData
