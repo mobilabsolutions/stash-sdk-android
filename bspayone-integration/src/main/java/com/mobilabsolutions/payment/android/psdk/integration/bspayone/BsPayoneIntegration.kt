@@ -87,22 +87,9 @@ class BsPayoneIntegration private constructor(
         }
     }
 
-    val creditCardNumber = UiDetail(
-            identifier = "ccn",
-            hint = "4211...",
-            title = "Credit card number",
-            type = UiDetailType.NUMBER,
-            validationRules = object : ValidationRules {
-                override fun verify(data: String): Pair<Boolean, String> {
-                    return Pair(data.length > 0, "")
-                }
-            }
-    )
-
     val creditCardUIDefinition = PaymentMethodUiDefinition(
             paymentMethodName = "CreditCard",
-            paymentMethodType = PaymentMethodType.CREDITCARD,
-            uiDetailList = listOf(creditCardNumber)
+            paymentMethodType = PaymentMethodType.CREDITCARD
     )
 
     override fun getPaymentMethodUiDefinitions(): List<PaymentMethodUiDefinition> {

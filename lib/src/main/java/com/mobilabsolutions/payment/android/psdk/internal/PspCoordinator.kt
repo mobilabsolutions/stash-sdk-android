@@ -72,21 +72,6 @@ class PspCoordinator @Inject constructor(
                     chosenIntegration.handleRegistrationRequest(registrationRequest)
                 }
 
-//        return mobilabApiV2.createAlias(chosenIntegration.identifier)
-//                .subscribeOn(Schedulers.io())
-//                .processErrors()
-//                .flatMap {
-//
-//                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.aliasId)
-//                    val additionalData = AdditionalRegistrationData(it.pspExtra)
-//                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
-//
-//                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
-//
-//                    pspAliasSingle
-//                }
-
-
     }
 
     fun handleRegisterCreditCard(
