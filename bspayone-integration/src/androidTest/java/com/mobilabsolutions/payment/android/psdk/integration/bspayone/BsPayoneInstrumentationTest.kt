@@ -2,6 +2,8 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import android.app.Application
 import androidx.test.InstrumentationRegistry
+import androidx.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnitRunner
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.internal.*
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -14,13 +16,14 @@ import io.reactivex.schedulers.Schedulers
 import org.junit.Assert
 import org.junit.Assert.fail
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.threeten.bp.LocalDate
 import timber.log.Timber
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 import javax.inject.Singleton
-
 
 class BsPayoneRegistrationInstrumentationTest {
     val testPublicKey = BuildConfig.newBsTestKey
@@ -65,7 +68,6 @@ class BsPayoneRegistrationInstrumentationTest {
             lastName = "Holderman"
     )
 
-    @Before
     fun setUp() {
         val context = InstrumentationRegistry.getContext().applicationContext as Application
 
@@ -84,7 +86,8 @@ class BsPayoneRegistrationInstrumentationTest {
     }
 
     @Test
-    fun registerCreditCard() {
+    fun testRegisterCreditCard() {
+        setUp()
 
         val latch = CountDownLatch(1)
 
@@ -114,7 +117,7 @@ class BsPayoneRegistrationInstrumentationTest {
 
     }
 
-
+    @Ignore("Not implemented on backend yet")
     @Test
     fun testBSSepaRegistration() {
         val latch = CountDownLatch(1)
@@ -145,7 +148,7 @@ class BsPayoneRegistrationInstrumentationTest {
 
         registrationDisposable.dispose()
     }
-
+    @Ignore("Not implemented on backend yet")
     @Test
     fun registerCreditCardFailure() {
 

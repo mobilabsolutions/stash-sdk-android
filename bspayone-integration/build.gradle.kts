@@ -52,6 +52,7 @@ dependencies {
     testImplementation(Libs.PowerMock.api)
     kaptTest(Libs.Dagger.compiler)
 
+    androidTestImplementation(project(Modules.paymentSdk))
     androidTestImplementation(Libs.junit)
     androidTestImplementation(Libs.mockitoCore)
     androidTestImplementation(Libs.mockwebserver)

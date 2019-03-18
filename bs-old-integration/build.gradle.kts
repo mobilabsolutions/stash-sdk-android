@@ -41,6 +41,7 @@ dependencies {
     testImplementation(Libs.junit)
     kaptTest(Libs.Dagger.compiler)
 
+    androidTestImplementation(project(Modules.paymentSdk))
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     kaptAndroidTest(Libs.Dagger.compiler)

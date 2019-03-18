@@ -63,7 +63,7 @@ class IntegrationTest {
             reason = "Test payment"
     )
 
-    @Before
+
     fun setUp() {
         val context = InstrumentationRegistry.getContext().applicationContext as Application
         val integrationInitialization = BsOldIntegration.create()
@@ -87,6 +87,7 @@ class IntegrationTest {
 
     @Test
     fun testCardRegistration() {
+        setUp()
         val latch = CountDownLatch(1)
         pspCoordinator.handleRegisterCreditCardOld(validCreditCardData).subscribeBy(
                 onSuccess = {
