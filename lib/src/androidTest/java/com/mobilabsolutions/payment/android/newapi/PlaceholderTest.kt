@@ -9,6 +9,7 @@ class PlaceholderTest {
 
     @Test
     fun placeholder() {
+        println("Placeholder")
         assert(true)
     }
 }

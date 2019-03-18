@@ -8,6 +8,7 @@ import org.junit.Test
 class PlaceholderUnitTest {
     @Test
     fun placholderUnitTest() {
+        println("Placeholder")
         assert(true)
     }
 }
