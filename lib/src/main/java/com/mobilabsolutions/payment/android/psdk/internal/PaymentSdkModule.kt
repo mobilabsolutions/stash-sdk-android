@@ -9,6 +9,7 @@ import com.google.gson.GsonBuilder
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
 import dagger.Module
 import dagger.Provides
@@ -35,7 +36,8 @@ import javax.inject.Singleton
  */
 @Module
 open class PaymentSdkModule(private val publicKey: String, private val mobilabUrl: String,
-                            private val applicationContext: Application) {
+                            private val applicationContext: Application,
+                            private val integrationInitializers : List<IntegrationInitialization>) {
     val MOBILAB_TIMEOUT = 60L
     val TIMEOUT_UNIT = TimeUnit.SECONDS
 
@@ -82,6 +84,26 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
+    fun provideMobilabApiV2(@Named("mobilabV2HttpClient")
+                            mobilabBackendOkHttpClient: OkHttpClient,
+                            @Named("mobilabBackendGsonConverterFactory")
+                            gsonConverterFactory: GsonConverterFactory,
+                            rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
+    ): MobilabApiV2 {
+        val mobilabBackendRetrofit = Retrofit.Builder()
+                .addConverterFactory(gsonConverterFactory)
+                .addCallAdapterFactory(rxJava2CallAdapterFactory)
+                .client(mobilabBackendOkHttpClient)
+                .baseUrl(mobilabUrl)
+                .build()
+
+        val mobilabApiV2 = mobilabBackendRetrofit.create(MobilabApiV2::class.java)
+        return mobilabApiV2
+
+    }
+
+    @Provides
+    @Singleton
     fun provideMobilabHttpClient(
             httpLoggingInterceptor: HttpLoggingInterceptor,
             sslSupportPackage: SslSupportPackage
@@ -92,6 +114,35 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
                 .addInterceptor { chain ->
                     val request = chain.request().newBuilder()
                             .addHeader("Authorization", "Bearer " + Base64.encodeToString(publicKey.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT).trim { it <= ' ' })
+                            .build()
+                    chain.proceed(request)
+                }
+                .connectTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+                .readTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+                .writeTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+        if (sslSupportPackage.useCustomSslSocketFactory) {
+            mobilabBackendOkHttpClientBuilder.sslSocketFactory(sslSupportPackage.sslSocketFactory!!, sslSupportPackage.x509TrustManager!!)
+            val connectionSpec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
+                    .tlsVersions(TlsVersion.TLS_1_2)
+                    .build()
+            mobilabBackendOkHttpClientBuilder.connectionSpecs(listOf(connectionSpec))
+        }
+        return mobilabBackendOkHttpClientBuilder.build()
+    }
+
+    @Provides
+    @Singleton
+    @Named("mobilabV2HttpClient")
+    fun provideMobilabV2HttpClient(
+            httpLoggingInterceptor: HttpLoggingInterceptor,
+            sslSupportPackage: SslSupportPackage
+    ): OkHttpClient {
+
+        val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
+                .addInterceptor(httpLoggingInterceptor)
+                .addInterceptor { chain ->
+                    val request = chain.request().newBuilder()
+                            .addHeader("Public-Key", " " + publicKey)
                             .build()
                     chain.proceed(request)
                 }
@@ -146,10 +197,6 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
-    fun providePaymentProviderType() = NewPaymentSdk.getProviderFromKey(publicKey)
-
-    @Provides
-    @Singleton
     fun provideDefaultGson() : Gson = Gson()
 
     @Provides
@@ -198,6 +245,14 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
             newUiCustomizationManager = NewUiCustomizationManager(gson, sharedPreferences)
         }
         return newUiCustomizationManager as NewUiCustomizationManager
+    }
+
+    @Provides
+    @Singleton
+    fun providePspIntegrationsRegistered() : Set<Integration> {
+        return integrationInitializers.filter { it.initializedOrNull() != null  }
+                .map { it.initializedOrNull() as Integration }
+                .toSet()
     }
 
 

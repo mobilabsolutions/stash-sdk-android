@@ -1,21 +1,18 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.SepaValidationException
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
-import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneHandler
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeHandler
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneHandler
+import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
-import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
-import org.iban4j.CountryCode
-import org.iban4j.Iban
 import retrofit2.HttpException
 import javax.inject.Inject
 
@@ -23,18 +20,26 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
-        private val oldBsPayoneHandler: OldBsPayoneHandler,
-        private val hyperchageHandler : HyperchargeHandler,
-        private val bsPayoneHandler: BsPayoneHandler,
         private val mobilabApi: MobilabApi,
-        private val paymentProvider:PaymentSdk.Provider,
-        private val exceptionMapper: BackendExceptionMapper
+        private val mobilabApiV2: MobilabApiV2,
+        private val exceptionMapper: BackendExceptionMapper,
+        private val integrations: Set<@JvmSuppressWildcards Integration>,
+        private val uiRequestHandler : UiRequestHandler
 ) {
 
 
-
-    fun handleRegisterCreditCard(
+    fun handleRegisterCreditCardOld(
             creditCardData: CreditCardData): Single<String> {
+        return handleRegisterCreditCardOld(creditCardData, integrations.first().identifier)
+    }
+
+    fun handleRegisterCreditCardOld(
+            creditCardData: CreditCardData, chosenPsp: PspIdentifier): Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
+
+        if (creditCardData.number.length < 16) {
+            return Single.error(RuntimeException("Invalid card number length"))
+        }
         val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
         if (creditCardData.number.length < 16) {
             return Single.error(RuntimeException("Invalid card number length"))
@@ -47,145 +52,130 @@ class PspCoordinator @Inject constructor(
                 .processErrors()
                 .map { it.result }
                 .flatMap {
-                    when (paymentProvider) {
-                        PaymentSdk.Provider.OLD_BS_PAYONE -> oldBsPayoneHandler.registerCreditCard(
-                                it, creditCardData
-                        )
-                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.registerCreditCard(
-                                it, creditCardData
-                        )
-                        PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerCreditCard(
-                                it, creditCardData
-                        )
-                    }
+                    //TODO temporary for validation, to be removed before going public
+                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.paymentAlias)
+                    val mappedValues = mapOf(
+                            "paymentAlias" to it.paymentAlias!!,
+                            "url" to it.url!!,
+                            "merchantId" to it.merchantId!!,
+                            "action" to it.action!!,
+                            "panAlias" to it.panAlias!!,
+                            "username" to it.username!!,
+                            "password" to it.password!!,
+                            "eventExtId" to it.eventExtId!!,
+                            "amount" to it.amount!!,
+                            "currency" to it.currency!!
+                    )
+                    val additionalData = AdditionalRegistrationData(mappedValues)
+                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+
+                    chosenIntegration.handleRegistrationRequest(registrationRequest)
                 }
-
-
 
     }
 
-    fun handleRegisterSepa(sepaData: SepaData): Single<String> {
-        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
-        paymentMethodRegistrationRequest.accountData = sepaData
-        paymentMethodRegistrationRequest.cardMask = "SEPA-${sepaData.iban?.substring(0 .. 5)}"
-        paymentMethodRegistrationRequest.oneTimePayment = false
+    fun handleRegisterCreditCard(
+            creditCardData: CreditCardData, billingData: BillingData = BillingData(), additionalUIData : Map<String, String> = emptyMap()): Single<String> {
+        return handleRegisterCreditCard(creditCardData, billingData, additionalUIData, integrations.first().identifier)
+    }
 
-        //Hypercharge currenlty can support only german SEPA
-        if (paymentProvider == PaymentSdk.Provider.HYPERCHARGE) {
-            val iban = Iban.valueOf(sepaData.iban)
-            if (iban.countryCode != CountryCode.DE) {
-                throw SepaValidationException("Only German SEPA accounts are supported with Hypercharge provider")
-            }
+    fun handleRegisterCreditCard(
+            creditCardData: CreditCardData, billingData: BillingData = BillingData(), additionalUIData : Map<String, String>, chosenPsp: PspIdentifier): Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
+
+        if (creditCardData.number.length < 16) {
+            return Single.error(RuntimeException("Invalid card number length"))
         }
 
-        return mobilabApi.registerSepa(paymentMethodRegistrationRequest)
+        return mobilabApiV2.createAlias(chosenIntegration.identifier)
                 .subscribeOn(Schedulers.io())
-                .map { it.result }
+                .processErrors()
                 .flatMap {
-                    when (paymentProvider) {
-                        PaymentSdk.Provider.OLD_BS_PAYONE -> Single.just(it.paymentAlias)
-                        PaymentSdk.Provider.NEW_PAYONE -> Single.just(it.paymentAlias)
-                        PaymentSdk.Provider.HYPERCHARGE -> hyperchageHandler.registerSepa(it, sepaData)
-                    }
+
+                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
+                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+
+                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
+
+                    pspAliasSingle
+                }
+
+
+    }
+
+    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData = BillingData(), additionalUIData : Map<String, String> = emptyMap()): Single<String> {
+        return handleRegisterSepa(sepaData, billingData, additionalUIData, integrations.first().identifier)
+    }
+
+    fun handleRegisterSepa(sepaData: SepaData,  billingData: BillingData, additionalUIData : Map<String, String> = emptyMap(), chosenPsp: PspIdentifier): Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
+
+        return mobilabApiV2.createAlias(chosenIntegration.identifier)
+                .subscribeOn(Schedulers.io())
+                .flatMap {
+
+                    val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
+                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+
+                    chosenIntegration.handleRegistrationRequest(registrationRequest)
+
                 }
     }
 
-    fun handleRemoveCreditCardAlias(alias : String) : Completable {
-        val deletionRequest = RemoveAliasRequest()
-        deletionRequest.paymentAlias = alias
-        return mobilabApi.deleteCreditCard(deletionRequest).subscribeOn(Schedulers.io())
+    fun handleRegisterCreditCardUsingUIComponent(chosenPsp: PspIdentifier) : Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
+        val definitions =
+                chosenIntegration.getPaymentMethodUiDefinitions()
+                        .filter { it.paymentMethodType == PaymentMethodType.CREDITCARD }
+                        .first()
+        val (creditCardData, additionalUIData ) =
+                uiRequestHandler.handleCreditCardMethodEntryRequest(definitions)
+        return handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData)
 
     }
 
-    fun handleRemoveSepaAlias(alias : String) : Completable {
-        val deletionRequest = RemoveAliasRequest()
-        deletionRequest.paymentAlias = alias
-        return mobilabApi.deleteSepa(deletionRequest).subscribeOn(Schedulers.io())
+    fun handleRegisterSepaUsingUIComponent(chosenPsp: PspIdentifier) : Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
+        val definitions =
+                chosenIntegration.getPaymentMethodUiDefinitions()
+                        .filter { it.paymentMethodType == PaymentMethodType.SEPA }
+                        .first()
+        val (sepaData, additionalUIData ) =
+                uiRequestHandler.handleSepadMethodEntryRequest(definitions)
+        return handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData)
 
     }
 
-    fun handleExecuteCreditCardPayment(
-            creditCardData: CreditCardData,
-            paymentData: PaymentData): Single<String>
-    {
-        return handleRegisterCreditCard(creditCardData)
-                .processErrors()
-                .flatMap { handleExecuteCreditCardPaymentWithAlias(it, paymentData) }
+    fun handleRegisterCreditCardUsingUIComponent() : Single<String> {
+        return handleRegisterCreditCardUsingUIComponent(integrations.first().identifier)
     }
 
-    fun handleExecuteCreditCardPaymentWithAlias(
-            creditCardAlias: String,
-            paymentData: PaymentData): Single<String> {
-        val paymentWithAliasRequest = PaymentWithAliasRequest(
-                paymentAlias = creditCardAlias,
-                amount = paymentData.amount,
-                currency = paymentData.currency!!,
-                customerId = paymentData.customerId,
-                reason = paymentData.reason!!
-        )
-
-        return mobilabApi.executePaymentWithCreditCardAlias(paymentWithAliasRequest)
-                .processErrors()
-                .map { it.result.transactionId }
-
-
+    fun handleRegisterSepaUsingUIComponent() : Single<String> {
+        return handleRegisterSepaUsingUIComponent(integrations.first().identifier)
     }
 
-    fun handleExecuteSepaPaymentWithAlias(
-            creditCardAlias: String,
-            paymentData: PaymentData): Single<String> {
-        val paymentWithAliasRequest = PaymentWithAliasRequest(
-                paymentAlias = creditCardAlias,
-                amount = paymentData.amount,
-                currency = paymentData.currency!!,
-                customerId = paymentData.customerId,
-                reason = paymentData.reason!!
-        )
-
-        return mobilabApi.executePaymentWithSepaAlias(paymentWithAliasRequest)
-                .map { it.result.transactionId }
-
-
+    fun handleAskUserToChoosePaymentMethod() : Single<PaymentMethodType> {
+        val chosenIntegration = integrations.first()
+        val definitions =
+                chosenIntegration.getPaymentMethodUiDefinitions()
+        return uiRequestHandler.askUserToChosePaymentMethod(definitions.map {it.paymentMethodType})
     }
 
+    //NOTE: This was never tested and is only an initial implementation of psp managed paypal payment
+    //It is not complete.
     fun handleExecutePaypalPayment(
             paymentData: PaymentData,
             billingData: BillingData
-    ) : Single<String> {
-        val paymentWithPaypalRequest = PaymentWithPayPalRequest(
-                amount = paymentData.amount,
-                currency = paymentData.currency!!,
-                customerId = paymentData.customerId,
-                reason = paymentData.reason!!,
-                billingData = billingData
-        )
-        return mobilabApi.executePaypalPayment(paymentWithPaypalRequest)
-                .subscribeOn(Schedulers.io())
-                .flatMap {
-                    val mappedTransactionId = it.result.mappedTransactionId
-                    when (paymentProvider) {
-                        PaymentSdk.Provider.OLD_BS_PAYONE -> throw RuntimeException("Not supported at the moment")
-                        PaymentSdk.Provider.NEW_PAYONE -> bsPayoneHandler.handlePayPalRedirectRequest(it.result.redirectUrl)
-                        PaymentSdk.Provider.HYPERCHARGE -> throw RuntimeException("Not supported at the moment")
-                    }.map {
-                        Pair(it, mappedTransactionId)
-                    }
-                }.flatMap {
-                    val mappedTransactionId = it.second
-                    val responseResult = it.first
-                    mobilabApi.reportPayPalResult(
-                            PayPalConfirmationRequest(
-                                    mappedTransactionId,
-                                    responseResult.redirectState.name.toLowerCase(),
-                                    responseResult.code)
-                    ).subscribeOn(Schedulers.io())
-                            .andThen(Single.just(mappedTransactionId))
-                }
+    ): Single<String> {
+
+        return Single.just("TODO")
     }
 
-    fun <T> Single<T>.processErrors() : Single<T> {
+    fun <T> Single<T>.processErrors(): Single<T> {
         return onErrorResumeNext {
-            when(it) {
+            when (it) {
                 is HttpException -> Single.error(exceptionMapper.mapError(it))
                 else -> Single.error(RuntimeException("Unknown exception ${it.message}"))
             }

@@ -2,17 +2,15 @@ package com.mobilabsolutions.payment.android.psdk;
 
 import android.app.Application;
 
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException;
+import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization;
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 
-import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.util.LinkedList;
+import java.util.List;
 
-import javax.crypto.KeyGenerator;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
-
-import timber.log.Timber;
 
 /**
  * This is a main interface to Payment SDK.
@@ -28,13 +26,29 @@ public final class PaymentSdk {
      * Used to initializa the SDK by providing public key
      * @param publicKey
      * @param applicationContext context of the application
+     * @param integration PSP integration
      */
-    public static void initalize(String publicKey, Application applicationContext) {
-        initialize(publicKey, applicationContext, "0000", "0000");
+    public static void initalize(String publicKey, Application applicationContext, IntegrationInitialization integration) {
+        LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
+        integrationList.add(integration);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
     }
 
-    public static void initialize(String publicKey, Application applicationContext, String seed, String pin) {
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext);
+    public static void initalize(String publicKey, Application applicationContext, IntegrationCompanion integrationComp) {
+        LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
+        integrationList.add(integrationComp.create());
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
+    }
+
+    /**
+     * Used to initializa the SDK by providing public key
+     * @param publicKey
+     * @param applicationContext context of the application
+     * @param integrationList list of PSPs the SDK will be using
+     */
+    //TODO we're keeping this private for mvp, later on we might decide to have a server side psp chooser, or offer per request psp choice
+    private static void initalize(String publicKey, Application applicationContext, List<IntegrationInitialization> integrationList) {
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
     }
 
     /**
@@ -46,7 +60,7 @@ public final class PaymentSdk {
      * @param applicationContext context of the application
      */
     public static void initalize(String publicKey, Application applicationContext,  SSLSocketFactory sslSocketFactory, X509TrustManager x509TrustManager) {
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, sslSocketFactory, x509TrustManager);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, null, sslSocketFactory, x509TrustManager);
     }
 
     /**
@@ -68,29 +82,5 @@ public final class PaymentSdk {
     public static UiCustomizationManager getUiCustomizationManager() {
         return NewPaymentSdk.Companion.getUiCustomizationManager();
     }
-
-    public enum Provider {
-        OLD_BS_PAYONE("BS"),
-        HYPERCHARGE("HC"),
-        NEW_PAYONE("NP");
-
-        private String prefix;
-
-        Provider(String prefix){
-            this.prefix = prefix;
-        }
-
-        public String getPrefix() {
-            return prefix;
-        }
-    }
-
-//    public static String generateRandomSeed()  {
-//        try {
-//            return KeyGenerator.getInstance("AES").generateKey().getEncoded();
-//        } catch (NoSuchAlgorithmException e) {
-//            Timber.e(e, "Key generation algorithm not available");
-//        }
-//    }
 
 }

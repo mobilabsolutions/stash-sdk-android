@@ -1,11 +1,11 @@
 package com.mobilabsolutions.payment.android.psdk.internal.api.backend
 
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasResponse
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import io.reactivex.Completable
 import io.reactivex.Single
-import retrofit2.http.Body
-import retrofit2.http.HTTP
-import retrofit2.http.POST
-import retrofit2.http.PUT
+import retrofit2.http.*
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -22,24 +22,8 @@ interface MobilabApi {
             @Body paymentMethodRegistrationRequest: PaymentMethodRegistrationRequest
     ): Single<SuccessResponse<PaymentMethodRegistrationResponse>>
 
-    @HTTP(method = "DELETE", path = "v1/remove/creditcard", hasBody = true)
-    fun deleteCreditCard(@Body cardAlias: RemoveAliasRequest): Completable
-
-    @HTTP(method = "DELETE", path = "v1/remove/sepa", hasBody = true)
-    fun deleteSepa(@Body paymentAlias: RemoveAliasRequest): Completable
-
     @PUT("v1/update/panalias")
     fun updatePaymentMethodAlias(@Body updatePaymentAliasRequest: UpdatePaymentAliasRequest): Completable
-
-    @POST("v1/payment/creditcard")
-    fun executePaymentWithCreditCardAlias(
-            @Body paymentWithAliasRequest: PaymentWithAliasRequest
-    ) : Single<SuccessResponse<PaymentWithAliasResponse>>
-
-    @POST("v1/payment/sepa")
-    fun executePaymentWithSepaAlias(
-            @Body paymentWithAliasRequest: PaymentWithAliasRequest
-    ) : Single<SuccessResponse<PaymentWithAliasResponse>>
 
     @POST("v1/payment/creditcard")
     fun executePaypalPayment(
@@ -52,4 +36,12 @@ interface MobilabApi {
     ) : Completable
 
 
+}
+
+interface MobilabApiV2 {
+    @POST("v1/alias")
+    fun createAlias(@Header("PSP-Type") psp : String) : Single<AliasResponse>
+
+    @PUT("v1/alias/{aliasId}")
+    fun updateAlias(@Path("aliasId") aliasId : String, @Body aliasUpdateRequest: AliasUpdateRequest) : Completable
 }

@@ -27,13 +27,14 @@ class PaymentController @Inject constructor() : Controller() {
     fun getPaymentMethodObservable() = paymentMethodStateSubject.map { it.paymentMethodMap }
 
     fun executePayment(paymentMethod : String, amount : Int, reason : String, currency : String) : Single<String> {
-        return paymentManager.executeCreditCardPaymentWithAlias(paymentMethod,
-                PaymentData(
-                        amount = amount,
-                        reason = reason,
-                        currency = currency
-                )
-        )
+        TODO()
+//        return paymentManager.executeCreditCardPaymentWithAlias(paymentMethod,
+//                PaymentData(
+//                        amount = amount,
+//                        reason = reason,
+//                        currency = currency
+//                )
+//        )
     }
 
 }

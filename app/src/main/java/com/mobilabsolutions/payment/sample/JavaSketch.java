@@ -1,44 +1,59 @@
 package com.mobilabsolutions.payment.sample;
 
+import android.app.Application;
+
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk;
-import com.mobilabsolutions.payment.android.psdk.exceptions.ProviderOriginatedException;
-import com.mobilabsolutions.payment.android.psdk.exceptions.other.TemporaryException;
-import com.mobilabsolutions.payment.android.psdk.integration.stripeintegration.StripeAdditionalRegistrationData;
-import com.mobilabsolutions.payment.android.psdk.integration.stripeintegration.StripeIntegration;
+import com.mobilabsolutions.payment.android.psdk.RegistrationManager;
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration;
 import com.mobilabsolutions.payment.android.psdk.model.BillingData;
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
 
 import org.threeten.bp.LocalDate;
 
-import timber.log.Timber;
+import io.reactivex.disposables.Disposable;
 
 /**
- *
  * Find more <a href="https://github.com/bumptech/glide">Glide</a>
- * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  *
+ * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 public class JavaSketch {
 
     public void bla() {
         BillingData billingData = BillingData.fromEmail("bla@bla.com");
         BillingData builtBillingData = new BillingData.Builder().build();
+        Application context = null;
 
-        CreditCardData creditCardData = new CreditCardData(
+        PaymentSdk.initalize(BuildConfig.newBsApiKey, context, BsPayoneIntegration.Companion);
+        RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
+
+        CreditCardData creditCardData = CreditCardData.create(
                 "123",
-                LocalDate.of(2011,11,1),
+                LocalDate.of(2011, 11, 1),
                 "123",
                 "Bla"
         );
 
-        StripeAdditionalRegistrationData stripeAdditionalRegistrationData = new StripeAdditionalRegistrationData();
+        Disposable disposable = registrationManager.registerCreditCard(creditCardData, BillingData.empty())
+                .subscribe(
+                        alias -> {
+                            //Handle alias
+                        },
+                        error -> {
+                            //Handle error
+                        }
+                );
+
+//        UiDetailType uiDetailType = UiDetailType.NAME
+
+//        StripeAdditionalRegistrationData stripeAdditionalRegistrationData = new StripeAdditionalRegistrationData();
 
 
 //        StripeIntegration stripeIntegration = new StripeIntegration();
-//        stripeIntegration.registerCreditCard(null, creditCardData, stripeAdditionalRegistrationData);
+//        stripeIntegration.executePayoneRequest(null, creditCardData, stripeAdditionalRegistrationData);
 
 
-//        PaymentSdk.getRegistrationManager().registerCreditCard(creditCardData, billingData);
+//        PaymentSdk.getRegistrationManager().executePayoneRequest(creditCardData, billingData);
 //        ProviderOriginatedException exception = new TemporaryException();
 //        switch (exception.getCode()) {
 //            case TemporaryException.CODE:

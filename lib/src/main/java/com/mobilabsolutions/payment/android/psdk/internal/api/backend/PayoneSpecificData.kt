@@ -5,6 +5,7 @@ package com.mobilabsolutions.payment.android.psdk.internal.api.backend
  */
 data class PayoneSpecificData(
         override val psp : String,
+        val merchantId : String,
         val hash : String,
         val portalId : String,
         val apiVersion : String,

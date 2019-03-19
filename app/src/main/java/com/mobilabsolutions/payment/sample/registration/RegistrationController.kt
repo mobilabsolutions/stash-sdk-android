@@ -65,15 +65,28 @@ class RegistrationController @Inject constructor() : Controller() {
     fun registerSepa(
             holderName: String = "",
             iban: String,
-            bic: String
+            bic: String,
+            address: String = "",
+            city: String = "",
+            country: String = "",
+            phone: String = ""
     ) : Completable {
+        val nameList = holderName.split(' ')
+        val firstName = nameList[0]
+        val lastName = if (nameList.size > 1) {
+            nameList[1]
+        } else {
+            ""
+        }
         return registrationManager.registerSepa(
                 SepaData(
                         bic = bic,
                         iban = iban,
                         holder = holderName
-                        )
-
+                        ),
+                BillingData(
+                        firstName, lastName, address, city, country
+                )
         ).doOnSuccess {
             paymentMethodStateSubject.apply {
                 val paymentMethodState = take(1).blockingLast()

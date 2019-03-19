@@ -31,6 +31,8 @@ val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
 
 object Modules {
     val stripeIntegration = ":stripeintegration"
+    val bsOldIntegration = ":bs-old-integration"
+    val bsPayoneIntegration = ":bspayone-integration"
     val paymentSdk = ":lib"
 }
 

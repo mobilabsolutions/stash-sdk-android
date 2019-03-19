@@ -74,25 +74,25 @@ dependencies {
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.appcompat)
 
-    implementation(Libs.OkHttp.okhttp)
-    implementation(Libs.OkHttp.loggingInterceptor)
+    api(Libs.OkHttp.okhttp)
+    api(Libs.OkHttp.loggingInterceptor)
 
-    implementation(Libs.Retrofit.retrofit)
-    implementation(Libs.Retrofit.retrofit_rxjava_adapter)
-    implementation(Libs.Retrofit.gsonConverter)
-    implementation(Libs.Retrofit.simplexmlConverter) {
+    api(Libs.Retrofit.retrofit)
+    api(Libs.Retrofit.retrofit_rxjava_adapter)
+    api(Libs.Retrofit.gsonConverter)
+    api(Libs.Retrofit.simplexmlConverter) {
         exclude(group = "stax", module = "stax-api")
         exclude(group = "stax", module = "stax")
         exclude(group = "xpp3", module = "xpp3")
     }
 
-    implementation(Libs.simpleframework) {
+    api(Libs.simpleframework) {
         exclude(group = "stax", module = "stax-api")
         exclude(group = "stax", module = "stax")
         exclude(group = "xpp3", module = "xpp3")
     }
 
-    implementation("com.mobilabsolutions.payment:payment-protocol:1.1-SNAPSHOT@jar") {
+    api("com.mobilabsolutions.payment:payment-protocol:1.1-SNAPSHOT@jar") {
         isChanging = true
     }
 

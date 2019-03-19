@@ -17,7 +17,7 @@ class PaymentMethodRegistrationResponse(
         var amount: String? = null,
         var currency: String? = null,
         var kind: String? = null,
-        @SerializedName("pspData")
-        val providerSpecificData : ProviderSpecificData?
+        @SerializedName("extra")
+        val providerSpecificData : Map<String,String> = emptyMap()
 
 )

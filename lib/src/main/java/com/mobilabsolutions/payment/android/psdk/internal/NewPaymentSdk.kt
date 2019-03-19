@@ -1,17 +1,13 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+////import com.tspoon.traceur.Traceur
 import android.app.Application
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentManager
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.oldbspayone.OldBsPayoneModule
-////import com.tspoon.traceur.Traceur
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
@@ -21,10 +17,16 @@ import javax.net.ssl.X509TrustManager
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
+class NewPaymentSdk(
+        publicKey: String,
+        applicationContext: Application,
+        integrationList : List<IntegrationInitialization>,
+        sslSocketFactory: SSLSocketFactory?,
+        x509TrustManager: X509TrustManager?) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
-    val NEW_BS_PAYONE_URL : String = BuildConfig.newBsApiUrl
+
+
 
     @Inject
     lateinit var newRegistrationManager: NewRegistrationManager
@@ -33,30 +35,29 @@ class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocke
     lateinit var newPaymentManager: NewPaymentManager
 
     @Inject
-    lateinit var paymentProvider: PaymentSdk.Provider
-
-    @Inject
-    lateinit var uiCustomizationManager : UiCustomizationManager
+    lateinit var uiCustomizationManager: UiCustomizationManager
 
     val daggerGraph: PaymentSdkComponent
 
-    constructor(publicKey: String, applicationContext : Application) : this(publicKey, applicationContext, null, null)
+    private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, emptyList(),null, null)
 
     init {
 
+
         daggerGraph = DaggerPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-                .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext))
-                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
-                .hyperchargeModule(HyperchargeModule())
-                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
+                .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext, integrationList))
                 .build()
+
+        integrationList.map { it.initialize(daggerGraph) }
+
         daggerGraph.inject(this)
 
 
+
+
+
     }
-
-
 
 
     companion object {
@@ -65,15 +66,15 @@ class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocke
 
         private var initialized = false
 
-        internal var testComponent : PaymentSdkComponent? = null
+        internal var testComponent: PaymentSdkComponent? = null
 
         @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?) {
-            initialize(publicKey, applicationContext, null, null)
+        fun initialize(publicKey: String?, applicationContext: Application?, integrationList : List<IntegrationInitialization>) {
+            initialize(publicKey, applicationContext, integrationList, null, null)
         }
 
         @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
+        fun initialize(publicKey: String?, applicationContext: Application?, integrationList : List<IntegrationInitialization>, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
             if (publicKey == null) {
                 throw InvalidPublicKeyException("Public key not supplied")
             }
@@ -88,8 +89,7 @@ class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocke
             }
 
             Timber.plant(Timber.DebugTree())
-//            //Traceur.enableLogging()
-            NewPaymentSdk.instance = NewPaymentSdk(publicKey, applicationContext, sslSocketFactory, x509TrustManager)
+            NewPaymentSdk.instance = NewPaymentSdk(publicKey, applicationContext, integrationList, sslSocketFactory, x509TrustManager)
 
             NewPaymentSdk.initialized = true
         }
@@ -104,7 +104,7 @@ class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocke
             return NewPaymentSdk.instance!!.newPaymentManager
         }
 
-        fun getUiCustomizationManager() : UiCustomizationManager {
+        fun getUiCustomizationManager(): UiCustomizationManager {
             assertInitialized()
             return NewPaymentSdk.instance!!.uiCustomizationManager
         }
@@ -117,29 +117,7 @@ class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocke
             }
         }
 
-        fun getProviderFromKey(publicKey: String?): PaymentSdk.Provider {
-            if (publicKey == null) {
-                throw InvalidPublicKeyException("Public key not supplied")
-            }
-            if (publicKey.length < 3) {
-                throw InvalidPublicKeyException("Public key length is not valid")
-            }
-            val parts = publicKey.split("-".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            if (parts.size == 3) {
-                if (parts[1] == "BS") {
-                    return PaymentSdk.Provider.OLD_BS_PAYONE
-                }
-                if (parts[1] == "HC") {
-                    return PaymentSdk.Provider.HYPERCHARGE
-                }
-                if (parts[1] == "PO") {//BS2
-                    return PaymentSdk.Provider.NEW_PAYONE
-                }
-            }
-            throw InvalidPublicKeyException("Unknown provider")
-        }
-
-        internal fun getInjector() : PaymentSdkComponent {
+        internal fun getInjector(): PaymentSdkComponent {
             if (instance != null) {
                 return instance!!.daggerGraph
             } else {
@@ -150,8 +128,6 @@ class NewPaymentSdk(publicKey: String, applicationContext: Application, sslSocke
         internal fun supplyTestComponent(testComponent: PaymentSdkComponent) {
             this.testComponent = testComponent
         }
-
-
 
 
         fun reset() {

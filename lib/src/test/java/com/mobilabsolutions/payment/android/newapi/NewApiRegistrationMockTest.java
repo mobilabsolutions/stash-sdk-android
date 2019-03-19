@@ -76,7 +76,7 @@
 //        CountDownLatch latch = new CountDownLatch(1);
 //
 //        RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
-//        Disposable registrationDisposable = registrationManager.registerCreditCard(
+//        Disposable registrationDisposable = registrationManager.executePayoneRequest(
 //                validCreditCardData,
 //                validBillingData
 //        )
@@ -85,7 +85,7 @@
 //                        paymentAlias -> {
 //                            Assert.assertNotNull(paymentAlias);
 //                            assertEquals("1234-CC", paymentAlias);
-//                            System.out.println("Payment alias: " + paymentAlias);
+//                            System.out.println("Payment aliasId: " + paymentAlias);
 //                            latch.countDown();
 //
 //                        }
@@ -111,7 +111,7 @@
 //                        paymentAlias -> {
 //                            Assert.assertNotNull(paymentAlias);
 //                            assertEquals("1234-SEPA", paymentAlias);
-//                            System.out.println("Payment alias: " + paymentAlias);
+//                            System.out.println("Payment aliasId: " + paymentAlias);
 //                            latch.countDown();
 //
 //                        }

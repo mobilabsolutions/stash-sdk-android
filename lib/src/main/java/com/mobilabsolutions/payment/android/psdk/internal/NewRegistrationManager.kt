@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -15,21 +16,26 @@ class NewRegistrationManager @Inject constructor(
         private val pspCoordinator: PspCoordinator
 
 ) : RegistrationManager {
-    override fun registerCreditCard(creditCardData: CreditCardData): Single<String> {
-        return pspCoordinator.handleRegisterCreditCard(creditCardData)
+
+    override fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData): Single<String> {
+        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, billingData = billingData ?: BillingData())
     }
 
 
-    override fun registerSepa(sepaData: SepaData): Single<String> {
-        return pspCoordinator.handleRegisterSepa(sepaData)
+    override fun registerSepa(sepaData: SepaData, billingData : BillingData): Single<String> {
+        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData )
     }
 
-    override fun removeCreditCardAlias(alias: String): Completable {
-        return pspCoordinator.handleRemoveCreditCardAlias(alias)
+    override fun registerCreditCardUsingUIComponent(): Single<String> {
+        return pspCoordinator.handleRegisterCreditCardUsingUIComponent()
     }
 
-    override fun removeSepaAlias(alias: String): Completable {
-        return pspCoordinator.handleRemoveSepaAlias(alias)
+    override fun registerSepaUsingUIComponent(): Single<String> {
+        return pspCoordinator.handleRegisterSepaUsingUIComponent()
+    }
+
+    override fun askUseToPickAPaymentMethod(): Single<PaymentMethodType> {
+        return pspCoordinator.handleAskUserToChoosePaymentMethod()
     }
 
 }

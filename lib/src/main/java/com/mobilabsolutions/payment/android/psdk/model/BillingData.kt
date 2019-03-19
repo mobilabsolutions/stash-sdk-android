@@ -4,7 +4,7 @@ import java.util.*
 
 /**
  * This class models the billing data needed when registering
- * a credit card or a sepa direct debit method as a payment alias
+ * a credit card or a sepa direct debit method as a payment aliasId
  *
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
@@ -28,6 +28,9 @@ class BillingData (
         @JvmStatic
         fun fromName(name : String) = BillingData(name.split(' ')[0], name.split(' ')[1]) //TODO well it's obvious this is just a placeholder
 
+        @JvmStatic
+        fun empty() = BillingData()
+
 
 
 
@@ -35,8 +38,6 @@ class BillingData (
 
     class Builder {
 
-
-        //TODO also obvious
         fun build() = BillingData()
 
     }
