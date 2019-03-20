@@ -26,14 +26,14 @@ TBD Repository serving the artefacts
 `implementation com.mobilabsolutions.payment:lib:0.9.5`
 
 #### Initializing the SDK
-```
+```kotlin
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 
 PaymentSdk.initalize("PD-BS-TOKEN");
 ```
 
 #### Credit card registration
-```
+```kotlin
 CreditCardData creditCardData = new CreditCardData();
 creditCardData.setNumber("4111111111111111");
 creditCardData.setExpiryDate(LocalDate.of(2021,1,1));
@@ -53,7 +53,7 @@ registrationManager.registerCreditCard(creditCardData, billingData)
 ```
 
 #### SEPA registration
-```
+```kotlin
 SepaData sepaData = new SepaData();
 sepaData.setBic("PBNKDEFF");
 sepaData.setIban("DE63123456791212121212");
@@ -73,7 +73,7 @@ registrationManager.registerSepa(sepaData, billingData)
         );
 ```
 #### Executing credit card payment
-```
+```kotlin
 PaymentData paymentData = new PaymentData();
 paymentData.setAmount(100);
 paymentData.setCurrency("EUR");
@@ -93,7 +93,7 @@ registrationManager.executeCreditCardPaymentWithAlias(creditCardAlias, paymentDa
 ```
 
 #### Executing SEPA payment
-```
+```kotlin
 PaymentData paymentData = new PaymentData();
 paymentData.setAmount(100);
 paymentData.setCurrency("EUR");
@@ -114,7 +114,7 @@ registrationManager.executeSepaPaymentWithAlias(sepaAlias, paymentData)
 ```
 
 #### Executing a one time payment
-```
+```kotlin
 CreditCardData creditCardData = new CreditCardData();
 creditCardData.setNumber("4111111111111111");
 creditCardData.setExpiryDate(LocalDate.of(2021,1,1));
@@ -140,7 +140,7 @@ registrationManager.executeCreditCardPayment(creditCardAlias, billingData, payme
 ```
 
 #### Removing a credit card alias
-```
+```kotlin
 RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 registrationManager.removeCreditCardAlias(alias)
                 .subscribe(
@@ -155,7 +155,7 @@ registrationManager.removeCreditCardAlias(alias)
 ```
 
 #### Removing a SEPA alias
-```
+```kotlin
 RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 registrationManager.removeSepaAlias(alias)
                 .subscribe(
