@@ -31,8 +31,8 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeBy(
-                            onComplete = {
-                                registrationViewState = copy(executingRegistration = false, successfullRegistration = true)
+                            onSuccess = {
+                                registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
                                 applyOnUi { it.renderState(registrationViewState) }
                             },
                             onError = {
@@ -65,8 +65,8 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeBy(
-                            onComplete = {
-                                registrationViewState = copy(executingRegistration = false, successfullRegistration = true)
+                            onSuccess = {
+                                registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
                                 applyOnUi { it.renderState(registrationViewState) }
                             },
                             onError = {
@@ -81,31 +81,50 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
         }
     }
 
+    fun registerPayPalRequested() {
+        registrationViewState = registrationViewState.copy(enteringData = false, executingRegistration = true, registrationFailed = false)
+        registrationViewState.apply {
+            registrationController.registerPayPal()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeBy(
+                            onSuccess = {
+                                registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                applyOnUi { it.renderState(registrationViewState) }
+                            },
+                            onError = {
+                                Timber.d("Error encountered")
+                                registrationViewState = copy(
+                                        executingRegistration = false,
+                                        registrationFailed = true,
+                                        failureReason = it.message ?: "Unknown error")
+                                applyOnUi { it.renderState(registrationViewState) }
+                            }
+
+                    )
+        }
+    }
+
     override fun onUiVisible() {
         super.onUiVisible()
         Timber.d("Ui visible")
         applyOnUi { ui ->
 
-            ui.holderNameObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(holderName = it, enteringData = true) })
-            ui.cityObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(city = it, enteringData = true)})
-            ui.phoneObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(phone = it, enteringData = true)})
-            ui.addressObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(address = it, enteringData = true)})
-            ui.countryObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(country = it, enteringData = true)})
-            ui.creditCardNumberObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(creditCardNumber = it, enteringData = true)})
-            ui.cvvObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(cvv = it, enteringData = true)})
-            ui.expiryDateObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(expiryDate = it, enteringData = true)})
-            ui.ibanObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(iban = it, enteringData = true)})
-            ui.bicObservable.subscribeBy(onNext = {registrationViewState = registrationViewState.copy(bic = it, enteringData = true)})
+            ui.holderNameObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(holderName = it, enteringData = true) })
+            ui.cityObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(city = it, enteringData = true) })
+            ui.phoneObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(phone = it, enteringData = true) })
+            ui.addressObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(address = it, enteringData = true) })
+            ui.countryObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(country = it, enteringData = true) })
+            ui.creditCardNumberObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(creditCardNumber = it, enteringData = true) })
+            ui.cvvObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(cvv = it, enteringData = true) })
+            ui.expiryDateObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(expiryDate = it, enteringData = true) })
+            ui.ibanObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(iban = it, enteringData = true) })
+            ui.bicObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(bic = it, enteringData = true) })
 
         }
 
 
-
-
-
-
     }
-
 
 
 }

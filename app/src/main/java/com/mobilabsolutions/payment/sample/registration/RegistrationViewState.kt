@@ -21,7 +21,7 @@ data class RegistrationViewState(
 
         val enteringData : Boolean = true,
         val executingRegistration :  Boolean = false,
-        val successfullRegistration : Boolean = false,
+        val successfullRegistration : Pair<Boolean, String> = Pair(false, ""),
         val registrationFailed : Boolean = false,
         val failureReason : String = ""
 

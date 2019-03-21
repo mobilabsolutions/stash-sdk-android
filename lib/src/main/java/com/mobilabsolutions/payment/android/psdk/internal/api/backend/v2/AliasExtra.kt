@@ -13,8 +13,7 @@ data class CreditCardConfig(
         val ccExpiry: String,
         val ccMask: String,
         val ccType: String,
-        val email: String,
-        val ibanMaskval: String
+        val email: String
 )
 
 data class SepaConfig(
@@ -26,4 +25,8 @@ data class SepaConfig(
         val zip : String? = null,
         val city : String? = null,
         val country : String? = null
+)
+
+data class PayPalConfig (
+        val nonce : String = ""
 )

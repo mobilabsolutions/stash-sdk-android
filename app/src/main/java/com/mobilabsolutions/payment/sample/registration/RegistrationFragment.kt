@@ -60,7 +60,7 @@ class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), Regi
                     registrationViewState.enteringData -> ""
                     registrationViewState.executingRegistration -> "Executing"
                     registrationViewState.registrationFailed -> "Failed ${registrationViewState.failureReason}"
-                    registrationViewState.successfullRegistration -> "Success"
+                    registrationViewState.successfullRegistration.first -> "Success: ${registrationViewState.successfullRegistration.second}"
                     else -> ""
                 }
 
@@ -80,6 +80,10 @@ class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), Regi
 
         registerSepaButton.setOnClickListener {
             notifyPresenter { it.registerSepaRequested() }
+        }
+
+        registerPayPalButton.setOnClickListener {
+            notifyPresenter { it.registerPayPalRequested() }
         }
 
         holderNameObservable = holderNameEditText.getBehaviorStringObservable()

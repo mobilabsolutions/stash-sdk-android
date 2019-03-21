@@ -9,7 +9,7 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
  */
 data class RegistrationRequest (
     val standardizedData : StandardizedData,
-    val additionalData : AdditionalRegistrationData
+    val additionalData : AdditionalRegistrationData = AdditionalRegistrationData()
 )
 
 interface StandardizedData {
@@ -29,3 +29,5 @@ data class SepaRegistrationRequest(
         val billingData: BillingData = BillingData(),
         override val aliasId: String
 ) : StandardizedData
+
+data class PayPalRegistrationRequest(override val aliasId: String) : StandardizedData

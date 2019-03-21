@@ -51,9 +51,8 @@ android {
 
 dependencies {
     implementation(project(Modules.paymentSdk)) //Core
-//    implementation(project(Modules.stripeIntegration))
-//    implementation(project(Modules.bsOldIntegration)) //BSOLD Module
     implementation(project(Modules.bsPayoneIntegration))
+    implementation(project(Modules.braintreeIntegration))
 
     implementation(Libs.Kotlin.stdlib)
 
@@ -82,6 +81,6 @@ dependencies {
     implementation(Libs.Retrofit.gsonConverter)
     implementation(Libs.Retrofit.retrofit_rxjava_adapter)
 
-    implementation("com.mobilabsolutions.android.commons:android-commons-dagger:3.0.1@aar")
-    implementation("com.mobilabsolutions.android.commons:android-commons:3.0.0@aar")
+    implementation("com.mobilabsolutions.android.commons:android-commons-dagger:3.0.2@aar")
+    implementation("com.mobilabsolutions.android.commons:android-commons:3.0.2@aar")
 }

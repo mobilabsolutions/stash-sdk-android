@@ -33,12 +33,13 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+
 }
 
 dependencies {
     implementation(project(Modules.paymentSdk))
     implementation(Libs.Kotlin.stdlib)
-    implementation(Libs.stripe)
+    implementation(Libs.braintree)
 
     implementation(Libs.Dagger.dagger)
     kapt(Libs.Dagger.compiler)

@@ -219,6 +219,12 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
+    fun provideContext() : Context {
+        return applicationContext
+    }
+
+    @Provides
+    @Singleton
     fun provideRedirectObservable() : Single<PayPalRedirectHandler.RedirectResult> {
         return redirectActivitySubject.firstElement().toSingle()
     }

@@ -42,6 +42,7 @@ android {
             buildConfigField("String", "newBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, "") + "\"")
 
             buildConfigField("String", "hyperchargeTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.hyperchargeTestKey, "") + "\"")
+            buildConfigField("String", "braintreeSanboxToken", "\"" + propOrDefWithTravis(PaymentSdkRelease.braintreeSandboxToken, "") + "\"")
         }
 
         getByName("release") {
@@ -104,6 +105,8 @@ dependencies {
 
 
     implementation(Libs.Dagger.dagger)
+    implementation(Libs.Dagger.daggerAndroid)
+    implementation(Libs.Dagger.androidSupport)
     kapt(Libs.Dagger.compiler)
 
     api(Libs.threetenabp)
@@ -119,6 +122,9 @@ dependencies {
 
     androidTestImplementation(Libs.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
+    androidTestImplementation(Libs.AndroidX.Test.core)
+    androidTestImplementation(Libs.AndroidX.Test.coreKtx)
+    androidTestImplementation(Libs.AndroidX.Test.ext)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     kaptAndroidTest(Libs.Dagger.compiler)
 

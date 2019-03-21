@@ -23,9 +23,8 @@ class MainActivity : BaseNoPresenterFragmentActivity(), HasSupportFragmentInject
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
 
-
     val REGISTRATION_FRAGMENT_TAG = RegistrationFragment::class.java.simpleName
-    val PAYMENT_FRAGMENT_TAG = PaymentFragment::class.java.simpleName;
+    val PAYMENT_FRAGMENT_TAG = PaymentFragment::class.java.simpleName
 
 
 //    @Inject
@@ -84,6 +83,8 @@ class MainActivity : BaseNoPresenterFragmentActivity(), HasSupportFragmentInject
     fun showPaymentScreen() {
         replaceFragment(paymentFragment, PAYMENT_FRAGMENT_TAG)
     }
+
+
 
 }
 

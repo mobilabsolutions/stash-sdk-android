@@ -3,12 +3,21 @@
           package="com.mobilabsolutions.payment.android">
     <uses-permission android:name="android.permission.INTERNET"/>
 
-    <application
-        android:usesCleartextTraffic="true"
-        >
+    <application>
+        <!--android:usesCleartextTraffic="true"-->
         <activity android:name=".psdk.internal.psphandler.psppaypal.PayPalRedirectActivity"
                   android:theme="@style/Theme.AppCompat"
             />
+        <activity android:name=".psdk.integration.braintree.BraintreePayPalActivity" />
+        <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
+                  android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="${applicationId}.braintree" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
