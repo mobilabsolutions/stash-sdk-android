@@ -23,17 +23,60 @@ read me will be updated to reflect changes once the integration modules are impl
 #### Including the SDK in your project
 TBD Repository serving the artefacts
 
+Gradle
+
 `implementation com.mobilabsolutions.payment:lib:0.9.5`
 
+Gradle Kotlin DSL
+
+`implementation("com.mobilabsolutions.payment:lib:0.9.5")`
+
 #### Initializing the SDK
+
+Kotlin 
+
 ```kotlin
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 
-PaymentSdk.initalize("PD-BS-TOKEN");
+PaymentSdk.initalize("PD-BS-TOKEN", PspIntegration);
+```
+
+Java 
+
+```java
+import com.mobilabsolutions.payment.android.psdk.PaymentSdk;
+
+PaymentSdk.initalize("PD-BS-TOKEN", PspIntegration.create());
 ```
 
 #### Credit card registration
+
+Kotlin
+
 ```kotlin
+val creditCardData = CreditCardData(
+    number = "4111111111111111",
+    expiryDate = LocalDate.of(2021,1,1),
+    cvv = "123"
+)
+
+
+val registrationManager = PaymentSdk.getRegistrationManager();
+registrationManager.registerCreditCard(creditCardData, billingData)
+        .subscribeBy(
+                onSuccess = {paymentAlias ->
+                    //Handle returned payment alias
+                },
+                onError = {
+                    //Handle error
+                }              
+               
+        )
+```
+
+Java
+
+```java
 CreditCardData creditCardData = new CreditCardData();
 creditCardData.setNumber("4111111111111111");
 creditCardData.setExpiryDate(LocalDate.of(2021,1,1));
@@ -52,13 +95,40 @@ registrationManager.registerCreditCard(creditCardData, billingData)
         );
 ```
 
+
 #### SEPA registration
+
+Kotlin 
+
 ```kotlin
+val sepaData = SepaData(
+    bic = "PBNKDEFF", 
+    iban = "DE63123456791212121212",
+    holderName = "Holder Holderman"
+    )
+
+
+val registrationManager = PaymentSdk.getRegistrationManager();
+registrationManager.registerSepa(sepaData)
+        .subscribeBy(
+                onSuccess = {
+                    //Handle returned payment alias
+                },
+                onError = {
+                    // Handle error
+                }
+
+        );
+```
+
+Java
+
+```java
 SepaData sepaData = new SepaData();
 sepaData.setBic("PBNKDEFF");
 sepaData.setIban("DE63123456791212121212");
 sepaData.setHolderName("Holder Holderman");
-billingData = new billingData();
+BillingData billingData = new BillingData.empty();
 
 RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 registrationManager.registerSepa(sepaData, billingData)
@@ -72,99 +142,6 @@ registrationManager.registerSepa(sepaData, billingData)
 
         );
 ```
-#### Executing credit card payment
-```kotlin
-PaymentData paymentData = new PaymentData();
-paymentData.setAmount(100);
-paymentData.setCurrency("EUR");
-paymentData.setCustomerId("1");
-paymentData.setReason("Test payment");
 
-PaymentManager registrationManager = PaymentSdk.getPaymentManager();
-registrationManager.executeCreditCardPaymentWithAlias(creditCardAlias, paymentData)
-        .subscribe(
-                transactionId -> {
-                    // Handle transaction id
-                },
-                error -> {
-                    // Handle error
-                }
-        );
-```
 
-#### Executing SEPA payment
-```kotlin
-PaymentData paymentData = new PaymentData();
-paymentData.setAmount(100);
-paymentData.setCurrency("EUR");
-paymentData.setCustomerId("1");
-paymentData.setReason("Test payment");
 
-PaymentManager registrationManager = PaymentSdk.getPaymentManager();
-registrationManager.executeSepaPaymentWithAlias(sepaAlias, paymentData)
-        .subscribe(
-                transactionId -> {
-                    // Handle transaction id
-                },
-                error -> {
-                    // Handle error
-                }
-        );
-
-```
-
-#### Executing a one time payment
-```kotlin
-CreditCardData creditCardData = new CreditCardData();
-creditCardData.setNumber("4111111111111111");
-creditCardData.setExpiryDate(LocalDate.of(2021,1,1));
-creditCardData.setCvv("123");
-creditCardData.setHolder("Holder Holderman");
-
-PaymentData paymentData = new PaymentData();
-paymentData.setAmount(100);
-paymentData.setCurrency("EUR");
-paymentData.setCustomerId("1");
-paymentData.setReason("Test payment");
-
-PaymentManager registrationManager = PaymentSdk.getPaymentManager();
-registrationManager.executeCreditCardPayment(creditCardAlias, billingData, paymentData)
-        .subscribe(
-                transactionId -> {
-                    // Handle transaction id
-                },
-                error -> {
-                    // Handle error
-                }
-        );
-```
-
-#### Removing a credit card alias
-```kotlin
-RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
-registrationManager.removeCreditCardAlias(alias)
-                .subscribe(
-                        () -> {
-                            // Handle success
-                        },
-                        error -> {
-                            // Handle error
-                        }
-
-                );
-```
-
-#### Removing a SEPA alias
-```kotlin
-RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
-registrationManager.removeSepaAlias(alias)
-                .subscribe(
-                        () -> {
-                            // Handle success
-                        },
-                        error -> {
-                            // Handle error
-                        }
-
-                );
-```
