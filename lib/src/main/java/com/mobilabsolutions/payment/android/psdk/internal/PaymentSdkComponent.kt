@@ -5,7 +5,6 @@ import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectActivity
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
 import okhttp3.logging.HttpLoggingInterceptor
@@ -20,8 +19,6 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(AndroidSupportInjectionModule::class, SslSupportModule::class, PaymentSdkModule::class))
 interface PaymentSdkComponent {
     fun inject(paymentSdk: NewPaymentSdk)
-
-    fun inject(payPalRedirectActivity: PayPalRedirectActivity)
 
     fun provideApplication() : Application
 

@@ -41,6 +41,10 @@ dependencies {
     implementation(Libs.Kotlin.stdlib)
 
 
+    implementation(Libs.AndroidX.appcompat)
+    implementation(Libs.AndroidX.constraintlayout)
+
+
     implementation(Libs.braintree)
 
     implementation(Libs.Dagger.dagger)
@@ -48,6 +52,9 @@ dependencies {
 
     testImplementation(Libs.junit)
     kaptTest(Libs.Dagger.compiler)
+
+    androidTestImplementation(Libs.AndroidX.appcompat)
+    androidTestImplementation(Libs.AndroidX.constraintlayout)
 
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)

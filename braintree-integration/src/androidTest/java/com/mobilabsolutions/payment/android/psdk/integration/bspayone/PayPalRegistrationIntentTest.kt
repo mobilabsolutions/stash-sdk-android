@@ -72,8 +72,6 @@ class PayPalIntentRegistrationTest {
         intending(not(isInternal())).respondWith(result);
         onView(isRoot()).perform(waitFor(5000)) //We need to wait for Braintree SDK to fetch necessary data
         intended(allOf(hasAction(Intent.ACTION_VIEW)))
-        val latch = CountDownLatch(1)
-        latch.await(10, TimeUnit.SECONDS)
         Intents.assertNoUnverifiedIntents();
 
 
