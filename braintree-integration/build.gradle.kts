@@ -39,6 +39,8 @@ android {
 dependencies {
     implementation(project(Modules.paymentSdk))
     implementation(Libs.Kotlin.stdlib)
+
+
     implementation(Libs.braintree)
 
     implementation(Libs.Dagger.dagger)
@@ -49,6 +51,7 @@ dependencies {
 
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.rules)
     kaptAndroidTest(Libs.Dagger.compiler)
 
 }

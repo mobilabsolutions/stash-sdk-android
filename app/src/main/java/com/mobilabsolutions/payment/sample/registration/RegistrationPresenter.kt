@@ -36,7 +36,7 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                                 applyOnUi { it.renderState(registrationViewState) }
                             },
                             onError = {
-                                Timber.d("Error encountered")
+                                Timber.d(it, "Error encountered")
                                 registrationViewState = copy(
                                         executingRegistration = false,
                                         registrationFailed = true,
@@ -70,7 +70,7 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                                 applyOnUi { it.renderState(registrationViewState) }
                             },
                             onError = {
-                                Timber.d("Error encountered")
+                                Timber.d(it, "Error encountered")
                                 registrationViewState = copy(
                                         executingRegistration = false,
                                         registrationFailed = true,
@@ -93,7 +93,7 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                                 applyOnUi { it.renderState(registrationViewState) }
                             },
                             onError = {
-                                Timber.d("Error encountered")
+                                Timber.d(it, "Error encountered")
                                 registrationViewState = copy(
                                         executingRegistration = false,
                                         registrationFailed = true,

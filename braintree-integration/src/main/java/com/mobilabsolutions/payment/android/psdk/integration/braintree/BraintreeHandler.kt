@@ -31,11 +31,13 @@ class BraintreeHandler @Inject constructor(){
             payPalActivityIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(payPalActivityIntent)
             resultSubject
-                    .doOnComplete {
-                        Timber.d("Nonce subject completed")
+                    .doOnNext {
+                        Timber.d("Nonce sent $it")
+                    }
+                    .doFinally {
+                        Timber.d("Finalizing")
                         processing.set(false)
                     }
-                    .doOnError { processing.set(false) }
                     .firstOrError()
         } else {
             Single.error(RuntimeException("TODO update me!")) //TODO

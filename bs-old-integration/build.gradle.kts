@@ -40,6 +40,10 @@ dependencies {
     implementation(Libs.Kotlin.stdlib)
     implementation(Libs.stripe)
 
+
+    implementation(Libs.AndroidX.appcompat)
+    implementation(Libs.AndroidX.constraintlayout)
+
     implementation(Libs.Dagger.dagger)
     kapt(Libs.Dagger.compiler)
 

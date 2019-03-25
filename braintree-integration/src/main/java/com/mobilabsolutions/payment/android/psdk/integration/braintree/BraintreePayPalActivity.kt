@@ -1,18 +1,16 @@
 package com.mobilabsolutions.payment.android.psdk.integration.braintree
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.PayPal
-import com.braintreepayments.api.interfaces.BraintreeErrorListener
-import com.braintreepayments.api.interfaces.BraintreeListener
-import com.braintreepayments.api.interfaces.ConfigurationListener
-import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
+import com.braintreepayments.api.interfaces.*
 import com.braintreepayments.api.models.Configuration
 import com.braintreepayments.api.models.PayPalRequest
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.R
+import com.mobilabsolutions.payment.android.psdk.integration.braintree.R
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
 import timber.log.Timber
 import java.lang.Exception
@@ -23,7 +21,12 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
-        PaymentMethodNonceCreatedListener, BraintreeErrorListener {
+        PaymentMethodNonceCreatedListener, BraintreeErrorListener, BraintreeCancelListener {
+    override fun onCancel(requestCode: Int) {
+        braintreeHandler.resultSubject.onError(RuntimeException("Braintree canceled"))
+        this.finish()
+    }
+
     override fun onConfigurationFetched(configuration: Configuration?) {
         Timber.d("Got configuration")
     }
@@ -39,7 +42,9 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
     }
 
     override fun onError(error: Exception?) {
-        Timber.d(error, "Got configuration")
+        Timber.d(error, "Error")
+        braintreeHandler.resultSubject.onError(error ?: RuntimeException("Unknown error received from Braintree SDK"))
+        this.finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,4 +55,5 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         val payment = PayPalRequest()
         PayPal.requestBillingAgreement(braintreeFragment, payment)
     }
+
 }
