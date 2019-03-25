@@ -31,8 +31,8 @@ class BraintreeHandler @Inject constructor(){
             payPalActivityIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
             context.startActivity(payPalActivityIntent)
             resultSubject
-                    .doOnNext {
-                        Timber.d("Nonce sent $it")
+                    .doOnEach {
+                        Timber.d("Event from paypal activity $it")
                     }
                     .doFinally {
                         Timber.d("Finalizing")
@@ -40,7 +40,7 @@ class BraintreeHandler @Inject constructor(){
                     }
                     .firstOrError()
         } else {
-            Single.error(RuntimeException("TODO update me!")) //TODO
+            Single.error(RuntimeException("Braintree PayPal activity already shown!"))
         }
 
 

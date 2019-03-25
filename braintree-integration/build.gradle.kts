@@ -51,6 +51,7 @@ dependencies {
 
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.espressoIntents)
     androidTestImplementation(Libs.AndroidX.Test.rules)
     kaptAndroidTest(Libs.Dagger.compiler)
 

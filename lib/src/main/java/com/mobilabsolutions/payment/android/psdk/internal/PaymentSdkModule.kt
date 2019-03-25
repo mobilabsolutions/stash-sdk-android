@@ -142,7 +142,7 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
                 .addInterceptor(httpLoggingInterceptor)
                 .addInterceptor { chain ->
                     val request = chain.request().newBuilder()
-                            .addHeader("Public-Key", " " + publicKey)
+                            .addHeader("Publishable-Key", publicKey)
                             .build()
                     chain.proceed(request)
                 }

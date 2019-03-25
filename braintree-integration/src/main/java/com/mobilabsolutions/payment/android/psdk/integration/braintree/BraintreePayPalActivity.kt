@@ -22,6 +22,7 @@ import javax.inject.Inject
  */
 class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         PaymentMethodNonceCreatedListener, BraintreeErrorListener, BraintreeCancelListener {
+
     override fun onCancel(requestCode: Int) {
         braintreeHandler.resultSubject.onError(RuntimeException("Braintree canceled"))
         this.finish()
@@ -36,24 +37,28 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
         Timber.d("Payment nonce create")
-        braintreeHandler.resultSubject.onNext(paymentMethodNonce?.nonce ?: throw RuntimeException("Nonce was null in created method"))
+        braintreeHandler.resultSubject.onNext(paymentMethodNonce?.nonce
+                ?: throw RuntimeException("Nonce was null in created method"))
         braintreeHandler.resultSubject.onComplete()
         this.finish()
     }
 
     override fun onError(error: Exception?) {
         Timber.d(error, "Error")
-        braintreeHandler.resultSubject.onError(error ?: RuntimeException("Unknown error received from Braintree SDK"))
+        braintreeHandler.resultSubject.onError(error
+                ?: RuntimeException("Unknown error received from Braintree SDK"))
         this.finish()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
+
         setContentView(R.layout.activity_braintree_paypal)
         val braintreeFragment = BraintreeFragment.newInstance(this, BuildConfig.braintreeSanboxToken)
         val payment = PayPalRequest()
         PayPal.requestBillingAgreement(braintreeFragment, payment)
+        sendBroadcast(Intent())
     }
 
 }
