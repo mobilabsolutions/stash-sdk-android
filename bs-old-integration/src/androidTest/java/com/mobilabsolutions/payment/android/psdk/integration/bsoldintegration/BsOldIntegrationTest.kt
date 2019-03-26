@@ -16,7 +16,6 @@ import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import dagger.Component
 import io.reactivex.rxkotlin.subscribeBy
-import org.junit.Before
 import org.junit.Test
 import org.threeten.bp.LocalDate
 import java.util.concurrent.CountDownLatch
@@ -32,6 +31,7 @@ class IntegrationTest {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
     val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
+
 
     @Inject
     lateinit var pspCoordinator : PspCoordinator

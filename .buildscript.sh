@@ -7,7 +7,7 @@ echo Travis build id: ${TRAVIS_BUILD_ID}
 
 ./gradlew dependencies
 if [[ $TRAVIS_BRANCH == 'master' ]]; then
-./gradlew lib:uploadArchives lib:connectedCheck lib:test bspayone-integration:connectedCheck
+./gradlew lib:uploadArchives lib:connectedCheck lib:test bspayone-integration:connectedCheck braintree-integration:connectedCheck
 else
 ./gradlew lib:assemble
 fi

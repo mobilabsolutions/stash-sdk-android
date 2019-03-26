@@ -14,6 +14,8 @@ object PaymentSdkRelease {
     val newBsTestKey = "NEW_BS_TEST_PUBLIC_KEY"
     val hyperchargeTestKey = "HC_TEST_PUBLIC_KEY"
 
+    val braintreeSandboxToken = "BRAINTREE_SANDBOX_TOKEN"
+
     val mobilabNexusUser = "MOBILAB_NEXUS_USER"
     val mobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
 }
@@ -33,6 +35,7 @@ object Modules {
     val stripeIntegration = ":stripeintegration"
     val bsOldIntegration = ":bs-old-integration"
     val bsPayoneIntegration = ":bspayone-integration"
+    val braintreeIntegration = ":braintree-integration"
     val paymentSdk = ":lib"
 }
 
@@ -54,6 +57,8 @@ object Libs {
     val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.11.0"
 
     val iban4j = "org.iban4j:iban4j:3.2.1"
+
+    val braintree = "com.braintreepayments.api:braintree:3.0.0"
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha02"
@@ -81,11 +86,16 @@ object Libs {
         val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
 
         object Test {
-            val core = "androidx.test:core:1.1.0"
+            val core = "androidx.test:core:1.1.1-alpha02"
+            val coreKtx = "androidx.test:core:1.1.1-alpha02"
+            val ext = "androidx.test.ext:junit-ktx:1.1.1-alpha02"
             val runner = "androidx.test:runner:1.1.1"
             val rules = "androidx.test:rules:1.1.1"
 
-            val espressoCore = "androidx.test.espresso:espresso-core:3.1.1"
+            val espressoCore = "androidx.test.espresso:espresso-core:3.2.0-alpha02"
+            val espressoIntents = "androidx.test.espresso:espresso-intents:3.2.0-alpha02"
+
+            val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
 
         val archCoreTesting = "androidx.arch.core:core-testing:2.0.0"

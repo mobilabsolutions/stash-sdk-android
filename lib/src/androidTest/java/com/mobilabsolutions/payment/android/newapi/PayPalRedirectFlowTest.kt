@@ -1,21 +1,18 @@
 //package com.mobilabsolutions.payment.android.newapi
 //
+////import com.tspoon.traceur.Traceur
 //import android.app.Application
 //import androidx.test.InstrumentationRegistry
+//import androidx.test.ext.junit.rules.activityScenarioRule
 //import com.mobilabsolutions.payment.android.BuildConfig
 //import com.mobilabsolutions.payment.android.psdk.internal.*
-//import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-//import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
 //import com.mobilabsolutions.payment.android.psdk.model.BillingData
 //import com.mobilabsolutions.payment.android.psdk.model.PaymentData
-////import com.tspoon.traceur.Traceur
 //import dagger.Component
-//import io.reactivex.rxkotlin.subscribeBy
 //import okhttp3.mockwebserver.MockResponse
 //import okhttp3.mockwebserver.MockWebServer
-//import org.junit.Assert
 //import org.junit.Before
-//import org.junit.Ignore
+//import org.junit.Rule
 //import org.junit.Test
 //import timber.log.Timber
 //import java.net.URL
@@ -27,7 +24,6 @@
 ///**
 // * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
 // */
-//@Ignore("Paypal is not planned for mvp")
 //class PayPalRedirectFlowTest {
 //    val testPublicKey = "PD-PO-nhnEiKIFQiZeVjGCM0HZY3xvaI"
 //    private val MOBILAB_BE_URL = BuildConfig.mobilabBackendUrl
@@ -35,6 +31,9 @@
 //    //    private val NEW_BS_PAYONE_URL = "https://secure.pay1.de/client-api/"
 //    private val NEW_BS_PAYONE_URL = BuildConfig.newBsApiUrl
 //
+//
+//    @get:Rule
+//    var activityScenario = activityScenarioRule<>()
 //
 //    @Inject
 //    lateinit var registrationManager: NewRegistrationManager
@@ -95,14 +94,10 @@
 //
 //        val context = InstrumentationRegistry.getContext().applicationContext as Application
 //        val graph = DaggerTestPayPalRedirectSdkComponent.builder()
-//                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context))
-//                .oldBsPayoneModule(com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule(OLD_BS_PAYONE_URL))
-//                .hyperchargeModule(HyperchargeModule())
-//                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
+//                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, emptyList()))
 //                .build()
 //        graph.injectTest(this)
 //        NewPaymentSdk.supplyTestComponent(graph)
-//        //Traceur.enableLogging()
 //        Timber.plant(Timber.DebugTree())
 //    }
 //
@@ -119,24 +114,24 @@
 //        paypalMockPage.setHeader("Location", "http://pd.mblb.net/api/v1/success/123456789")
 //        paypalMockPage.setResponseCode(302)
 //        payPalMockWebServer.enqueue(paypalMockPage)
-//        paymentManager.executePayPalPayment(paymentData, billingData).subscribeBy(
-//                onSuccess = {
-//                    Timber.d("Got transaction id $it")
-//                    Assert.assertEquals("123", it)
-//                    latch.countDown()
-//                },
-//                onError = {
-//                    Timber.e("Failed")
-//                    latch.countDown()
-//                }
-//        )
-//        latch.await()
+////        paymentManager.executePayPalPayment(paymentData, billingData).subscribeBy(
+////                onSuccess = {
+////                    Timber.d("Got transaction id $it")
+////                    Assert.assertEquals("123", it)
+////                    latch.countDown()
+////                },
+////                onError = {
+////                    Timber.e("Failed")
+////                    latch.countDown()
+////                }
+////        )
+////        latch.await()
 //    }
 //}
 //
 //
 //@Singleton
-//@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+//@Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
 //internal interface TestPayPalRedirectSdkComponent : PaymentSdkComponent {
 //    fun injectTest(test: PayPalRedirectFlowTest)
 //}

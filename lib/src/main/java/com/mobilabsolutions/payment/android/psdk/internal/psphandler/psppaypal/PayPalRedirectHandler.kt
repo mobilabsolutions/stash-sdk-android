@@ -20,13 +20,4 @@ class PayPalRedirectHandler @Inject constructor(
 
     data class RedirectResult(val redirectState: RedirectState, val code : String)
 
-    fun handlePayPalRedirect(redirectUrl : String) : Single<RedirectResult> {
-        return Completable.fromAction {
-            val payPalRedirectActivityIntent = Intent(applicationContext, PayPalRedirectActivity::class.java)
-            payPalRedirectActivityIntent.putExtra(PayPalRedirectActivity.REDIRECT_URL_EXTRA, redirectUrl)
-            payPalRedirectActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            applicationContext.startActivity(payPalRedirectActivityIntent)
-        }.andThen(redirectActivitySingle)
-
-    }
 }

@@ -5,7 +5,6 @@ import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
-import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -34,8 +33,12 @@ class NewRegistrationManager @Inject constructor(
         return pspCoordinator.handleRegisterSepaUsingUIComponent()
     }
 
-    override fun askUseToPickAPaymentMethod(): Single<PaymentMethodType> {
+    override fun askUserToPickAPaymentMethod(): Single<PaymentMethodType> {
         return pspCoordinator.handleAskUserToChoosePaymentMethod()
+    }
+
+    override fun registerPayPalAccount(): Single<String> {
+        return pspCoordinator.handleRegisterPayPal()
     }
 
 }

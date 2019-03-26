@@ -31,13 +31,19 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
     implementation(project(Modules.paymentSdk))
     implementation(Libs.Kotlin.stdlib)
 
-    implementation(Libs.AndroidX.appcompat)
+
+
 
     implementation(Libs.Dagger.dagger)
     kapt(Libs.Dagger.compiler)

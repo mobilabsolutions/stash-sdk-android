@@ -30,6 +30,8 @@ interface RegistrationManager {
 
     fun registerSepaUsingUIComponent(): Single<String>
 
-    fun askUseToPickAPaymentMethod() : Single<PaymentMethodType>
+    fun askUserToPickAPaymentMethod() : Single<PaymentMethodType>
+
+    fun registerPayPalAccount() : Single<String>
 
 }

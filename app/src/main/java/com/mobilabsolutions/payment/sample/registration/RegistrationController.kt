@@ -9,9 +9,11 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import com.mobilabsolutions.payment.sample.state.PaymentMethodState
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import org.threeten.bp.LocalDate
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -38,7 +40,7 @@ class RegistrationController @Inject constructor() : Controller() {
             cvv: String,
             exipryDate: LocalDate
 
-    ): Completable {
+    ): Single<String> {
         val nameList = holderName.split(' ')
         val firstName = nameList[0]
         val lastName = if (nameList.size > 1) {
@@ -59,7 +61,7 @@ class RegistrationController @Inject constructor() : Controller() {
                 val paymentMethodMap = paymentMethodState.paymentMethodMap
                 onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("CC" + creditCardNumber.takeLast(4) to it)))
             }
-        }.ignoreElement()
+        }
     }
 
     fun registerSepa(
@@ -70,7 +72,7 @@ class RegistrationController @Inject constructor() : Controller() {
             city: String = "",
             country: String = "",
             phone: String = ""
-    ) : Completable {
+    ): Single<String> {
         val nameList = holderName.split(' ')
         val firstName = nameList[0]
         val lastName = if (nameList.size > 1) {
@@ -83,7 +85,7 @@ class RegistrationController @Inject constructor() : Controller() {
                         bic = bic,
                         iban = iban,
                         holder = holderName
-                        ),
+                ),
                 BillingData(
                         firstName, lastName, address, city, country
                 )
@@ -93,7 +95,22 @@ class RegistrationController @Inject constructor() : Controller() {
                 val paymentMethodMap = paymentMethodState.paymentMethodMap
                 onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("SEPA" + iban.takeLast(4) to it)))
             }
-        }.ignoreElement()
+        }
     }
+
+    fun registerPayPal(): Single<String> {
+
+        return registrationManager.registerPayPalAccount()
+                .doOnSuccess{
+                            Timber.d("Nonce $it")
+                            paymentMethodStateSubject.apply {
+                                val paymentMethodState = take(1).blockingLast()
+                                val paymentMethodMap = paymentMethodState.paymentMethodMap
+                                onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("PayPal" + LocalDate.now().toString() to it)))
+                            }
+
+                        }
+    }
+
 
 }
