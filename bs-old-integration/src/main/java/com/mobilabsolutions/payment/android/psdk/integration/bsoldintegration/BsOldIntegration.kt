@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration
 
 import android.app.Activity
 import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
@@ -14,19 +15,19 @@ import javax.inject.Inject
  */
 
 
-class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : String = BuildConfig.oldBsApiUrl ) : Integration {
+class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url: String = BuildConfig.oldBsApiUrl) : Integration {
     override val identifier = "BsOld"
 
     companion object : IntegrationCompanion {
-        var integration : BsOldIntegration? = null
+        var integration: BsOldIntegration? = null
 
-        override fun create() : IntegrationInitialization {
+        override fun create(): IntegrationInitialization {
             return object : IntegrationInitialization {
                 override fun initializedOrNull(): Integration? {
                     return integration
                 }
 
-                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url : String): Integration {
+                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url: String): Integration {
                     if (integration == null) {
                         if (url.isEmpty()) {
                             integration = BsOldIntegration(paymentSdkComponent)
@@ -42,13 +43,13 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : Strin
     }
 
     @Inject
-    lateinit var oldBsPayoneHandler : OldBsPayoneHandler
+    lateinit var oldBsPayoneHandler: OldBsPayoneHandler
 
     init {
         initialize(paymentSdkComponent)
     }
 
-    private fun initialize(appDaggerGraph : PaymentSdkComponent) {
+    private fun initialize(appDaggerGraph: PaymentSdkComponent) {
         val graph = DaggerBsOldIntegrationComponent.builder()
                 .bsOldModule(BsOldModule(url))
                 .coreComponent(appDaggerGraph)
@@ -75,10 +76,14 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url : Strin
     }
 
     override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
-        return emptyList()
+        return listOf(
+                PaymentMethodDefinition(
+                        methodId = "BsP-CC-1234",
+                        pspIdentifier = identifier,
+                        paymentMethodType = PaymentMethodType.CREDITCARD
+                )
+        )
     }
-
-
 
 
 }

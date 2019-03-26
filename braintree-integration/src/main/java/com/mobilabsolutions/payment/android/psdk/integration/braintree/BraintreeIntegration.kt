@@ -72,7 +72,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     }
 
     override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
-        return listOf(PaymentMethodDefinition("PayPal", PaymentMethodType.PAYPAL))
+        return listOf(PaymentMethodDefinition("PayPal", identifier, PaymentMethodType.PAYPAL))
     }
 
     override fun handlePaymentMethodEntryRequest(activity : Activity, registrationRequest: RegistrationRequest): Single<String> {

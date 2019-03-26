@@ -85,7 +85,8 @@ class BsPayoneIntegration private constructor(
     }
 
     val creditCardUIDefinition = PaymentMethodDefinition(
-            paymentMethodName = "CreditCard",
+            methodId = "BsP-CC-1234",
+            pspIdentifier = identifier,
             paymentMethodType = PaymentMethodType.CREDITCARD
     )
 

@@ -4,6 +4,7 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.app.Application
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentManager
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
@@ -39,6 +40,8 @@ class NewPaymentSdk(
 
     val daggerGraph: PaymentSdkComponent
 
+    var paymentMethodSet : Set<PaymentMethodType> = emptySet()
+
     private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, emptyList(),null, null)
 
     init {
@@ -49,7 +52,20 @@ class NewPaymentSdk(
                 .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext, integrationList))
                 .build()
 
-        integrationList.map { it.initialize(daggerGraph) }
+        integrationList.map {
+            val initialized = it.initialize(daggerGraph)
+            val supportedMethods = initialized.getSupportedPaymentMethodDefinitions().map { it.paymentMethodType }
+            supportedMethods.forEach { paymentMethodType ->
+                if (paymentMethodSet.contains(paymentMethodType)) {
+                    throw RuntimeException("You are trying to add integrations that support same payment methods. This is not supported at this moment")
+                } else {
+                    paymentMethodSet += paymentMethodType
+                }
+            }
+            initialized
+        }
+
+
 
         daggerGraph.inject(this)
 

@@ -8,6 +8,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -131,36 +132,42 @@ class PspCoordinator @Inject constructor(
     // ------- UI Component handling ------------
     //
 
-    fun registerCreditCardUsingUIComponent(activity: Activity?, chosenPsp: PspIdentifier): Single<String> {
-        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
-        val definitions =
-                chosenIntegration.getSupportedPaymentMethodDefinitions()
-                        .filter { it.paymentMethodType == PaymentMethodType.CREDITCARD }
-                        .first()
+    fun registerCreditCardUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition): Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == paymentMethodDefinition.pspIdentifier }.first()
         val (creditCardData, additionalUIData) =
-                uiRequestHandler.handleCreditCardMethodEntryRequest(definitions)
+                uiRequestHandler.handleCreditCardMethodEntryRequest(
+                        activity,
+                        chosenIntegration,
+                        paymentMethodDefinition
+                )
         return handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData)
 
     }
 
-    fun registerSepaUsingUIComponent(activity: Activity?, chosenPsp: PspIdentifier): Single<String> {
-        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
-        val definitions =
-                chosenIntegration.getSupportedPaymentMethodDefinitions()
-                        .filter { it.paymentMethodType == PaymentMethodType.SEPA }
-                        .first()
+    fun registerSepaUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition): Single<String> {
+        val chosenIntegration = integrations.filter { it.identifier == paymentMethodDefinition.pspIdentifier }.first()
         val (sepaData, additionalUIData) =
-                uiRequestHandler.handleSepadMethodEntryRequest(definitions)
+                uiRequestHandler.handleSepadMethodEntryRequest(
+                        activity,
+                        chosenIntegration,
+                        paymentMethodDefinition
+                )
         return handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData)
 
     }
 
     fun registerCreditCardUsingUIComponent(activity: Activity?): Single<String> {
-        return registerCreditCardUsingUIComponent(activity, integrations.first().identifier)
+        val selectedPaymentMethodDefinition = integrations.flatMap {
+            it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.CREDITCARD }
+        }.first()
+        return registerCreditCardUsingUIComponent(activity, selectedPaymentMethodDefinition)
     }
 
     fun registerSepaUsingUIComponent(activity: Activity?): Single<String> {
-        return registerSepaUsingUIComponent(activity, integrations.first().identifier)
+        val selectedPaymentMethodDefinition = integrations.flatMap {
+            it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.SEPA }
+        }.first()
+        return registerSepaUsingUIComponent(activity, selectedPaymentMethodDefinition)
     }
 
     fun getAvailablePaymentMethods() : Set<PaymentMethodType> {
