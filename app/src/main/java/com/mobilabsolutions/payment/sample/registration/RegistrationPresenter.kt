@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.sample.registration
 
+import android.app.Activity
 import com.mobilabsolutions.commonsv3.mvp.presenter.CommonPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -82,27 +83,30 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
     }
 
     fun registerPayPalRequested() {
-        registrationViewState = registrationViewState.copy(enteringData = false, executingRegistration = true, registrationFailed = false)
-        registrationViewState.apply {
-            registrationController.registerPayPal()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeBy(
-                            onSuccess = {
-                                registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
-                                applyOnUi { it.renderState(registrationViewState) }
-                            },
-                            onError = {
-                                Timber.d(it, "Error encountered")
-                                registrationViewState = copy(
-                                        executingRegistration = false,
-                                        registrationFailed = true,
-                                        failureReason = it.message ?: "Unknown error")
-                                applyOnUi { it.renderState(registrationViewState) }
-                            }
+        applyOnUi {
+            registrationViewState = registrationViewState.copy(enteringData = false, executingRegistration = true, registrationFailed = false)
+            registrationViewState.apply {
+                registrationController.registerPayPal(it.getParentActivity())
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy(
+                                onSuccess = {
+                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                    applyOnUi { it.renderState(registrationViewState) }
+                                },
+                                onError = {
+                                    Timber.d(it, "Error encountered")
+                                    registrationViewState = copy(
+                                            executingRegistration = false,
+                                            registrationFailed = true,
+                                            failureReason = it.message ?: "Unknown error")
+                                    applyOnUi { it.renderState(registrationViewState) }
+                                }
 
-                    )
+                        )
+            }
         }
+
     }
 
     override fun onUiVisible() {

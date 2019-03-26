@@ -1,6 +1,8 @@
 package com.mobilabsolutions.payment.sample.registration
 
+import android.app.Activity
 import com.mobilabsolutions.commonsv3.mvp.controller.Controller
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -98,9 +100,10 @@ class RegistrationController @Inject constructor() : Controller() {
         }
     }
 
-    fun registerPayPal(): Single<String> {
+    fun registerPayPal(activity : Activity): Single<String> {
 
-        return registrationManager.registerPayPalAccount()
+//        return registrationManager.registerPaymentMehodUsingUi(specificPaymentMethodType = PaymentMethodType.PAYPAL)
+        return registrationManager.registerPaymentMehodUsingUi()
                 .doOnSuccess{
                             Timber.d("Nonce $it")
                             paymentMethodStateSubject.apply {

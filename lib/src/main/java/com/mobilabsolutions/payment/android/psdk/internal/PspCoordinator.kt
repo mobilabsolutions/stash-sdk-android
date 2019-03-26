@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import android.app.Activity
 import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
@@ -126,10 +127,14 @@ class PspCoordinator @Inject constructor(
                 }
     }
 
-    fun handleRegisterCreditCardUsingUIComponent(chosenPsp: PspIdentifier): Single<String> {
+    //
+    // ------- UI Component handling ------------
+    //
+
+    fun registerCreditCardUsingUIComponent(activity: Activity?, chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
         val definitions =
-                chosenIntegration.getPaymentMethodUiDefinitions()
+                chosenIntegration.getSupportedPaymentMethodDefinitions()
                         .filter { it.paymentMethodType == PaymentMethodType.CREDITCARD }
                         .first()
         val (creditCardData, additionalUIData) =
@@ -138,10 +143,10 @@ class PspCoordinator @Inject constructor(
 
     }
 
-    fun handleRegisterSepaUsingUIComponent(chosenPsp: PspIdentifier): Single<String> {
+    fun registerSepaUsingUIComponent(activity: Activity?, chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
         val definitions =
-                chosenIntegration.getPaymentMethodUiDefinitions()
+                chosenIntegration.getSupportedPaymentMethodDefinitions()
                         .filter { it.paymentMethodType == PaymentMethodType.SEPA }
                         .first()
         val (sepaData, additionalUIData) =
@@ -150,22 +155,43 @@ class PspCoordinator @Inject constructor(
 
     }
 
-    fun handleRegisterCreditCardUsingUIComponent(): Single<String> {
-        return handleRegisterCreditCardUsingUIComponent(integrations.first().identifier)
+    fun registerCreditCardUsingUIComponent(activity: Activity?): Single<String> {
+        return registerCreditCardUsingUIComponent(activity, integrations.first().identifier)
     }
 
-    fun handleRegisterSepaUsingUIComponent(): Single<String> {
-        return handleRegisterSepaUsingUIComponent(integrations.first().identifier)
+    fun registerSepaUsingUIComponent(activity: Activity?): Single<String> {
+        return registerSepaUsingUIComponent(activity, integrations.first().identifier)
     }
 
-    fun handleAskUserToChoosePaymentMethod(): Single<PaymentMethodType> {
-        val chosenIntegration = integrations.first()
-        val definitions =
-                chosenIntegration.getPaymentMethodUiDefinitions()
-        return uiRequestHandler.askUserToChosePaymentMethod(definitions.map { it.paymentMethodType })
+    fun getAvailablePaymentMethods() : Set<PaymentMethodType> {
+        return integrations.flatMap {  it.getSupportedPaymentMethodDefinitions().map {it.paymentMethodType}  }.toSet()
     }
 
-    fun handleRegisterPayPal(): Single<String> {
+    private fun askUserToChoosePaymentMethod(activity: Activity?): Single<PaymentMethodType> {
+        return uiRequestHandler.askUserToChosePaymentMethod(activity, getAvailablePaymentMethods())
+    }
+
+    fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?): Single<String> {
+        return if (specificPaymentMethodType != null) {
+            when (specificPaymentMethodType) {
+                PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity)
+                PaymentMethodType.CREDITCARD -> registerCreditCardUsingUIComponent(activity)
+                PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity)
+            }
+        } else {
+            askUserToChoosePaymentMethod(activity)
+                    .flatMap {
+                        when (it) {
+                            PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity)
+                            PaymentMethodType.CREDITCARD -> registerCreditCardUsingUIComponent(activity)
+                            PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity)
+                        }
+
+                    }
+        }
+    }
+
+    private fun registerPayPalUsingUIComponent(activity : Activity?): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == BRAINTREE_PSP_NAME }.first()
         val backendImplemented = false
         return if (backendImplemented) {
@@ -175,7 +201,7 @@ class PspCoordinator @Inject constructor(
 
                         val standardizedData = PayPalRegistrationRequest(it.aliasId)
                         val registrationRequest = RegistrationRequest(standardizedData)
-                        chosenIntegration.handleRegistrationRequest(registrationRequest)
+                        uiRequestHandler.hadlePaypalMethodEntryRequest(activity, registrationRequest)
 
                     }
         } else {

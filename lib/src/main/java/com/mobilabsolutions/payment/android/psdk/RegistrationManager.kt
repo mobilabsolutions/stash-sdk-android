@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk
 
+import android.app.Activity
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -26,12 +27,20 @@ interface RegistrationManager {
      */
     fun registerSepa(sepaData: SepaData, billingData: BillingData = BillingData()): Single<String>
 
-    fun registerCreditCardUsingUIComponent(): Single<String>
+    /**
+     * Returns a list of supported payment methods
+     * @return list of supported payment methods
+     */
+    fun getAvailablePaymentMethods() : Set<PaymentMethodType>
 
-    fun registerSepaUsingUIComponent(): Single<String>
+    /**
+     * Let payment SDK handle data using built-in UI components
+     *
+     * @param activity the activity context to launch from. If activity is null, a new task will be created
+     * @param specificPaymentMethodType skip payment method chooser and immediately show specific type entry UI
+     * @returnstring string representing aliasId
+     */
+    fun registerPaymentMehodUsingUi(activity : Activity? = null, specificPaymentMethodType: PaymentMethodType? = null) : Single<String>
 
-    fun askUserToPickAPaymentMethod() : Single<PaymentMethodType>
-
-    fun registerPayPalAccount() : Single<String>
 
 }

@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import android.app.Activity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -25,20 +26,14 @@ class NewRegistrationManager @Inject constructor(
         return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData )
     }
 
-    override fun registerCreditCardUsingUIComponent(): Single<String> {
-        return pspCoordinator.handleRegisterCreditCardUsingUIComponent()
+    override fun getAvailablePaymentMethods(): Set<PaymentMethodType> {
+        return pspCoordinator.getAvailablePaymentMethods()
     }
 
-    override fun registerSepaUsingUIComponent(): Single<String> {
-        return pspCoordinator.handleRegisterSepaUsingUIComponent()
+    override fun registerPaymentMehodUsingUi(activity : Activity?, specificPaymentMethodType: PaymentMethodType?): Single<String> {
+        return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType)
     }
 
-    override fun askUserToPickAPaymentMethod(): Single<PaymentMethodType> {
-        return pspCoordinator.handleAskUserToChoosePaymentMethod()
-    }
 
-    override fun registerPayPalAccount(): Single<String> {
-        return pspCoordinator.handleRegisterPayPal()
-    }
 
 }

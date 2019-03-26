@@ -1,6 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.integration.braintree
 
-import android.content.Context
+import android.app.Activity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
@@ -8,8 +8,9 @@ import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PayPalRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodUiDefinition
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -61,7 +62,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
             braintreeHandler.tokenizePaymentMethods()
                     .flatMap {
                         mobilabApiV2.updateAlias(registrationRequest.standardizedData.aliasId,
-                                AliasUpdateRequest(it))
+                                AliasUpdateRequest(it)).blockingAwait()
                         Single.just(it)
                     }
         } else {
@@ -70,11 +71,13 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
 
     }
 
-    override fun getPaymentMethodUiDefinitions(): List<PaymentMethodUiDefinition> {
-        return listOf(PaymentMethodUiDefinition("PayPal", PaymentMethodType.PAYPAL))
+    override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
+        return listOf(PaymentMethodDefinition("PayPal", PaymentMethodType.PAYPAL))
     }
 
-
+    override fun handlePaymentMethodEntryRequest(activity : Activity, registrationRequest: RegistrationRequest): Single<String> {
+        return handleRegistrationRequest(registrationRequest)
+    }
 }
 
 
