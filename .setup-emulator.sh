@@ -4,4 +4,5 @@ if [[ ${TRAVIS_BRANCH} == 'master' ]]; then
     emulator -avd test -no-audio -no-window &
     android-wait-for-emulator
     adb shell input keyevent 82 &
+    adb shell settings put global stay_on_while_plugged_in 3
 fi
