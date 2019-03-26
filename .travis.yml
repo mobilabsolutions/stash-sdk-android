@@ -27,6 +27,7 @@ android:
   - android-sdk-license-.+
 env:
   - GRADLE_OPTS="-Xmx4g"
+  - ADB_INSTALL_TIMEOUT=8
 branches:
   only:
   - master
