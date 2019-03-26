@@ -47,6 +47,10 @@ android {
     dexOptions {
         preDexLibraries = !isTravisBuild
     }
+
+    lintOptions {
+        isAbortOnError = false
+    }
 }
 
 dependencies {

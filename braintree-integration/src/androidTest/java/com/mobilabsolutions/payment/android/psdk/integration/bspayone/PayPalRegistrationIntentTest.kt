@@ -15,16 +15,20 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import org.hamcrest.Matchers.allOf
 import androidx.test.espresso.intent.Intents.intending
 import android.app.Instrumentation
+import android.graphics.Point
+import android.os.RemoteException
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intended
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import dagger.Component
+import lib.android.paypal.com.magnessdk.a.b.e
 import org.hamcrest.Matchers.not
 import org.junit.Before
 import java.util.concurrent.CountDownLatch
@@ -61,7 +65,17 @@ class PayPalIntentRegistrationTest {
 
     @Before
     fun setUp() {
+        val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+        val coordinates =  Array<Point>(4) { Point(0,0) }
+        coordinates[0] = Point(248, 1520)
+        coordinates[1] = Point(248, 929)
+        coordinates[2] = Point(796, 1520)
+        coordinates[3] = Point(796, 929)
 
+        if (!uiDevice.isScreenOn()) {
+            uiDevice.wakeUp();
+            uiDevice.swipe(coordinates, 10);
+        }
 
     }
 

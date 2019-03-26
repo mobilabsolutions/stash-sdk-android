@@ -33,6 +33,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        isAbortOnError = false
+    }
+
 
 }
 
@@ -60,6 +64,7 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.espressoIntents)
     androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
     kaptAndroidTest(Libs.Dagger.compiler)
 
 }

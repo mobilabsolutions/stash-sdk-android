@@ -94,6 +94,8 @@ object Libs {
 
             val espressoCore = "androidx.test.espresso:espresso-core:3.2.0-alpha02"
             val espressoIntents = "androidx.test.espresso:espresso-intents:3.2.0-alpha02"
+
+            val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
 
         val archCoreTesting = "androidx.arch.core:core-testing:2.0.0"
