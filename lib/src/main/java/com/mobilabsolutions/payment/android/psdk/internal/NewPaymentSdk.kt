@@ -21,12 +21,11 @@ import javax.net.ssl.X509TrustManager
 class NewPaymentSdk(
         publicKey: String,
         applicationContext: Application,
-        integrationList : List<IntegrationInitialization>,
+        integrationList: List<IntegrationInitialization>,
         sslSocketFactory: SSLSocketFactory?,
         x509TrustManager: X509TrustManager?) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
-
 
 
     @Inject
@@ -40,9 +39,9 @@ class NewPaymentSdk(
 
     val daggerGraph: PaymentSdkComponent
 
-    var paymentMethodSet : Set<PaymentMethodType> = emptySet()
+    var paymentMethodSet: Set<PaymentMethodType> = emptySet()
 
-    private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, emptyList(),null, null)
+    private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, emptyList(), null, null)
 
     init {
 
@@ -57,7 +56,10 @@ class NewPaymentSdk(
             val supportedMethods = initialized.getSupportedPaymentMethodDefinitions().map { it.paymentMethodType }
             supportedMethods.forEach { paymentMethodType ->
                 if (paymentMethodSet.contains(paymentMethodType)) {
-                    throw RuntimeException("You are trying to add integrations that support same payment methods. This is not supported at this moment")
+                    throw RuntimeException(
+                            "You are trying to add integrations that handle same payment methods. " +
+                                    "This is not supported at this moment. " +
+                                    "Encountered when processing ${initialized.identifier} payment method $paymentMethodType")
                 } else {
                     paymentMethodSet += paymentMethodType
                 }
@@ -68,9 +70,6 @@ class NewPaymentSdk(
 
 
         daggerGraph.inject(this)
-
-
-
 
 
     }
@@ -85,12 +84,12 @@ class NewPaymentSdk(
         internal var testComponent: PaymentSdkComponent? = null
 
         @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?, integrationList : List<IntegrationInitialization>) {
+        fun initialize(publicKey: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>) {
             initialize(publicKey, applicationContext, integrationList, null, null)
         }
 
         @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?, integrationList : List<IntegrationInitialization>, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
+        fun initialize(publicKey: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
             if (publicKey == null) {
                 throw InvalidPublicKeyException("Public key not supplied")
             }

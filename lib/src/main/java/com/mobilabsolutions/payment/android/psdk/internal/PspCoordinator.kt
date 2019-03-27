@@ -79,14 +79,26 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData, billingData: BillingData = BillingData(), additionalUIData: Map<String, String> = emptyMap()): Single<String> {
-        return handleRegisterCreditCard(creditCardData, billingData, additionalUIData, integrations.first().identifier)
+            creditCardData: CreditCardData, billingData: BillingData = BillingData(),
+            additionalUIData: Map<String, String> = emptyMap()): Single<String> {
+        return handleRegisterCreditCard(
+                creditCardData,
+                billingData,
+                additionalUIData,
+                integrations
+                        .filter { it.supportsPaymentMethods(PaymentMethodType.CREDITCARD) }
+                        .first()
+                        .identifier
+        )
     }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData, billingData: BillingData = BillingData(), additionalUIData: Map<String, String>, chosenPsp: PspIdentifier): Single<String> {
+            creditCardData: CreditCardData, billingData: BillingData = BillingData(),
+            additionalUIData: Map<String, String>, chosenPsp: PspIdentifier): Single<String> {
+
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
+        //TODO proper validation
         if (creditCardData.number.length < 16) {
             return Single.error(RuntimeException("Invalid card number length"))
         }
@@ -109,11 +121,14 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData = BillingData(), additionalUIData: Map<String, String> = emptyMap()): Single<String> {
-        return handleRegisterSepa(sepaData, billingData, additionalUIData, integrations.first().identifier)
+        return handleRegisterSepa(sepaData, billingData, additionalUIData, integrations.filter { it.supportsPaymentMethods(PaymentMethodType.SEPA) }.first().identifier)
     }
 
     fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData, additionalUIData: Map<String, String> = emptyMap(), chosenPsp: PspIdentifier): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
+
+
+        //TODO validate
 
         return mobilabApiV2.createAlias(chosenIntegration.identifier)
                 .subscribeOn(Schedulers.io())
@@ -170,8 +185,8 @@ class PspCoordinator @Inject constructor(
         return registerSepaUsingUIComponent(activity, selectedPaymentMethodDefinition)
     }
 
-    fun getAvailablePaymentMethods() : Set<PaymentMethodType> {
-        return integrations.flatMap {  it.getSupportedPaymentMethodDefinitions().map {it.paymentMethodType}  }.toSet()
+    fun getAvailablePaymentMethods(): Set<PaymentMethodType> {
+        return integrations.flatMap { it.getSupportedPaymentMethodDefinitions().map { it.paymentMethodType } }.toSet()
     }
 
     private fun askUserToChoosePaymentMethod(activity: Activity?): Single<PaymentMethodType> {
@@ -198,7 +213,7 @@ class PspCoordinator @Inject constructor(
         }
     }
 
-    private fun registerPayPalUsingUIComponent(activity : Activity?): Single<String> {
+    private fun registerPayPalUsingUIComponent(activity: Activity?): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == BRAINTREE_PSP_NAME }.first()
         val backendImplemented = false
         return if (backendImplemented) {
