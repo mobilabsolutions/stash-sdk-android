@@ -35,16 +35,26 @@ public final class PaymentSdk {
     public static void initalize(String publicKey, Application applicationContext, IntegrationInitialization integration) {
         LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
         integrationList.add(integration);
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList, false, null, null);
     }
 
     public static void initalize(String publicKey, Application applicationContext, IntegrationCompanion integrationComp) {
         LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
         integrationList.add(integrationComp.create());
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList, false, null, null);
+    }
+
+    public static void initalize(String publicKey, Application applicationContext, IntegrationCompanion integrationComp, Boolean testMode) {
+        LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
+        integrationList.add(integrationComp.create());
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList, testMode, null, null);
     }
 
     public static void initalize(String publicKey, Application applicationContext, Set<IntegrationCompanion> integrationCompanionList) {
+        initalize(publicKey, applicationContext, integrationCompanionList, false);
+    }
+
+    public static void initalize(String publicKey, Application applicationContext, Set<IntegrationCompanion> integrationCompanionList, Boolean testMode) {
         LinkedList<IntegrationInitialization> integrationList = new LinkedList<>();
         integrationList.addAll(
                 Observable.fromIterable(integrationCompanionList).map(
@@ -55,7 +65,7 @@ public final class PaymentSdk {
         );
 
 
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList, testMode, null, null);
     }
 
     /**
@@ -67,7 +77,7 @@ public final class PaymentSdk {
      */
     //TODO we're keeping this private for mvp, later on we might decide to have a server side psp chooser, or offer per request psp choice
     private static void initalize(String publicKey, Application applicationContext, List<IntegrationInitialization> integrationList) {
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, integrationList, false, null, null);
     }
 
     /**
@@ -80,7 +90,11 @@ public final class PaymentSdk {
      * @param applicationContext context of the application
      */
     public static void initalize(String publicKey, Application applicationContext, SSLSocketFactory sslSocketFactory, X509TrustManager x509TrustManager) {
-        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, null, sslSocketFactory, x509TrustManager);
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, null, false, sslSocketFactory, x509TrustManager);
+    }
+
+    public static void initalize(String publicKey, Application applicationContext, Boolean testMode,SSLSocketFactory sslSocketFactory, X509TrustManager x509TrustManager) {
+        NewPaymentSdk.Companion.initialize(publicKey, applicationContext, null, testMode, sslSocketFactory, x509TrustManager);
     }
 
     /**
