@@ -1,6 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.internal.psphandler
 
 import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
@@ -18,7 +19,7 @@ interface Integration {
 
     fun getSupportedPaymentMethodDefinitions() : List<PaymentMethodDefinition>
 
-    fun handlePaymentMethodEntryRequest(activity : Activity, registrationRequest: RegistrationRequest) : Single<String>
+    fun handlePaymentMethodEntryRequest(activity : AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition) : Single<Map<String, String>>
 
     fun supportsPaymentMethods(methodType: PaymentMethodType) : Boolean {
         return getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == methodType }.isNotEmpty()

@@ -1,6 +1,11 @@
 package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
 import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
@@ -8,8 +13,13 @@ import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.subjects.PublishSubject
 import org.threeten.bp.LocalDate
+import timber.log.Timber
+import java.lang.RuntimeException
 import java.lang.ref.WeakReference
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,35 +32,71 @@ class UiRequestHandler @Inject constructor() {
     @Inject
     lateinit var integrations: Set<@JvmSuppressWildcards Integration>
 
-    lateinit var activityReference : WeakReference<Activity>
+    @Inject
+    lateinit var applicationContext: Context
 
+    lateinit var activityReference: WeakReference<Activity>
 
-    fun handleCreditCardMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition): Pair<CreditCardData, Map<String, String>> {
-        val validCreditCardData = CreditCardData(
-                "4111111111111111",
-                LocalDate.of(2021, 1, 1),
-                "123",
-                "Holder Holderman"
-        )
-        return Pair(validCreditCardData, mapOf("TEST" to "test"))
+    internal val processing = AtomicBoolean(false)
+
+    lateinit var hostActivityProvider: PublishSubject<AppCompatActivity>
+
+    fun provideHostActivity(activity: AppCompatActivity) {
+        activityReference = WeakReference(activity)
+        hostActivityProvider.onNext(activity)
     }
 
-    fun handleSepadMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition): Pair<SepaData, Map<String, String>> {
-        var validSepaData: SepaData = SepaData("PBNKDEFF", "DE42721622981375897982", "Holder Holderman")
-        return Pair(validSepaData, mapOf("TEST" to "test"))
-    }
-
-    fun hadlePaypalMethodEntryRequest(activity: Activity?, registrationRequest: RegistrationRequest): Single<String> {
+    private fun launchHostActivity(activity: Activity?): Single<AppCompatActivity> {
         if (activity != null) {
-            return integrations.first().handlePaymentMethodEntryRequest(activity, registrationRequest)
+            val launchHostIntent = Intent(activity, RegistrationProccessHostActivity::class.java)
+            activity.startActivity(launchHostIntent)
         } else {
-            return integrations.first().handlePaymentMethodEntryRequest(activityReference.get()!!, registrationRequest)
+            val launchHostIntent = Intent(applicationContext, RegistrationProccessHostActivity::class.java)
+            launchHostIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
+            applicationContext.startActivity(launchHostIntent)
+        }
+        hostActivityProvider = PublishSubject.create<AppCompatActivity>()
+        return hostActivityProvider.firstOrError()
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun handleCreditCardMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition): Single<Pair<CreditCardData, Map<String, String>>> {
+        val hostActivitySingle = launchHostActivity(activity)
+        return hostActivitySingle.flatMap { hostActivity ->
+            integration.handlePaymentMethodEntryRequest(hostActivity, definition)
+                    .doFinally {
+                        hostActivity.finish()
+                    }
+        }.map {
+            val validCreditCardData = CreditCardData(
+                    "4111111111111111",
+                    LocalDate.of(2021, 1, 1),
+                    "123",
+                    "Holder Holderman"
+            )
+            Pair(validCreditCardData, mapOf("TEST" to "test"))
         }
 
+
+    }
+
+    fun handleSepaMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition): Single<Pair<SepaData, Map<String, String>>> {
+        var validSepaData: SepaData = SepaData("PBNKDEFF", "DE42721622981375897982", "Holder Holderman")
+        return Single.just(Pair(validSepaData, mapOf("TEST" to "test")))
+    }
+
+    fun handlePaypalMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition): Single<Map<String, String>> {
+        return launchHostActivity(activity).flatMap { hostActivity ->
+            integration.handlePaymentMethodEntryRequest(hostActivity, PaymentMethodDefinition("", "BRAINTREE", PaymentMethodType.PAYPAL))
+                    .doFinally {
+                        hostActivity.finish()
+                    }
+        }
     }
 
     fun askUserToChosePaymentMethod(activity: Activity?, availableMethods: Set<PaymentMethodType>): Single<PaymentMethodType> {
-        return Single.just(PaymentMethodType.PAYPAL)
+        return Single.just(PaymentMethodType.CREDITCARD)
     }
 
 }

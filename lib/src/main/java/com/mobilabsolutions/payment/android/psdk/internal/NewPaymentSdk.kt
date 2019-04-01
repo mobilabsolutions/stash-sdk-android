@@ -136,7 +136,12 @@ class NewPaymentSdk(
             if (instance != null) {
                 return instance!!.daggerGraph
             } else {
-                return testComponent!!
+                if (testComponent != null) {
+                    return testComponent!!
+                } else {
+                    throw RuntimeException("Payment SDK not initialized!")
+                }
+
             }
         }
 

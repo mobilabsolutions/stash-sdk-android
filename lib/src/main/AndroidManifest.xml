@@ -5,6 +5,9 @@
 
     <application>
         <!--android:usesCleartextTraffic="true"-->
+        <activity android:name=".psdk.internal.uicomponents.RegistrationProccessHostActivity"
+                  android:theme="@style/Theme.AppCompat"
+            />
     </application>
 
 </manifest>

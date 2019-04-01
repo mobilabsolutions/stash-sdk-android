@@ -103,6 +103,9 @@ dependencies {
     api(Libs.RxJava.rxAndroid)
     api(Libs.RxJava.rxKotlin)
 
+    implementation(Libs.AndroidX.appcompat)
+    implementation(Libs.AndroidX.constraintlayout)
+
 
     implementation(Libs.Dagger.dagger)
     implementation(Libs.Dagger.daggerAndroid)

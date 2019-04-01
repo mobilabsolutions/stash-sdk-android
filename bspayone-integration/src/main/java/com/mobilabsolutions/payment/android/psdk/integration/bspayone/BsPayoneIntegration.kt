@@ -1,8 +1,10 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.UiComponentHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
@@ -21,6 +23,9 @@ class BsPayoneIntegration private constructor(
 
     @Inject
     lateinit var bsPayoneHandler: BsPayoneHandler
+
+    @Inject
+    lateinit var uiComponentHandler: UiComponentHandler
 
 
     companion object : IntegrationCompanion {
@@ -94,8 +99,13 @@ class BsPayoneIntegration private constructor(
         return listOf(creditCardUIDefinition)
     }
 
-    override fun handlePaymentMethodEntryRequest(activity: Activity, registrationRequest: RegistrationRequest): Single<String> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
+        return when (paymentMethodDefinition.paymentMethodType) {
+            PaymentMethodType.CREDITCARD -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
+            PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity)
+            PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
+        }
+
     }
 }
 

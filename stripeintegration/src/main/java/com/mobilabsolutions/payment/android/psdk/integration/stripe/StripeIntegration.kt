@@ -1,6 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.integration.stripe
 
 import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
@@ -40,7 +41,7 @@ class StripeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration 
         return emptyList()
     }
 
-    override fun handlePaymentMethodEntryRequest(activity: Activity, registrationRequest: RegistrationRequest): Single<String> {
+    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String,String>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

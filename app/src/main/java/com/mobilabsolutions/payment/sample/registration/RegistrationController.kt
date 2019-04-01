@@ -50,14 +50,16 @@ class RegistrationController @Inject constructor() : Controller() {
         } else {
             ""
         }
-        return registrationManager.registerCreditCard(
-                CreditCardData(number = creditCardNumber,
-                        expiryDate = exipryDate,
-                        cvv = cvv,
-                        holder = holderName
-                )
+        return registrationManager.registerPaymentMehodUsingUi(specificPaymentMethodType = PaymentMethodType.CREDITCARD)
+//        return registrationManager.registerCreditCard(
+//                CreditCardData(number = creditCardNumber,
+//                        expiryDate = exipryDate,
+//                        cvv = cvv,
+//                        holder = holderName
+//                )
+//          )
 
-        ).doOnSuccess {
+        .doOnSuccess {
             paymentMethodStateSubject.apply {
                 val paymentMethodState = take(1).blockingLast()
                 val paymentMethodMap = paymentMethodState.paymentMethodMap
@@ -103,7 +105,7 @@ class RegistrationController @Inject constructor() : Controller() {
     fun registerPayPal(activity : Activity): Single<String> {
 
 //        return registrationManager.registerPaymentMehodUsingUi(specificPaymentMethodType = PaymentMethodType.PAYPAL)
-        return registrationManager.registerPaymentMehodUsingUi()
+        return registrationManager.registerPaymentMehodUsingUi(specificPaymentMethodType = PaymentMethodType.PAYPAL)
                 .doOnSuccess{
                             Timber.d("Nonce $it")
                             paymentMethodStateSubject.apply {

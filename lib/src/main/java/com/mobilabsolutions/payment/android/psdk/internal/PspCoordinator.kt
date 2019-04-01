@@ -149,25 +149,26 @@ class PspCoordinator @Inject constructor(
 
     fun registerCreditCardUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == paymentMethodDefinition.pspIdentifier }.first()
-        val (creditCardData, additionalUIData) =
-                uiRequestHandler.handleCreditCardMethodEntryRequest(
-                        activity,
-                        chosenIntegration,
-                        paymentMethodDefinition
-                )
-        return handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData)
+        return uiRequestHandler.handleCreditCardMethodEntryRequest(
+                activity,
+                chosenIntegration,
+                paymentMethodDefinition
+        ).flatMap { (creditCardData, additionalUIData) ->
+            handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData)
+        }
 
     }
 
     fun registerSepaUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == paymentMethodDefinition.pspIdentifier }.first()
-        val (sepaData, additionalUIData) =
-                uiRequestHandler.handleSepadMethodEntryRequest(
+        return uiRequestHandler.handleSepaMethodEntryRequest(
                         activity,
                         chosenIntegration,
                         paymentMethodDefinition
-                )
-        return handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData)
+                ).flatMap { (sepaData, additionalUIData) ->
+                    handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData)
+
+                }
 
     }
 
@@ -216,20 +217,34 @@ class PspCoordinator @Inject constructor(
     private fun registerPayPalUsingUIComponent(activity: Activity?): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == BRAINTREE_PSP_NAME }.first()
         val backendImplemented = false
-        return if (backendImplemented) {
+
+        val selectedPaymentMethodDefinition = integrations.flatMap {
+            it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.PAYPAL }
+        }.first()
+        if (backendImplemented) {
             return mobilabApiV2.createAlias(BRAINTREE_PSP_NAME)
                     .subscribeOn(Schedulers.io())
-                    .flatMap {
-
-                        val standardizedData = PayPalRegistrationRequest(it.aliasId)
-                        val registrationRequest = RegistrationRequest(standardizedData)
-                        uiRequestHandler.hadlePaypalMethodEntryRequest(activity, registrationRequest)
-
+                    .flatMap { aliasResponse ->
+                        uiRequestHandler.handlePaypalMethodEntryRequest(
+                                activity,
+                                chosenIntegration,
+                                selectedPaymentMethodDefinition).flatMap {
+                            val additionalData = AdditionalRegistrationData(it)
+                            val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
+                            val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+                            chosenIntegration.handleRegistrationRequest(registrationRequest)
+                        }
                     }
         } else {
-            chosenIntegration.handleRegistrationRequest(RegistrationRequest(PayPalRegistrationRequest("1")))
+            return uiRequestHandler.handlePaypalMethodEntryRequest(
+                    activity,
+                    chosenIntegration,
+                    selectedPaymentMethodDefinition
+            ).flatMap {
+                chosenIntegration.handleRegistrationRequest(RegistrationRequest(PayPalRegistrationRequest(it["nonce"]
+                        ?: "PayPalNonce"), AdditionalRegistrationData(it)))
+            }
         }
-
 
     }
 

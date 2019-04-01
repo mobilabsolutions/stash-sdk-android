@@ -58,7 +58,6 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         val braintreeFragment = BraintreeFragment.newInstance(this, BuildConfig.braintreeSanboxToken)
         val payment = PayPalRequest()
         PayPal.requestBillingAgreement(braintreeFragment, payment)
-        sendBroadcast(Intent())
     }
 
 }

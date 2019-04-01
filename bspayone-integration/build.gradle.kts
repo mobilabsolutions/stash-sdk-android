@@ -2,6 +2,7 @@ plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
+    kotlin("android.extensions")
 }
 
 val stripePublicKey = propOrDefWithTravis(PaymentSdkRelease.stripePublicKey, "")
@@ -42,7 +43,8 @@ dependencies {
     implementation(project(Modules.paymentSdk))
     implementation(Libs.Kotlin.stdlib)
 
-
+    implementation(Libs.AndroidX.appcompat)
+    implementation(Libs.AndroidX.constraintlayout)
 
 
     implementation(Libs.Dagger.dagger)

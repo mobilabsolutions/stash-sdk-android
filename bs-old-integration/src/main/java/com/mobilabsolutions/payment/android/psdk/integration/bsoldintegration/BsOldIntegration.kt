@@ -1,6 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration
 
 import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
@@ -71,7 +72,7 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url: String
 
     }
 
-    override fun handlePaymentMethodEntryRequest(activity: Activity, registrationRequest: RegistrationRequest): Single<String> {
+    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
