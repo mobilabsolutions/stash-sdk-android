@@ -60,7 +60,6 @@ class UiRequestHandler @Inject constructor() {
     }
 
 
-    @RequiresApi(Build.VERSION_CODES.N)
     fun handleCreditCardMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition): Single<Pair<CreditCardData, Map<String, String>>> {
         val hostActivitySingle = launchHostActivity(activity)
         return hostActivitySingle.flatMap { hostActivity ->
