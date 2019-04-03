@@ -81,8 +81,16 @@ class UiRequestHandler @Inject constructor() {
     }
 
     fun handleSepaMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition): Single<Pair<SepaData, Map<String, String>>> {
+        val hostActivitySingle = launchHostActivity(activity)
         var validSepaData: SepaData = SepaData("PBNKDEFF", "DE42721622981375897982", "Holder Holderman")
-        return Single.just(Pair(validSepaData, mapOf("TEST" to "test")))
+        return return hostActivitySingle.flatMap { hostActivity ->
+            integration.handlePaymentMethodEntryRequest(hostActivity, definition)
+                    .doFinally {
+                        hostActivity.finish()
+                    }
+        }.map {
+            Pair(validSepaData, mapOf("TEST" to "test"))
+        }
     }
 
     fun handlePaypalMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition): Single<Map<String, String>> {

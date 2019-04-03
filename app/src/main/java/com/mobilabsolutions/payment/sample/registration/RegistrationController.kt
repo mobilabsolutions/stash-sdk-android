@@ -51,7 +51,7 @@ class RegistrationController @Inject constructor() : Controller() {
         } else {
             ""
         }
-        return registrationManager.registerPaymentMehodUsingUi(specificPaymentMethodType = PaymentMethodType.CREDITCARD)
+        return registrationManager.registerPaymentMehodUsingUi(activity, specificPaymentMethodType = PaymentMethodType.CREDITCARD)
 //        return registrationManager.registerCreditCard(
 //                CreditCardData(number = creditCardNumber,
 //                        expiryDate = exipryDate,
@@ -60,13 +60,13 @@ class RegistrationController @Inject constructor() : Controller() {
 //                )
 //          )
 
-        .doOnSuccess {
-            paymentMethodStateSubject.apply {
-                val paymentMethodState = take(1).blockingLast()
-                val paymentMethodMap = paymentMethodState.paymentMethodMap
-                onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("CC" + creditCardNumber.takeLast(4) to it)))
-            }
-        }
+                .doOnSuccess {
+                    paymentMethodStateSubject.apply {
+                        val paymentMethodState = take(1).blockingLast()
+                        val paymentMethodMap = paymentMethodState.paymentMethodMap
+                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("CC" + creditCardNumber.takeLast(4) to it)))
+                    }
+                }
     }
 
     fun registerSepa(
@@ -86,35 +86,37 @@ class RegistrationController @Inject constructor() : Controller() {
         } else {
             ""
         }
-        return registrationManager.registerSepa(
-                SepaData(
-                        bic = bic,
-                        iban = iban,
-                        holder = holderName
-                ),
-                BillingData(
-                        firstName, lastName, address, city, country
-                )
-        ).doOnSuccess {
-            paymentMethodStateSubject.apply {
-                val paymentMethodState = take(1).blockingLast()
-                val paymentMethodMap = paymentMethodState.paymentMethodMap
-                onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("SEPA" + iban.takeLast(4) to it)))
-            }
-        }
+        return registrationManager.registerPaymentMehodUsingUi(activity, specificPaymentMethodType = PaymentMethodType.SEPA)
+//        return registrationManager.registerSepa(
+//                SepaData(
+//                        bic = bic,
+//                        iban = iban,
+//                        holder = holderName
+//                ),
+//                BillingData(
+//                        firstName, lastName, address, city, country
+//                )
+//        )
+                .doOnSuccess {
+                    paymentMethodStateSubject.apply {
+                        val paymentMethodState = take(1).blockingLast()
+                        val paymentMethodMap = paymentMethodState.paymentMethodMap
+                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("SEPA" + iban.takeLast(4) to it)))
+                    }
+                }
     }
 
-    fun registerPayPal(activity : Activity? = null): Single<String> {
+    fun registerPayPal(activity: Activity? = null): Single<String> {
         return registrationManager.registerPaymentMehodUsingUi(activity = activity, specificPaymentMethodType = PaymentMethodType.PAYPAL)
-                .doOnSuccess{
-                            Timber.d("Nonce $it")
-                            paymentMethodStateSubject.apply {
-                                val paymentMethodState = take(1).blockingLast()
-                                val paymentMethodMap = paymentMethodState.paymentMethodMap
-                                onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("PayPal" + LocalDate.now().toString() to it)))
-                            }
+                .doOnSuccess {
+                    Timber.d("Nonce $it")
+                    paymentMethodStateSubject.apply {
+                        val paymentMethodState = take(1).blockingLast()
+                        val paymentMethodMap = paymentMethodState.paymentMethodMap
+                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("PayPal" + LocalDate.now().toString() to it)))
+                    }
 
-                        }
+                }
     }
 
 

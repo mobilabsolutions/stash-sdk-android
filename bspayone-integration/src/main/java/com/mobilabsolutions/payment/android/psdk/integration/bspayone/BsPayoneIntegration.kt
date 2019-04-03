@@ -95,8 +95,14 @@ class BsPayoneIntegration private constructor(
             paymentMethodType = PaymentMethodType.CREDITCARD
     )
 
+    val sepaUIDefinition = PaymentMethodDefinition(
+            methodId = "BsP-SEPA-1234",
+            pspIdentifier = identifier,
+            paymentMethodType = PaymentMethodType.SEPA
+    )
+
     override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
-        return listOf(creditCardUIDefinition)
+        return listOf(creditCardUIDefinition, sepaUIDefinition)
     }
 
     override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
