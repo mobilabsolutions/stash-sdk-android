@@ -40,7 +40,8 @@ class RegistrationController @Inject constructor() : Controller() {
             phone: String = "",
             creditCardNumber: String,
             cvv: String,
-            exipryDate: LocalDate
+            exipryDate: LocalDate,
+            activity: Activity? = null
 
     ): Single<String> {
         val nameList = holderName.split(' ')
@@ -75,7 +76,8 @@ class RegistrationController @Inject constructor() : Controller() {
             address: String = "",
             city: String = "",
             country: String = "",
-            phone: String = ""
+            phone: String = "",
+            activity: Activity? = null
     ): Single<String> {
         val nameList = holderName.split(' ')
         val firstName = nameList[0]
@@ -102,10 +104,8 @@ class RegistrationController @Inject constructor() : Controller() {
         }
     }
 
-    fun registerPayPal(activity : Activity): Single<String> {
-
-//        return registrationManager.registerPaymentMehodUsingUi(specificPaymentMethodType = PaymentMethodType.PAYPAL)
-        return registrationManager.registerPaymentMehodUsingUi(specificPaymentMethodType = PaymentMethodType.PAYPAL)
+    fun registerPayPal(activity : Activity? = null): Single<String> {
+        return registrationManager.registerPaymentMehodUsingUi(activity = activity, specificPaymentMethodType = PaymentMethodType.PAYPAL)
                 .doOnSuccess{
                             Timber.d("Nonce $it")
                             paymentMethodStateSubject.apply {

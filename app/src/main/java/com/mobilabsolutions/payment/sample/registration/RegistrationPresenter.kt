@@ -21,64 +21,70 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
 
     fun registerSepaRequested() {
         registrationViewState = registrationViewState.copy(enteringData = false, executingRegistration = true, registrationFailed = false)
-        applyOnUi { it.renderState(registrationViewState) }
+        applyOnUi {
+            it.renderState(registrationViewState)
 
-        registrationViewState.apply {
-            registrationController.registerSepa(
-                    holderName = holderName,
-                    iban = iban,
-                    bic = bic
-            )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeBy(
-                            onSuccess = {
-                                registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
-                                applyOnUi { it.renderState(registrationViewState) }
-                            },
-                            onError = {
-                                Timber.d(it, "Error encountered")
-                                registrationViewState = copy(
-                                        executingRegistration = false,
-                                        registrationFailed = true,
-                                        failureReason = it.message ?: "Unknown error")
-                                applyOnUi { it.renderState(registrationViewState) }
-                            }
-                    )
+            registrationViewState.apply {
+                registrationController.registerSepa(
+                        holderName = holderName,
+                        iban = iban,
+                        bic = bic,
+                        activity = it.getParentActivity()
+                )
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy(
+                                onSuccess = {
+                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                    applyOnUi { it.renderState(registrationViewState) }
+                                },
+                                onError = {
+                                    Timber.d(it, "Error encountered")
+                                    registrationViewState = copy(
+                                            executingRegistration = false,
+                                            registrationFailed = true,
+                                            failureReason = it.message ?: "Unknown error")
+                                    applyOnUi { it.renderState(registrationViewState) }
+                                }
+                        )
+            }
         }
     }
 
     fun registerCreditCardRequested() {
         registrationViewState = registrationViewState.copy(enteringData = false, executingRegistration = true, registrationFailed = false)
-        applyOnUi { it.renderState(registrationViewState) }
+        applyOnUi {
+            it.renderState(registrationViewState)
 
-        registrationViewState.apply {
-            registrationController.registerCreditCard(
-                    holderName = holderName,
-                    address = address,
-                    city = city,
-                    country = country,
-                    phone = phone,
-                    creditCardNumber = creditCardNumber,
-                    cvv = cvv,
-                    exipryDate = expiryDate
-            )
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeBy(
-                            onSuccess = {
-                                registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
-                                applyOnUi { it.renderState(registrationViewState) }
-                            },
-                            onError = {
-                                Timber.d(it, "Error encountered")
-                                registrationViewState = copy(
-                                        executingRegistration = false,
-                                        registrationFailed = true,
-                                        failureReason = it.message ?: "Unknown error")
-                                applyOnUi { it.renderState(registrationViewState) }
-                            }
-                    )
+            registrationViewState.apply {
+                registrationController.registerCreditCard(
+                        holderName = holderName,
+                        address = address,
+                        city = city,
+                        country = country,
+                        phone = phone,
+                        creditCardNumber = creditCardNumber,
+                        cvv = cvv,
+                        exipryDate = expiryDate,
+                        activity = it.getParentActivity()
+                )
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy(
+                                onSuccess = {
+                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                    applyOnUi { it.renderState(registrationViewState) }
+                                },
+                                onError = {
+                                    Timber.d(it, "Error encountered")
+                                    registrationViewState = copy(
+                                            executingRegistration = false,
+                                            registrationFailed = true,
+                                            failureReason = it.message ?: "Unknown error")
+                                    applyOnUi { it.renderState(registrationViewState) }
+                                }
+                        )
+            }
         }
     }
 
