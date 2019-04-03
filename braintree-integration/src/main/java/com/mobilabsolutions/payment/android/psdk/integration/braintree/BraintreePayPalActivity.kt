@@ -1,20 +1,18 @@
 package com.mobilabsolutions.payment.android.psdk.integration.braintree
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.PayPal
-import com.braintreepayments.api.interfaces.*
+import com.braintreepayments.api.interfaces.BraintreeCancelListener
+import com.braintreepayments.api.interfaces.BraintreeErrorListener
+import com.braintreepayments.api.interfaces.ConfigurationListener
+import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.Configuration
 import com.braintreepayments.api.models.PayPalRequest
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.integration.braintree.R
-import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
 import timber.log.Timber
-import java.lang.Exception
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 /**
