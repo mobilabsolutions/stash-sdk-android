@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.braintree
 
 import android.content.Context
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -17,19 +18,16 @@ import javax.inject.Singleton
 @IntegrationScope
 class BraintreeHandler @Inject constructor(){
 
-    @Inject
-    lateinit var context : Context
-
     internal val processing = AtomicBoolean(false)
     internal var resultSubject = PublishSubject.create<String>()
 
 
-    fun tokenizePaymentMethods() : Single<String> {
+    fun tokenizePaymentMethods(activity: AppCompatActivity) : Single<String> {
         return if (processing.compareAndSet(false,true)) {
             resultSubject = PublishSubject.create()
-            val payPalActivityIntent = Intent(context, BraintreePayPalActivity::class.java)
+            val payPalActivityIntent = Intent(activity, BraintreePayPalActivity::class.java)
             payPalActivityIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
-            context.startActivity(payPalActivityIntent)
+            activity.startActivity(payPalActivityIntent)
             resultSubject
                     .doOnEach {
                         Timber.d("Event from paypal activity $it")

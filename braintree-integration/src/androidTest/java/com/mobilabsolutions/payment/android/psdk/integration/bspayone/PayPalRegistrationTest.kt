@@ -38,7 +38,8 @@ class PayPalRegistrationTest {
     val MOBILAB_BACKEND_URL = BuildConfig.mobilabBackendUrl
     val MOBILAB_TEST_PUBLISHABLE_KEY = BuildConfig.newBsTestKey
 
-    @get:Rule val activityRule = object : ActivityTestRule<BraintreePayPalActivity>(BraintreePayPalActivity::class.java, true, false) {
+    @get:Rule
+    val activityRule = object : ActivityTestRule<BraintreePayPalActivity>(BraintreePayPalActivity::class.java, true, false) {
 
 
         override fun beforeActivityLaunched() {
@@ -49,8 +50,9 @@ class PayPalRegistrationTest {
                     .paymentSdkModule(PaymentSdkModule(
                             MOBILAB_TEST_PUBLISHABLE_KEY,
                             MOBILAB_BACKEND_URL,
-                            context.applicationContext as Application ,
-                            listOf(initialization)))
+                            context.applicationContext as Application,
+                            listOf(initialization)
+                            , true))
                     .build()
             initialization.initialize(component)
 
@@ -62,7 +64,7 @@ class PayPalRegistrationTest {
     @Before
     fun setUp() {
         val uiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
-        val coordinates =  Array<Point>(4) { Point(0,0) }
+        val coordinates = Array<Point>(4) { Point(0, 0) }
         coordinates[0] = Point(248, 1520)
         coordinates[1] = Point(248, 929)
         coordinates[2] = Point(796, 1520)
@@ -74,6 +76,7 @@ class PayPalRegistrationTest {
         }
 
     }
+
     @Ignore("Failing on travis, seems that emulator screen goes to sleep")
     @Test
     fun checkLoading() {

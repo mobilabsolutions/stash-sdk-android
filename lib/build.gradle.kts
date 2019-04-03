@@ -56,6 +56,7 @@ android {
             buildConfigField("String", "newBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, "") + "\"")
 
             buildConfigField("String", "hyperchargeTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.hyperchargeTestKey, "") + "\"")
+            buildConfigField("String", "braintreeSanboxToken", "\"" + propOrDefWithTravis(PaymentSdkRelease.braintreeSandboxToken, "") + "\"")
         }
     }
 
@@ -103,6 +104,9 @@ dependencies {
     api(Libs.RxJava.rxAndroid)
     api(Libs.RxJava.rxKotlin)
 
+    implementation(Libs.AndroidX.appcompat)
+    implementation(Libs.AndroidX.constraintlayout)
+
 
     implementation(Libs.Dagger.dagger)
     implementation(Libs.Dagger.daggerAndroid)
@@ -112,6 +116,10 @@ dependencies {
     api(Libs.threetenabp)
     implementation("org.iban4j:iban4j:3.2.1")
     implementation(Libs.iban4j)
+
+    testImplementation(project(Modules.bsOldIntegration))
+    testImplementation(project(Modules.bsPayoneIntegration))
+    testImplementation(project(Modules.braintreeIntegration))
 
     testImplementation(Libs.junit)
     testImplementation(Libs.mockitoCore)

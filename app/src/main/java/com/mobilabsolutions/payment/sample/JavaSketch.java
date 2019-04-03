@@ -10,6 +10,8 @@ import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
 
 import org.threeten.bp.LocalDate;
 
+import java.util.UUID;
+
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -34,7 +36,7 @@ public class JavaSketch {
                 "Bla"
         );
 
-        Disposable disposable = registrationManager.registerCreditCard(creditCardData, BillingData.empty())
+        Disposable disposable = registrationManager.registerCreditCard(creditCardData, BillingData.empty(), UUID.randomUUID())
                 .subscribe(
                         alias -> {
                             //Handle alias

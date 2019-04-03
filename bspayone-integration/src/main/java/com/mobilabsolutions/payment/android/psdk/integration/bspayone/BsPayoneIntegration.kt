@@ -1,11 +1,14 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
+import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.UiComponentHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodUiDefinition
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -20,6 +23,9 @@ class BsPayoneIntegration private constructor(
 
     @Inject
     lateinit var bsPayoneHandler: BsPayoneHandler
+
+    @Inject
+    lateinit var uiComponentHandler: UiComponentHandler
 
 
     companion object : IntegrationCompanion {
@@ -83,16 +89,30 @@ class BsPayoneIntegration private constructor(
         }
     }
 
-    val creditCardUIDefinition = PaymentMethodUiDefinition(
-            paymentMethodName = "CreditCard",
+    val creditCardUIDefinition = PaymentMethodDefinition(
+            methodId = "BsP-CC-1234",
+            pspIdentifier = identifier,
             paymentMethodType = PaymentMethodType.CREDITCARD
     )
 
-    override fun getPaymentMethodUiDefinitions(): List<PaymentMethodUiDefinition> {
-        return listOf(creditCardUIDefinition)
+    val sepaUIDefinition = PaymentMethodDefinition(
+            methodId = "BsP-SEPA-1234",
+            pspIdentifier = identifier,
+            paymentMethodType = PaymentMethodType.SEPA
+    )
+
+    override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
+        return listOf(creditCardUIDefinition, sepaUIDefinition)
     }
 
+    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
+        return when (paymentMethodDefinition.paymentMethodType) {
+            PaymentMethodType.CREDITCARD -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
+            PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity)
+            PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
+        }
 
+    }
 }
 
 

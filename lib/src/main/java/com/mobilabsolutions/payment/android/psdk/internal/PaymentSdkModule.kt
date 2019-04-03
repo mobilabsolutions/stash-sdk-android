@@ -37,7 +37,8 @@ import javax.inject.Singleton
 @Module
 open class PaymentSdkModule(private val publicKey: String, private val mobilabUrl: String,
                             private val applicationContext: Application,
-                            private val integrationInitializers : List<IntegrationInitialization>) {
+                            private val integrationInitializers : List<IntegrationInitialization>,
+                            private val testMode : Boolean) {
     val MOBILAB_TIMEOUT = 60L
     val TIMEOUT_UNIT = TimeUnit.SECONDS
 
@@ -141,9 +142,12 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
         val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
                 .addInterceptor(httpLoggingInterceptor)
                 .addInterceptor { chain ->
-                    val request = chain.request().newBuilder()
+                    val requestBuilder = chain.request().newBuilder()
                             .addHeader("Publishable-Key", publicKey)
-                            .build()
+                    if (testMode){
+                        requestBuilder.addHeader("PSP-Test-Mode", "true")
+                    }
+                    val request = requestBuilder.build()
                     chain.proceed(request)
                 }
                 .connectTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)

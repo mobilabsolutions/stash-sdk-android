@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.sample.registration
 
+import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -36,11 +37,15 @@ interface RegistrationView : Ui {
 
     var sepaOrCCSelectorObservable : Observable<Boolean>
 
+    fun getParentActivity() : Activity
+
     fun renderState(registrationViewState: RegistrationViewState)
 }
 
 
 class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), RegistrationView {
+    override fun getParentActivity(): Activity = activity as Activity
+
     override lateinit var holderNameObservable: Observable<String>
     override lateinit var addressObservable: Observable<String>
     override lateinit var cityObservable: Observable<String>

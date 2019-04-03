@@ -1,11 +1,13 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import android.app.Activity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -16,29 +18,23 @@ class NewRegistrationManager @Inject constructor(
 
 ) : RegistrationManager {
 
-    override fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData): Single<String> {
-        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, billingData = billingData ?: BillingData())
+    override fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData, idempotencyId : UUID?): Single<String> {
+        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, billingData = billingData)
     }
 
 
-    override fun registerSepa(sepaData: SepaData, billingData : BillingData): Single<String> {
+    override fun registerSepa(sepaData: SepaData, billingData : BillingData, idempotencyId : UUID?): Single<String> {
         return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData )
     }
 
-    override fun registerCreditCardUsingUIComponent(): Single<String> {
-        return pspCoordinator.handleRegisterCreditCardUsingUIComponent()
+    override fun getAvailablePaymentMethods(): Set<PaymentMethodType> {
+        return pspCoordinator.getAvailablePaymentMethods()
     }
 
-    override fun registerSepaUsingUIComponent(): Single<String> {
-        return pspCoordinator.handleRegisterSepaUsingUIComponent()
+    override fun registerPaymentMehodUsingUi(activity : Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyId : UUID?): Single<String> {
+        return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType)
     }
 
-    override fun askUserToPickAPaymentMethod(): Single<PaymentMethodType> {
-        return pspCoordinator.handleAskUserToChoosePaymentMethod()
-    }
 
-    override fun registerPayPalAccount(): Single<String> {
-        return pspCoordinator.handleRegisterPayPal()
-    }
 
 }

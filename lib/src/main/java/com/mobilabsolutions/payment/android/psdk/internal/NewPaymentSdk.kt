@@ -4,6 +4,7 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.app.Application
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentManager
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
@@ -20,12 +21,12 @@ import javax.net.ssl.X509TrustManager
 class NewPaymentSdk(
         publicKey: String,
         applicationContext: Application,
-        integrationList : List<IntegrationInitialization>,
+        integrationList: List<IntegrationInitialization>,
+        testMode : Boolean,
         sslSocketFactory: SSLSocketFactory?,
         x509TrustManager: X509TrustManager?) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
-
 
 
     @Inject
@@ -39,22 +40,37 @@ class NewPaymentSdk(
 
     val daggerGraph: PaymentSdkComponent
 
-    private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, emptyList(),null, null)
+    var paymentMethodSet: Set<PaymentMethodType> = emptySet()
+
+    private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, emptyList(),true,null, null)
 
     init {
 
 
         daggerGraph = DaggerPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-                .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext, integrationList))
+                .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext, integrationList, true))
                 .build()
 
-        integrationList.map { it.initialize(daggerGraph) }
+        integrationList.map {
+            val initialized = it.initialize(daggerGraph)
+            val supportedMethods = initialized.getSupportedPaymentMethodDefinitions().map { it.paymentMethodType }
+            supportedMethods.forEach { paymentMethodType ->
+                if (paymentMethodSet.contains(paymentMethodType)) {
+                    throw RuntimeException(
+                            "You are trying to add integrations that handle same payment methods. " +
+                                    "This is not supported at this moment. " +
+                                    "Encountered when processing ${initialized.identifier} payment method $paymentMethodType")
+                } else {
+                    paymentMethodSet += paymentMethodType
+                }
+            }
+            initialized
+        }
+
+
 
         daggerGraph.inject(this)
-
-
-
 
 
     }
@@ -68,13 +84,13 @@ class NewPaymentSdk(
 
         internal var testComponent: PaymentSdkComponent? = null
 
-        @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?, integrationList : List<IntegrationInitialization>) {
-            initialize(publicKey, applicationContext, integrationList, null, null)
-        }
+//        @Synchronized
+//        fun initialize(publicKey: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode : Boolean) {
+//            initialize(publicKey, applicationContext, integrationList, null, null)
+//        }
 
         @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?, integrationList : List<IntegrationInitialization>, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
+        fun initialize(publicKey: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode : Boolean = false, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
             if (publicKey == null) {
                 throw InvalidPublicKeyException("Public key not supplied")
             }
@@ -89,7 +105,7 @@ class NewPaymentSdk(
             }
 
             Timber.plant(Timber.DebugTree())
-            NewPaymentSdk.instance = NewPaymentSdk(publicKey, applicationContext, integrationList, sslSocketFactory, x509TrustManager)
+            NewPaymentSdk.instance = NewPaymentSdk(publicKey, applicationContext, integrationList, testMode, sslSocketFactory, x509TrustManager)
 
             NewPaymentSdk.initialized = true
         }
@@ -121,7 +137,12 @@ class NewPaymentSdk(
             if (instance != null) {
                 return instance!!.daggerGraph
             } else {
-                return testComponent!!
+                if (testComponent != null) {
+                    return testComponent!!
+                } else {
+                    throw RuntimeException("Payment SDK not initialized!")
+                }
+
             }
         }
 

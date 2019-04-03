@@ -56,7 +56,8 @@ class PayPalIntentRegistrationTest {
                             MOBILAB_TEST_PUBLISHABLE_KEY,
                             MOBILAB_BACKEND_URL,
                             context.applicationContext as Application ,
-                            listOf(initialization)))
+                            listOf(initialization),
+                            true))
                     .build()
             initialization.initialize(component)
         }

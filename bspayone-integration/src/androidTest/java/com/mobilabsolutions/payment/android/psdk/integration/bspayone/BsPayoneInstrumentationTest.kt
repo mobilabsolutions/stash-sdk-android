@@ -75,7 +75,7 @@ class BsPayoneRegistrationInstrumentationTest {
 
         val graph = DaggerBsPayoneTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
-                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, listOf(integration)))
+                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, listOf(integration), true))
                 .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
                 .build()
 
