@@ -2,15 +2,14 @@ language: android
 jdk:
 - oraclejdk8
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-  - rm -f  $HOME/.android/build-cache/*.lock
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
+  timeout: 120
   directories:
-  - "$HOME/.gradle/caches/5.2/"
-  - "$HOME/.gradle/caches/build-cache-1/"
-  - "$HOME/.gradle/wrapper/"
-  - "$HOME/.android/build-cache/"
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache
 android:
   components:
   - platform-tools
@@ -26,7 +25,7 @@ android:
   licenses:
   - android-sdk-license-.+
 env:
-  global:      
+  global:
   - GRADLE_OPTS="-Xmx4g"
   - ADB_INSTALL_TIMEOUT=8
 branches:
@@ -35,15 +34,25 @@ branches:
   - /^(\d+\.)?(\d+\.)?\d+(-\w+)?$/
 before_install:
 - touch /home/travis/.android/repositories.cfg
-- yes | sdkmanager "platforms;android-28"
-- mkdir "$ANDROID_HOME/licenses" || true
-- echo -e "\n8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
-- echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 - chmod +x gradlew
 - chmod +x .buildscript.sh
-- chmod +x .setup-emulator.sh
+
+# Install SDK license so Android Gradle plugin can install deps.
+- mkdir "$ANDROID_HOME/licenses" || true
+- echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
+- echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" >> "$ANDROID_HOME/licenses/android-sdk-license"
+
+# Install the rest of tools (e.g., avdmanager)
+- sdkmanager tools
+# Install the system image
+- sdkmanager "system-images;android-18;default;armeabi-v7a"
+# Create and start emulator for the script. Meant to race the install task.
+- echo no | avdmanager create avd --force -n test -k "system-images;android-18;default;armeabi-v7a"
+- $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
+
 before_script:
-- "./.setup-emulator.sh"
+- android-wait-for-emulator
+- adb shell input keyevent 82
 script:
 - "./.buildscript.sh"
 notifications:
