@@ -5,28 +5,22 @@ before_cache:
 - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
 - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
-  timeout: 120
   directories:
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
-  - $HOME/.android/build-cache
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+  - "$HOME/.android/build-cache"
 android:
   components:
   - build-tools-28.0.3
 branches:
   only:
   - master
-  - /^(\d+\.)?(\d+\.)?\d+(-\w+)?$/
+  - "/^(\\d+\\.)?(\\d+\\.)?\\d+(-\\w+)?$/"
 before_install:
-- touch /home/travis/.android/repositories.cfg
-- chmod +x gradlew
-- chmod +x .buildscript.sh
-
 # Install SDK license so Android Gradle plugin can install deps.
 - mkdir "$ANDROID_HOME/licenses" || true
 - echo "d56f5187479451eabf01fb78af6dfcb131a6481e" > "$ANDROID_HOME/licenses/android-sdk-license"
 - echo "24333f8a63b6825ea9c5514f83c2829b004d1fee" >> "$ANDROID_HOME/licenses/android-sdk-license"
-
 # Install the rest of tools (e.g., avdmanager)
 - sdkmanager tools
 # Install the system image
@@ -40,7 +34,9 @@ install: ./gradlew clean lib:assemble lib:assembleAndroidTest --stacktrace
 before_script:
 - android-wait-for-emulator
 - adb shell input keyevent 82
+
 script: ./gradlew lib:connectedCheck --stacktrace
+
 notifications:
   slack:
     secure: pAlu0Ttaiir36uYyNcE/Y5TR0jMa+Cbiq7ySItZG8xFjK8RTv5deeILIpsTzAMgBmAKdVruRm7p+P3RP/g5A9x/0VPRcAMe0iBPTo4EyCGWCKhOkicljL2yyYhhwLwZ7qCVuht+zWtc/ZHAHmm95f1rglF8nc/EsmUuYKZVTQ9CJnPBkjO4ZczY1rzvltwL9iIy6BXTN2qZeyNHk0ozr4iTn4BT7UQIR4tussAGJdpxItxkR5rC8mzJ5nOJ7tlvwKvgS990OmiCc2DS5QR2nrieBW04JYvxchXKSpYRmE+d4emvDAUiau5GKeHaAUh/MRkZLUR6isfqSKS76/79sW2Ca5Foq/Ec7yyThUV0d1kq9ErDA5WAvhSyNGOHVuPywAi+jem5wT16MFt8+imYVWM3biNr7Ymbq/IyhhACCc5ZZNsKbxan+NONFh6BFL97e/HbNiktu8Gu39260VcplvoSprFtkyVyqlPxq4vSASDCKdUgsVt0+o+w/7Ekkc8fqp5BZ+eTd6AHpzDAAUt5U3L/4v4jdoJo3gPrOcADZ/qmF80bzoA/4F0hINXCO84x5oCRZhkpeisJ777tdwN+2h+9ji8XS84GtVM0ZtK9qxhYU/qoPIY6I6JZw2VvV5NNPAIN9jPrGHXNu45mbVeJYdqwJD0NXd12k8WUQIYPpFXc=
