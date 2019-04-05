@@ -35,11 +35,12 @@ before_install:
 - echo no | avdmanager create avd --force -n test -k "system-images;android-21;default;armeabi-v7a"
 - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
 
+install: ./gradlew clean lib:assemble lib:assembleAndroidTest --stacktrace
+
 before_script:
 - android-wait-for-emulator
 - adb shell input keyevent 82
-script:
-- "./.buildscript.sh"
+script: ./gradlew lib:connectedCheck --stacktrace
 notifications:
   slack:
     secure: pAlu0Ttaiir36uYyNcE/Y5TR0jMa+Cbiq7ySItZG8xFjK8RTv5deeILIpsTzAMgBmAKdVruRm7p+P3RP/g5A9x/0VPRcAMe0iBPTo4EyCGWCKhOkicljL2yyYhhwLwZ7qCVuht+zWtc/ZHAHmm95f1rglF8nc/EsmUuYKZVTQ9CJnPBkjO4ZczY1rzvltwL9iIy6BXTN2qZeyNHk0ozr4iTn4BT7UQIR4tussAGJdpxItxkR5rC8mzJ5nOJ7tlvwKvgS990OmiCc2DS5QR2nrieBW04JYvxchXKSpYRmE+d4emvDAUiau5GKeHaAUh/MRkZLUR6isfqSKS76/79sW2Ca5Foq/Ec7yyThUV0d1kq9ErDA5WAvhSyNGOHVuPywAi+jem5wT16MFt8+imYVWM3biNr7Ymbq/IyhhACCc5ZZNsKbxan+NONFh6BFL97e/HbNiktu8Gu39260VcplvoSprFtkyVyqlPxq4vSASDCKdUgsVt0+o+w/7Ekkc8fqp5BZ+eTd6AHpzDAAUt5U3L/4v4jdoJo3gPrOcADZ/qmF80bzoA/4F0hINXCO84x5oCRZhkpeisJ777tdwN+2h+9ji8XS84GtVM0ZtK9qxhYU/qoPIY6I6JZw2VvV5NNPAIN9jPrGHXNu45mbVeJYdqwJD0NXd12k8WUQIYPpFXc=
