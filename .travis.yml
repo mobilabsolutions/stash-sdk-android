@@ -10,11 +10,11 @@ cache:
   - $HOME/.gradle/caches/
   - $HOME/.gradle/wrapper/
   - $HOME/.android/build-cache
-#android:
-#  components:
+android:
+  components:
 #  - platform-tools
 #  - tools
-#  - build-tools-28.0.3
+  - build-tools-28.0.3
 #  - extra-android-support
 #  - extra-google-google_play_services
 #  - extra-android-m2repository
@@ -27,7 +27,7 @@ cache:
 env:
   global:
   - GRADLE_OPTS="-Xmx4g"
-#  - ADB_INSTALL_TIMEOUT=8
+  - ADB_INSTALL_TIMEOUT=8
 branches:
   only:
   - master
@@ -45,9 +45,9 @@ before_install:
 # Install the rest of tools (e.g., avdmanager)
 - sdkmanager tools
 # Install the system image
-- sdkmanager "system-images;android-25;default;armeabi-v7a"
+- sdkmanager "system-images;android-19;default;armeabi-v7a"
 # Create and start emulator for the script. Meant to race the install task.
-- echo no | avdmanager create avd --force -n test -k "system-images;android-25;default;armeabi-v7a"
+- echo no | avdmanager create avd --force -n test -k "system-images;android-19;default;armeabi-v7a"
 - $ANDROID_HOME/emulator/emulator -avd test -no-audio -no-window &
 
 before_script:

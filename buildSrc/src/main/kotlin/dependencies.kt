@@ -22,7 +22,7 @@ object PaymentSdkRelease {
 
 object PaymentSdkBuildConfigs {
     val compileSdk = 28
-    val minSdk = 21
+    val minSdk = 19
     val targetSdk = 28
     val buildtoolsVersion = "28.0.3"
     val vapianoVersionCode = "1"
