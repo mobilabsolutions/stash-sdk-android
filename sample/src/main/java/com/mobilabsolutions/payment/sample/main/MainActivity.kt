@@ -22,7 +22,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        NavigationUI.setupWithNavController(binding.mainToolbar, navController)
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
 
     }
 }
