@@ -7,6 +7,8 @@ buildscript {
         classpath(Libs.androidGradlePlugin)
         classpath(Libs.Kotlin.gradlePlugin)
         classpath(Libs.Kotlin.extensions)
+        classpath(Libs.gradleVersionsPlugin)
+        classpath(Libs.AndroidX.Navigation.safeArgs)
     }
 }
 

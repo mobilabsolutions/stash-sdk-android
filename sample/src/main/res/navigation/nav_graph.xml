@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/register">
+
+    <fragment
+        android:id="@+id/register"
+        android:name="com.mobilabsolutions.payment.sample.main.register.RegisterFragment"
+        android:label="@string/register">
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/payment"
+        android:name="com.mobilabsolutions.payment.sample.main.payment.PaymentFragment"
+        android:label="@string/payment">
+
+    </fragment>
+
+
+</navigation>
