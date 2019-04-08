@@ -49,6 +49,8 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk;
 PaymentSdk.initalize("PD-BS-TOKEN", PspIntegration.create());
 ```
 
+#### Registering payment method using UI
+
 #### Credit card registration
 
 Kotlin

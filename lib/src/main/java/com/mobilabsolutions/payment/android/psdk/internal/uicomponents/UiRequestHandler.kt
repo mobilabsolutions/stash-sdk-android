@@ -3,21 +3,15 @@ package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 import org.threeten.bp.LocalDate
-import timber.log.Timber
-import java.lang.RuntimeException
 import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
@@ -40,6 +34,8 @@ class UiRequestHandler @Inject constructor() {
     internal val processing = AtomicBoolean(false)
 
     lateinit var hostActivityProvider: PublishSubject<AppCompatActivity>
+
+    lateinit var paymentMethodTypeSubject: PublishSubject<PaymentMethodType>
 
     fun provideHostActivity(activity: AppCompatActivity) {
         activityReference = WeakReference(activity)
@@ -103,7 +99,13 @@ class UiRequestHandler @Inject constructor() {
     }
 
     fun askUserToChosePaymentMethod(activity: Activity?, availableMethods: Set<PaymentMethodType>): Single<PaymentMethodType> {
-        return Single.just(PaymentMethodType.CREDITCARD)
+        return launchHostActivity(activity).flatMap { hostActivity ->
+            paymentMethodTypeSubject = PublishSubject.create()
+            val paymentMethodChoiceFragment = PaymentMethodChoiceFragment()
+            hostActivity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, paymentMethodChoiceFragment).commitNow()
+            paymentMethodTypeSubject.firstOrError()
+        }
+
     }
 
 }

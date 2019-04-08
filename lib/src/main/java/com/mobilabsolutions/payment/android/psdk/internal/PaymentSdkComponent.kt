@@ -5,6 +5,7 @@ import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodChoiceFragment
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.RegistrationProccessHostActivity
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
@@ -22,6 +23,8 @@ interface PaymentSdkComponent {
     fun inject(paymentSdk: NewPaymentSdk)
 
     fun inject(registrationProccessHostActivity: RegistrationProccessHostActivity)
+
+    fun inject(paymentMethodChoiceFragment: PaymentMethodChoiceFragment)
 
     fun provideApplication() : Application
 

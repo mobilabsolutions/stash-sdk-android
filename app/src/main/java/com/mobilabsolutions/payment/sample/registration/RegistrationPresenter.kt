@@ -115,6 +115,35 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
 
     }
 
+    fun registerPaymentMethodRequested() {
+        registrationViewState = registrationViewState.copy(enteringData = false, executingRegistration = true, registrationFailed = false)
+        applyOnUi {
+            it.renderState(registrationViewState)
+
+            registrationViewState.apply {
+                registrationController.registerPaymentMethod(
+                        activity = it.getParentActivity()
+                )
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeBy(
+                                onSuccess = {
+                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                    applyOnUi { it.renderState(registrationViewState) }
+                                },
+                                onError = {
+                                    Timber.d(it, "Error encountered")
+                                    registrationViewState = copy(
+                                            executingRegistration = false,
+                                            registrationFailed = true,
+                                            failureReason = it.message ?: "Unknown error")
+                                    applyOnUi { it.renderState(registrationViewState) }
+                                }
+                        )
+            }
+        }
+    }
+
     override fun onUiVisible() {
         super.onUiVisible()
         Timber.d("Ui visible")
