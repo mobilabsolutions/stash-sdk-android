@@ -2,15 +2,13 @@ language: android
 jdk:
 - oraclejdk8
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
-  - rm -f  $HOME/.android/build-cache/*.lock
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - "$HOME/.gradle/caches/5.2/"
-  - "$HOME/.gradle/caches/build-cache-1/"
-  - "$HOME/.gradle/wrapper/"
-  - "$HOME/.android/build-cache/"
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
+  - $HOME/.android/build-cache
 android:
   components:
   - platform-tools
