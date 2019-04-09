@@ -19,14 +19,14 @@ interface RegistrationManager {
      * @param creditCardData credit card information
      * @return string representing payment aliasId
      */
-    fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData = BillingData(), idempotencyId : UUID? = null): Single<String>
+    fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData = BillingData(), idempotencyKey : UUID? = null): Single<String>
 
     /**
      * Register a sepa debit account so you can use payment aliasId for future payments
      * @param sepaData sepa card information
      * @return string representing payment aliasId
      */
-    fun registerSepa(sepaData: SepaData, billingData: BillingData = BillingData(), idempotencyId: UUID? = null): Single<String>
+    fun registerSepa(sepaData: SepaData, billingData: BillingData = BillingData(), idempotencyKey: UUID? = null): Single<String>
 
     /**
      * Returns a list of supported payment methods
@@ -41,7 +41,7 @@ interface RegistrationManager {
      * @param specificPaymentMethodType skip payment method chooser and immediately show specific type entry UI
      * @returnstring string representing aliasId
      */
-    fun registerPaymentMehodUsingUi(activity : Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyId: UUID? = null) : Single<String>
+    fun registerPaymentMehodUsingUi(activity : Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyKey: UUID? = null) : Single<String>
 
 
 }
