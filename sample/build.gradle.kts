@@ -110,6 +110,16 @@ dependencies {
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.ui)
 
+    testImplementation(Libs.junit)
+
+    androidTestImplementation(Libs.AndroidX.appcompat)
+    androidTestImplementation(Libs.AndroidX.constraintlayout)
+
+    androidTestImplementation(Libs.AndroidX.Test.runner)
+    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.espressoIntents)
+    androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
 }
 
 tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
