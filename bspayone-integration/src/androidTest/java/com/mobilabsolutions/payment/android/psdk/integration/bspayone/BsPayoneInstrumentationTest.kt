@@ -85,6 +85,7 @@ class BsPayoneRegistrationInstrumentationTest {
         ////Traceur.enableLogging()
     }
 
+    @Ignore("Idempotent-Key needs to be implemented.")
     @Test
     fun testRegisterCreditCard() {
         setUp()
