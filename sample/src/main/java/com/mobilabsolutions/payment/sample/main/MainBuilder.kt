@@ -3,8 +3,9 @@ package com.mobilabsolutions.payment.sample.main
 import androidx.lifecycle.ViewModel
 import com.mobilabsolutions.payment.sample.inject.ViewModelBuilder
 import com.mobilabsolutions.payment.sample.inject.ViewModelKey
-import com.mobilabsolutions.payment.sample.main.payment.PaymentBuilder
-import com.mobilabsolutions.payment.sample.main.register.RegisterBuilder
+import com.mobilabsolutions.payment.sample.main.checkout.CheckoutBuilder
+import com.mobilabsolutions.payment.sample.main.items.ItemsBuilder
+import com.mobilabsolutions.payment.sample.main.paymentmethods.PaymentMethodsBuilder
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -17,8 +18,9 @@ import dagger.multibindings.IntoMap
 abstract class MainBuilder {
     @ContributesAndroidInjector(modules = [
         ViewModelBuilder::class,
-        RegisterBuilder::class,
-        PaymentBuilder::class
+        ItemsBuilder::class,
+        CheckoutBuilder::class,
+        PaymentMethodsBuilder::class
     ])
     abstract fun mainActivity(): MainActivity
 

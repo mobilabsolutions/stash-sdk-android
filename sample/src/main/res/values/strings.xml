@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Payment SDK Sample</string>
+    <string name="items">List of Items</string>
+    <string name="checkout">Check-out</string>
     <string name="register">Register</string>
     <string name="payment">Payment</string>
 </resources>

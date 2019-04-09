@@ -2,9 +2,10 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+
         <variable
             name="state"
-            type="com.mobilabsolutions.payment.sample.main.register.RegisterViewState"/>
+            type="com.mobilabsolutions.payment.sample.main.items.ItemsViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
