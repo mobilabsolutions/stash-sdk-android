@@ -40,7 +40,8 @@ object Modules {
 }
 
 object Libs {
-    val androidGradlePlugin = "com.android.tools.build:gradle:3.3.0"
+    val androidGradlePlugin = "com.android.tools.build:gradle:3.3.2"
+    val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.20.0"
 
     val timber = "com.jakewharton.timber:timber:4.7.1"
 
@@ -60,6 +61,8 @@ object Libs {
 
     val braintree = "com.braintreepayments.api:braintree:3.0.0"
 
+    val mvrx = "com.airbnb.android:mvrx:0.7.2"
+
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha02"
         val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.8"
@@ -67,7 +70,7 @@ object Libs {
     }
 
     object Kotlin {
-        private const val version = "1.3.11"
+        private const val version = "1.3.21"
         val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
         val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
@@ -84,6 +87,16 @@ object Libs {
     object AndroidX {
         val appcompat = "androidx.appcompat:appcompat:1.0.2"
         val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
+        val archCoreTesting = "androidx.arch.core:core-testing:2.0.0"
+        val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
+        val coreKtx = "androidx.core:core-ktx:1.0.1"
+
+        object Navigation {
+            private const val version = "2.0.0"
+            val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
+            val ui = "androidx.navigation:navigation-ui-ktx:$version"
+            val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
+        }
 
         object Test {
             val core = "androidx.test:core:1.1.1-alpha02"
@@ -98,16 +111,10 @@ object Libs {
             val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
 
-        val archCoreTesting = "androidx.arch.core:core-testing:2.0.0"
-
-        val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
-
-        val coreKtx = "androidx.core:core-ktx:1.0.1"
-
         object Lifecycle {
             private const val version = "2.0.0"
             val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
-            val reactive = "androidx.lifecycle:lifecycle-reactivestreams:$version"
+            val reactivestreams = "androidx.lifecycle:lifecycle-reactivestreams:$version"
             val compiler = "androidx.lifecycle:lifecycle-compiler:$version"
         }
 
@@ -121,13 +128,13 @@ object Libs {
     }
 
     object RxJava {
-        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.5"
+        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.8"
         val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.3.0"
-        val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.0"
+        val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
 
     object Dagger {
-        private const val version = "2.20"
+        private const val version = "2.22.1"
         val dagger = "com.google.dagger:dagger:$version"
         val daggerAndroid = "com.google.dagger:dagger-android:$version"
         val androidSupport = "com.google.dagger:dagger-android-support:$version"
@@ -144,13 +151,13 @@ object Libs {
     }
 
     object OkHttp {
-        private const val version = "3.12.1"
+        private const val version = "3.14.0"
         val okhttp = "com.squareup.okhttp3:okhttp:$version"
         val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
     }
 
     object Stetho {
-        private const val version = "1.5.0"
+        private const val version = "1.5.1"
         val stetho = "com.facebook.stetho:stetho:$version"
         val stethoOkhttp33 = "com.facebook.stetho:stetho-okhttp3:$version"
     }
@@ -159,6 +166,19 @@ object Libs {
         private const val version = "2.0.0-beta.5"
         val module = "org.powermock:powermock-module-junit4:$version"
         val api = "org.powermock:powermock-api-mockito2:$version"
+    }
+
+    object AssistedInject {
+        private const val version = "0.4.0"
+        val annotationDagger2 = "com.squareup.inject:assisted-inject-annotations-dagger2:$version"
+        val processorDagger2 = "com.squareup.inject:assisted-inject-processor-dagger2:$version"
+    }
+
+    object Epoxy {
+        private const val version = "3.3.1"
+        val epoxy = "com.airbnb.android:epoxy:$version"
+        val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
+        val processor = "com.airbnb.android:epoxy-processor:$version"
     }
 }
 

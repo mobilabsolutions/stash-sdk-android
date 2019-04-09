@@ -43,7 +43,8 @@ before_install:
 - chmod +x .buildscript.sh
 - chmod +x .setup-emulator.sh
 before_script:
-- "./.setup-emulator.sh"
+# disable emulator until we define Travis build process.
+#- "./.setup-emulator.sh"
 script:
 - "./.buildscript.sh"
 notifications:
