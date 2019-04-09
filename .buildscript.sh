@@ -7,13 +7,12 @@ echo Travis build id: ${TRAVIS_BUILD_ID}
 echo Is this PR: ${TRAVIS_PULL_REQUEST}
 
 if [ ! -z $TRAVIS_TAG ]; then
-# If there's a tag, deploy.
-    ./gradlew lib:assemble
+# If there's a tag, release.
+    echo Release.
 elif [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
-# If it's not pull request and the branch is master, run all the tests.
-    ./gradlew lib:connectedCheck lib:test bspayone-integration:connectedCheck braintree-integration:connectedCheck
+# If it's not pull request and the branch is master, deploy the sample app to Fabric beta.
+    echo Deploy to Fabric Beta.
 else
-# If it's pull request, run all the tests or just library tests?
-	./gradlew clean lib:assemble lib:assembleAndroidTest --stacktrace
-	./gradlew lib:check lib:connectedCheck --stacktrace
+# If it's pull request,
+	echo This is a pull request, no deployemnt.
 fi
