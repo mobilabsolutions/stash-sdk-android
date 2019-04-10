@@ -10,7 +10,7 @@ import java.util.*
  */
 //data class BillingData(var country: String, val firstName: String, val city: String, val lastName: String, val email: String, val address1: String, val address2: String, val zip: String)
 
-class BillingData (
+data class BillingData (
     var firstName: String? = null,
     var lastName: String? = null,
     var email: String? = null,
@@ -37,8 +37,14 @@ class BillingData (
     }
 
     class Builder {
+        var billingData = BillingData()
 
-        fun build() = BillingData()
+        fun setCity(city : String) : Builder {
+            billingData = billingData.copy(city = city)
+            return this
+        }
+
+        fun build() = billingData
 
     }
 }

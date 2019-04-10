@@ -16,7 +16,7 @@ class SampleApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        PaymentSdk.initalize(BuildConfig.newBsApiKey, this, setOf(BsPayoneIntegration, BraintreeIntegration), true)
+        PaymentSdk.initalize(BuildConfig.newBsApiKey, BuildConfig.mobilabBackendUrl, this, setOf(BsPayoneIntegration, BraintreeIntegration), true)
 
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this)

@@ -3,10 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.internal
 ////import com.tspoon.traceur.Traceur
 import android.app.Application
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.PaymentManager
-import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.RegistrationManager
-import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
+import com.mobilabsolutions.payment.android.psdk.*
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
 import timber.log.Timber
@@ -20,6 +17,7 @@ import javax.net.ssl.X509TrustManager
  */
 class NewPaymentSdk(
         publicKey: String,
+        url : String?,
         applicationContext: Application,
         integrationList: List<IntegrationInitialization>,
         testMode : Boolean,
@@ -42,14 +40,14 @@ class NewPaymentSdk(
 
     var paymentMethodSet: Set<PaymentMethodType> = emptySet()
 
-    private constructor(publicKey: String, applicationContext: Application) : this(publicKey, applicationContext, emptyList(),true,null, null)
+    private constructor(publicKey: String, url : String?, applicationContext: Application) : this(publicKey, url, applicationContext, emptyList(),true,null, null)
 
     init {
-
+        val backendUrl = url ?: MOBILAB_BE_URL
 
         daggerGraph = DaggerPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-                .paymentSdkModule(PaymentSdkModule(publicKey, MOBILAB_BE_URL, applicationContext, integrationList, true))
+                .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationList, true))
                 .build()
 
         integrationList.map {
@@ -90,7 +88,13 @@ class NewPaymentSdk(
 //        }
 
         @Synchronized
-        fun initialize(publicKey: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode : Boolean = false, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
+        fun initialize(applicationContext : Application, configuration : PaymentSdkConfiguration) {
+            val integrationInitializations = configuration.integrations.map { it.create() }.toList()
+            initialize(configuration.publicKey, configuration.endpoint, applicationContext, integrationInitializations, configuration.testMode, configuration.sslFactory, configuration.x509TrustManager)
+        }
+
+        @Synchronized
+        fun initialize(publicKey: String?, url : String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode : Boolean = false, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
             if (publicKey == null) {
                 throw InvalidPublicKeyException("Public key not supplied")
             }
@@ -105,7 +109,7 @@ class NewPaymentSdk(
             }
 
             Timber.plant(Timber.DebugTree())
-            NewPaymentSdk.instance = NewPaymentSdk(publicKey, applicationContext, integrationList, testMode, sslSocketFactory, x509TrustManager)
+            NewPaymentSdk.instance = NewPaymentSdk(publicKey, url, applicationContext, integrationList, testMode, sslSocketFactory, x509TrustManager)
 
             NewPaymentSdk.initialized = true
         }
