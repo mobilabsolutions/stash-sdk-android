@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">payment-sdk-android</string>
+    <string name="payment_chooser_title_text">Payment method</string>
+    <string name="payment_chooser_subtitle_text">Please choose a payment method</string>
 </resources>
