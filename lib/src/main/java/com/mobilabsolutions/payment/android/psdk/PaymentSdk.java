@@ -69,6 +69,10 @@ public final class PaymentSdk {
         NewPaymentSdk.Companion.initialize(publicKey, url, applicationContext, integrationList, testMode, null, null);
     }
 
+    public static void initalize(Application applicationContext, PaymentSdkConfiguration paymentSdkConfiguration) {
+        NewPaymentSdk.Companion.initialize(applicationContext, paymentSdkConfiguration);
+    }
+
     /**
      * Used to initializa the SDK by providing public key
      *
