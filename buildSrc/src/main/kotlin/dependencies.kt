@@ -41,6 +41,7 @@ object Modules {
 
 object Libs {
     val androidGradlePlugin = "com.android.tools.build:gradle:3.3.2"
+
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.20.0"
 
     val timber = "com.jakewharton.timber:timber:4.7.1"
@@ -62,6 +63,8 @@ object Libs {
     val braintree = "com.braintreepayments.api:braintree:3.0.0"
 
     val mvrx = "com.airbnb.android:mvrx:0.7.2"
+
+    val cardView = "com.android.support:cardview-v7:25.1.0"
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha02"

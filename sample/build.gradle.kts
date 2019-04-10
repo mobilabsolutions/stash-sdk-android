@@ -1,4 +1,3 @@
-
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 plugins {
@@ -106,6 +105,10 @@ dependencies {
     kapt(Libs.AssistedInject.processorDagger2)
 
     implementation(Libs.mvrx)
+
+    implementation(Libs.Epoxy.epoxy)
+    implementation(Libs.Epoxy.dataBinding)
+    kapt(Libs.Epoxy.processor)
 
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.ui)
