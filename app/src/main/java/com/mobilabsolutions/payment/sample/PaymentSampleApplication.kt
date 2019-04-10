@@ -17,7 +17,7 @@ class PaymentSampleApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        PaymentSdk.initalize(BuildConfig.newBsApiKey, this, setOf(BsPayoneIntegration, BraintreeIntegration), true)
+        PaymentSdk.initalize(BuildConfig.newBsApiKey, "https://payment-dev.mblb.net/api/", this, setOf(BsPayoneIntegration, BraintreeIntegration), true)
 
 
         if (BuildConfig.DEBUG) {

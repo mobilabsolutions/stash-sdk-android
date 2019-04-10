@@ -26,7 +26,7 @@ public class JavaSketch {
         BillingData builtBillingData = new BillingData.Builder().build();
         Application context = null;
 
-        PaymentSdk.initalize(BuildConfig.newBsApiKey, context, BsPayoneIntegration.Companion);
+        PaymentSdk.initalize(BuildConfig.newBsApiKey, BuildConfig.mobilabBackendUrl, context, BsPayoneIntegration.Companion);
         RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 
         CreditCardData creditCardData = CreditCardData.create(
