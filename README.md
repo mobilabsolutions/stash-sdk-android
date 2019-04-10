@@ -26,19 +26,19 @@ read me will be updated to reflect changes once the integration modules are impl
 - Braintree [PayPal]
 - Adyen [Credit Cards / SEPA]
 
-#### Including the SDK in your project
+### Including the SDK in your project
 
-Gradle
+**Gradle**
 
 `implementation com.mobilabsolutions.payment:lib:0.9.5`
 
-Gradle Kotlin DSL
+**Gradle Kotlin DSL**
 
 `implementation("com.mobilabsolutions.payment:lib:0.9.5")`
 
-#### Initializing the SDK
+### Initializing the SDK
 
-### Configuring the SDK
+
 
 To use the SDK, you need to initialize it with some configuration data. Among the data that needs to be provided are the public key as well as the backend endpoint that should be used by the SDK.
 
@@ -139,7 +139,7 @@ creditCardData.setCvv("123");
 
 BillingData billingData = new BillingData.Builder()
          .setCity("Cologne")
-         ,build()
+         .build()
 
 
 RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
@@ -251,7 +251,7 @@ registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CRED
 ``` 
 
 ### Idempotency
-All calls provided by Payment SDK are idempotent. To use idempotency simply provide a UUID to any of the method you call.
+All calls provided by Payment SDK are idempotent. To use idempotency simply provide a UUID to with any of the registration methods used.
 
 **Example**
 
