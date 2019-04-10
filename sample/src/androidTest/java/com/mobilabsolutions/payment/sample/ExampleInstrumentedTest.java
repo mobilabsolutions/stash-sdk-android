@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.sample;
 
 import android.content.Context;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertEquals;
  */
 @RunWith(AndroidJUnit4.class)
 public class ExampleInstrumentedTest {
+    @Ignore
     @Test
     public void useAppContext() {
         // Context of the app under test.
