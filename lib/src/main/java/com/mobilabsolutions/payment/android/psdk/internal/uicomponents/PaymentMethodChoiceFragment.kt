@@ -25,10 +25,18 @@ class PaymentMethodChoiceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        testButton.setOnClickListener {
-            println("Chosen")
+
+        sepaButton.setOnClickListener {
+            uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.SEPA)
+        }
+        ccTmpButton.setOnClickListener {
             uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.CREDITCARD)
         }
+        paypalButton.setOnClickListener {
+            uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.PAYPAL)
+        }
+
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
