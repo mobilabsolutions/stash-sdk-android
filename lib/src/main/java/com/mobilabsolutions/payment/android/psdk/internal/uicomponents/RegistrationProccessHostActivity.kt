@@ -21,4 +21,9 @@ class RegistrationProccessHostActivity : AppCompatActivity() {
         uiRequestHandler.provideHostActivity(this)
         setContentView(R.layout.registration_host_activity)
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        uiRequestHandler.hostActivityDismissed()
+    }
 }

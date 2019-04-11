@@ -9,6 +9,7 @@ import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
 import kotlinx.android.synthetic.main.payment_method_chooser_fragment.*
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 /**
@@ -19,6 +20,8 @@ class PaymentMethodChoiceFragment : Fragment() {
     @Inject
     lateinit var uiRequestHandler: UiRequestHandler
 
+    private var choiceMade = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.payment_method_chooser_fragment, container, false)
     }
@@ -27,12 +30,15 @@ class PaymentMethodChoiceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         sepaButton.setOnClickListener {
+            choiceMade = true
             uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.SEPA)
         }
         ccTmpButton.setOnClickListener {
+            choiceMade = true
             uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.CREDITCARD)
         }
         paypalButton.setOnClickListener {
+            choiceMade = true
             uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.PAYPAL)
         }
 
@@ -42,5 +48,12 @@ class PaymentMethodChoiceFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         NewPaymentSdk.getInjector().inject(this)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (!choiceMade) {
+            uiRequestHandler.paymentMethodTypeSubject.onError(RuntimeException("User canceled choosing method"))
+        }
     }
 }
