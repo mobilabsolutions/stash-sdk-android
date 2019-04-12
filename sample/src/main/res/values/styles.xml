@@ -8,11 +8,14 @@
     </style>
 
 
-
     <style name="AppTheme.Launcher" parent="@style/AppTheme">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
+    <style name="TextAppearance.Sample.ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/aquaMarine</item>
+    </style>
 
 </resources>

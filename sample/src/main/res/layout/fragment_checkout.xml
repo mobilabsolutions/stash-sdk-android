@@ -1,14 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <data>
+
         <variable
             name="state"
-            type="com.mobilabsolutions.payment.sample.main.checkout.CheckoutViewState"/>
+            type="com.mobilabsolutions.payment.sample.main.checkout.CheckoutViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/checkout_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/checkout"
+                android:textAppearance="@style/TextAppearance.Sample.ToolbarTitle" />
+        </androidx.appcompat.widget.Toolbar>
+
+        <com.airbnb.epoxy.EpoxyRecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkout_toolbar" />
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
