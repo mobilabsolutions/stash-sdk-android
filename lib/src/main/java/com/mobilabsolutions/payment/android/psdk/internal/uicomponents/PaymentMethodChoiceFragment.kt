@@ -75,6 +75,7 @@ class PaymentMethodChoiceFragment : Fragment() {
 
     class PaymentMethodViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val paymentMethodName = view.paymentMethodTypeTextView
+        val paymentMethodIcon = view.paymentMethodIconImageView
     }
 
     class PaymentMethodAdapter(val availablePaymentMethods: List<PaymentMethodDefinition>, val paymentMethodSubject: ReplaySubject<PaymentMethodType>) : RecyclerView.Adapter<PaymentMethodViewHolder>() {
@@ -88,9 +89,17 @@ class PaymentMethodChoiceFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: PaymentMethodViewHolder, position: Int) {
-            holder.paymentMethodName.text = availablePaymentMethods[position].paymentMethodType.name
+            val paymentMethodDefinition = availablePaymentMethods[position]
+            holder.paymentMethodName.text = paymentMethodDefinition.paymentMethodType.name
+            holder.paymentMethodIcon.setImageResource(
+                    when(paymentMethodDefinition.paymentMethodType) {
+                        PaymentMethodType.CREDITCARD -> R.drawable.ic_credit
+                        PaymentMethodType.SEPA -> R.drawable.ic_sepa_symbol
+                        PaymentMethodType.PAYPAL -> R.drawable.ic_paypal_grey
+                    }
+            )
             holder.paymentMethodName.setOnClickListener {
-                paymentMethodSubject.onNext(availablePaymentMethods[position].paymentMethodType)
+                paymentMethodSubject.onNext(paymentMethodDefinition.paymentMethodType)
 
             }
 

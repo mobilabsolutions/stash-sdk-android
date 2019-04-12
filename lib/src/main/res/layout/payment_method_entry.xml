@@ -3,6 +3,7 @@
                                                    xmlns:app="http://schemas.android.com/apk/res-auto"
                                                    xmlns:tools="http://schemas.android.com/tools"
                                                    android:orientation="vertical"
+                                                   android:background="#ffffff"
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
@@ -10,9 +11,22 @@
         android:id="@+id/paymentMethodTypeTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="@+id/paymentMethodIconImageView"
+        app:layout_constraintStart_toEndOf="@+id/paymentMethodIconImageView"
+        app:layout_constraintTop_toTopOf="@+id/paymentMethodIconImageView"
+        app:layout_constraintVertical_bias="0.695"/>
+
+    <ImageView
+        android:id="@+id/paymentMethodIconImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
-        android:text="TextView"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:srcCompat="@drawable/ic_credit"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
