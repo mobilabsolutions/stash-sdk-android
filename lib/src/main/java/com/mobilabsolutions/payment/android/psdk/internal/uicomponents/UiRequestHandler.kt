@@ -39,7 +39,7 @@ class UiRequestHandler @Inject constructor() {
 
     var hostActivityProvider: ReplaySubject<AppCompatActivity> = ReplaySubject.create<AppCompatActivity>()
 
-    lateinit var paymentMethodTypeSubject: PublishSubject<PaymentMethodType>
+    lateinit var paymentMethodTypeSubject: ReplaySubject<PaymentMethodType>
 
     var errorSubject : PublishSubject<Map<String, String>> = PublishSubject.create()
 
@@ -64,6 +64,10 @@ class UiRequestHandler @Inject constructor() {
         hostActivityProvider = ReplaySubject.create()
         currentRequestId = -1
         processing.set(false)
+    }
+
+    internal fun availablePaymentMethods() : List<PaymentMethodDefinition> {
+        return integrations.flatMap { it.getSupportedPaymentMethodDefinitions() }
     }
 
     /**
@@ -150,7 +154,7 @@ class UiRequestHandler @Inject constructor() {
         checkFlow(requestId)
         return launchHostActivity(activity).flatMap { hostActivity ->
             val supportFragmentManager = hostActivity.supportFragmentManager
-            paymentMethodTypeSubject = PublishSubject.create()
+            paymentMethodTypeSubject = ReplaySubject.create()
             val paymentMethodChoiceFragment = PaymentMethodChoiceFragment()
             supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, paymentMethodChoiceFragment).commitNow()
             paymentMethodTypeSubject
