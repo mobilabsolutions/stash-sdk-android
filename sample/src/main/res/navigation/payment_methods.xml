@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/payment"
+    app:startDestination="@+id/paymentMethodsScreen">
+
+    <fragment
+        android:id="@+id/paymentMethodsScreen"
+        android:name="com.mobilabsolutions.payment.sample.main.paymentmethods.PaymentMethodsFragment"
+        android:label="@string/payment"
+        tools:layout="@layout/fragment_payment_methods">
+
+    </fragment>
+
+</navigation>
