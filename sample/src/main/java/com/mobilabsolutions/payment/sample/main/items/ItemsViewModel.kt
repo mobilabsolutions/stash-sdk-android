@@ -4,6 +4,7 @@ import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
+import com.mobilabsolutions.payment.sample.data.interactors.LoadProducts
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -13,7 +14,8 @@ import com.squareup.inject.assisted.AssistedInject
  */
 class ItemsViewModel @AssistedInject constructor(
         @Assisted initialState: ItemsViewState,
-        private val schedulers: AppRxSchedulers
+        schedulers: AppRxSchedulers,
+        private val loadProducts: LoadProducts
 ) : BaseViewModel<ItemsViewState>(initialState) {
     @AssistedInject.Factory
     interface Factory {
@@ -25,5 +27,15 @@ class ItemsViewModel @AssistedInject constructor(
             val fragment: ItemsFragment = (viewModelContext as FragmentViewModelContext).fragment()
             return fragment.itemsViewModelFactory.create(state)
         }
+    }
+
+    init {
+        loadProducts.observe()
+                .subscribeOn(schedulers.io)
+                .execute {
+                    copy(products = it()?: emptyList())
+                }
+
+        loadProducts.setParams(Unit)
     }
 }
