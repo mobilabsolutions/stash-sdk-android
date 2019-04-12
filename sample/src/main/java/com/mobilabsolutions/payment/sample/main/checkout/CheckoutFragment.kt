@@ -11,6 +11,5 @@ class CheckoutFragment : BaseFragment() {
     lateinit var checkoutViewModelFactory: CheckoutViewModel.Factory
 
     override fun invalidate() {
-
     }
 }

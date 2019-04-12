@@ -49,7 +49,7 @@ class IntegrationTest {
     @Test
     fun testMultipleIntegrations() {
         expectedException.expect(RuntimeException::class.java)
-        PaymentSdk.initalize("123", application, setOf(BsPayoneIntegration, BsOldIntegration))
+        PaymentSdk.initalize("123", "fakeUrl", application, setOf(BsPayoneIntegration, BsOldIntegration))
     }
 }
 

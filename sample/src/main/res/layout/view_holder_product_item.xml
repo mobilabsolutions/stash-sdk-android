@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/card_view"
-    android:layout_width="match_parent"
-    android:layout_height="104dp"
-    android:layout_margin="5dp"
-    card_view:cardCornerRadius="2dp"
-    card_view:contentPadding="10dp">
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="product"
+            type="com.mobilabsolutions.payment.sample.data.entities.Product" />
+    </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center">
 
         <ImageView
@@ -29,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_toEndOf="@+id/image"
-            android:text="@string/item_title"
+            android:text="@{product.name}"
             android:textColor="@color/colorDark"
             android:textSize="22sp" />
 
@@ -40,7 +41,7 @@
             android:layout_below="@+id/title"
             android:layout_toEndOf="@+id/image"
             android:maxLines="2"
-            android:text="@string/item_description"
+            android:text="@{product.description}"
             android:textColor="@color/colorGray"
             android:textSize="16sp" />
 
@@ -51,10 +52,11 @@
             android:layout_below="@+id/desc"
             android:layout_marginTop="1dp"
             android:layout_toEndOf="@+id/image"
-            android:text="@string/price_placeholder"
+            android:text="@{product.displayPrice()}"
             android:textColor="@color/colorAquamarine"
             android:textSize="22sp" />
 
     </RelativeLayout>
 
-</android.support.v7.widget.CardView>
+
+</layout>

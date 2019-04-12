@@ -3,13 +3,18 @@ package com.mobilabsolutions.payment.sample;
 import android.app.Application;
 
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk;
+import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration;
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager;
+import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration;
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration;
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 import com.mobilabsolutions.payment.android.psdk.model.BillingData;
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
 
 import org.threeten.bp.LocalDate;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import io.reactivex.disposables.Disposable;
@@ -26,7 +31,7 @@ public class JavaSketch {
         BillingData builtBillingData = new BillingData.Builder().build();
         Application context = null;
 
-        PaymentSdk.initalize(BuildConfig.newBsApiKey, context, BsPayoneIntegration.Companion);
+        PaymentSdk.initalize(BuildConfig.newBsApiKey, BuildConfig.mobilabBackendUrl, context, BsPayoneIntegration.Companion);
         RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 
         CreditCardData creditCardData = CreditCardData.create(
@@ -45,6 +50,19 @@ public class JavaSketch {
                             //Handle error
                         }
                 );
+        Set<IntegrationCompanion> integrations = new HashSet<>();
+        integrations.add(BraintreeIntegration.Companion);
+        integrations.add(BsPayoneIntegration.Companion);
+
+        PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder("YourPublicKey")
+                .setEndpoint("https://payment-dev.mblb.net/api/")
+                .setIntegrations(integrations)
+                .setTestMode(true)
+                .build();
+
+        PaymentSdk.initalize(context, configuration);
+
+        registrationManager.registerPaymentMehodUsingUi(null, null, null);
 
 //        UiDetailType uiDetailType = UiDetailType.NAME
 
