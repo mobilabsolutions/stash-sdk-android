@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,7 +12,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/checkout_toolbar"
@@ -30,9 +33,43 @@
         <com.airbnb.epoxy.EpoxyRecyclerView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkout_toolbar" />
+            android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/label_total_amount"
+            app:layout_constraintTop_toBottomOf="@+id/checkout_toolbar"
+            tools:listitem="@layout/view_holder_checkout_item" />
 
+        <TextView
+            android:id="@+id/label_total_amount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:text="@string/total_amount"
+            android:textColor="@color/darkBlack"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/btn_pay"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/aquaMarine"
+            android:textSize="24sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/label_total_amount"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="23,95 €" />
+
+        <TextView
+            android:id="@+id/btn_pay"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/ripple_rounded_corner_aqua"
+            android:gravity="center"
+            android:text="@string/pay"
+            android:textAllCaps="true"
+            android:textColor="@color/pureWhite"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

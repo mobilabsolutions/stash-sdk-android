@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="pureWhite">#ffffff</color>
     <color name="aquaMarine">#07d0c7</color>
+    <color name="darkBlack">#12202a</color>
 </resources>
