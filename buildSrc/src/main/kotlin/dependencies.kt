@@ -119,11 +119,13 @@ object Libs {
         }
 
         object Room {
-            private const val version = "2.0.0"
+            private const val version = "2.1.0-alpha06"
             val common = "androidx.room:room-common:$version"
             val runtime = "androidx.room:room-runtime:$version"
             val rxjava2 = "androidx.room:room-rxjava2:$version"
             val compiler = "androidx.room:room-compiler:$version"
+            val ktx = "androidx.room:room-ktx:$version"
+            val testing = "androidx.room:room-testing:$version"
         }
     }
 
@@ -175,7 +177,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.3.1"
+        private const val version = "3.4.0"
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"
