@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="product"
+            type="com.mobilabsolutions.payment.sample.data.entities.Product" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -16,6 +19,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
             android:padding="8dp">
 
             <ImageView

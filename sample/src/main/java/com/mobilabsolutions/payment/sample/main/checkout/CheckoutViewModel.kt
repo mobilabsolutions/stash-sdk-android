@@ -26,4 +26,8 @@ class CheckoutViewModel @AssistedInject constructor(
             return fragment.checkoutViewModelFactory.create(state)
         }
     }
+
+    fun onPayBtnClicked(){
+
+    }
 }
