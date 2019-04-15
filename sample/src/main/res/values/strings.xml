@@ -8,6 +8,9 @@
     <string name="pay">Pay</string>
     <string name="total_amount">Total Amount</string>
 
+    <string name="payment_methods">Payment Methods</string>
+    <string name="add_payment_method">Add new payment method</string>
+
 
 
 </resources>
