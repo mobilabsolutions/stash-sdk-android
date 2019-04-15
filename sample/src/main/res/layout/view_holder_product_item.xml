@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+>
 
     <data>
 
@@ -10,53 +11,73 @@
                 type="com.mobilabsolutions.payment.sample.data.entities.Product"/>
     </data>
 
-    <RelativeLayout
+    <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center">
+            app:cardCornerRadius="4dp"
+            app:cardElevation="4dp" android:layout_margin="5dp">
 
-        <ImageView
-                android:id="@+id/image"
-                android:layout_width="81dp"
-                android:layout_height="88dp"
-                android:layout_alignParentStart="true"
-                android:layout_margin="8dp"
-                android:contentDescription="@string/thumbnail"
-                app:image="@{product.image}"/>
-
-        <TextView
-                android:id="@+id/title"
-                android:layout_width="wrap_content"
+        <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@+id/image"
-                android:text="@{product.name}"
-                android:textColor="@color/colorDark"
-                android:textSize="22sp"/>
+                android:layout_gravity="center">
 
-        <TextView
-                android:id="@+id/desc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/title"
-                android:layout_toEndOf="@+id/image"
-                android:maxLines="2"
-                android:text="@{product.description}"
-                android:textColor="@color/colorGray"
-                android:textSize="16sp"/>
+            <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="81dp"
+                    android:layout_height="88dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_margin="8dp"
+                    android:src="@drawable/image_card_05"
+                    android:contentDescription="@string/thumbnail"
+                    app:image="@{product.image}"/>
 
-        <TextView
-                android:id="@+id/price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/desc"
-                android:layout_marginTop="1dp"
-                android:layout_toEndOf="@+id/image"
-                app:currency="@{product.price}"
-                android:textColor="@color/colorAquamarine"
-                android:textSize="22sp"/>
+            <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_toEndOf="@+id/image"
+                    android:text="@{product.name, default=@string/item_title}"
+                    android:textColor="@color/colorDark"
+                    android:textSize="22sp"
+                    tools:ignore="RelativeOverlap"/>
 
-    </RelativeLayout>
+            <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/title"
+                    android:layout_toEndOf="@+id/image"
+                    android:maxLines="2"
+                    android:text="@{product.description, default=@string/item_description}"
+                    android:textColor="@color/colorGray"
+                    android:textSize="16sp"/>
 
+            <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/description"
+                    android:layout_marginTop="1dp"
+                    android:layout_toEndOf="@+id/image"
+                    android:text="@string/price_placeholder"
+                    app:currency="@{product.price}"
+                    android:textColor="@color/colorAquamarine"
+                    android:textSize="22sp"/>
+
+            <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    app:srcCompat="@drawable/ic_plus"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="28dp"
+                    android:contentDescription="@string/thumbnail" android:padding="8dp"/>
+
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 
 </layout>

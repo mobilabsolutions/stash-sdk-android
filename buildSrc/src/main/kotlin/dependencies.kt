@@ -64,8 +64,6 @@ object Libs {
 
     val mvrx = "com.airbnb.android:mvrx:0.7.2"
 
-    val cardView = "com.android.support:cardview-v7:25.1.0"
-
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha02"
         val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.8"
@@ -90,6 +88,7 @@ object Libs {
     object AndroidX {
         val appcompat = "androidx.appcompat:appcompat:1.0.2"
         val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
+        val cardview = "androidx.cardview:cardview:1.0.0"
         val archCoreTesting = "androidx.arch.core:core-testing:2.0.0"
         val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
         val coreKtx = "androidx.core:core-ktx:1.0.1"

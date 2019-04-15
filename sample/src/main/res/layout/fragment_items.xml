@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
-            name="state"
-            type="com.mobilabsolutions.payment.sample.main.items.ItemsViewState" />
+                name="state"
+                type="com.mobilabsolutions.payment.sample.main.items.ItemsViewState"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <com.airbnb.epoxy.EpoxyRecyclerView
-            android:id="@+id/itemsRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+                android:id="@+id/itemsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/view_holder_product_item"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -76,6 +76,8 @@ dependencies {
 
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.appcompat)
+    implementation(Libs.AndroidX.cardview)
+
     implementation(Libs.Google.material)
 
     implementation(Libs.timber)
@@ -128,7 +130,6 @@ dependencies {
     implementation(Libs.Epoxy.epoxy)
     implementation(Libs.Epoxy.dataBinding)
     kapt(Libs.Epoxy.processor)
-
 
     testImplementation(Libs.junit)
 
