@@ -65,6 +65,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     }
 
     class PaymentMethodViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val rootView = view.paymentMethodRootView
         val paymentMethodName = view.paymentMethodTypeTextView
         val paymentMethodIcon = view.paymentMethodIconImageView
     }
@@ -95,7 +96,7 @@ class PaymentMethodChoiceFragment : Fragment() {
                         PaymentMethodType.PAYPAL -> R.drawable.ic_paypal_grey
                     }
             )
-            holder.paymentMethodName.setOnClickListener {
+            holder.rootView.setOnClickListener {
                 paymentMethodSubject.onNext(paymentMethodDefinition.paymentMethodType)
 
             }
