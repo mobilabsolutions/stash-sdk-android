@@ -40,7 +40,7 @@ interface MobilabApi {
 
 interface MobilabApiV2 {
     @POST("v1/alias")
-    fun createAlias(@Header("PSP-Type") psp : String) : Single<AliasResponse>
+    fun createAlias(@Header("PSP-Type") psp : String, @Header("Idempotent-Key") idempotencyKey : String) : Single<AliasResponse>
 
     @PUT("v1/alias/{aliasId}")
     fun updateAlias(@Path("aliasId") aliasId : String, @Body aliasUpdateRequest: AliasUpdateRequest) : Completable

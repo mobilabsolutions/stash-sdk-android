@@ -1,12 +1,14 @@
 package com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2
 
 import com.google.gson.annotations.SerializedName
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 
 
 data class AliasExtra(
         @SerializedName("ccConfig")
         val creditCardConfig: CreditCardConfig? = null,
-        val sepaConfig: SepaConfig? = null
+        val sepaConfig: SepaConfig? = null,
+        val paymentMethod : String
 )
 
 data class CreditCardConfig(

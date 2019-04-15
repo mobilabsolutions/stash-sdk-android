@@ -18,21 +18,21 @@ class NewRegistrationManager @Inject constructor(
 
 ) : RegistrationManager {
 
-    override fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData, idempotencyId : UUID?): Single<String> {
-        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, billingData = billingData)
+    override fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData, idempotencyKey : UUID?): Single<String> {
+        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, billingData = billingData, idempotencyKey = (idempotencyKey ?: UUID.randomUUID()).toString())
     }
 
 
-    override fun registerSepa(sepaData: SepaData, billingData : BillingData, idempotencyId : UUID?): Single<String> {
-        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData )
+    override fun registerSepa(sepaData: SepaData, billingData : BillingData, idempotencyKey : UUID?): Single<String> {
+        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData, idempotencyKey = (idempotencyKey ?: UUID.randomUUID()).toString())
     }
 
     override fun getAvailablePaymentMethods(): Set<PaymentMethodType> {
         return pspCoordinator.getAvailablePaymentMethods()
     }
 
-    override fun registerPaymentMehodUsingUi(activity : Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyId : UUID?): Single<String> {
-        return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType)
+    override fun registerPaymentMehodUsingUi(activity : Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey : UUID?): Single<String> {
+        return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, (idempotencyKey ?: UUID.randomUUID()).toString())
     }
 
 

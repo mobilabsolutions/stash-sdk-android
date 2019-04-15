@@ -16,6 +16,7 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -80,7 +81,7 @@ class PspCoordinator @Inject constructor(
 
     fun handleRegisterCreditCard(
             creditCardData: CreditCardData, billingData: BillingData = BillingData(),
-            additionalUIData: Map<String, String> = emptyMap()): Single<String> {
+            additionalUIData: Map<String, String> = emptyMap(), idempotencyKey: String): Single<String> {
         return handleRegisterCreditCard(
                 creditCardData,
                 billingData,
@@ -88,13 +89,14 @@ class PspCoordinator @Inject constructor(
                 integrations
                         .filter { it.supportsPaymentMethods(PaymentMethodType.CREDITCARD) }
                         .first()
-                        .identifier
+                        .identifier,
+                idempotencyKey
         )
     }
 
     fun handleRegisterCreditCard(
             creditCardData: CreditCardData, billingData: BillingData = BillingData(),
-            additionalUIData: Map<String, String>, chosenPsp: PspIdentifier): Single<String> {
+            additionalUIData: Map<String, String>, chosenPsp: PspIdentifier, idempotencyKey: String): Single<String> {
 
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
@@ -103,7 +105,7 @@ class PspCoordinator @Inject constructor(
             return Single.error(RuntimeException("Invalid card number length"))
         }
 
-        return mobilabApiV2.createAlias(chosenIntegration.identifier)
+        return mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
                 .subscribeOn(Schedulers.io())
                 .processErrors()
                 .flatMap {
@@ -120,17 +122,17 @@ class PspCoordinator @Inject constructor(
 
     }
 
-    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData = BillingData(), additionalUIData: Map<String, String> = emptyMap()): Single<String> {
-        return handleRegisterSepa(sepaData, billingData, additionalUIData, integrations.filter { it.supportsPaymentMethods(PaymentMethodType.SEPA) }.first().identifier)
+    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData = BillingData(), additionalUIData: Map<String, String> = emptyMap(), idempotencyKey: String): Single<String> {
+        return handleRegisterSepa(sepaData, billingData, additionalUIData, integrations.filter { it.supportsPaymentMethods(PaymentMethodType.SEPA) }.first().identifier, idempotencyKey)
     }
 
-    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData, additionalUIData: Map<String, String> = emptyMap(), chosenPsp: PspIdentifier): Single<String> {
+    fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData, additionalUIData: Map<String, String> = emptyMap(), chosenPsp: PspIdentifier, idempotencyKey: String): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
 
         //TODO validate
 
-        return mobilabApiV2.createAlias(chosenIntegration.identifier)
+        return mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
 
@@ -147,74 +149,79 @@ class PspCoordinator @Inject constructor(
     // ------- UI Component handling ------------
     //
 
-    fun registerCreditCardUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition): Single<String> {
+    fun registerCreditCardUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition, idempotencyKey: String, requestId: Int): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == paymentMethodDefinition.pspIdentifier }.first()
         return uiRequestHandler.handleCreditCardMethodEntryRequest(
                 activity,
                 chosenIntegration,
-                paymentMethodDefinition
+                paymentMethodDefinition,
+                requestId
         ).flatMap { (creditCardData, additionalUIData) ->
-            handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData)
+            handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
         }
 
     }
 
-    fun registerSepaUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition): Single<String> {
+    fun registerSepaUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition, idempotencyKey: String, requestId: Int): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == paymentMethodDefinition.pspIdentifier }.first()
         return uiRequestHandler.handleSepaMethodEntryRequest(
-                        activity,
-                        chosenIntegration,
-                        paymentMethodDefinition
-                ).flatMap { (sepaData, additionalUIData) ->
-                    handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData)
+                activity,
+                chosenIntegration,
+                paymentMethodDefinition,
+                requestId
+        ).flatMap { (sepaData, additionalUIData) ->
+            handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
 
-                }
+        }
 
     }
 
-    fun registerCreditCardUsingUIComponent(activity: Activity?): Single<String> {
+    fun registerCreditCardUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<String> {
         val selectedPaymentMethodDefinition = integrations.flatMap {
             it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.CREDITCARD }
         }.first()
-        return registerCreditCardUsingUIComponent(activity, selectedPaymentMethodDefinition)
+        return registerCreditCardUsingUIComponent(activity, selectedPaymentMethodDefinition, idempotencyKey, requestId)
     }
 
-    fun registerSepaUsingUIComponent(activity: Activity?): Single<String> {
+    fun registerSepaUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<String> {
         val selectedPaymentMethodDefinition = integrations.flatMap {
             it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.SEPA }
         }.first()
-        return registerSepaUsingUIComponent(activity, selectedPaymentMethodDefinition)
+        return registerSepaUsingUIComponent(activity, selectedPaymentMethodDefinition, idempotencyKey, requestId)
     }
 
     fun getAvailablePaymentMethods(): Set<PaymentMethodType> {
         return integrations.flatMap { it.getSupportedPaymentMethodDefinitions().map { it.paymentMethodType } }.toSet()
     }
 
-    private fun askUserToChoosePaymentMethod(activity: Activity?): Single<PaymentMethodType> {
-        return uiRequestHandler.askUserToChosePaymentMethod(activity, getAvailablePaymentMethods())
+    private fun askUserToChoosePaymentMethod(activity: Activity?, requestId: Int): Single<PaymentMethodType> {
+        return uiRequestHandler.askUserToChosePaymentMethod(activity, requestId)
     }
 
-    fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?): Single<String> {
-        return if (specificPaymentMethodType != null) {
-            when (specificPaymentMethodType) {
-                PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity)
-                PaymentMethodType.CREDITCARD -> registerCreditCardUsingUIComponent(activity)
-                PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity)
-            }
+    fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: String): Single<String> {
+        val requestId = Random().nextInt(Int.MAX_VALUE)
+        val resolvedPaymentMethodType = if (specificPaymentMethodType != null) {
+            Single.just(specificPaymentMethodType)
         } else {
-            askUserToChoosePaymentMethod(activity)
-                    .flatMap {
-                        when (it) {
-                            PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity)
-                            PaymentMethodType.CREDITCARD -> registerCreditCardUsingUIComponent(activity)
-                            PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity)
-                        }
-
-                    }
+            askUserToChoosePaymentMethod(activity, requestId)
         }
+        return resolvedPaymentMethodType.flatMap {
+            when (it) {
+                PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity, idempotencyKey, requestId)
+                PaymentMethodType.CREDITCARD -> registerCreditCardUsingUIComponent(activity, idempotencyKey, requestId)
+                PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity, idempotencyKey, requestId)
+            }
+        }.onErrorResumeNext {
+            if (it is UiRequestHandler.EntryCancelled) {
+                handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, idempotencyKey)
+            } else {
+                Single.error(it)
+            }
+        }
+
     }
 
-    private fun registerPayPalUsingUIComponent(activity: Activity?): Single<String> {
+    private fun registerPayPalUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == BRAINTREE_PSP_NAME }.first()
         val backendImplemented = false
 
@@ -222,13 +229,14 @@ class PspCoordinator @Inject constructor(
             it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.PAYPAL }
         }.first()
         if (backendImplemented) {
-            return mobilabApiV2.createAlias(BRAINTREE_PSP_NAME)
+            return mobilabApiV2.createAlias(BRAINTREE_PSP_NAME, idempotencyKey)
                     .subscribeOn(Schedulers.io())
                     .flatMap { aliasResponse ->
                         uiRequestHandler.handlePaypalMethodEntryRequest(
                                 activity,
                                 chosenIntegration,
-                                selectedPaymentMethodDefinition).flatMap {
+                                selectedPaymentMethodDefinition,
+                                requestId).flatMap {
                             val additionalData = AdditionalRegistrationData(it)
                             val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
                             val registrationRequest = RegistrationRequest(standardizedData, additionalData)
@@ -239,7 +247,8 @@ class PspCoordinator @Inject constructor(
             return uiRequestHandler.handlePaypalMethodEntryRequest(
                     activity,
                     chosenIntegration,
-                    selectedPaymentMethodDefinition
+                    selectedPaymentMethodDefinition,
+                    requestId
             ).flatMap {
                 chosenIntegration.handleRegistrationRequest(RegistrationRequest(PayPalRegistrationRequest(it["nonce"]
                         ?: "PayPalNonce"), AdditionalRegistrationData(it)))

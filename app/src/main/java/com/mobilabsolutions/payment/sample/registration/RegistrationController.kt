@@ -119,5 +119,18 @@ class RegistrationController @Inject constructor() : Controller() {
                 }
     }
 
+    fun registerPaymentMethod(activity: Activity? = null): Single<String> {
+        return registrationManager.registerPaymentMehodUsingUi(activity = activity)
+                .doOnSuccess {
+                    Timber.d("Nonce $it")
+                    paymentMethodStateSubject.apply {
+                        val paymentMethodState = take(1).blockingLast()
+                        val paymentMethodMap = paymentMethodState.paymentMethodMap
+                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("PayPal" + LocalDate.now().toString() to it)))
+                    }
+
+                }
+    }
+
 
 }

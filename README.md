@@ -95,6 +95,8 @@ For example:
 
 Or in code, you should supply testMode parameter when creating your `configuration` object, as shown in the previous section
 
+#### Registering payment method using UI
+
 #### Credit card registration
 
 o register a credit card, the `registerCreditCard` method of the registration manager is used.

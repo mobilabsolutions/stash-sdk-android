@@ -106,6 +106,7 @@ dependencies {
 
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
+    implementation(Libs.AndroidX.recyclerview)
 
 
     implementation(Libs.Dagger.dagger)
