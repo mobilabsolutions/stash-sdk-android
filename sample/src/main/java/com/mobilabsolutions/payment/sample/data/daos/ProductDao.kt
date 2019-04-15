@@ -15,4 +15,7 @@ abstract class ProductDao : EntityDao<Product> {
 
     @Query("SELECT * FROM product")
     abstract fun entriesObservable(): Observable<List<Product>>
+
+    @Query("SELECT * FROM product")
+    abstract suspend fun products(): List<Product>
 }

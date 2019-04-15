@@ -16,4 +16,7 @@ abstract class CartDao : EntityDao<Cart> {
     @Transaction
     @Query("SELECT * FROM cart")
     abstract fun entriesObservable(): Observable<List<CartWithProduct>>
+
+    @Query("SELECT * FROM cart WHERE product_id=:productId")
+    abstract fun cartByProductId(productId: Long): Cart?
 }

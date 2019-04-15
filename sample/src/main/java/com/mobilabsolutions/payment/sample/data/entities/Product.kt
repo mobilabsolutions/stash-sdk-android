@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.sample.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 /**
@@ -15,4 +16,9 @@ data class Product(
         @ColumnInfo val name: String? = null,
         @ColumnInfo val description: String? = null,
         @ColumnInfo val price: Int = 0
-) : SampleEntity
+) : SampleEntity {
+    @delegate:Ignore
+    val productType by lazy(LazyThreadSafetyMode.NONE) {
+        ProductType.fromProductName(name ?: "")
+    }
+}
