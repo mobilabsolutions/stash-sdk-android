@@ -4,12 +4,15 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import org.threeten.bp.LocalDate
@@ -26,6 +29,8 @@ import javax.inject.Singleton
 @Singleton
 class UiRequestHandler @Inject constructor() {
 
+    class EntryCancelled : RuntimeException()
+
     @Inject
     lateinit var integrations: Set<@JvmSuppressWildcards Integration>
 
@@ -37,19 +42,31 @@ class UiRequestHandler @Inject constructor() {
 
     private var startedNewTask = false
 
+    var compositeDisposable = CompositeDisposable()
+
     var hostActivityProvider: ReplaySubject<AppCompatActivity> = ReplaySubject.create<AppCompatActivity>()
 
     lateinit var paymentMethodTypeSubject: ReplaySubject<PaymentMethodType>
 
-    var errorSubject : PublishSubject<Map<String, String>> = PublishSubject.create()
+    var errorSubject: PublishSubject<Map<String, String>> = PublishSubject.create()
+
+    lateinit var currentChooserFragment : Fragment
 
     fun provideHostActivity(activity: AppCompatActivity) {
         hostActivityProvider.onNext(activity)
+
     }
 
-    fun hostActivityDismissed() {
+    fun chooserCancelled() {
         hostActivityProvider = ReplaySubject.create()
         errorSubject.onError(RuntimeException("User cancelled"))
+        errorSubject = PublishSubject.create()
+        processing.set(false)
+    }
+
+    fun entryCancelled() {
+        hostActivityProvider = ReplaySubject.create()
+        errorSubject.onError(EntryCancelled())
         errorSubject = PublishSubject.create()
         processing.set(false)
     }
@@ -66,14 +83,14 @@ class UiRequestHandler @Inject constructor() {
         processing.set(false)
     }
 
-    internal fun availablePaymentMethods() : List<PaymentMethodDefinition> {
+    internal fun availablePaymentMethods(): List<PaymentMethodDefinition> {
         return integrations.flatMap { it.getSupportedPaymentMethodDefinitions() }
     }
 
     /**
      * Request ID makes this reentrant from the perspective of PspCoordinators
      */
-    fun checkFlow(requestId : Int) {
+    fun checkFlow(requestId: Int) {
         if (processing.compareAndSet(false, true)) {
             if (currentRequestId != requestId && currentRequestId != -1) {
                 throw RuntimeException("Already processing payment method entry")
@@ -108,6 +125,7 @@ class UiRequestHandler @Inject constructor() {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
         return hostActivitySingle.flatMap { hostActivity ->
+            (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.ENTRY)
             integration.handlePaymentMethodEntryRequest(hostActivity, definition)
                     .doFinally {
                         flowCompleted(hostActivity)
@@ -131,6 +149,7 @@ class UiRequestHandler @Inject constructor() {
         val hostActivitySingle = launchHostActivity(activity)
         var validSepaData = SepaData("PBNKDEFF", "DE42721622981375897982", "Holder Holderman")
         return hostActivitySingle.flatMap { hostActivity ->
+            (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.ENTRY)
             integration.handlePaymentMethodEntryRequest(hostActivity, definition)
                     .doFinally {
                         flowCompleted(hostActivity)
@@ -143,6 +162,7 @@ class UiRequestHandler @Inject constructor() {
     fun handlePaypalMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition, requestId: Int): Single<Map<String, String>> {
         checkFlow(requestId)
         return launchHostActivity(activity).flatMap { hostActivity ->
+            (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.ENTRY)
             integration.handlePaymentMethodEntryRequest(hostActivity, PaymentMethodDefinition("", "BRAINTREE", PaymentMethodType.PAYPAL))
                     .doFinally {
                         flowCompleted(hostActivity)
@@ -150,19 +170,21 @@ class UiRequestHandler @Inject constructor() {
         }
     }
 
-    fun askUserToChosePaymentMethod(activity: Activity?, availableMethods: Set<PaymentMethodType>, requestId: Int): Single<PaymentMethodType> {
+    fun askUserToChosePaymentMethod(activity: Activity? = null, requestId: Int): Single<PaymentMethodType> {
         checkFlow(requestId)
         return launchHostActivity(activity).flatMap { hostActivity ->
             val supportFragmentManager = hostActivity.supportFragmentManager
+            (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.CHOOSER)
             paymentMethodTypeSubject = ReplaySubject.create()
             val paymentMethodChoiceFragment = PaymentMethodChoiceFragment()
+            currentChooserFragment = paymentMethodChoiceFragment
             supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, paymentMethodChoiceFragment).commitNow()
             paymentMethodTypeSubject
                     .doOnError {
                         flowCompleted(hostActivity)
                     }
                     .doOnNext {
-                        supportFragmentManager.beginTransaction().remove(paymentMethodChoiceFragment).commitNow()
+                        supportFragmentManager.beginTransaction().remove(currentChooserFragment).commitNow()
                     }.firstOrError()
         }
 

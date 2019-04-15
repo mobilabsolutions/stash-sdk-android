@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
 import javax.inject.Inject
@@ -14,6 +15,12 @@ class RegistrationProccessHostActivity : AppCompatActivity() {
     @Inject
     lateinit var uiRequestHandler: UiRequestHandler
 
+    enum class CurrentState {
+        CHOOSER, ENTRY
+    }
+
+    var currentState = CurrentState.CHOOSER
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val injector = NewPaymentSdk.getInjector()
@@ -23,7 +30,21 @@ class RegistrationProccessHostActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        when (currentState) {
+            CurrentState.CHOOSER -> {
+                uiRequestHandler.chooserCancelled()
+            }
+            CurrentState.ENTRY -> {
+                uiRequestHandler.entryCancelled()
+            }
+        }
         super.onBackPressed()
-        uiRequestHandler.hostActivityDismissed()
+
     }
+
+    fun setState(state : CurrentState) {
+        currentState  = state
+    }
+
+
 }

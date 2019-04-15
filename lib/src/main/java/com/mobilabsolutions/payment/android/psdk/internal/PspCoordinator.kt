@@ -195,7 +195,7 @@ class PspCoordinator @Inject constructor(
     }
 
     private fun askUserToChoosePaymentMethod(activity: Activity?, requestId: Int): Single<PaymentMethodType> {
-        return uiRequestHandler.askUserToChosePaymentMethod(activity, getAvailablePaymentMethods(), requestId)
+        return uiRequestHandler.askUserToChosePaymentMethod(activity, requestId)
     }
 
     fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: String): Single<String> {
@@ -210,6 +210,12 @@ class PspCoordinator @Inject constructor(
                 PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity, idempotencyKey, requestId)
                 PaymentMethodType.CREDITCARD -> registerCreditCardUsingUIComponent(activity, idempotencyKey, requestId)
                 PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity, idempotencyKey, requestId)
+            }
+        }.onErrorResumeNext {
+            if (it is UiRequestHandler.EntryCancelled) {
+                handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, idempotencyKey)
+            } else {
+                Single.error(it)
             }
         }
 

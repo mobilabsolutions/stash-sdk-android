@@ -45,18 +45,9 @@ class PaymentMethodChoiceFragment : Fragment() {
         paymentMethodRecyclerView.layoutManager = LinearLayoutManager(context)
         paymentMethodRecyclerView.adapter = paymentMethodAdapter
 
-//        sepaButton.setOnClickListener {
-//            choiceMade = true
-//            uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.SEPA)
-//        }
-//        ccTmpButton.setOnClickListener {
-//            choiceMade = true
-//            uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.CREDITCARD)
-//        }
-//        paypalButton.setOnClickListener {
-//            choiceMade = true
-//            uiRequestHandler.paymentMethodTypeSubject.onNext(PaymentMethodType.PAYPAL)
-//        }
+        cancelImageView.setOnClickListener {
+            activity?.onBackPressed()
+        }
 
 
     }
@@ -90,9 +81,15 @@ class PaymentMethodChoiceFragment : Fragment() {
 
         override fun onBindViewHolder(holder: PaymentMethodViewHolder, position: Int) {
             val paymentMethodDefinition = availablePaymentMethods[position]
-            holder.paymentMethodName.text = paymentMethodDefinition.paymentMethodType.name
+            holder.paymentMethodName.setText(
+                    when (paymentMethodDefinition.paymentMethodType) {
+                        PaymentMethodType.CREDITCARD -> R.string.payment_chooser_credit_card
+                        PaymentMethodType.SEPA -> R.string.payment_chooser_sepa
+                        PaymentMethodType.PAYPAL -> R.string.payment_chooser_paypal
+                    }
+            )
             holder.paymentMethodIcon.setImageResource(
-                    when(paymentMethodDefinition.paymentMethodType) {
+                    when (paymentMethodDefinition.paymentMethodType) {
                         PaymentMethodType.CREDITCARD -> R.drawable.ic_credit
                         PaymentMethodType.SEPA -> R.drawable.ic_sepa_symbol
                         PaymentMethodType.PAYPAL -> R.drawable.ic_paypal_grey
