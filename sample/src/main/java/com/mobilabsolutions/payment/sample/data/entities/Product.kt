@@ -1,5 +1,8 @@
 package com.mobilabsolutions.payment.sample.data.entities
 
+
+import android.content.res.Resources
+import android.graphics.drawable.Drawable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -19,13 +22,4 @@ data class Product(
         @ColumnInfo val description: String? = null,
         @ColumnInfo val price: Int = 0
 ) : SampleEntity {
-
-    companion object {
-        val format: NumberFormat = NumberFormat.getCurrencyInstance(Locale.GERMANY)
-    }
-
-    fun displayPrice(): String {
-        return format.format(price / 100) //ToDo: Update with BigDecimal
-    }
-
 }

@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.sample.data.repositories.product
 
+import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.data.DatabaseTransactionRunner
 import com.mobilabsolutions.payment.sample.data.daos.EntityInserter
 import com.mobilabsolutions.payment.sample.data.daos.ProductDao
@@ -16,33 +17,38 @@ class LocalProductStore @Inject constructor(
 ) {
     companion object {
         private val mobilabTShirt = Product(
+                image = R.drawable.image_card_01,
                 name = "Mobilab",
                 description = "T-Shirt print",
                 price = 2385
         )
 
         private val notebookPaper = Product(
+                image = R.drawable.image_card_02,
                 name = "Notebook Paper",
                 description = "Quadrille Pads",
                 price = 350
         )
 
         private val sticker = Product(
+                image = R.drawable.image_card_03,
                 name = "MobiLab Sticker",
                 description = "12 sticker sheets",
-                price = 2395
+                price = 1099
         )
 
         private val pen = Product(
+                image = R.drawable.image_card_04,
                 name = "MobiLab Pen",
                 description = "Blue Color",
-                price = 2395
+                price = 1325
         )
 
         private val femaleTShirt = Product(
+                image = R.drawable.image_card_05,
                 name = "MobiLab",
                 description = "Female",
-                price = 2395
+                price = 2595
         )
 
         private val sampleDataList = listOf(mobilabTShirt, notebookPaper, sticker, pen, femaleTShirt)
