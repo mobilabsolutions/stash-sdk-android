@@ -6,13 +6,14 @@ import androidx.databinding.BindingAdapter
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.data.entities.Product
 import com.mobilabsolutions.payment.sample.data.entities.ProductType.*
+import com.mobilabsolutions.payment.sample.extensions.priceWithCurrencyString
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 15-04-2019.
  */
 @BindingAdapter("priceWithCurrency")
 fun priceWithCurrency(textView: TextView, price: Int) {
-    textView.text = JavaUtils.formatCurrencyFromCents(price)
+    textView.text = priceWithCurrencyString(price)
 }
 
 @BindingAdapter("imageByProductType")

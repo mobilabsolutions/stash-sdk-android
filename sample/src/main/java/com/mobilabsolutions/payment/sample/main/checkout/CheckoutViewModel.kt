@@ -40,13 +40,12 @@ class CheckoutViewModel @AssistedInject constructor(
                     val carts = it() ?: emptyList()
                     var totalPrice = 0
                     carts.forEach {
-                        val cart = it.entry!!
-                        totalPrice += cart.quantity * it.product.price
+                        it.entry?.let { cart ->
+                            totalPrice += cart.quantity * it.product.price
+                        }
                     }
-
                     copy(cartItems = it() ?: emptyList(), totalAmount = totalPrice)
                 }
-
         loadCart.setParams(Unit)
     }
 
