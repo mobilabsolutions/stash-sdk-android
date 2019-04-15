@@ -4,6 +4,10 @@ import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
+import com.mobilabsolutions.payment.sample.core.launchInteractor
+import com.mobilabsolutions.payment.sample.data.interactors.ChangeCartQuantity
+import com.mobilabsolutions.payment.sample.data.interactors.LoadCart
+import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -13,7 +17,9 @@ import com.squareup.inject.assisted.AssistedInject
  */
 class CheckoutViewModel @AssistedInject constructor(
         @Assisted initialState: CheckoutViewState,
-        private val schedulers: AppRxSchedulers
+        schedulers: AppRxSchedulers,
+        loadCart: LoadCart,
+        private val changeCartQuantity: ChangeCartQuantity
 ) : BaseViewModel<CheckoutViewState>(initialState) {
     @AssistedInject.Factory
     interface Factory {
@@ -27,7 +33,32 @@ class CheckoutViewModel @AssistedInject constructor(
         }
     }
 
-    fun onPayBtnClicked(){
+    init {
+        loadCart.observe()
+                .subscribeOn(schedulers.io)
+                .execute {
+                    val carts = it() ?: emptyList()
+                    var totalPrice = 0
+                    carts.forEach {
+                        val cart = it.entry!!
+                        totalPrice += cart.quantity * it.product.price
+                    }
+
+                    copy(cartItems = it() ?: emptyList(), totalAmount = totalPrice)
+                }
+
+        loadCart.setParams(Unit)
+    }
+
+    fun onAddButtonClicked(cartWithProduct: CartWithProduct) {
+        scope.launchInteractor(changeCartQuantity, ChangeCartQuantity.ExecuteParams(true, cartWithProduct))
+    }
+
+    fun onRemoveButtonClicked(cartWithProduct: CartWithProduct) {
+        scope.launchInteractor(changeCartQuantity, ChangeCartQuantity.ExecuteParams(false, cartWithProduct))
+    }
+
+    fun onPayBtnClicked() {
 
     }
 }

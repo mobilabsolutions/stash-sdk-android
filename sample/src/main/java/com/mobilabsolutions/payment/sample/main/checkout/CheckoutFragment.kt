@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.mobilabsolutions.payment.sample.core.BaseFragment
-import com.mobilabsolutions.payment.sample.data.entities.Product
+import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.databinding.FragmentCheckoutBinding
 import javax.inject.Inject
 
@@ -32,12 +32,12 @@ class CheckoutFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         controller = CheckoutEpoxyController(object : CheckoutEpoxyController.Callbacks {
-            override fun onAddButtonClicked(product: Product) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun onAddButtonClicked(cartWithProduct: CartWithProduct) {
+                viewModel.onAddButtonClicked(cartWithProduct)
             }
 
-            override fun onMinusButtonClicked(product: Product) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            override fun onRemoveButtonClicked(cartWithProduct: CartWithProduct) {
+                viewModel.onRemoveButtonClicked(cartWithProduct)
             }
         })
         binding.checkoutRv.setController(controller)
