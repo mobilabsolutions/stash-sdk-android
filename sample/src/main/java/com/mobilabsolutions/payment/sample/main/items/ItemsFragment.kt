@@ -19,6 +19,7 @@ import javax.inject.Inject
  */
 
 class ItemsFragment : BaseFragment() {
+    override val mvrxViewId: String = ItemsFragment::class.java.simpleName
 
     @Inject
     lateinit var itemsViewModelFactory: ItemsViewModel.Factory
