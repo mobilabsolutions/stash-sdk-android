@@ -12,41 +12,126 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_corner_white"
+        android:paddingBottom="40dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="16dp"
+        android:background="@drawable/rounded_corner_white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/sepa_entry_title">
 
         <EditText
-            android:id="@+id/sepaEditText"
+            android:id="@+id/firstNameEditText"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edit_text_selector"
+            android:ems="10"
+            android:hint="@string/sepa_data_entry_first_name"
+            android:inputType="textPersonName"
+            android:paddingStart="16dp"
+            app:layout_constraintEnd_toStartOf="@+id/guideline"
+            app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"/>
+
+        <EditText
+            android:id="@+id/ibanEditText"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edit_text_selector"
+            android:ems="10"
+            android:hint="@string/sepa_data_entry_iban"
+            android:inputType="textPersonName"
+            android:paddingStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/ibanTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/ibanTitleTextView"/>
+
+        <EditText
+            android:id="@+id/ibanEditText2"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_selector"
+            android:ems="10"
+            android:hint="@string/sepa_data_entry_iban"
+            android:inputType="textPersonName"
+            android:paddingStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/ibanTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/ibanTitleTextView2"/>
+
+        <EditText
+            android:id="@+id/lastNameEditText"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/edit_text_selector"
+            android:ems="10"
+            android:hint="@string/sepa_data_entry_last_name"
+            android:inputType="textPersonName"
+            android:paddingStart="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView2"
+            app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView2"/>
+
+        <TextView
+            android:id="@+id/ibanTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="DE123"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/sepa_data_entry_iban"
+            android:textColor="@color/dark_two"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/firstNameEditText"/>
+
+        <TextView
+            android:id="@+id/ibanTitleTextView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/sepa_data_entry_country"
+            android:textColor="@color/dark_two"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ibanEditText"/>
+
+        <TextView
+            android:id="@+id/firstNameTitleTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/sepa_data_entry_first_name"
+            android:textColor="@color/dark_two"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-        <EditText
-            android:id="@+id/holdernameEditText"
+        <TextView
+            android:id="@+id/firstNameTitleTextView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Holder Holderman"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sepaEditText"/>
+            android:layout_marginTop="16dp"
+            android:text="@string/sepa_data_entry_last_name"
+            android:textColor="@color/dark_two"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="189dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -55,12 +140,12 @@
         android:id="@+id/submitButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="34dp"
         android:layout_marginBottom="18dp"
+        android:layout_marginEnd="34dp"
+        android:layout_marginStart="34dp"
         android:background="@drawable/rounded_corner_gray_button_selector"
         android:text="@string/sepa_data_entry_save"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
@@ -73,6 +158,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="80dp"
         android:text="SEPA"
+        android:textColor="@color/dark_two"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
