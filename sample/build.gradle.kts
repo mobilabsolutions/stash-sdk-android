@@ -65,6 +65,10 @@ android {
     lintOptions {
         isAbortOnError = false
     }
+    packagingOptions {
+        pickFirst("META-INF/atomicfu.kotlin_module")
+    }
+
 }
 
 dependencies {
@@ -77,6 +81,8 @@ dependencies {
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.coreKtx)
+    implementation(Libs.AndroidX.cardview)
+
     implementation(Libs.Google.material)
 
     implementation(Libs.timber)
@@ -113,6 +119,10 @@ dependencies {
 
     implementation(Libs.mvrx)
 
+    implementation(Libs.Epoxy.epoxy)
+    implementation(Libs.Epoxy.dataBinding)
+    kapt(Libs.Epoxy.processor)
+
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.ui)
 
@@ -125,7 +135,6 @@ dependencies {
     implementation(Libs.Epoxy.epoxy)
     implementation(Libs.Epoxy.dataBinding)
     kapt(Libs.Epoxy.processor)
-
 
     testImplementation(Libs.junit)
 

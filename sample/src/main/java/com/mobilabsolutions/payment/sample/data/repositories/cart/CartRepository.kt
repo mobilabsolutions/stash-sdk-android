@@ -2,8 +2,6 @@ package com.mobilabsolutions.payment.sample.data.repositories.cart
 
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.util.AppCoroutineDispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,9 +16,9 @@ class CartRepository @Inject constructor(
 
     init {
         // remove this after merging.
-        GlobalScope.launch(dispatchers.io) {
-            localCartStore.insertSampleData()
-        }
+//        GlobalScope.launch(dispatchers.io) {
+//            localCartStore.insertSampleData()
+//        }
     }
 
     fun observeCarts() = localCartStore.observeCarts()

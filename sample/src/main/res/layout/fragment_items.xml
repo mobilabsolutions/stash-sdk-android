@@ -1,16 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
-            name="state"
-            type="com.mobilabsolutions.payment.sample.main.items.ItemsViewState" />
+                name="state"
+                type="com.mobilabsolutions.payment.sample.main.items.ItemsViewState"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+                android:id="@+id/items_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:fontFamily="@font/lato_bold"
+                android:gravity="center"
+                android:text="@string/items"
+                android:textAppearance="@style/TextAppearance.Sample.ToolbarTitle"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+        <com.airbnb.epoxy.EpoxyRecyclerView
+                android:id="@+id/itemsRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/view_holder_product_item"
+                app:layout_constraintTop_toBottomOf="@id/items_title" android:layout_marginTop="96dp"
+                tools:layout_editor_absoluteX="16dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

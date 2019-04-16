@@ -3,6 +3,7 @@ package com.mobilabsolutions.payment.sample.main.checkout
 import com.airbnb.epoxy.TypedEpoxyController
 import com.mobilabsolutions.payment.sample.checkoutItem
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
+import com.mobilabsolutions.payment.sample.emptyCheckOut
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
@@ -27,6 +28,10 @@ class CheckoutEpoxyController(
                     addClickListener { _ -> callbacks.onAddButtonClicked(it) }
                     removeClickListener { _ -> callbacks.onRemoveButtonClicked(it) }
                 }
+            }
+        } else {
+            emptyCheckOut {
+                id("empty_checkout_view")
             }
         }
     }

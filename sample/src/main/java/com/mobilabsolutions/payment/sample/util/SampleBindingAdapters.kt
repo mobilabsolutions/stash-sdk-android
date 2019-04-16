@@ -7,7 +7,10 @@ import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.data.entities.PaymentType
 import com.mobilabsolutions.payment.sample.data.entities.Product
-import com.mobilabsolutions.payment.sample.data.entities.ProductType.*
+import com.mobilabsolutions.payment.sample.data.entities.ProductType.MOBILAB_PEN
+import com.mobilabsolutions.payment.sample.data.entities.ProductType.MOBILAB_STICKER
+import com.mobilabsolutions.payment.sample.data.entities.ProductType.MOBILAB_T_SHIRT
+import com.mobilabsolutions.payment.sample.data.entities.ProductType.NOTEBOOK_PAPER
 import com.mobilabsolutions.payment.sample.extensions.priceWithCurrencyString
 
 /**
@@ -21,11 +24,11 @@ fun priceWithCurrency(textView: TextView, price: Int) {
 @BindingAdapter("imageByProductType")
 fun imageByProductType(imageView: ImageView, product: Product) {
     val resId = when (product.productType) {
-        MOBILAB_T_SHIRT -> R.drawable.tshirt
-        NOTEBOOK_PAPER -> R.drawable.note
-        MOBILAB_STICKER -> R.drawable.sticker
-        MOBILAB_PEN -> R.drawable.pen
-        else -> R.drawable.tshirt
+        MOBILAB_T_SHIRT -> R.drawable.image_card_01
+        NOTEBOOK_PAPER -> R.drawable.image_card_02
+        MOBILAB_STICKER -> R.drawable.image_card_03
+        MOBILAB_PEN -> R.drawable.image_card_04
+        else -> R.drawable.image_card_05
     }
     imageView.setImageResource(resId)
 }
