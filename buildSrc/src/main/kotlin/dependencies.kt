@@ -61,7 +61,7 @@ object Libs {
 
     val braintree = "com.braintreepayments.api:braintree:3.0.0"
 
-    val mvrx = "com.airbnb.android:mvrx:0.7.2"
+    val mvrx = "com.airbnb.android:mvrx:1.0.0"
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha02"
@@ -70,7 +70,7 @@ object Libs {
     }
 
     object Kotlin {
-        private const val version = "1.3.21"
+        private const val version = "1.3.30"
         val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
         val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
@@ -78,7 +78,7 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.1.0"
+        private const val version = "1.2.0"
         val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         val rx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$version"
         val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
@@ -153,7 +153,7 @@ object Libs {
     }
 
     object OkHttp {
-        private const val version = "3.14.0"
+        private const val version = "3.14.1"
         val okhttp = "com.squareup.okhttp3:okhttp:$version"
         val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
     }
