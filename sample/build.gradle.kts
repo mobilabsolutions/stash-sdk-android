@@ -65,6 +65,10 @@ android {
     lintOptions {
         isAbortOnError = false
     }
+    packagingOptions {
+        pickFirst("META-INF/atomicfu.kotlin_module")
+    }
+
 }
 
 dependencies {
