@@ -45,18 +45,28 @@ android {
         manifestPlaceholders = mapOf("fabric-api-key" to propOrDefWithTravis(DemoRelease.fabricApiKey, ""))
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = rootProject.file("signing/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         getByName("debug") {
             buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
             buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
             buildConfigField("String", "oldBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, "") + "\"")
             buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, "") + "\"")
+
             applicationIdSuffix = ".debug"
             versionNameSuffix = ".debug"
+            signingConfig = signingConfigs.getByName("debug")
         }
         getByName("release") {
-            isShrinkResources = true
-            isMinifyEnabled = true
+            signingConfig = signingConfigs.getByName("debug")
 
             buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
             buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
