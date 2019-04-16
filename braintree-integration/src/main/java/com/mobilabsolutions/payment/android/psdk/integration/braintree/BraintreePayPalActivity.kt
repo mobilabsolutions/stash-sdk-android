@@ -57,5 +57,4 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         val payment = PayPalRequest()
         PayPal.requestBillingAgreement(braintreeFragment, payment)
     }
-
 }

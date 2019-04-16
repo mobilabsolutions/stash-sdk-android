@@ -76,6 +76,7 @@ dependencies {
 
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.appcompat)
+    implementation(Libs.AndroidX.coreKtx)
     implementation(Libs.AndroidX.cardview)
 
     implementation(Libs.Google.material)

@@ -2,7 +2,6 @@ package com.mobilabsolutions.payment.sample.registration
 
 import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import com.mobilabsolutions.commonsv3.mvp.view.Ui
 import com.mobilabsolutions.commonsv3_dagger.mvp.view.DaggerCommonFragment
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.getBehaviorStringObservable
-import com.mobilabsolutions.payment.sample.getStringObservable
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.registration_fragment.*
 import org.threeten.bp.LocalDate
@@ -89,6 +87,10 @@ class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), Regi
 
         registerPayPalButton.setOnClickListener {
             notifyPresenter { it.registerPayPalRequested() }
+        }
+
+        showChooserButton.setOnClickListener {
+            notifyPresenter { it.registerPaymentMethodRequested() }
         }
 
         holderNameObservable = holderNameEditText.getBehaviorStringObservable()

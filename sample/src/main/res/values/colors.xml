@@ -4,6 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorDark">#12202A</color>
-    <color name="colorGray">#A3AAAF</color>
-    <color name="colorAquamarine">#07d0c7</color>
+    <color name="colorCoolGray">#A3AAAF</color>
+    <color name="colorAquaMarine">#07d0c7</color>
+    <color name="colorDarkAquaMarine">#048b85</color>
+    <color name="colorLightGrey">#f5f5f5</color>
+    <color name="colorWhite">#ffffff</color>
 </resources>

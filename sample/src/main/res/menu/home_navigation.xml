@@ -2,14 +2,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/home_nav_items"
-        android:title="Items"/>
+            android:id="@+id/items"
+            android:icon="@drawable/ic_list"
+            android:title="Items"/>
 
     <item
-        android:id="@+id/home_nav_checkout"
-        android:title="Checkout"/>
+            android:id="@+id/checkout"
+            android:icon="@drawable/ic_basket"
+            android:title="@string/checkout"/>
 
     <item
-        android:id="@+id/home_nav_payment_methods"
-        android:title="Payment Methods"/>
+            android:id="@+id/payment"
+            android:icon="@drawable/ic_payment"
+            android:title="@string/payment"/>
 </menu>

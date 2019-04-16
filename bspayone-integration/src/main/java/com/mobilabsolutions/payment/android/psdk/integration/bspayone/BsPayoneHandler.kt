@@ -1,7 +1,9 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.*
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
@@ -20,8 +22,13 @@ class BsPayoneHandler @Inject constructor(
         private val mobilabApiV2: MobilabApiV2
 
 ) {
+    /**
+     * We use this just for testing so we don't hit bspayone api rate limit, which seems to be quite low
+     */
+    val mockResponse = true
+
     fun registerCreditCard(
-            aliasId : String,
+            aliasId: String,
             bsPayoneRegistrationRequest: BsPayoneRegistrationRequest,
             creditCardData: CreditCardData)
             : Single<String> {
@@ -53,26 +60,37 @@ class BsPayoneHandler @Inject constructor(
                     )
                 }
 
-
-        return bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
-            when(it) {
-                is BsPayoneVerificationSuccessResponse -> {
-                    mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(it.cardAlias)).blockingGet()
-                    it.cardAlias
+        return if (mockResponse) {
+            val mockCardAlias = "MockCreditCardAlias"
+            mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
+                    mockCardAlias,
+                    AliasExtra(paymentMethod = "CC")
+            )).blockingAwait()
+            Single.just(aliasId)
+        } else {
+            bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
+                when (it) {
+                    is BsPayoneVerificationSuccessResponse -> {
+                        mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
+                                it.cardAlias,
+                                AliasExtra(paymentMethod = PaymentMethodType.CREDITCARD.name)
+                        )).blockingAwait()
+                        aliasId
+                    }
+                    is BsPayoneVerificationErrorResponse -> throw BsPayoneErrorHandler.handleError(it)
+                    is BsPayoneVerificationInvalidResponse -> throw BsPayoneErrorHandler.handleError(it)
+                    else -> throw RuntimeException("Unknown response when trying to register credit card: $it")
                 }
-                is BsPayoneVerificationErrorResponse -> throw BsPayoneErrorHandler.handleError(it)
-                is BsPayoneVerificationInvalidResponse -> throw BsPayoneErrorHandler.handleError(it)
-                else -> throw RuntimeException("Unknown response when trying to register credit card: $it")
             }
         }
+
     }
 
     fun registerSepa(
-            aliasId : String,
+            aliasId: String,
             sepaData: SepaData,
             billingData: BillingData
-    ) : Single<String> {
-
+    ): Single<String> {
 
         val sepaConfig = SepaConfig(
                 iban = sepaData.iban,
@@ -87,7 +105,7 @@ class BsPayoneHandler @Inject constructor(
         return mobilabApiV2.updateAlias(
                 aliasId,
                 AliasUpdateRequest(
-                        extra = AliasExtra(sepaConfig = sepaConfig)
+                        extra = AliasExtra(sepaConfig = sepaConfig, paymentMethod = PaymentMethodType.SEPA.name)
                 )
         ).andThen(Single.just(aliasId))
     }

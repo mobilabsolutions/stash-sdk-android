@@ -1,13 +1,9 @@
 package com.mobilabsolutions.payment.sample.data.entities
 
-
-import android.content.res.Resources
-import android.graphics.drawable.Drawable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import java.text.NumberFormat
-import java.util.*
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
@@ -22,4 +18,8 @@ data class Product(
         @ColumnInfo val description: String? = null,
         @ColumnInfo val price: Int = 0
 ) : SampleEntity {
+    @delegate:Ignore
+    val productType by lazy(LazyThreadSafetyMode.NONE) {
+        ProductType.fromProductName(name ?: "")
+    }
 }

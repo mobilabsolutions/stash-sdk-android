@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.mobilabsolutions.payment.sample.R
@@ -18,6 +19,7 @@ import javax.inject.Inject
  */
 
 class ItemsFragment : BaseFragment() {
+
     @Inject
     lateinit var itemsViewModelFactory: ItemsViewModel.Factory
 
@@ -33,8 +35,14 @@ class ItemsFragment : BaseFragment() {
                 productItem {
                     id(product.id)
                     product(product)
+                    clickListener { _ ->
+                        viewModel.onClick(product)
+                        Toast.makeText(activity, getString(R.string.message, product.name), Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }
     }
+
+
 }
