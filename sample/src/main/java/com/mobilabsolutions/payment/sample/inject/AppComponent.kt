@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.sample.inject
 
 import com.mobilabsolutions.payment.sample.SampleApplication
 import com.mobilabsolutions.payment.sample.data.DataModule
+import com.mobilabsolutions.payment.sample.data.RepositoryBindingModule
 import com.mobilabsolutions.payment.sample.main.MainBuilder
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -17,6 +18,7 @@ import javax.inject.Singleton
     AppModule::class,
     AppAssistedModule::class,
     DataModule::class,
+    RepositoryBindingModule::class,
     MainBuilder::class
 ])
 interface AppComponent : AndroidInjector<SampleApplication> {

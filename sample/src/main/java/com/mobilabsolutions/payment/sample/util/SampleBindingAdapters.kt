@@ -4,6 +4,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.mobilabsolutions.payment.sample.R
+import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
+import com.mobilabsolutions.payment.sample.data.entities.PaymentType
 import com.mobilabsolutions.payment.sample.data.entities.Product
 import com.mobilabsolutions.payment.sample.data.entities.ProductType.*
 import com.mobilabsolutions.payment.sample.extensions.priceWithCurrencyString
@@ -24,6 +26,16 @@ fun imageByProductType(imageView: ImageView, product: Product) {
         MOBILAB_STICKER -> R.drawable.sticker
         MOBILAB_PEN -> R.drawable.pen
         else -> R.drawable.tshirt
+    }
+    imageView.setImageResource(resId)
+}
+
+@BindingAdapter("paymentImageByType")
+fun paymentImageByType(imageView: ImageView, paymentMethod: PaymentMethod) {
+    val resId = when (paymentMethod.type) {
+        PaymentType.CREDIT_CARD -> R.drawable.credit_card
+        PaymentType.SEPA -> R.drawable.sepa
+        PaymentType.PAYPAL -> R.drawable.paypal
     }
     imageView.setImageResource(resId)
 }

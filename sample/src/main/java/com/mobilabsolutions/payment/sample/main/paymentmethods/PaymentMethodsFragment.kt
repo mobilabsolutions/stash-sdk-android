@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.mobilabsolutions.payment.sample.core.BaseFragment
+import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.databinding.FragmentPaymentMethodsBinding
 import javax.inject.Inject
 
@@ -19,6 +20,7 @@ class PaymentMethodsFragment : BaseFragment() {
 
     private val viewModel: PaymentMethodsViewModel by fragmentViewModel()
     private lateinit var binding: FragmentPaymentMethodsBinding
+    private lateinit var controller: PaymentMethodsEpoxyController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPaymentMethodsBinding.inflate(inflater, container, false)
@@ -26,9 +28,26 @@ class PaymentMethodsFragment : BaseFragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        controller = PaymentMethodsEpoxyController(object : PaymentMethodsEpoxyController.Callbacks {
+            override fun onAddBtnClicked() {
+                viewModel.onAddBtnClicked()
+            }
+
+            override fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
+                viewModel.onDeleteBtnClicked(paymentMethod)
+            }
+        })
+        binding.paymentMethodsRv.setController(controller)
+    }
+
+
     override fun invalidate() {
         withState(viewModel) {
-
+            binding.state = it
+            controller.setData(it)
         }
     }
 }

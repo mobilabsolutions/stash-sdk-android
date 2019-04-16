@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -11,7 +12,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
         <TextView
             android:id="@+id/payment_methods_title"
@@ -25,10 +28,16 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.airbnb.epoxy.EpoxyRecyclerView
+            android:id="@+id/payment_methods_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginTop="48dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:padding="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/payment_methods_title" />
+            app:layout_constraintTop_toBottomOf="@+id/payment_methods_title"
+            tools:listitem="@layout/view_holder_payment_method_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
