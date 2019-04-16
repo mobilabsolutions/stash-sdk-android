@@ -9,5 +9,6 @@ import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 data class CheckoutViewState(
         val loading: Boolean = false,
         val cartItems: List<CartWithProduct> = emptyList(),
-        val totalAmount: Int = 0
+        val totalAmount: Int = 0,
+        val showEmptyView:Boolean = false
 ) : MvRxState
