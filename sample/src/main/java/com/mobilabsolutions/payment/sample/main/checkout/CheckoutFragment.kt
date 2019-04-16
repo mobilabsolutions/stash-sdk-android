@@ -15,6 +15,8 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class CheckoutFragment : BaseFragment() {
+    override val mvrxViewId: String = CheckoutFragment::class.java.simpleName
+
     @Inject
     lateinit var checkoutViewModelFactory: CheckoutViewModel.Factory
 

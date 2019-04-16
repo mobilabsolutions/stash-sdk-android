@@ -14,6 +14,7 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class ItemsFragment : BaseFragment() {
+    override val mvrxViewId: String = ItemsFragment::class.java.simpleName
 
     @Inject
     lateinit var itemsViewModelFactory: ItemsViewModel.Factory
