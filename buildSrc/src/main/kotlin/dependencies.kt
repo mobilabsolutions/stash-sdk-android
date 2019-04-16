@@ -29,6 +29,12 @@ object PaymentSdkBuildConfigs {
     val vapianoVersionName = "1.2.0"
 }
 
+object DemoRelease {
+    val fabricApiKey = "FABRIC_API_KEY"
+    val versionCode = "1"
+    val versionName = "0.0.1"
+}
+
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
 
 object Modules {
@@ -67,7 +73,7 @@ object Libs {
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha02"
         val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.8"
-        val fabricPlugin = "io.fabric.tools:gradle:1.27.0"
+        val fabricPlugin = "io.fabric.tools:gradle:1.27.1"
     }
 
     object Kotlin {
