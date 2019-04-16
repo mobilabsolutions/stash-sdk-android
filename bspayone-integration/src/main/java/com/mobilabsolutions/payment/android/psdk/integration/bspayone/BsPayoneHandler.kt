@@ -2,7 +2,8 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.*
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
@@ -25,8 +26,9 @@ class BsPayoneHandler @Inject constructor(
      * We use this just for testing so we don't hit bspayone api rate limit, which seems to be quite low
      */
     val mockResponse = true
+
     fun registerCreditCard(
-            aliasId : String,
+            aliasId: String,
             bsPayoneRegistrationRequest: BsPayoneRegistrationRequest,
             creditCardData: CreditCardData)
             : Single<String> {
@@ -67,7 +69,7 @@ class BsPayoneHandler @Inject constructor(
             Single.just(aliasId)
         } else {
             bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
-                when(it) {
+                when (it) {
                     is BsPayoneVerificationSuccessResponse -> {
                         mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
                                 it.cardAlias,
@@ -85,11 +87,10 @@ class BsPayoneHandler @Inject constructor(
     }
 
     fun registerSepa(
-            aliasId : String,
+            aliasId: String,
             sepaData: SepaData,
             billingData: BillingData
-    ) : Single<String> {
-
+    ): Single<String> {
 
         val sepaConfig = SepaConfig(
                 iban = sepaData.iban,

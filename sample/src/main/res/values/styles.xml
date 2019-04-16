@@ -7,19 +7,19 @@
         <item name="android:textViewStyle">@style/LatoTextViewStyle</item>
         <item name="buttonStyle">@style/LatoButtonStyle</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
-        <item name="android:statusBarColor">@color/coolGrey</item>
+        <item name="android:statusBarColor">@color/colorCoolGray</item>
     </style>
 
 
     <style name="AppTheme.Launcher" parent="@style/AppTheme">
         <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
-        <item name="android:statusBarColor">@color/darkAquaMarine</item>
+        <item name="android:statusBarColor">@color/colorDarkAquaMarine</item>
     </style>
 
     <style name="TextAppearance.Sample.ToolbarTitle" parent="@style/TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">24sp</item>
-        <item name="android:textColor">@color/aquaMarine</item>
+        <item name="android:textColor">@color/colorAquaMarine</item>
     </style>
 
     <style name="LatoTextViewStyle" parent="android:Widget.TextView">

@@ -41,6 +41,7 @@ object Modules {
 
 object Libs {
     val androidGradlePlugin = "com.android.tools.build:gradle:3.3.2"
+
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.20.0"
 
     val timber = "com.jakewharton.timber:timber:4.7.1"
@@ -87,6 +88,7 @@ object Libs {
     object AndroidX {
         val appcompat = "androidx.appcompat:appcompat:1.0.2"
         val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
+        val cardview = "androidx.cardview:cardview:1.0.0"
         val archCoreTesting = "androidx.arch.core:core-testing:2.0.0"
         val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-alpha2"
         val coreKtx = "androidx.core:core-ktx:1.0.1"

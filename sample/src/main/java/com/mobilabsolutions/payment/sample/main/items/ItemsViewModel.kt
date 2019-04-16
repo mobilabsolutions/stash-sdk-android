@@ -4,10 +4,14 @@ import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
+import com.mobilabsolutions.payment.sample.core.launchInteractor
+import com.mobilabsolutions.payment.sample.data.entities.Product
+import com.mobilabsolutions.payment.sample.data.interactors.AddCart
 import com.mobilabsolutions.payment.sample.data.interactors.LoadProducts
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import java.nio.channels.CompletionHandler
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
@@ -15,7 +19,8 @@ import com.squareup.inject.assisted.AssistedInject
 class ItemsViewModel @AssistedInject constructor(
         @Assisted initialState: ItemsViewState,
         schedulers: AppRxSchedulers,
-        private val loadProducts: LoadProducts
+        loadProducts: LoadProducts,
+        private val addCart: AddCart
 ) : BaseViewModel<ItemsViewState>(initialState) {
     @AssistedInject.Factory
     interface Factory {
@@ -33,9 +38,13 @@ class ItemsViewModel @AssistedInject constructor(
         loadProducts.observe()
                 .subscribeOn(schedulers.io)
                 .execute {
-                    copy(products = it()?: emptyList())
+                    copy(products = it)
                 }
 
         loadProducts.setParams(Unit)
+    }
+
+    fun onClick(product: Product) {
+        scope.launchInteractor(addCart, AddCart.ExecuteParams(product))
     }
 }

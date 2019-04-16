@@ -20,6 +20,5 @@ class ChangeCartQuantity @Inject constructor(
         cartRepository.changeCartQuantity(executeParams.add, executeParams.cartWithProduct)
     }
 
-
     data class ExecuteParams(val add: Boolean, val cartWithProduct: CartWithProduct)
 }
