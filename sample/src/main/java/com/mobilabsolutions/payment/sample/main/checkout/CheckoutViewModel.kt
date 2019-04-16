@@ -44,7 +44,7 @@ class CheckoutViewModel @AssistedInject constructor(
                             totalPrice += cart.quantity * it.product.price
                         }
                     }
-                    copy(cartItems = it() ?: emptyList(), totalAmount = totalPrice)
+                    copy(cartItems = it() ?: emptyList(), totalAmount = totalPrice, showEmptyView = carts.isEmpty())
                 }
         loadCart.setParams(Unit)
     }
