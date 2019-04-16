@@ -13,8 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingEnd="16dp"
+        android:paddingStart="16dp">
 
 
         <TextView
@@ -32,8 +32,8 @@
             android:id="@+id/checkout_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="48dp"
             android:layout_marginBottom="24dp"
+            android:layout_marginTop="48dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
             android:padding="10dp"
@@ -45,8 +45,8 @@
             android:id="@+id/label_total_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginBottom="24dp"
+            android:layout_marginStart="10dp"
             android:fontFamily="@font/lato_bold"
             android:text="@string/total_amount"
             android:textColor="@color/darkBlack"
@@ -55,6 +55,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
+            android:id="@+id/total_price_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.mobilabsolutions.payment.sample.core.BaseFragment
@@ -47,6 +48,9 @@ class CheckoutFragment : BaseFragment() {
     override fun invalidate() {
         withState(viewModel) {
             binding.state = it
+            binding.btnPay.isVisible = !it.showEmptyView
+            binding.labelTotalAmount.isVisible = !it.showEmptyView
+            binding.totalPriceText.isVisible = !it.showEmptyView
             controller.setData(it)
         }
     }
