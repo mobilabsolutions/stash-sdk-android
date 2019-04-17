@@ -20,21 +20,21 @@ class LocalPaymentMethodStore @Inject constructor(
                 id = 1,
                 paymentMethodId = "payment_method_id_1",
                 alias = "XXX",
-                _type = "credit_card"
+                _type = "Credit Card"
         )
 
         private val sepa = PaymentMethod(
                 id = 2,
                 paymentMethodId = "payment_method_id_2",
                 alias = "DE12349790",
-                _type = "sepa"
+                _type = "SEPA"
         )
 
         private val paypal = PaymentMethod(
                 id = 3,
                 paymentMethodId = "payment_method_id_3",
                 alias = "maxmustermann@gmail.com",
-                _type = "paypal"
+                _type = "PayPal"
         )
     }
 

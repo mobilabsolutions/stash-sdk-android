@@ -5,9 +5,9 @@ package com.mobilabsolutions.payment.sample.data.entities
  */
 
 enum class PaymentType(val sdkValue: String) {
-    CREDIT_CARD("credit_card"),
-    SEPA("sepa"),
-    PAYPAL("paypal");
+    CREDIT_CARD("Credit Card"),
+    SEPA("SEPA"),
+    PAYPAL("PayPal");
 
     companion object {
         fun fromVapianoValue(value: String): PaymentType = PaymentType.values().first { it.sdkValue == value }
