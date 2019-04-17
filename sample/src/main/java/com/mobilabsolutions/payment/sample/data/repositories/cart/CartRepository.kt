@@ -10,8 +10,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class CartRepository @Inject constructor(
-        private val dispatchers: AppCoroutineDispatchers,
-        private val localCartStore: LocalCartStore
+    private val dispatchers: AppCoroutineDispatchers,
+    private val localCartStore: LocalCartStore
 ) {
 
     init {

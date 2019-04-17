@@ -18,7 +18,7 @@ class PaymentSampleApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        val  configuration = PaymentSdkConfiguration(
+        val configuration = PaymentSdkConfiguration(
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = "https://payment-dev.mblb.net/api/",
                 integrations = setOf(BsPayoneIntegration, BraintreeIntegration),
@@ -27,17 +27,14 @@ class PaymentSampleApplication : DaggerApplication() {
         PaymentSdk.initalize(this, configuration)
 //        PaymentSdk.initalize(BuildConfig.newBsApiKey, "https://payment-dev.mblb.net/api/", this, setOf(BsPayoneIntegration, BraintreeIntegration), true)
 
-
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this)
             if (Timber.forest().filter { it is Timber.DebugTree }.isEmpty()) {
                 Timber.plant(Timber.DebugTree())
             }
-
         }
 
         AndroidThreeTen.init(this)
-
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
@@ -45,5 +42,4 @@ class PaymentSampleApplication : DaggerApplication() {
         DaggerPresenterManager.setInjector(component)
         return component
     }
-
 }

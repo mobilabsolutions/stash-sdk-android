@@ -9,7 +9,7 @@ import com.mobilabsolutions.payment.sample.emptyCheckOut
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
 class CheckoutEpoxyController(
-        private val callbacks: Callbacks
+    private val callbacks: Callbacks
 ) : TypedEpoxyController<CheckoutViewState>() {
     interface Callbacks {
         fun onAddButtonClicked(cartWithProduct: CartWithProduct)

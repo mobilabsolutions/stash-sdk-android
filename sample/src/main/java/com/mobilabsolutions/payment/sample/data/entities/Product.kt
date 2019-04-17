@@ -12,11 +12,11 @@ import androidx.room.PrimaryKey
         tableName = "product"
 )
 data class Product(
-        @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
-        @ColumnInfo val name: String? = null,
-        @ColumnInfo val image: Int = 0,
-        @ColumnInfo val description: String? = null,
-        @ColumnInfo val price: Int = 0
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
+    @ColumnInfo val name: String? = null,
+    @ColumnInfo val image: Int = 0,
+    @ColumnInfo val description: String? = null,
+    @ColumnInfo val price: Int = 0
 ) : SampleEntity {
     @delegate:Ignore
     val productType by lazy(LazyThreadSafetyMode.NONE) {

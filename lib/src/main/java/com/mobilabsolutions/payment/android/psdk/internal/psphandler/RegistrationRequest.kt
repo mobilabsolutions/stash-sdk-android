@@ -7,27 +7,25 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-data class RegistrationRequest (
-    val standardizedData : StandardizedData,
-    val additionalData : AdditionalRegistrationData = AdditionalRegistrationData()
+data class RegistrationRequest(
+    val standardizedData: StandardizedData,
+    val additionalData: AdditionalRegistrationData = AdditionalRegistrationData()
 )
 
 interface StandardizedData {
-    val aliasId : String
+    val aliasId: String
 }
 
-
-
 data class CreditCardRegistrationRequest(
-        val creditCardData: CreditCardData,
-        val billingData: BillingData = BillingData(),
-        override val aliasId: String
+    val creditCardData: CreditCardData,
+    val billingData: BillingData = BillingData(),
+    override val aliasId: String
 ) : StandardizedData
 
 data class SepaRegistrationRequest(
-        val sepaData: SepaData,
-        val billingData: BillingData = BillingData(),
-        override val aliasId: String
+    val sepaData: SepaData,
+    val billingData: BillingData = BillingData(),
+    override val aliasId: String
 ) : StandardizedData
 
 data class PayPalRegistrationRequest(override val aliasId: String) : StandardizedData

@@ -9,13 +9,12 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.P
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 
-internal class NewUiCustomizationManager(val gson : Gson, val sharedPreferences: SharedPreferences) : UiCustomizationManager {
+internal class NewUiCustomizationManager(val gson: Gson, val sharedPreferences: SharedPreferences) : UiCustomizationManager {
     companion object {
         val PAYPAL_CUSTOMIZATION_KEY = "PaypalCustomization"
     }
 
-
-    private var payPalActivityCustomization : PayPalActivityCustomization = PayPalActivityCustomization()
+    private var payPalActivityCustomization: PayPalActivityCustomization = PayPalActivityCustomization()
 
     init {
         val paypalPreference = sharedPreferences.getString(PAYPAL_CUSTOMIZATION_KEY, "")
@@ -24,19 +23,14 @@ internal class NewUiCustomizationManager(val gson : Gson, val sharedPreferences:
         } else {
             payPalActivityCustomization = gson.fromJson(paypalPreference, payPalActivityCustomization::class.java)
         }
-
     }
-
-
 
     override fun setPaypalRedirectActivityCustomizations(payPalActivityCustomization: PayPalActivityCustomization) {
         this.payPalActivityCustomization = payPalActivityCustomization
         storeCustomizations()
     }
 
-    internal fun getPaypalRedirectActivityCustomizations() : PayPalActivityCustomization = payPalActivityCustomization
-
-
+    internal fun getPaypalRedirectActivityCustomizations(): PayPalActivityCustomization = payPalActivityCustomization
 
     private fun storeCustomizations() {
         sharedPreferences
@@ -44,5 +38,4 @@ internal class NewUiCustomizationManager(val gson : Gson, val sharedPreferences:
                 .putString(PAYPAL_CUSTOMIZATION_KEY, gson.toJson(payPalActivityCustomization))
                 .commit()
     }
-
 }

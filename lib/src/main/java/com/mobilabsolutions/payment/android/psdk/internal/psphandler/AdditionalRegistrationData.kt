@@ -8,4 +8,4 @@ package com.mobilabsolutions.payment.android.psdk.internal.psphandler
  *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-data class AdditionalRegistrationData(val extraData : Map<String,String> = emptyMap())
+data class AdditionalRegistrationData(val extraData: Map<String, String> = emptyMap())

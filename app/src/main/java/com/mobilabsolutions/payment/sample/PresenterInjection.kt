@@ -3,7 +3,6 @@ package com.mobilabsolutions.payment.sample
 import com.mobilabsolutions.payment.sample.payment.PaymentPresenter
 import com.mobilabsolutions.payment.sample.registration.RegistrationPresenter
 
-
 /**
  * Presenter injection is used with dagger as a way of telling dagger that presenters are injectable
  * since the instantiation is done by [DaggerPresenterManager]

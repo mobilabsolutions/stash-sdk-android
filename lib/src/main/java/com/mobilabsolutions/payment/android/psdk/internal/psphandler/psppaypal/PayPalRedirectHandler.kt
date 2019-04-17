@@ -1,8 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal
 
 import android.app.Application
-import android.content.Intent
-import io.reactivex.Completable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -11,13 +9,13 @@ import javax.inject.Inject
  */
 
 class PayPalRedirectHandler @Inject constructor(
-        val applicationContext : Application,
-        val redirectActivitySingle: Single<RedirectResult>) {
+    val applicationContext: Application,
+    val redirectActivitySingle: Single<RedirectResult>
+) {
 
     enum class RedirectState {
         SUCCESS, FAILURE, CANCELED, UNKNOWN
     }
 
-    data class RedirectResult(val redirectState: RedirectState, val code : String)
-
+    data class RedirectResult(val redirectState: RedirectState, val code: String)
 }

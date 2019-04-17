@@ -13,9 +13,9 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class LoadPaymentMethods @Inject constructor(
-        dispatchers: AppCoroutineDispatchers,
-        private val schedulers: AppRxSchedulers,
-        private val paymentMethodRepository: PaymentMethodRepository
+    dispatchers: AppCoroutineDispatchers,
+    private val schedulers: AppRxSchedulers,
+    private val paymentMethodRepository: PaymentMethodRepository
 ) : SubjectInteractor<Unit, Unit, List<PaymentMethod>>() {
     override val dispatcher: CoroutineDispatcher = dispatchers.io
 

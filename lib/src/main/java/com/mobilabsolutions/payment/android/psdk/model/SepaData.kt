@@ -7,9 +7,9 @@ import org.iban4j.Iban
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
 class SepaData(
-        var bic: String = "",
-        iban: String = "",
-        val holder : String
+    var bic: String = "",
+    iban: String = "",
+    val holder: String
 
 ) {
     var iban: String = iban

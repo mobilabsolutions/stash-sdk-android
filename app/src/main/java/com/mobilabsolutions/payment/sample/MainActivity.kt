@@ -16,9 +16,7 @@ import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-
 class MainActivity : BaseNoPresenterFragmentActivity(), HasSupportFragmentInjector {
-
 
     @Inject
     lateinit var supportFragmentInjector: DispatchingAndroidInjector<Fragment>
@@ -26,12 +24,11 @@ class MainActivity : BaseNoPresenterFragmentActivity(), HasSupportFragmentInject
     val REGISTRATION_FRAGMENT_TAG = RegistrationFragment::class.java.simpleName
     val PAYMENT_FRAGMENT_TAG = PaymentFragment::class.java.simpleName
 
-
 //    @Inject
     lateinit var registrationFragment: RegistrationFragment
 
 //    @Inject
-    lateinit var paymentFragment : PaymentFragment
+    lateinit var paymentFragment: PaymentFragment
 
     val compositeDisposable = CompositeDisposable()
 
@@ -72,9 +69,7 @@ class MainActivity : BaseNoPresenterFragmentActivity(), HasSupportFragmentInject
         paymentButton.setOnClickListener {
             showPaymentScreen()
         }
-
     }
-
 
     fun showRegistrationScreen() {
         replaceFragment(registrationFragment, REGISTRATION_FRAGMENT_TAG)
@@ -83,9 +78,6 @@ class MainActivity : BaseNoPresenterFragmentActivity(), HasSupportFragmentInject
     fun showPaymentScreen() {
         replaceFragment(paymentFragment, PAYMENT_FRAGMENT_TAG)
     }
-
-
-
 }
 
 fun EditText.getString() = this.getText().toString()
@@ -95,20 +87,16 @@ fun EditText.getStringObservable() = Observable.create<String> {
     this.addTextChangedListener(
             object : android.text.TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
                 }
 
                 override fun afterTextChanged(s: Editable?) {
                     it.onNext(s.toString())
                 }
-
             }
     )
-
 }
 
 fun EditText.getBehaviorStringObservable() = Observable.create<String> {
@@ -116,18 +104,14 @@ fun EditText.getBehaviorStringObservable() = Observable.create<String> {
     this.addTextChangedListener(
             object : android.text.TextWatcher {
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
                 }
 
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
                 }
 
                 override fun afterTextChanged(s: Editable?) {
                     it.onNext(s.toString())
                 }
-
             }
     )
-
 }.replay(1).autoConnect()

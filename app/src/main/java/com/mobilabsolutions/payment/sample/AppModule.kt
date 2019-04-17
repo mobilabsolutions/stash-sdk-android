@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.sample
 
-
 import android.app.Application
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
@@ -14,13 +13,12 @@ import com.mobilabsolutions.payment.sample.state.PaymentMethodState
 import dagger.Module
 import dagger.Provides
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.PublishSubject
 import javax.inject.Singleton
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-//@Module(includes = arrayOf(CommonModule::class, ActivityBindingModule::class, MenuModule::class, AuthModule::class, PaymentModule::class))
+// @Module(includes = arrayOf(CommonModule::class, ActivityBindingModule::class, MenuModule::class, AuthModule::class, PaymentModule::class))
 @Module(includes = arrayOf(MainActivityModule::class, PaymentFragmentModule::class, RegistrationFragmentModule::class))
 class AppModule {
 
@@ -38,23 +36,21 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun providieRegistrationManager() : RegistrationManager {
+    fun providieRegistrationManager(): RegistrationManager {
         return PaymentSdk.getRegistrationManager()
     }
 
     @Singleton
     @Provides
-    fun providePaymentManager() : PaymentManager {
+    fun providePaymentManager(): PaymentManager {
         return PaymentSdk.getPaymentManager()
     }
 
     @Singleton
     @Provides
-    fun providePaymentMethodStateSubject() : BehaviorSubject<PaymentMethodState> {
+    fun providePaymentMethodStateSubject(): BehaviorSubject<PaymentMethodState> {
         return BehaviorSubject.createDefault(PaymentMethodState())
     }
-
-
 
     companion object {
         private const val PREFS_NAME = "sample_app_preference"

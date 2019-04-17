@@ -1,11 +1,9 @@
 package com.mobilabsolutions.payment.sample.registration
 
-import android.app.Activity
 import com.mobilabsolutions.commonsv3.mvp.presenter.CommonPresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import org.threeten.bp.LocalDate
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -112,7 +110,6 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                         )
             }
         }
-
     }
 
     fun registerPaymentMethodRequested() {
@@ -159,11 +156,6 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
             ui.expiryDateObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(expiryDate = it, enteringData = true) })
             ui.ibanObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(iban = it, enteringData = true) })
             ui.bicObservable.subscribeBy(onNext = { registrationViewState = registrationViewState.copy(bic = it, enteringData = true) })
-
         }
-
-
     }
-
-
 }

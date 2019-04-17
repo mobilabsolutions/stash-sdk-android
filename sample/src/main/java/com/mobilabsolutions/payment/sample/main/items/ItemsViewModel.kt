@@ -11,16 +11,15 @@ import com.mobilabsolutions.payment.sample.data.interactors.LoadProducts
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import java.nio.channels.CompletionHandler
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class ItemsViewModel @AssistedInject constructor(
-        @Assisted initialState: ItemsViewState,
-        schedulers: AppRxSchedulers,
-        loadProducts: LoadProducts,
-        private val addCart: AddCart
+    @Assisted initialState: ItemsViewState,
+    schedulers: AppRxSchedulers,
+    loadProducts: LoadProducts,
+    private val addCart: AddCart
 ) : BaseViewModel<ItemsViewState>(initialState) {
     @AssistedInject.Factory
     interface Factory {

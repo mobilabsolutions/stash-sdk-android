@@ -3,10 +3,8 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicompone
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.RegistrationProccessHostActivity
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 /**
@@ -26,7 +24,6 @@ class UiComponentHandler @Inject constructor() {
         }.firstOrError()
     }
 
-
     fun handleCreditCardDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
         dataSubject = PublishSubject.create()
         val creditCardDataEntryFragment = CreditCardDataEntryFragment()
@@ -35,5 +32,4 @@ class UiComponentHandler @Inject constructor() {
             activity.supportFragmentManager.beginTransaction().remove(creditCardDataEntryFragment).commitNow()
         }.firstOrError()
     }
-
 }

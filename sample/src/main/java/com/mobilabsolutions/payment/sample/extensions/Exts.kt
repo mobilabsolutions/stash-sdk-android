@@ -2,7 +2,7 @@ package com.mobilabsolutions.payment.sample.extensions
 
 import java.math.BigDecimal
 import java.text.NumberFormat
-import java.util.*
+import java.util.Currency
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 15-04-2019.

@@ -50,7 +50,7 @@ before_script:
 
 install: ./gradlew clean assemble assembleAndroidTest --stacktrace
 
-script: ./gradlew check lib:connectedCheck bspayone-integration:connectedCheck braintree-integration:connectedCheck --stacktrace
+script: ./gradlew check spotlessCheck dependencyUpdates lib:connectedCheck bspayone-integration:connectedCheck braintree-integration:connectedCheck --stacktrace
 
 after_success: ./.buildscript.sh
 

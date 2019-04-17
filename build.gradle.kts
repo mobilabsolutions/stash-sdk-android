@@ -12,6 +12,11 @@ buildscript {
     }
 }
 
+plugins {
+    id("com.diffplug.gradle.spotless") version ("3.21.1")
+    id("com.github.ben-manes.versions") version ("0.21.0")
+}
+
 allprojects {
     repositories {
         google()
@@ -25,8 +30,14 @@ allprojects {
     }
 }
 
-val clean by tasks.creating(Delete::class) {
-    delete(rootProject.buildDir)
+subprojects {
+    apply(plugin = "com.diffplug.gradle.spotless")
+    spotless {
+        kotlin {
+            target("**/*.kt")
+            ktlint("0.31.0")
+        }
+    }
 }
 
 configurations.all {

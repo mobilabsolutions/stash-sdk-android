@@ -1,12 +1,14 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
 import javax.inject.Inject
@@ -14,7 +16,6 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-
 
 class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url: String = BuildConfig.oldBsApiUrl) : Integration {
     override val identifier = "BsOld"
@@ -38,7 +39,6 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url: String
                     }
                     return integration as Integration
                 }
-
             }
         }
     }
@@ -69,11 +69,10 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url: String
             }
             else -> throw BsOldIntegrationException("Invalid standardized data type")
         }
-
     }
 
     override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
@@ -85,9 +84,4 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url: String
                 )
         )
     }
-
-
 }
-
-
-

@@ -9,7 +9,7 @@ import com.mobilabsolutions.payment.sample.paymentMethodItem
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class PaymentMethodsEpoxyController(
-        private val callbacks: Callbacks
+    private val callbacks: Callbacks
 ) : TypedEpoxyController<PaymentMethodsViewState>() {
 
     interface Callbacks {

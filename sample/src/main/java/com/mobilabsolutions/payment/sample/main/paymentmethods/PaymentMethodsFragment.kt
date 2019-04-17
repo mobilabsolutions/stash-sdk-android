@@ -55,7 +55,6 @@ class PaymentMethodsFragment : BaseFragment() {
         binding.paymentMethodsRv.setController(controller)
     }
 
-
     override fun invalidate() {
         withState(viewModel) {
             binding.state = it
