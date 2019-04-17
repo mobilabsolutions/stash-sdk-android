@@ -24,7 +24,7 @@ platform :android do
 
    desc "Deploy to Fabric Release"
    lane :deploy_release_fabric do |options|
-       gradle(task: "sample:assembleRelease")
+       gradle(task: "assembleRelease")
 
        crashlytics(
            api_token: options[:FABRIC_API_KEY],
