@@ -46,7 +46,7 @@ object Modules {
 }
 
 object Libs {
-    val androidGradlePlugin = "com.android.tools.build:gradle:3.3.2"
+    val androidGradlePlugin = "com.android.tools.build:gradle:3.4.0"
 
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.20.0"
 
@@ -72,7 +72,7 @@ object Libs {
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha02"
-        val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.8"
+        val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.9"
         val fabricPlugin = "io.fabric.tools:gradle:1.27.1"
     }
 
@@ -185,7 +185,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.4.0"
+        private const val version = "3.4.1"
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"
