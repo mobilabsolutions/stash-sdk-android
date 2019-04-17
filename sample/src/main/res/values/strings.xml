@@ -10,10 +10,10 @@
     <string name="image_description">Image Description</string>
     <string name="item_title">Item Title</string>
     <string name="item_description">Item Description</string>
-
     <string name="pay">Pay</string>
     <string name="total_amount">Total Amount</string>
-
+    <string name="payment_methods">Payment Methods</string>
+    <string name="add_payment_method">Add new payment method</string>
     <string name="empty_checkout">No Items yet</string>
     <string name="select_new_item">Please select a new item.</string>
 </resources>

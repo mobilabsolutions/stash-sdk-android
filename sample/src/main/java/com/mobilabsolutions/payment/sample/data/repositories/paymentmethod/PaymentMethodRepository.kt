@@ -1,7 +1,12 @@
 package com.mobilabsolutions.payment.sample.data.repositories.paymentmethod
 
+import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
+import io.reactivex.Observable
+
 /**
- * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
+ * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
-class PaymentMethodRepository {
+interface PaymentMethodRepository {
+    fun observePaymentMethods(): Observable<List<PaymentMethod>>
+    suspend fun deletePaymentMethod(paymentMethod: PaymentMethod)
 }
