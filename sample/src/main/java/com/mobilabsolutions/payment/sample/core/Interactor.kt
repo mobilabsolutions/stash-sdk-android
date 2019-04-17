@@ -3,11 +3,8 @@ package com.mobilabsolutions.payment.sample.core
 import io.reactivex.Observable
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.asObservable
 
 /**
@@ -33,6 +30,7 @@ interface Interactor<in P> {
  *
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
+@ObsoleteCoroutinesApi
 abstract class ChannelInteractor<P, T : Any> : Interactor<P> {
     private val channel = Channel<T>()
     val errorSubject: BehaviorSubject<Throwable> = BehaviorSubject.create<Throwable>()

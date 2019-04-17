@@ -12,6 +12,9 @@
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="${fabric-api-key}" />
 
         <activity
                 android:name=".launcher.LauncherActivity"

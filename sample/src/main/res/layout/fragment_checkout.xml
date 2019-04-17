@@ -51,8 +51,11 @@
             android:text="@string/total_amount"
             android:textColor="@color/colorDark"
             android:textSize="18sp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_pay"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            tools:visibility="visible" />
+
 
         <TextView
             android:id="@+id/total_price_text"
@@ -62,10 +65,13 @@
             android:fontFamily="@font/lato_black"
             android:textColor="@color/colorAquaMarine"
             android:textSize="24sp"
+            android:visibility="gone"
             app:layout_constraintBaseline_toBaselineOf="@+id/label_total_amount"
             app:layout_constraintEnd_toEndOf="parent"
             app:priceWithCurrency="@{state.totalAmount}"
-            tools:text="23,95 €" />
+            tools:text="23,95 €"
+            tools:visibility="visible" />
+
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_pay"
@@ -77,11 +83,12 @@
             android:textAllCaps="true"
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
+            android:visibility="gone"
             app:backgroundTint="@color/colorAquaMarine"
             app:cornerRadius="20dp"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
-
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:visibility="visible" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
+
