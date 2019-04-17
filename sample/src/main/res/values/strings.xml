@@ -16,4 +16,7 @@
     <string name="add_payment_method">Add new payment method</string>
     <string name="empty_checkout">No Items yet</string>
     <string name="select_new_item">Please select a new item.</string>
+
+    <string name="delete_payment_method_title">Delete Payment Method</string>
+    <string name="delete_payment_method_message">Are you sure?</string>
 </resources>

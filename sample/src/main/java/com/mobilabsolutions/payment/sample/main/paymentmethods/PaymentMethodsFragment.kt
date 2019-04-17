@@ -4,8 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.databinding.FragmentPaymentMethodsBinding
@@ -39,7 +41,15 @@ class PaymentMethodsFragment : BaseFragment() {
             }
 
             override fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
-                viewModel.onDeleteBtnClicked(paymentMethod)
+                val dialog = AlertDialog.Builder(requireContext())
+                dialog.setTitle(getString(R.string.delete_payment_method_title))
+                dialog.setMessage(getString(R.string.delete_payment_method_message))
+                dialog.setPositiveButton("Yes") { view, _ ->
+                    view.dismiss()
+                    viewModel.onDeleteBtnClicked(paymentMethod)
+                }
+                dialog.setNegativeButton("No") { view, _ -> view.dismiss() }
+                dialog.show()
             }
         })
         binding.paymentMethodsRv.setController(controller)
