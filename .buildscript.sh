@@ -12,7 +12,7 @@ if [ ! -z $TRAVIS_TAG ]; then
 elif [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
 # If it's not pull request and the branch is master, deploy the sample app to Fabric beta.
     echo Deploy to Fabric Beta.
-    fastlane deploy_release_fabric FABRIC_API_KEY:$FABRIC_API_KEY FABRIC_BUILD_SECRET:$FABRIC_BUILD_SECRET
+    bundle exec fastlane deploy_release_fabric FABRIC_API_KEY:$FABRIC_API_KEY FABRIC_BUILD_SECRET:$FABRIC_BUILD_SECRET
 else
 # If it's pull request,
 	echo This is a pull request, no deployemnt.
