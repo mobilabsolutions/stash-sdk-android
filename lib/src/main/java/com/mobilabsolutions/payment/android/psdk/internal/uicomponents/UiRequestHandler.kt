@@ -30,6 +30,7 @@ import javax.inject.Singleton
 class UiRequestHandler @Inject constructor() {
 
     class EntryCancelled : RuntimeException()
+    class UserCancelled : RuntimeException()
 
     @Inject
     lateinit var integrations: Set<@JvmSuppressWildcards Integration>
@@ -42,13 +43,13 @@ class UiRequestHandler @Inject constructor() {
 
     private var startedNewTask = false
 
-    var compositeDisposable = CompositeDisposable()
-
     var hostActivityProvider: ReplaySubject<AppCompatActivity> = ReplaySubject.create<AppCompatActivity>()
 
     lateinit var paymentMethodTypeSubject: ReplaySubject<PaymentMethodType>
 
     var errorSubject: PublishSubject<Map<String, String>> = PublishSubject.create()
+
+    var chooserUsed = false
 
     lateinit var currentChooserFragment : Fragment
 
@@ -59,14 +60,18 @@ class UiRequestHandler @Inject constructor() {
 
     fun chooserCancelled() {
         hostActivityProvider = ReplaySubject.create()
-        errorSubject.onError(RuntimeException("User cancelled"))
+        errorSubject.onError(RuntimeException())
         errorSubject = PublishSubject.create()
         processing.set(false)
     }
 
     fun entryCancelled() {
         hostActivityProvider = ReplaySubject.create()
-        errorSubject.onError(EntryCancelled())
+        if (chooserUsed) {
+            errorSubject.onError(EntryCancelled())
+        } else {
+            errorSubject.onError(UserCancelled())
+        }
         errorSubject = PublishSubject.create()
         processing.set(false)
     }
@@ -172,6 +177,7 @@ class UiRequestHandler @Inject constructor() {
 
     fun askUserToChosePaymentMethod(activity: Activity? = null, requestId: Int): Single<PaymentMethodType> {
         checkFlow(requestId)
+        chooserUsed = true
         return launchHostActivity(activity).flatMap { hostActivity ->
             val supportFragmentManager = hostActivity.supportFragmentManager
             (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.CHOOSER)

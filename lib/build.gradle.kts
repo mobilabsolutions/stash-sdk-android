@@ -107,6 +107,9 @@ dependencies {
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.recyclerview)
+    implementation(Libs.Google.material)
+
+    implementation(Libs.Utils.commonsValidator)
 
 
     implementation(Libs.Dagger.dagger)

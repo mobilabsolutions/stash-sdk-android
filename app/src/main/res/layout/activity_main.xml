@@ -7,6 +7,7 @@
     tools:context=".MainActivity">
 
     <Button
+        android:visibility="gone"
         android:id="@+id/registrationButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -19,6 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/fragmentContainer" />
 
     <Button
+        android:visibility="gone"
         android:id="@+id/paymentButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -3,6 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicompone
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.RegistrationProccessHostActivity
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject

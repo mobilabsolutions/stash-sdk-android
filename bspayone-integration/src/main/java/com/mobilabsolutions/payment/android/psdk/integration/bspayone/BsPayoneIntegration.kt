@@ -10,6 +10,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 /**

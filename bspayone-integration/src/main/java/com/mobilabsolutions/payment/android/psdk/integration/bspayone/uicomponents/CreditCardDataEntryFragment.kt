@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,6 +20,9 @@ class CreditCardDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
+    @Inject
+    lateinit var creditCardDataValidator : CreditCardDataValidator
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.credit_card_data_entry_fragment, container, false)
         return view
@@ -26,7 +30,7 @@ class CreditCardDataEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        submitButton.setOnClickListener {
+        saveButton.setOnClickListener {
             uiComponentHandler.dataSubject.onNext(mapOf("1" to "2"))
         }
 

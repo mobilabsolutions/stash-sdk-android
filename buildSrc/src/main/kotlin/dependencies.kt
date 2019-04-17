@@ -182,6 +182,10 @@ object Libs {
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"
     }
+
+    object Utils {
+        val commonsValidator = "commons-validator:commons-validator:1.6"
+    }
 }
 
 fun Project.propOrDefWithTravis(propertyName: String, defaultValue: String): String {
