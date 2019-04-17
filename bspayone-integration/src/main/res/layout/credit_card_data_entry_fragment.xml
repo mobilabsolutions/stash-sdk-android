@@ -36,7 +36,7 @@
             android:text="@string/credit_card_data_expiry"
             android:textColor="@color/dark_two"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ibanNumberEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText"/>
 
         <EditText
             android:id="@+id/expirationDateEditText"
@@ -61,7 +61,7 @@
             android:text="@string/credit_card_data_cvv"
             android:textColor="@color/dark_two"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/ibanNumberEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText"/>
 
         <EditText
             android:id="@+id/ccvEditText"
@@ -95,7 +95,7 @@
             app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"/>
 
         <EditText
-            android:id="@+id/ibanNumberEditText"
+            android:id="@+id/creditCardNumberEditText"
             android:layout_width="0dp"
             android:layout_height="36dp"
             android:layout_marginEnd="16dp"

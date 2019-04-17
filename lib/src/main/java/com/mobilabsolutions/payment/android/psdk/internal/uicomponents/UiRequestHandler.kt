@@ -12,6 +12,7 @@ import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
@@ -133,6 +134,7 @@ class UiRequestHandler @Inject constructor() {
         return hostActivitySingle.flatMap { hostActivity ->
             (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.ENTRY)
             integration.handlePaymentMethodEntryRequest(hostActivity, definition)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doFinally {
                         flowCompleted(hostActivity)
                     }.ambWith(errorSubject.firstOrError())
@@ -157,6 +159,7 @@ class UiRequestHandler @Inject constructor() {
         return hostActivitySingle.flatMap { hostActivity ->
             (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.ENTRY)
             integration.handlePaymentMethodEntryRequest(hostActivity, definition)
+                    .observeOn(AndroidSchedulers.mainThread())
                     .doFinally {
                         flowCompleted(hostActivity)
                     }.ambWith(errorSubject.firstOrError())

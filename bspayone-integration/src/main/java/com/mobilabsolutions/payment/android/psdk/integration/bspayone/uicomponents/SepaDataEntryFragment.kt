@@ -45,7 +45,7 @@ class SepaDataEntryFragment : Fragment() {
         firstNameEditText.getContentOnFocusLost {
            validateFirstName(it)
         }
-        ibanNumberEditText.getContentOnFocusLost {
+        creditCardNumberEditText.getContentOnFocusLost {
             validateIban(it)
         }
         lastNameEditText.getContentOnFocusLost {
@@ -59,14 +59,14 @@ class SepaDataEntryFragment : Fragment() {
             var success = true
             success = validateFirstName(firstNameEditText.getContentsAsString()) && success
             success = validateLastName(lastNameEditText.getContentsAsString()) && success
-            success = validateIban(ibanNumberEditText.getContentsAsString()) && success
+            success = validateIban(creditCardNumberEditText.getContentsAsString()) && success
             success = validateCountry(countryText.text.toString()) && success
 
             if (success) {
                 val dataMap : MutableMap<String, String> = mutableMapOf()
                 dataMap.put(SepaData.FIRST_NAME, firstNameEditText.getContentsAsString())
                 dataMap.put(SepaData.LAST_NAME, lastNameEditText.getContentsAsString())
-                dataMap.put(SepaData.IBAN, ibanNumberEditText.getContentsAsString())
+                dataMap.put(SepaData.IBAN, creditCardNumberEditText.getContentsAsString())
                 dataMap.put(BillingData.COUNTRY, countryText.text.toString())
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
@@ -102,11 +102,11 @@ class SepaDataEntryFragment : Fragment() {
     fun validateIban(iban : String) : Boolean {
         val validationResult = sepaDataValidator.validateIban(iban)
         if (!validationResult.success) {
-            ibanNumberEditText.background = errorDrawable
-            ibanNumberEditText.setError(getString(validationResult.errorMessageResourceId), null)
+            creditCardNumberEditText.background = errorDrawable
+            creditCardNumberEditText.setError(getString(validationResult.errorMessageResourceId), null)
         } else {
-            ibanNumberEditText.background = normalBacgroundDrawable
-            ibanNumberEditText.setError(null, null)
+            creditCardNumberEditText.background = normalBacgroundDrawable
+            creditCardNumberEditText.setError(null, null)
         }
         return validationResult.success
     }
