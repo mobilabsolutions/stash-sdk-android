@@ -32,6 +32,11 @@ data class BillingData (
         fun empty() = BillingData()
 
 
+        val FIRST_NAME = "FIRST_NAME"
+        val LAST_NAME = "LAST_NAME"
+        val COUNTRY = "COUNTRY"
+
+
 
 
     }

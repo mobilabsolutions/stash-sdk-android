@@ -7,6 +7,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.RegistrationProccessHostActivity
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import timber.log.Timber
 import java.lang.RuntimeException
 import javax.inject.Inject
 
@@ -21,6 +22,7 @@ class UiComponentHandler @Inject constructor() {
     fun handleSepaDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
         dataSubject = PublishSubject.create()
         val sepaDataEntryFragment = SepaDataEntryFragment()
+        Timber.d("Current thread: ${Thread.currentThread().name}")
         activity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, sepaDataEntryFragment).commitNow()
         return dataSubject.doFinally {
             activity.supportFragmentManager.beginTransaction().remove(sepaDataEntryFragment).commitNow()

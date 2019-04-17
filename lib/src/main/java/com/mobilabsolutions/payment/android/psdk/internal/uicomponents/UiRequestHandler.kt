@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
@@ -160,7 +161,8 @@ class UiRequestHandler @Inject constructor() {
                         flowCompleted(hostActivity)
                     }.ambWith(errorSubject.firstOrError())
         }.map {
-            Pair(validSepaData, mapOf("TEST" to "test"))
+            SepaData(iban = it.getValue(SepaData.IBAN), holder = it.getValue(SepaData.FIRST_NAME) + " " + it.getValue(SepaData.LAST_NAME))
+            Pair(validSepaData, mapOf(BillingData.COUNTRY to it.getValue(BillingData.COUNTRY)))
         }
     }
 

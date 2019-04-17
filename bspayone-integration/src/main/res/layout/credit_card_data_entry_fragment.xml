@@ -110,7 +110,7 @@
             app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView"/>
 
         <EditText
-            android:id="@+id/countryEditText"
+            android:id="@+id/countryText"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginEnd="16dp"

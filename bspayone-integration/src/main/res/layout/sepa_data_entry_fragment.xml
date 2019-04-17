@@ -59,7 +59,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView"/>
 
             <TextView
-                android:id="@+id/countryEditText"
+                android:id="@+id/countryText"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
@@ -68,6 +68,7 @@
                 android:background="@drawable/edit_text_selector"
                 android:ems="10"
                 android:hint="@string/sepa_data_entry_country"
+                android:text="Germany"
                 android:textColor="?attr/editTextColor"
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
                 android:paddingStart="16dp"

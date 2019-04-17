@@ -127,6 +127,9 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData, additionalUIData: Map<String, String> = emptyMap(), chosenPsp: PspIdentifier, idempotencyKey: String): Single<String> {
+        if (additionalUIData.containsKey(BillingData.COUNTRY)) {
+            billingData.country = additionalUIData.getValue(BillingData.COUNTRY)
+        }
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
 
