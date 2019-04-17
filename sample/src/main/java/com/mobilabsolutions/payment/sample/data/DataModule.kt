@@ -32,4 +32,7 @@ class DataModule {
 
     @Provides
     fun provideCartDao(db: SampleDatabase) = db.cartDao()
+
+    @Provides
+    fun providePaymentMethodDao(db: SampleDatabase) = db.paymentMethodDao()
 }
