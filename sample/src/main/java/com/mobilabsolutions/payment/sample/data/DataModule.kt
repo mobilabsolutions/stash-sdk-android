@@ -3,6 +3,9 @@ package com.mobilabsolutions.payment.sample.data
 import android.content.Context
 import android.os.Debug
 import androidx.room.Room
+import com.mobilabsolutions.payment.sample.data.repositories.cart.CartModule
+import com.mobilabsolutions.payment.sample.data.repositories.paymentmethod.PaymentMethodModule
+import com.mobilabsolutions.payment.sample.data.repositories.product.ProductModule
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -10,7 +13,11 @@ import javax.inject.Singleton
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
-@Module
+@Module(includes = [
+    ProductModule::class,
+    CartModule::class,
+    PaymentMethodModule::class
+])
 class DataModule {
     @Singleton
     @Provides

@@ -4,9 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.productItem
@@ -19,8 +19,6 @@ import javax.inject.Inject
  */
 
 class ItemsFragment : BaseFragment() {
-    override val mvrxViewId: String = ItemsFragment::class.java.simpleName
-
     @Inject
     lateinit var itemsViewModelFactory: ItemsViewModel.Factory
 
@@ -38,7 +36,7 @@ class ItemsFragment : BaseFragment() {
                     product(product)
                     clickListener { _ ->
                         viewModel.onClick(product)
-                        Toast.makeText(activity, getString(R.string.message, product.name), Toast.LENGTH_SHORT).show()
+                        view?.let { Snackbar.make(it, getString(R.string.message, product.name), Snackbar.LENGTH_SHORT).show() }
                     }
                 }
             }

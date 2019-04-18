@@ -1,26 +1,11 @@
 package com.mobilabsolutions.payment.sample.data.repositories.product
 
-import com.mobilabsolutions.payment.sample.util.AppCoroutineDispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Singleton
+import com.mobilabsolutions.payment.sample.data.entities.Product
+import io.reactivex.Observable
 
 /**
- * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
+ * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
-@Singleton
-class ProductRepository @Inject constructor(
-    private val dispatchers: AppCoroutineDispatchers,
-    private val localProductStore: LocalProductStore
-) {
-    init {
-        GlobalScope.launch(dispatchers.io) {
-            if (localProductStore.isInitData()) {
-                localProductStore.populateInitData()
-            }
-        }
-    }
-
-    fun observerProducts() = localProductStore.observerProducts()
+interface ProductRepository {
+    fun observerProducts(): Observable<List<Product>>
 }

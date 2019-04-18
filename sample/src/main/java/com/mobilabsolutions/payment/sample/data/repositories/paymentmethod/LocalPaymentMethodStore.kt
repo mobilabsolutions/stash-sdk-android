@@ -15,35 +15,6 @@ class LocalPaymentMethodStore @Inject constructor(
     private val paymentMethodDao: PaymentMethodDao
 ) {
 
-    companion object {
-        private val creditCard = PaymentMethod(
-                id = 1,
-                paymentMethodId = "payment_method_id_1",
-                alias = "XXX",
-                _type = "Credit Card"
-        )
-
-        private val sepa = PaymentMethod(
-                id = 2,
-                paymentMethodId = "payment_method_id_2",
-                alias = "DE12349790",
-                _type = "SEPA"
-        )
-
-        private val paypal = PaymentMethod(
-                id = 3,
-                paymentMethodId = "payment_method_id_3",
-                alias = "maxmustermann@gmail.com",
-                _type = "PayPal"
-        )
-    }
-
-    suspend fun insertSampleData() {
-        if (paymentMethodDao.paymentMethodsCount() < 1) {
-            paymentMethodDao.insertAll(listOf(creditCard, sepa, paypal))
-        }
-    }
-
     fun observePaymentMethods() = paymentMethodDao.entriesObservable()
 
     suspend fun savePaymentMethod() = transactionRunner {

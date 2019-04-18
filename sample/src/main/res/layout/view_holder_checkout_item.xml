@@ -30,7 +30,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_margin="5dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
@@ -80,8 +80,8 @@
                 android:id="@+id/product_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:paddingStart="8dp"
                 android:paddingEnd="16dp"
+                android:paddingStart="8dp"
                 android:textAppearance="@style/itemPrice"
                 app:layout_constraintBottom_toBottomOf="@+id/product_image"
                 app:layout_constraintStart_toEndOf="@+id/product_image"
@@ -97,6 +97,7 @@
                 android:background="@drawable/ripple_circle_grey"
                 android:contentDescription="@string/image_description"
                 android:onClick="@{removeClickListener}"
+                android:padding="8dp"
                 android:src="@drawable/ic_remove"
                 android:tint="@color/aquaMarine"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -124,6 +125,7 @@
                 android:background="@drawable/ripple_circle_grey"
                 android:contentDescription="@string/image_description"
                 android:onClick="@{addClickListener}"
+                android:padding="8dp"
                 android:src="@drawable/ic_add"
                 android:tint="@color/aquaMarine"
                 app:layout_constraintBottom_toBottomOf="parent"

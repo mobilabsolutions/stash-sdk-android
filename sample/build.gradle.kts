@@ -64,6 +64,12 @@ android {
             applicationIdSuffix = ".debug"
             versionNameSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
+            ext.set("alwaysUpdateBuildId", false)
+            isCrunchPngs = false
+            splits {
+                density.isEnable = false
+                abi.isEnable = false
+            }
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("debug")

@@ -12,9 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/items_title"
@@ -30,11 +28,14 @@
         <com.airbnb.epoxy.EpoxyRecyclerView
             android:id="@+id/itemsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="96dp"
-            android:padding="4dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="48dp"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/items_title"
-            tools:layout_editor_absoluteX="16dp"
             tools:listitem="@layout/view_holder_product_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
