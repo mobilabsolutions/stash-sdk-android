@@ -40,7 +40,6 @@ before_install:
 - echo -e "\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-preview-license"
 - chmod +x gradlew
 - chmod +x .buildscript.sh
-- bundle update
 # Disable Espresso tests for now.
 #- echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
 #- emulator -avd test -no-audio -no-window &
@@ -50,9 +49,11 @@ before_install:
 #- adb shell input keyevent 82 &
 #- adb shell settings put global stay_on_while_plugged_in 3
 
-install: ./gradlew clean assemble
+install: ./gradlew spotlessCheck
 
-script: ./gradlew check spotlessCheck dependencyUpdates
+before_script: ./gradlew dependencyUpdates
+
+script: ./gradlew check
 
 after_success: ./.buildscript.sh
 
