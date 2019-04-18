@@ -38,16 +38,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText"/>
 
-        <EditText
-            android:id="@+id/expirationDateEditText"
+        <TextView
+            android:id="@+id/expirationDateTextView"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/edit_text_selector"
             android:ems="10"
             android:hint="@string/credit_card_data_expiry_hint"
-            android:inputType="textPersonName"
+            android:gravity="center_vertical"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textColor="?attr/editTextColor"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="@+id/expirationDateTitleTextView"
             app:layout_constraintTop_toBottomOf="@+id/expirationDateTitleTextView"/>
@@ -75,6 +78,7 @@
             android:hint="@string/credit_card_data_cvv"
             android:inputType="textPersonName"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/ccvTitleTextView"
@@ -90,6 +94,7 @@
             android:hint="@string/sepa_data_entry_first_name"
             android:inputType="textPersonName"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView"
             app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"/>
@@ -105,11 +110,12 @@
             android:hint="@string/credit_card_data_number"
             android:inputType="number"
             android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
             app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView"/>
 
-        <EditText
+        <TextView
             android:id="@+id/countryText"
             android:layout_width="0dp"
             android:layout_height="40dp"
@@ -118,10 +124,14 @@
             android:background="@drawable/edit_text_selector"
             android:ems="10"
             android:hint="@string/credit_card_data_entry_country"
+            android:gravity="center_vertical"
             android:inputType="textPersonName"
             android:paddingStart="16dp"
+            android:text="Germany"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
+            android:textColor="?attr/editTextColor"
+            android:textAppearance="?android:attr/textAppearanceMediumInverse"
             app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
             app:layout_constraintTop_toBottomOf="@+id/countryTitleTextView"/>
 
@@ -161,7 +171,7 @@
             android:text="@string/sepa_data_entry_country"
             android:textColor="@color/dark_two"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/expirationDateEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/expirationDateTextView"/>
 
         <TextView
             android:id="@+id/firstNameTitleTextView"

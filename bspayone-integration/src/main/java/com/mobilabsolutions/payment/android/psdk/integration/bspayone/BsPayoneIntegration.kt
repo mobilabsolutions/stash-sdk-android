@@ -13,7 +13,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Registratio
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
 import javax.inject.Inject
 
 /**
@@ -107,8 +106,8 @@ class BsPayoneIntegration private constructor(
 
     override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
         return when (paymentMethodDefinition.paymentMethodType) {
-            PaymentMethodType.CREDITCARD -> uiComponentHandler.handleCreditCardDataEntryRequest(activity).observeOn(AndroidSchedulers.mainThread())
-            PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity).observeOn(AndroidSchedulers.mainThread())
+            PaymentMethodType.CREDITCARD -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
+            PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity)
             PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
         }
     }

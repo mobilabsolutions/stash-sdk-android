@@ -8,9 +8,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.*
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
+// ktlint-disable no-wildcard-imports
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -29,11 +33,14 @@ class SepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var personalDataValidator: PersonalDataValidator
 
-    lateinit var errorDrawable : Drawable
-    lateinit var normalBacgroundDrawable : Drawable
+    lateinit var errorDrawable: Drawable
+    lateinit var normalBacgroundDrawable: Drawable
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.sepa_data_entry_fragment, container, false)
         return view
     }
@@ -43,13 +50,13 @@ class SepaDataEntryFragment : Fragment() {
         errorDrawable = resources.getDrawable(R.drawable.edit_text_frame_error)
         normalBacgroundDrawable = resources.getDrawable(R.drawable.edit_text_frame)
         firstNameEditText.getContentOnFocusLost {
-           validateFirstName(it)
+            validateFirstName(it)
         }
         creditCardNumberEditText.getContentOnFocusLost {
             validateIban(it)
         }
         lastNameEditText.getContentOnFocusLost {
-         validateLastName(it)
+            validateLastName(it)
         }
         countryText.setOnClickListener {
             Timber.d("Country selector")
@@ -63,19 +70,17 @@ class SepaDataEntryFragment : Fragment() {
             success = validateCountry(countryText.text.toString()) && success
 
             if (success) {
-                val dataMap : MutableMap<String, String> = mutableMapOf()
+                val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap.put(SepaData.FIRST_NAME, firstNameEditText.getContentsAsString())
                 dataMap.put(SepaData.LAST_NAME, lastNameEditText.getContentsAsString())
                 dataMap.put(SepaData.IBAN, creditCardNumberEditText.getContentsAsString())
                 dataMap.put(BillingData.COUNTRY, countryText.text.toString())
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
-
-
         }
     }
 
-    fun validateFirstName(name : String) : Boolean {
+    fun validateFirstName(name: String): Boolean {
         val validationResult = personalDataValidator.validateName(name)
         if (!validationResult.success) {
             firstNameEditText.background = errorDrawable
@@ -87,7 +92,7 @@ class SepaDataEntryFragment : Fragment() {
         return validationResult.success
     }
 
-    fun validateLastName(name : String) : Boolean {
+    fun validateLastName(name: String): Boolean {
         val validationResult = personalDataValidator.validateName(name)
         if (!validationResult.success) {
             lastNameEditText.background = errorDrawable
@@ -99,11 +104,14 @@ class SepaDataEntryFragment : Fragment() {
         return validationResult.success
     }
 
-    fun validateIban(iban : String) : Boolean {
+    fun validateIban(iban: String): Boolean {
         val validationResult = sepaDataValidator.validateIban(iban)
         if (!validationResult.success) {
             creditCardNumberEditText.background = errorDrawable
-            creditCardNumberEditText.setError(getString(validationResult.errorMessageResourceId), null)
+            creditCardNumberEditText.setError(
+                getString(validationResult.errorMessageResourceId),
+                null
+            )
         } else {
             creditCardNumberEditText.background = normalBacgroundDrawable
             creditCardNumberEditText.setError(null, null)
@@ -111,7 +119,7 @@ class SepaDataEntryFragment : Fragment() {
         return validationResult.success
     }
 
-    fun validateCountry(country : String) : Boolean {
+    fun validateCountry(country: String): Boolean {
         return if (!country.isEmpty()) {
             countryText.background = normalBacgroundDrawable
             countryText.setError(null, null)
@@ -122,8 +130,6 @@ class SepaDataEntryFragment : Fragment() {
             false
         }
     }
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

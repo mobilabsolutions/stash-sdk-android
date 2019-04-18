@@ -16,6 +16,5 @@ class CreditCardData(val number: String, val expiryDate: LocalDate, val cvv: Str
         val CREDIT_CARD_NUMBER = "CREDIT_CARD_NUMBER"
         val EXPIRY_DATE = "EXPIRY_DATE"
         val CVV = "CVV"
-
     }
 }
