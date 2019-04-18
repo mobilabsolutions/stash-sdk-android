@@ -24,7 +24,6 @@ class MainActivity : BaseActivity() {
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
         }
-
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
@@ -34,7 +33,6 @@ class MainActivity : BaseActivity() {
         // BottomNavigationBar with Navigation
         setupBottomNavigationBar()
     }
-
 
     private fun setupBottomNavigationBar() {
         val bottomNavigationView = binding.bottomNavigationView

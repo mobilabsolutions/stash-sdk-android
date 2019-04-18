@@ -23,6 +23,7 @@ class LauncherActivity : AppCompatActivity() {
         Handler().postDelayed({
             startActivity(Intent(this, MainActivity::class.java))
             finish()
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
         }, SPLASH_SCREEN_DURATION)
     }
 }

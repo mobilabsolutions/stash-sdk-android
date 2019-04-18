@@ -6,3 +6,5 @@
 /build
 /javadoc/
 /javadocPublic/
+play-account.json
+release.keystore.key

@@ -13,9 +13,9 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
 class LoadProducts @Inject constructor(
-        dispatchers: AppCoroutineDispatchers,
-        private val schedulers: AppRxSchedulers,
-        private val productRepository: ProductRepository
+    dispatchers: AppCoroutineDispatchers,
+    private val schedulers: AppRxSchedulers,
+    private val productRepository: ProductRepository
 ) : SubjectInteractor<Unit, Unit, List<Product>>() {
     override val dispatcher: CoroutineDispatcher = dispatchers.io
 

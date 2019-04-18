@@ -26,8 +26,5 @@ class PublicApiTest {
 
     @Test
     fun testCardRegistration() {
-
     }
-
-
 }

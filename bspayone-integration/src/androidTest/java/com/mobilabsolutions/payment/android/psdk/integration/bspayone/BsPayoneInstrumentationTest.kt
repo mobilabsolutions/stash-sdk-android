@@ -2,10 +2,12 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import android.app.Application
 import androidx.test.InstrumentationRegistry
-import androidx.test.runner.AndroidJUnit4
-import androidx.test.runner.AndroidJUnitRunner
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.internal.*
+import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentManager
+import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
+import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
+import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
+import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
@@ -15,10 +17,8 @@ import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import org.junit.Assert
 import org.junit.Assert.fail
-import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.threeten.bp.LocalDate
 import timber.log.Timber
 import java.util.concurrent.CountDownLatch
@@ -34,7 +34,6 @@ class BsPayoneRegistrationInstrumentationTest {
 
     @Inject
     lateinit var registrationManager: NewRegistrationManager
-
 
     @Inject
     lateinit var paymentManager: NewPaymentManager
@@ -82,7 +81,7 @@ class BsPayoneRegistrationInstrumentationTest {
         integration.initialize(graph)
 
         graph.injectTest(this)
-        ////Traceur.enableLogging()
+        // //Traceur.enableLogging()
     }
 
     @Ignore("Idempotent-Key needs to be implemented.")
@@ -101,8 +100,6 @@ class BsPayoneRegistrationInstrumentationTest {
                             Assert.assertNotNull(paymentAlias)
                             println("Payment aliasId: $paymentAlias")
                             latch.countDown()
-
-
                         },
                         onError = {
                             Timber.e(it, "Failed")
@@ -113,9 +110,7 @@ class BsPayoneRegistrationInstrumentationTest {
 
         latch.await()
 
-
         registrationDisposable.dispose()
-
     }
 
     @Ignore("Not implemented on backend yet")
@@ -131,7 +126,6 @@ class BsPayoneRegistrationInstrumentationTest {
                             Assert.assertNotNull(paymentAlias)
                             println("Payment aliasId: $paymentAlias")
                             latch.countDown()
-
                         }
 
                 ) { error ->
@@ -174,7 +168,6 @@ class BsPayoneRegistrationInstrumentationTest {
         )
 
         latch.await()
-
     }
 }
 

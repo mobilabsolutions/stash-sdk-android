@@ -42,6 +42,7 @@ before_install:
 - chmod +x .buildscript.sh
 - echo no | android create avd --force -n test -t android-21 --abi armeabi-v7a
 - emulator -avd test -no-audio -no-window &
+- bundle update
 
 before_script:
 - android-wait-for-emulator
@@ -50,7 +51,7 @@ before_script:
 
 install: ./gradlew clean assemble assembleAndroidTest --stacktrace
 
-script: ./gradlew check lib:connectedCheck bspayone-integration:connectedCheck braintree-integration:connectedCheck --stacktrace
+script: ./gradlew check spotlessCheck dependencyUpdates lib:connectedCheck bspayone-integration:connectedCheck braintree-integration:connectedCheck --stacktrace
 
 after_success: ./.buildscript.sh
 

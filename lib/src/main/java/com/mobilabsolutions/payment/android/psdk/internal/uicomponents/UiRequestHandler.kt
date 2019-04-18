@@ -14,13 +14,10 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import org.threeten.bp.LocalDate
-import timber.log.Timber
 import java.lang.RuntimeException
-import java.lang.ref.WeakReference
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -57,7 +54,6 @@ class UiRequestHandler @Inject constructor() {
 
     fun provideHostActivity(activity: AppCompatActivity) {
         hostActivityProvider.onNext(activity)
-
     }
 
     fun chooserCancelled() {
@@ -124,9 +120,7 @@ class UiRequestHandler @Inject constructor() {
             }
         }
         return hostActivityProvider.firstOrError()
-
     }
-
 
     fun handleCreditCardMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition, requestId: Int): Single<Pair<CreditCardData, Map<String, String>>> {
         checkFlow(requestId)
@@ -148,8 +142,6 @@ class UiRequestHandler @Inject constructor() {
 
             Pair(validCreditCardData, mapOf("TEST" to "test"))
         }
-
-
     }
 
     fun handleSepaMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition, requestId: Int): Single<Pair<SepaData, Map<String, String>>> {
@@ -198,7 +190,5 @@ class UiRequestHandler @Inject constructor() {
                         supportFragmentManager.beginTransaction().remove(currentChooserFragment).commitNow()
                     }.firstOrError()
         }
-
     }
-
 }

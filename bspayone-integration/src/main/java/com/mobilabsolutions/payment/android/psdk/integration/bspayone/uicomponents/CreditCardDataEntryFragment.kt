@@ -73,16 +73,12 @@ class CreditCardDataEntryFragment : Fragment() {
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
         Timber.d("Created")
-
-
-
     }
 
     fun validateFirstName(name : String) : Boolean {

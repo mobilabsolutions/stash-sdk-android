@@ -30,16 +30,15 @@ interface RegistrationView : Ui {
     var cvvObservable: Observable<String>
     var expiryDateObservable: Observable<LocalDate>
 
-    var ibanObservable : Observable<String>
-    var bicObservable : Observable<String>
+    var ibanObservable: Observable<String>
+    var bicObservable: Observable<String>
 
-    var sepaOrCCSelectorObservable : Observable<Boolean>
+    var sepaOrCCSelectorObservable: Observable<Boolean>
 
-    fun getParentActivity() : Activity
+    fun getParentActivity(): Activity
 
     fun renderState(registrationViewState: RegistrationViewState)
 }
-
 
 class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), RegistrationView {
     override fun getParentActivity(): Activity = activity as Activity
@@ -66,7 +65,6 @@ class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), Regi
                     registrationViewState.successfullRegistration.first -> "Success: ${registrationViewState.successfullRegistration.second}"
                     else -> ""
                 }
-
     }
 
     override val presenterType: Class<RegistrationPresenter> = RegistrationPresenter::class.java
@@ -109,11 +107,9 @@ class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), Regi
                 val expiryDate = LocalDate.parse(expiryString, formatter)
                 expiryDate
             } catch (parseException: DateTimeParseException) {
-                Timber.i("Invalid date format ${expiryString}")
+                Timber.i("Invalid date format $expiryString")
                 LocalDate.MIN
             }
-
-
         }.cache()
 
 //        creditCardNumberEditText.visibility = View.VISIBLE
@@ -124,9 +120,9 @@ class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), Regi
 //        registerSepaButton.isEnabled = false
 //        registerCreditCardButton.isEnabled = true
 
-        methodSelectorGroup.setOnCheckedChangeListener{
+        methodSelectorGroup.setOnCheckedChangeListener {
             group, checkedId ->
-            when(checkedId) {
+            when (checkedId) {
                 R.id.ccSelectedRadio -> {
                     creditCardNumberEditText.visibility = View.VISIBLE
                     cvvEditText.visibility = View.VISIBLE
@@ -150,5 +146,4 @@ class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), Regi
 
         methodSelectorGroup.check(R.id.ccSelectedRadio)
     }
-
 }

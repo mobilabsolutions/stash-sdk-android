@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.android.psdk.integration.braintree
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
@@ -9,7 +8,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PayPalRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
@@ -29,7 +27,6 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     @Inject
     lateinit var mobilabApiV2: MobilabApiV2
 
-
     companion object : IntegrationCompanion {
         var integration: BraintreeIntegration? = null
 
@@ -45,7 +42,6 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
                     }
                     return integration as Integration
                 }
-
             }
         }
     }
@@ -65,11 +61,9 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
             mobilabApiV2.updateAlias(registrationRequest.standardizedData.aliasId,
                     AliasUpdateRequest(registrationRequest.additionalData.extraData[NONCE])).blockingAwait()
             Single.just(registrationRequest.standardizedData.aliasId)
-
         } else {
             Single.just(registrationRequest.additionalData.extraData[NONCE])
         }
-
     }
 
     override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
@@ -78,9 +72,5 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
 
     override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
         return braintreeHandler.tokenizePaymentMethods(activity).flatMap { Single.just(mapOf(NONCE to it)) }
-
     }
 }
-
-
-

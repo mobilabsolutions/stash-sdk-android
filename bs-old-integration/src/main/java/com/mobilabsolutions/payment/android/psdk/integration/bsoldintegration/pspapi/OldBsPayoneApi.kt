@@ -14,9 +14,8 @@ interface OldBsPayoneApi {
     @POST("services/XmlApi")
     @Headers("Content-Type: application/soap+xml; charset=UTF-8")
     fun registerCreditCard(
-            @Header("Authorization") authorization : String,
-            @Body bsPayonePaymentRequest: BsPayonePaymentRequest)
-    : Single<BsPayonePaymentResponse>
-
-
+        @Header("Authorization") authorization: String,
+        @Body bsPayonePaymentRequest: BsPayonePaymentRequest
+    ):
+    Single<BsPayonePaymentResponse>
 }

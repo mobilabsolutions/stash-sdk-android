@@ -15,7 +15,9 @@ import javax.inject.Singleton
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
-@Module
+@Module(includes = [
+    AppModuleBinds::class
+])
 class AppModule {
 
     @Provides

@@ -1,33 +1,33 @@
-//package com.mobilabsolutions.payment.android.newapi
+// package com.mobilabsolutions.payment.android.newapi
 //
-//import android.app.Application
-//import android.os.Build
-//import androidx.test.InstrumentationRegistry
-//import com.mobilabsolutions.payment.android.BuildConfig
-//import com.mobilabsolutions.payment.android.psdk.exceptions.backend.UnknownBackendException
-//import com.mobilabsolutions.payment.android.psdk.internal.*
-//import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
-//import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-//import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
-//import com.mobilabsolutions.payment.android.psdk.model.BillingData
-//import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-//import com.mobilabsolutions.payment.android.psdk.model.PaymentData
-////import com.tspoon.traceur.Traceur
-//import dagger.Component
-//import io.reactivex.schedulers.Schedulers
-//import org.junit.Assert;
-//import org.junit.Before
-//import org.junit.Test
-//import org.threeten.bp.LocalDate
-//import timber.log.Timber
-//import java.util.concurrent.CountDownLatch
-//import javax.inject.Inject
-//import javax.inject.Singleton
+// import android.app.Application
+// import android.os.Build
+// import androidx.test.InstrumentationRegistry
+// import com.mobilabsolutions.payment.android.BuildConfig
+// import com.mobilabsolutions.payment.android.psdk.exceptions.backend.UnknownBackendException
+// import com.mobilabsolutions.payment.android.psdk.internal.*
+// import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
+// import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
+// import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
+// import com.mobilabsolutions.payment.android.psdk.model.BillingData
+// import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+// import com.mobilabsolutions.payment.android.psdk.model.PaymentData
+// //import com.tspoon.traceur.Traceur
+// import dagger.Component
+// import io.reactivex.schedulers.Schedulers
+// import org.junit.Assert;
+// import org.junit.Before
+// import org.junit.Test
+// import org.threeten.bp.LocalDate
+// import timber.log.Timber
+// import java.util.concurrent.CountDownLatch
+// import javax.inject.Inject
+// import javax.inject.Singleton
 //
-///**
+// /**
 // * @author [Ugi](ugi@mobilabsolutions.com)
 // */
-//class OldBSPaymentInstrumentationTests {
+// class OldBSPaymentInstrumentationTests {
 //    //QEvuprLEfAesqaVxfHOmNxRtKFNAaVyX
 //    //mOQIxngxMduuvqgTlBycdKHfCpMqwTCy
 //
@@ -38,9 +38,9 @@
 //
 //    //    var creditCardAlias = BuildConfig.oldBsExistingCcAlias
 //    var creditCardAlias = "QEvuprLEfAesqaVxfHOmNxRtKFNAaVyX"
-////    var sepaAlias = BuildConfig.oldBsExistingSepaAlias
+// //    var sepaAlias = BuildConfig.oldBsExistingSepaAlias
 //    var sepaAlias = "YUJokVWXCbvGTLVNxhBtoYdpcoNzCGMr"
-////    var sepaAlias = "wIChkvSAAPLLhLrAHNdvTjeDjibfhoDc"
+// //    var sepaAlias = "wIChkvSAAPLLhLrAHNdvTjeDjibfhoDc"
 //    var paymentData: PaymentData = PaymentData(
 //            amount = 100,
 //            currency = "EUR",
@@ -219,10 +219,10 @@
 //        paymentDisposable.dispose()
 //    }
 //
-//}
+// }
 //
-//@Singleton
-//@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
-//internal interface TestOldBsPaymentSdkComponent : PaymentSdkComponent {
+// @Singleton
+// @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+// internal interface TestOldBsPaymentSdkComponent : PaymentSdkComponent {
 //    fun injectTest(test: OldBSPaymentInstrumentationTests)
-//}
+// }

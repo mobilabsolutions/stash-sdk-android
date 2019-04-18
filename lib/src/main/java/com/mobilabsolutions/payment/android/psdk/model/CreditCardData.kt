@@ -6,10 +6,10 @@ import org.threeten.bp.LocalDate
  * This class models data needed to register a credit card as a payment method
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
-class CreditCardData(val number: String, val expiryDate: LocalDate, val cvv: String, val holder: String, additionalData : Map<String, String> = emptyMap()) {
+class CreditCardData(val number: String, val expiryDate: LocalDate, val cvv: String, val holder: String, additionalData: Map<String, String> = emptyMap()) {
     companion object {
         @JvmStatic
-        fun create(number: String, expiryDate: LocalDate, cvv: String, holder: String) : CreditCardData {
+        fun create(number: String, expiryDate: LocalDate, cvv: String, holder: String): CreditCardData {
             return CreditCardData(number, expiryDate, cvv, holder)
         }
 
@@ -19,4 +19,3 @@ class CreditCardData(val number: String, val expiryDate: LocalDate, val cvv: Str
 
     }
 }
-

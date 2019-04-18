@@ -5,7 +5,7 @@ package com.mobilabsolutions.payment.android.psdk.model
  *
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
-data class PaymentData (
+data class PaymentData(
     var customerId: String = "",
     var amount: Int = 0,
     var currency: String = "",

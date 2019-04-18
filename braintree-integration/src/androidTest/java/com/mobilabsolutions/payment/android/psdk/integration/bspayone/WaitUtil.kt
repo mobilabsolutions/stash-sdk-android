@@ -6,7 +6,6 @@ import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.ViewAction
 import org.hamcrest.Matcher
 
-
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */

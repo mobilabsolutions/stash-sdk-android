@@ -1,5 +1,7 @@
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
+val haveFabricApiKey = propOrDefWithTravis(DemoRelease.fabricApiKey, "").isNotEmpty()
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -8,10 +10,17 @@ plugins {
     id("com.github.ben-manes.versions")
     id("androidx.navigation.safeargs.kotlin")
 }
+if (haveFabricApiKey) {
+    apply(plugin = "io.fabric")
+}
 
 kapt {
     correctErrorTypes = true
     useBuildCache = true
+}
+
+androidExtensions {
+    isExperimental = true
 }
 
 android {
@@ -21,14 +30,27 @@ android {
         applicationId = "com.mobilabsolutions.payment.sample"
         minSdkVersion(PaymentSdkBuildConfigs.minSdk)
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, DemoRelease.versionCode).toInt()
+        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, DemoRelease.versionName)
+        vectorDrawables.useSupportLibrary = true
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = mapOf("room.schemaLocation" to "$projectDir/schemas")
             }
+        }
+
+        manifestPlaceholders = mapOf("fabric-api-key" to propOrDefWithTravis(DemoRelease.fabricApiKey, ""))
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = rootProject.file("signing/debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
         }
     }
 
@@ -38,10 +60,14 @@ android {
             buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
             buildConfigField("String", "oldBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, "") + "\"")
             buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsTestKey, "") + "\"")
+
             applicationIdSuffix = ".debug"
             versionNameSuffix = ".debug"
+            signingConfig = signingConfigs.getByName("debug")
         }
         getByName("release") {
+            signingConfig = signingConfigs.getByName("debug")
+
             buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
             buildConfigField("String", "oldBsTestKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsTestKey, "") + "\"")
             buildConfigField("String", "oldBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.oldBsApiUrl, "") + "\"")
@@ -65,9 +91,24 @@ android {
     lintOptions {
         isAbortOnError = false
     }
+    packagingOptions {
+        pickFirst("META-INF/atomicfu.kotlin_module")
+    }
+
 }
 
 dependencies {
+    testImplementation(Libs.junit)
+
+    androidTestImplementation(Libs.AndroidX.appcompat)
+    androidTestImplementation(Libs.AndroidX.constraintlayout)
+
+    androidTestImplementation(Libs.AndroidX.Test.runner)
+    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.espressoIntents)
+    androidTestImplementation(Libs.AndroidX.Test.rules)
+    androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
+
     implementation(project(Modules.paymentSdk)) //Core
     implementation(project(Modules.bsPayoneIntegration))
     implementation(project(Modules.braintreeIntegration))
@@ -77,6 +118,8 @@ dependencies {
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.coreKtx)
+    implementation(Libs.AndroidX.cardview)
+
     implementation(Libs.Google.material)
 
     implementation(Libs.timber)
@@ -113,6 +156,10 @@ dependencies {
 
     implementation(Libs.mvrx)
 
+    implementation(Libs.Epoxy.epoxy)
+    implementation(Libs.Epoxy.dataBinding)
+    kapt(Libs.Epoxy.processor)
+
     implementation(Libs.AndroidX.Navigation.fragment)
     implementation(Libs.AndroidX.Navigation.ui)
 
@@ -126,17 +173,10 @@ dependencies {
     implementation(Libs.Epoxy.dataBinding)
     kapt(Libs.Epoxy.processor)
 
+    implementation(Libs.Google.crashlytics) {
+        isTransitive = true
+    }
 
-    testImplementation(Libs.junit)
-
-    androidTestImplementation(Libs.AndroidX.appcompat)
-    androidTestImplementation(Libs.AndroidX.constraintlayout)
-
-    androidTestImplementation(Libs.AndroidX.Test.runner)
-    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
-    androidTestImplementation(Libs.AndroidX.Test.espressoIntents)
-    androidTestImplementation(Libs.AndroidX.Test.rules)
-    androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
 }
 
 tasks.named<DependencyUpdatesTask>("dependencyUpdates") {

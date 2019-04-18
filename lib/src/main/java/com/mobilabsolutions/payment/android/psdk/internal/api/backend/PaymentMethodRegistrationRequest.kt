@@ -8,7 +8,7 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
  */
 class PaymentMethodRegistrationRequest {
     var accountData: SepaData? = null
-        //TODO temporary until we move billing data
+        // TODO temporary until we move billing data
         set(value) {
             field = value
             billingData = if (value != null) {
@@ -26,6 +26,6 @@ class PaymentMethodRegistrationRequest {
     var cardMask: String? = null
     var customerId: String? = null
     var oneTimePayment: Boolean = false
-    //TODO temporary
+    // TODO temporary
     private var billingData: BillingData? = null
 }

@@ -4,14 +4,12 @@ import com.mobilabsolutions.commonsv3.mvp.presenter.CommonPresenter
 import com.mobilabsolutions.payment.android.psdk.exceptions.ProviderOriginatedException
 import com.mobilabsolutions.payment.android.psdk.exceptions.other.TemporaryException
 import com.mobilabsolutions.payment.android.psdk.exceptions.payment.PaymentFailedException
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 /**
@@ -57,7 +55,6 @@ class PaymentPresenter : CommonPresenter<PaymentView>() {
                     ui.reasonObservable
             ) { amount: String, currency: String, paymentMethod: String, reason: String ->
                 Timber.d("Got $amount, $currency, $paymentMethod, $reason")
-
             }.subscribe()
             )
         }
@@ -71,7 +68,7 @@ class PaymentPresenter : CommonPresenter<PaymentView>() {
                     ui.paymentMethodObservable,
                     ui.reasonObservable
             ) { amount: String, currency: String, paymentMethod: String, reason: String ->
-                Timber.d("Executing payment ${reason}")
+                Timber.d("Executing payment $reason")
                 paymentController.executePayment(paymentMethodMap[paymentMethod]!!, amount.toInt(), reason, currency)
             }.take(1).flatMapSingle { it }
 
@@ -97,5 +94,4 @@ class PaymentPresenter : CommonPresenter<PaymentView>() {
             )
         }
     }
-
 }

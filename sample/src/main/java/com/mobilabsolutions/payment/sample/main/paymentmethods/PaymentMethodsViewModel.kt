@@ -4,6 +4,10 @@ import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
+import com.mobilabsolutions.payment.sample.core.launchInteractor
+import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
+import com.mobilabsolutions.payment.sample.data.interactors.DeletePaymentMethod
+import com.mobilabsolutions.payment.sample.data.interactors.LoadPaymentMethods
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -12,8 +16,10 @@ import com.squareup.inject.assisted.AssistedInject
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
 class PaymentMethodsViewModel @AssistedInject constructor(
-        @Assisted initialStateMethods: PaymentMethodsViewState,
-        private val schedulers: AppRxSchedulers
+    @Assisted initialStateMethods: PaymentMethodsViewState,
+    schedulers: AppRxSchedulers,
+    loadPaymentMethods: LoadPaymentMethods,
+    private val deletePaymentMethod: DeletePaymentMethod
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
     @AssistedInject.Factory
     interface Factory {
@@ -25,5 +31,22 @@ class PaymentMethodsViewModel @AssistedInject constructor(
             val methodsFragment: PaymentMethodsFragment = (viewModelContext as FragmentViewModelContext).fragment()
             return methodsFragment.paymentMethodsViewModelFactory.create(state)
         }
+    }
+
+    init {
+        loadPaymentMethods.observe()
+                .subscribeOn(schedulers.io)
+                .execute {
+                    copy(paymentMethods = it() ?: emptyList())
+                }
+
+        loadPaymentMethods.setParams(Unit)
+    }
+
+    fun onAddBtnClicked() {
+    }
+
+    fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
+        scope.launchInteractor(deletePaymentMethod, DeletePaymentMethod.ExecuteParams(paymentMethod))
     }
 }

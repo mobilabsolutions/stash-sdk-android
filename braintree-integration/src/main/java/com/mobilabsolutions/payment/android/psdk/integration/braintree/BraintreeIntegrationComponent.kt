@@ -10,7 +10,7 @@ import dagger.Component
 @IntegrationScope
 @Component(dependencies = arrayOf(PaymentSdkComponent::class), modules = arrayOf(BraintreeModule::class))
 interface BraintreeIntegrationComponent {
-    fun inject(integration : BraintreeIntegration)
+    fun inject(integration: BraintreeIntegration)
 
     fun inject(payPalActivity: BraintreePayPalActivity)
 }

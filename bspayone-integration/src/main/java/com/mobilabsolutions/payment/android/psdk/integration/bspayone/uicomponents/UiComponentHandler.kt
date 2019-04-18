@@ -29,7 +29,6 @@ class UiComponentHandler @Inject constructor() {
         }.firstOrError()
     }
 
-
     fun handleCreditCardDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
         dataSubject = PublishSubject.create()
         val creditCardDataEntryFragment = CreditCardDataEntryFragment()
@@ -38,5 +37,4 @@ class UiComponentHandler @Inject constructor() {
             activity.supportFragmentManager.beginTransaction().remove(creditCardDataEntryFragment).commitNow()
         }.firstOrError()
     }
-
 }

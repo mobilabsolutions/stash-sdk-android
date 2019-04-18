@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.sample.data.entities
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 /**
@@ -11,8 +12,14 @@ import androidx.room.PrimaryKey
         tableName = "product"
 )
 data class Product(
-        @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
-        @ColumnInfo val name: String? = null,
-        @ColumnInfo val description: String? = null,
-        @ColumnInfo val price: Int = 0
-) : SampleEntity
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
+    @ColumnInfo val name: String? = null,
+    @ColumnInfo val image: Int = 0,
+    @ColumnInfo val description: String? = null,
+    @ColumnInfo val price: Int = 0
+) : SampleEntity {
+    @delegate:Ignore
+    val productType by lazy(LazyThreadSafetyMode.NONE) {
+        ProductType.fromProductName(name ?: "")
+    }
+}

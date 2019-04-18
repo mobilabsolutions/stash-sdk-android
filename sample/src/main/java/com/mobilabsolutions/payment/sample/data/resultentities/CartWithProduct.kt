@@ -4,7 +4,7 @@ import androidx.room.Embedded
 import androidx.room.Relation
 import com.mobilabsolutions.payment.sample.data.entities.Cart
 import com.mobilabsolutions.payment.sample.data.entities.Product
-import java.util.*
+import java.util.Objects
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.

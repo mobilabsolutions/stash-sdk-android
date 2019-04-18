@@ -12,9 +12,9 @@ import dagger.Component
 @IntegrationScope
 @Component(dependencies = arrayOf(PaymentSdkComponent::class), modules = arrayOf(BsPayoneModule::class))
 interface BsPayoneIntegrationComponent {
-    fun inject(integration : BsPayoneIntegration)
+    fun inject(integration: BsPayoneIntegration)
 
-    fun inject(creditCardFragment : CreditCardDataEntryFragment)
+    fun inject(creditCardFragment: CreditCardDataEntryFragment)
 
     fun inject(sepaDataEntryFragment: SepaDataEntryFragment)
 }

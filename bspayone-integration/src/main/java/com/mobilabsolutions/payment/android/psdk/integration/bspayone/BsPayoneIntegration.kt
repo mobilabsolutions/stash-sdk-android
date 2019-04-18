@@ -1,13 +1,16 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.UiComponentHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,8 +20,8 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BsPayoneIntegration private constructor(
-        paymentSdkComponent: PaymentSdkComponent,
-        val url: String = BuildConfig.newBsApiUrl
+    paymentSdkComponent: PaymentSdkComponent,
+    val url: String = BuildConfig.newBsApiUrl
 ) : Integration {
     override val identifier = "BS_PAYONE"
 
@@ -27,7 +30,6 @@ class BsPayoneIntegration private constructor(
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
-
 
     companion object : IntegrationCompanion {
         var integration: BsPayoneIntegration? = null
@@ -48,11 +50,9 @@ class BsPayoneIntegration private constructor(
                     }
                     return integration as Integration
                 }
-
             }
         }
     }
-
 
     val bsPayoneIntegrationComponent: BsPayoneIntegrationComponent
 
@@ -64,7 +64,6 @@ class BsPayoneIntegration private constructor(
 
         bsPayoneIntegrationComponent.inject(this)
     }
-
 
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
         val standardizedData = registrationRequest.standardizedData
@@ -112,9 +111,5 @@ class BsPayoneIntegration private constructor(
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity).observeOn(AndroidSchedulers.mainThread())
             PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
         }
-
     }
 }
-
-
-

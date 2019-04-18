@@ -3,8 +3,10 @@ package com.mobilabsolutions.payment.sample.data
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.mobilabsolutions.payment.sample.data.daos.CartDao
+import com.mobilabsolutions.payment.sample.data.daos.PaymentMethodDao
 import com.mobilabsolutions.payment.sample.data.daos.ProductDao
 import com.mobilabsolutions.payment.sample.data.entities.Cart
+import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.data.entities.Product
 
 /**
@@ -13,11 +15,13 @@ import com.mobilabsolutions.payment.sample.data.entities.Product
 @Database(
         entities = [
             Product::class,
-            Cart::class
+            Cart::class,
+            PaymentMethod::class
         ],
-        version = 1
+        version = 2
 )
 abstract class SampleDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
     abstract fun cartDao(): CartDao
+    abstract fun paymentMethodDao(): PaymentMethodDao
 }
