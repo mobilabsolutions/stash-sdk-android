@@ -98,7 +98,7 @@ class PspCoordinator @Inject constructor(
                 billingData,
                 additionalUIData,
                 integrations
-                        .filter { it.supportsPaymentMethods(PaymentMethodType.CREDITCARD) }
+                        .filter { it.supportsPaymentMethods(PaymentMethodType.CC) }
                         .first()
                         .identifier,
                 idempotencyKey
@@ -189,7 +189,7 @@ class PspCoordinator @Inject constructor(
 
     fun registerCreditCardUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<String> {
         val selectedPaymentMethodDefinition = integrations.flatMap {
-            it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.CREDITCARD }
+            it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.CC }
         }.first()
         return registerCreditCardUsingUIComponent(activity, selectedPaymentMethodDefinition, idempotencyKey, requestId)
     }
@@ -219,7 +219,7 @@ class PspCoordinator @Inject constructor(
         return resolvedPaymentMethodType.flatMap {
             when (it) {
                 PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity, idempotencyKey, requestId)
-                PaymentMethodType.CREDITCARD -> registerCreditCardUsingUIComponent(activity, idempotencyKey, requestId)
+                PaymentMethodType.CC -> registerCreditCardUsingUIComponent(activity, idempotencyKey, requestId)
                 PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity, idempotencyKey, requestId)
             }
         }.onErrorResumeNext {

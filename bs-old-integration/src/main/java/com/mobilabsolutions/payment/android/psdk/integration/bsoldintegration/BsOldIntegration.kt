@@ -80,7 +80,7 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url: String
                 PaymentMethodDefinition(
                         methodId = "BsP-CC-1234",
                         pspIdentifier = identifier,
-                        paymentMethodType = PaymentMethodType.CREDITCARD
+                        paymentMethodType = PaymentMethodType.CC
                 )
         )
     }

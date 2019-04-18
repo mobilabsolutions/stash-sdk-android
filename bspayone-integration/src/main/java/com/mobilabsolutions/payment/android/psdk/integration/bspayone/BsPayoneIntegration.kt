@@ -91,7 +91,7 @@ class BsPayoneIntegration private constructor(
     val creditCardUIDefinition = PaymentMethodDefinition(
             methodId = "BsP-CC-1234",
             pspIdentifier = identifier,
-            paymentMethodType = PaymentMethodType.CREDITCARD
+            paymentMethodType = PaymentMethodType.CC
     )
 
     val sepaUIDefinition = PaymentMethodDefinition(
@@ -106,7 +106,7 @@ class BsPayoneIntegration private constructor(
 
     override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
         return when (paymentMethodDefinition.paymentMethodType) {
-            PaymentMethodType.CREDITCARD -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
+            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity)
             PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
         }

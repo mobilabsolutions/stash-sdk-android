@@ -16,6 +16,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -40,7 +41,8 @@ class UiRequestHandler @Inject constructor() {
 
     private var startedNewTask = false
 
-    var hostActivityProvider: ReplaySubject<AppCompatActivity> = ReplaySubject.create<AppCompatActivity>()
+    var hostActivityProvider: ReplaySubject<AppCompatActivity> =
+        ReplaySubject.create<AppCompatActivity>()
 
     lateinit var paymentMethodTypeSubject: ReplaySubject<PaymentMethodType>
 
@@ -108,11 +110,13 @@ class UiRequestHandler @Inject constructor() {
         if (!hostActivityProvider.hasValue()) {
             if (activity != null) {
                 startedNewTask = false
-                val launchHostIntent = Intent(activity, RegistrationProccessHostActivity::class.java)
+                val launchHostIntent =
+                    Intent(activity, RegistrationProccessHostActivity::class.java)
                 activity.startActivity(launchHostIntent)
             } else {
                 startedNewTask = true
-                val launchHostIntent = Intent(applicationContext, RegistrationProccessHostActivity::class.java)
+                val launchHostIntent =
+                    Intent(applicationContext, RegistrationProccessHostActivity::class.java)
                 launchHostIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
                 applicationContext.startActivity(launchHostIntent)
             }
@@ -120,73 +124,111 @@ class UiRequestHandler @Inject constructor() {
         return hostActivityProvider.firstOrError()
     }
 
-    fun handleCreditCardMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition, requestId: Int): Single<Pair<CreditCardData, Map<String, String>>> {
+    fun handleCreditCardMethodEntryRequest(
+        activity: Activity?,
+        integration: Integration,
+        definition: PaymentMethodDefinition,
+        requestId: Int
+    ): Single<Pair<CreditCardData, Map<String, String>>> {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
         return hostActivitySingle.flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.ENTRY)
+            (hostActivity as RegistrationProccessHostActivity).setState(
+                RegistrationProccessHostActivity.CurrentState.ENTRY
+            )
             integration.handlePaymentMethodEntryRequest(hostActivity, definition)
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .doFinally {
-                        flowCompleted(hostActivity)
-                    }.ambWith(errorSubject.firstOrError())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .doFinally {
+                    flowCompleted(hostActivity)
+                }.ambWith(errorSubject.firstOrError())
         }.map {
             val validCreditCardData = CreditCardData(
-                    "4111111111111111",
-                    LocalDate.of(2021, 1, 1),
-                    "123",
-                    "Holder Holderman"
+                it.getValue(CreditCardData.CREDIT_CARD_NUMBER),
+                LocalDate.parse(
+                    it.getValue(CreditCardData.EXPIRY_DATE) + "/01",
+                    DateTimeFormatter.ofPattern("MM/yy/dd")
+                ),
+                it.getValue(CreditCardData.CVV),
+                it.getValue(BillingData.FIRST_NAME) + " " + it.getValue(BillingData.LAST_NAME)
             )
+            val additionalDataMap : Map<String, String> = emptyMap()
 
-            Pair(validCreditCardData, mapOf("TEST" to "test"))
+            Pair(validCreditCardData, additionalDataMap)
         }
     }
 
-    fun handleSepaMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition, requestId: Int): Single<Pair<SepaData, Map<String, String>>> {
+    fun handleSepaMethodEntryRequest(
+        activity: Activity?,
+        integration: Integration,
+        definition: PaymentMethodDefinition,
+        requestId: Int
+    ): Single<Pair<SepaData, Map<String, String>>> {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
         var validSepaData = SepaData("PBNKDEFF", "DE42721622981375897982", "Holder Holderman")
         return hostActivitySingle.flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.ENTRY)
+            (hostActivity as RegistrationProccessHostActivity).setState(
+                RegistrationProccessHostActivity.CurrentState.ENTRY
+            )
             integration.handlePaymentMethodEntryRequest(hostActivity, definition)
-                    .subscribeOn(AndroidSchedulers.mainThread())
-                    .doFinally {
-                        flowCompleted(hostActivity)
-                    }.ambWith(errorSubject.firstOrError())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .doFinally {
+                    flowCompleted(hostActivity)
+                }.ambWith(errorSubject.firstOrError())
         }.map {
-            SepaData(iban = it.getValue(SepaData.IBAN), holder = it.getValue(SepaData.FIRST_NAME) + " " + it.getValue(SepaData.LAST_NAME))
-            Pair(validSepaData, mapOf(BillingData.COUNTRY to it.getValue(BillingData.COUNTRY)))
+            val sepaData = SepaData(
+                iban = it.getValue(SepaData.IBAN),
+                holder = it.getValue(SepaData.FIRST_NAME) + " " + it.getValue(SepaData.LAST_NAME)
+            )
+            Pair(sepaData, mapOf(BillingData.COUNTRY to it.getValue(BillingData.COUNTRY)))
         }
     }
 
-    fun handlePaypalMethodEntryRequest(activity: Activity?, integration: Integration, definition: PaymentMethodDefinition, requestId: Int): Single<Map<String, String>> {
+    fun handlePaypalMethodEntryRequest(
+        activity: Activity?,
+        integration: Integration,
+        definition: PaymentMethodDefinition,
+        requestId: Int
+    ): Single<Map<String, String>> {
         checkFlow(requestId)
         return launchHostActivity(activity).flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.ENTRY)
-            integration.handlePaymentMethodEntryRequest(hostActivity, PaymentMethodDefinition("", "BRAINTREE", PaymentMethodType.PAYPAL))
-                    .doFinally {
-                        flowCompleted(hostActivity)
-                    }.ambWith(errorSubject.firstOrError())
+            (hostActivity as RegistrationProccessHostActivity).setState(
+                RegistrationProccessHostActivity.CurrentState.ENTRY
+            )
+            integration.handlePaymentMethodEntryRequest(
+                hostActivity,
+                PaymentMethodDefinition("", "BRAINTREE", PaymentMethodType.PAYPAL)
+            )
+                .doFinally {
+                    flowCompleted(hostActivity)
+                }.ambWith(errorSubject.firstOrError())
         }
     }
 
-    fun askUserToChosePaymentMethod(activity: Activity? = null, requestId: Int): Single<PaymentMethodType> {
+    fun askUserToChosePaymentMethod(
+        activity: Activity? = null,
+        requestId: Int
+    ): Single<PaymentMethodType> {
         checkFlow(requestId)
         chooserUsed = true
         return launchHostActivity(activity).flatMap { hostActivity ->
             val supportFragmentManager = hostActivity.supportFragmentManager
-            (hostActivity as RegistrationProccessHostActivity).setState(RegistrationProccessHostActivity.CurrentState.CHOOSER)
+            (hostActivity as RegistrationProccessHostActivity).setState(
+                RegistrationProccessHostActivity.CurrentState.CHOOSER
+            )
             paymentMethodTypeSubject = ReplaySubject.create()
             val paymentMethodChoiceFragment = PaymentMethodChoiceFragment()
             currentChooserFragment = paymentMethodChoiceFragment
-            supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, paymentMethodChoiceFragment).commitNow()
+            supportFragmentManager.beginTransaction()
+                .add(R.id.host_activity_fragment, paymentMethodChoiceFragment).commitNow()
             paymentMethodTypeSubject
-                    .doOnError {
-                        flowCompleted(hostActivity)
-                    }
-                    .doOnNext {
-                        supportFragmentManager.beginTransaction().remove(currentChooserFragment).commitNow()
-                    }.firstOrError()
+                .doOnError {
+                    flowCompleted(hostActivity)
+                }
+                .doOnNext {
+                    supportFragmentManager.beginTransaction().remove(currentChooserFragment)
+                        .commitNow()
+                }.firstOrError()
         }
     }
 }
