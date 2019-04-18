@@ -35,6 +35,7 @@
                 android:layout_width="46dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="8dp"
+                android:background="@drawable/ripple_rounded_corner_box_white"
                 android:contentDescription="@string/image_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -48,13 +49,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@{paymentMethod._type}"
-                android:textColor="@color/darkBlack"
-                android:textSize="16sp"
+                android:textAppearance="@style/itemTitle"
                 app:layout_constraintBottom_toTopOf="@+id/payment_alias"
                 app:layout_constraintStart_toEndOf="@id/payment_type_icon"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed"
-                tools:text="CREDIT CARD" />
+                tools:text="@string/payment_type_placeholder" />
 
             <TextView
                 android:id="@+id/payment_alias"
@@ -62,12 +62,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="@{paymentMethod.alias}"
-                android:textColor="@color/coolGray"
-                android:textSize="12sp"
+                android:textAppearance="@style/itemDescription"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/payment_type_icon"
                 app:layout_constraintTop_toBottomOf="@+id/payment_name"
-                tools:text="maxmustermann@gmail.com" />
+                tools:text="@string/payment_type_alias_placeholder" />
 
             <ImageView
                 android:id="@+id/btn_delete"

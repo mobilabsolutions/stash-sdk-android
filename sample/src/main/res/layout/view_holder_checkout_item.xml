@@ -41,7 +41,7 @@
 
             <ImageView
                 android:id="@+id/product_image"
-                android:layout_width="80dp"
+                android:layout_width="81dp"
                 android:layout_height="88dp"
                 android:contentDescription="@string/image_description"
                 app:imageByProductType="@{product}"
@@ -50,18 +50,16 @@
                 tools:src="@drawable/image_card_01" />
 
             <TextView
-                android:id="@+id/product_name"
+                android:id="@+id/product_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lato_bold"
                 android:paddingStart="8dp"
-                android:paddingEnd="16dp"
-                android:text="@{product.name}"
-                android:textColor="@color/darkBlack"
-                android:textSize="16sp"
+                android:text="@{product.name, default=@string/item_title}"
+                android:textAppearance="@style/itemTitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/product_image"
                 app:layout_constraintTop_toTopOf="parent"
+                tools:ignore="RtlSymmetry"
                 tools:text="Name" />
 
             <TextView
@@ -69,13 +67,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:maxLines="2"
                 android:paddingStart="8dp"
-                android:paddingEnd="16dp"
-                android:text="@{product.description}"
-                android:textColor="@color/coolGray"
-                android:textSize="12sp"
+                android:text="@{product.description, default=@string/item_description}"
+                android:textAppearance="@style/itemDescription"
                 app:layout_constraintStart_toEndOf="@+id/product_image"
-                app:layout_constraintTop_toBottomOf="@+id/product_name"
+                app:layout_constraintTop_toBottomOf="@+id/product_title"
+                tools:ignore="RtlSymmetry"
                 tools:text="Desc" />
 
             <TextView
@@ -84,18 +82,18 @@
                 android:layout_height="wrap_content"
                 android:paddingStart="8dp"
                 android:paddingEnd="16dp"
-                android:textColor="@color/aquaMarine"
-                android:textSize="16sp"
+                android:textAppearance="@style/itemPrice"
                 app:layout_constraintBottom_toBottomOf="@+id/product_image"
                 app:layout_constraintStart_toEndOf="@+id/product_image"
                 app:priceWithCurrency="@{product.price}"
-                tools:text="price" />
+                tools:text="@string/price_placeholder" />
 
             <ImageView
                 android:id="@+id/btn_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
                 android:background="@drawable/ripple_circle_grey"
                 android:contentDescription="@string/image_description"
                 android:onClick="@{removeClickListener}"
@@ -112,6 +110,7 @@
                 android:layout_marginEnd="10dp"
                 android:text="@{quantity}"
                 android:textColor="@color/darkBlack"
+                android:textSize="16sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/btn_add"
                 app:layout_constraintTop_toTopOf="parent"
@@ -130,7 +129,6 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

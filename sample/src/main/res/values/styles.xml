@@ -30,5 +30,22 @@
         <item name="android:fontFamily">@font/lato</item>
     </style>
 
+    <style name="itemTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/darkBlack</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/lato_bold</item>
+    </style>
+
+    <style name="itemDescription" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/coolGray</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:fontFamily">@font/lato</item>
+    </style>
+
+    <style name="itemPrice" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/aquaMarine</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/lato</item>
+    </style>
 
 </resources>
