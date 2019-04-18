@@ -1,32 +1,32 @@
-//package com.mobilabsolutions.payment.android.newapi
+// package com.mobilabsolutions.payment.android.newapi
 //
-//import android.app.Application
-//import androidx.test.InstrumentationRegistry
-//import com.mobilabsolutions.payment.android.BuildConfig
-//import com.mobilabsolutions.payment.android.psdk.internal.*
-//import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-//import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
-//import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-//import com.mobilabsolutions.payment.android.psdk.model.PaymentData
-//import com.mobilabsolutions.payment.android.psdk.model.SepaData
-//import dagger.Component
-//import io.reactivex.rxkotlin.subscribeBy
-//import io.reactivex.schedulers.Schedulers
-//import org.junit.Assert
-//import org.junit.Before
-//import org.junit.Test
-//import org.threeten.bp.LocalDate
-//import java.util.concurrent.CountDownLatch
-//import javax.inject.Inject
-//import javax.inject.Singleton
+// import android.app.Application
+// import androidx.test.InstrumentationRegistry
+// import com.mobilabsolutions.payment.android.BuildConfig
+// import com.mobilabsolutions.payment.android.psdk.internal.*
+// import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
+// import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
+// import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+// import com.mobilabsolutions.payment.android.psdk.model.PaymentData
+// import com.mobilabsolutions.payment.android.psdk.model.SepaData
+// import dagger.Component
+// import io.reactivex.rxkotlin.subscribeBy
+// import io.reactivex.schedulers.Schedulers
+// import org.junit.Assert
+// import org.junit.Before
+// import org.junit.Test
+// import org.threeten.bp.LocalDate
+// import java.util.concurrent.CountDownLatch
+// import javax.inject.Inject
+// import javax.inject.Singleton
 //
-///**
+// /**
 // * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
 //
 // */
 //
 //
-//class BsPayoneRegistrationInstrumentationTest {
+// class BsPayoneRegistrationInstrumentationTest {
 //    val testPublicKey = BuildConfig.newBsTestKey
 //    val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 //    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
@@ -98,34 +98,34 @@
 //
 //    }
 //
-////    @Test
-////    fun testBSCreditCardPayment() {
-////        val latch = CountDownLatch(1)
-////
-////        val paymentDisposable = paymentManager.executeCreditCardPaymentWithAlias(
-////                ccAlias,
-////                paymentData
-////        )
-////                .subscribeOn(Schedulers.io())
-////                .subscribe(
-////                        { transactionId ->
-////                            Assert.assertNotNull(transactionId)
-////                            println("Transaction: $transactionId")
-////                            latch.countDown()
-////
-////                        }
-////                ) { error ->
-////                    Timber.e(error, "BS credit card payment failed")
-////                    Assert.fail(error.message)
-////                }
-////        try {
-////            latch.await()
-////        } catch (e: InterruptedException) {
-////            e.printStackTrace()
-////        }
-////
-////        paymentDisposable.dispose()
-////    }
+// //    @Test
+// //    fun testBSCreditCardPayment() {
+// //        val latch = CountDownLatch(1)
+// //
+// //        val paymentDisposable = paymentManager.executeCreditCardPaymentWithAlias(
+// //                ccAlias,
+// //                paymentData
+// //        )
+// //                .subscribeOn(Schedulers.io())
+// //                .subscribe(
+// //                        { transactionId ->
+// //                            Assert.assertNotNull(transactionId)
+// //                            println("Transaction: $transactionId")
+// //                            latch.countDown()
+// //
+// //                        }
+// //                ) { error ->
+// //                    Timber.e(error, "BS credit card payment failed")
+// //                    Assert.fail(error.message)
+// //                }
+// //        try {
+// //            latch.await()
+// //        } catch (e: InterruptedException) {
+// //            e.printStackTrace()
+// //        }
+// //
+// //        paymentDisposable.dispose()
+// //    }
 //
 //
 //    @Test
@@ -185,10 +185,10 @@
 //        latch.await()
 //
 //    }
-//}
+// }
 //
-//@Singleton
-//@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
-//internal interface TestPaymentSdkComponent : PaymentSdkComponent {
+// @Singleton
+// @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+// internal interface TestPaymentSdkComponent : PaymentSdkComponent {
 //    fun injectTest(test: BsPayoneRegistrationInstrumentationTest)
-//}
+// }

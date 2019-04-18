@@ -10,7 +10,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class EntityInserter @Inject constructor(
-        private val transactionRunner: DatabaseTransactionRunner
+    private val transactionRunner: DatabaseTransactionRunner
 ) {
     suspend fun <E : SampleEntity> insertOrUpdate(dao: EntityDao<E>, entities: List<E>) = transactionRunner {
         entities.forEach {

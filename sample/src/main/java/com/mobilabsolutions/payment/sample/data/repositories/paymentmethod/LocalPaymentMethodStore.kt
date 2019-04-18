@@ -10,9 +10,9 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class LocalPaymentMethodStore @Inject constructor(
-        private val transactionRunner: DatabaseTransactionRunner,
-        private val entityInserter: EntityInserter,
-        private val paymentMethodDao: PaymentMethodDao
+    private val transactionRunner: DatabaseTransactionRunner,
+    private val entityInserter: EntityInserter,
+    private val paymentMethodDao: PaymentMethodDao
 ) {
 
     companion object {
@@ -47,7 +47,6 @@ class LocalPaymentMethodStore @Inject constructor(
     fun observePaymentMethods() = paymentMethodDao.entriesObservable()
 
     suspend fun savePaymentMethod() = transactionRunner {
-
     }
 
     suspend fun deletePaymentMethod(paymentMethod: PaymentMethod) = transactionRunner {

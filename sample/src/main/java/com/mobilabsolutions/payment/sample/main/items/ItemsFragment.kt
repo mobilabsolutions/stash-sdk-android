@@ -44,6 +44,4 @@ class ItemsFragment : BaseFragment() {
             }
         }
     }
-
-
 }

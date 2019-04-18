@@ -11,8 +11,8 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class DeletePaymentMethod @Inject constructor(
-        dispatchers: AppCoroutineDispatchers,
-        private val paymentMethodRepository: PaymentMethodRepository
+    dispatchers: AppCoroutineDispatchers,
+    private val paymentMethodRepository: PaymentMethodRepository
 ) : ChannelInteractor<DeletePaymentMethod.ExecuteParams, Unit>() {
     override val dispatcher: CoroutineDispatcher = dispatchers.io
 

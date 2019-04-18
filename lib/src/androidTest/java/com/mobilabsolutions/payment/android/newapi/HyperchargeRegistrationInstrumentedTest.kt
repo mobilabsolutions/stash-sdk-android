@@ -1,42 +1,42 @@
-//package com.mobilabsolutions.payment.android.newapi
+// package com.mobilabsolutions.payment.android.newapi
 //
-//import android.app.Application
-//import android.os.Build
-//import androidx.test.InstrumentationRegistry
-//import com.mobilabsolutions.payment.android.BuildConfig
-//import com.mobilabsolutions.payment.android.psdk.exceptions.validation.SepaValidationException
-//import com.mobilabsolutions.payment.android.psdk.internal.*
-//import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
-//import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-//import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
-//import com.mobilabsolutions.payment.android.psdk.model.BillingData
-//import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-//import com.mobilabsolutions.payment.android.psdk.model.PaymentData
-//import com.mobilabsolutions.payment.android.psdk.model.SepaData
-////import com.tspoon.traceur.Traceur
-//import dagger.Component
-//import io.reactivex.Single
-//import io.reactivex.schedulers.Schedulers
-//import org.junit.Assert
-//import org.junit.Before
-//import org.junit.Ignore
-//import org.junit.Rule
-//import org.junit.Test
-//import org.junit.rules.ExpectedException
-//import org.threeten.bp.LocalDate
-//import retrofit2.HttpException
-//import timber.log.Timber
-//import java.util.concurrent.CountDownLatch
-//import javax.inject.Inject
-//import javax.inject.Singleton
+// import android.app.Application
+// import android.os.Build
+// import androidx.test.InstrumentationRegistry
+// import com.mobilabsolutions.payment.android.BuildConfig
+// import com.mobilabsolutions.payment.android.psdk.exceptions.validation.SepaValidationException
+// import com.mobilabsolutions.payment.android.psdk.internal.*
+// import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
+// import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
+// import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
+// import com.mobilabsolutions.payment.android.psdk.model.BillingData
+// import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+// import com.mobilabsolutions.payment.android.psdk.model.PaymentData
+// import com.mobilabsolutions.payment.android.psdk.model.SepaData
+// //import com.tspoon.traceur.Traceur
+// import dagger.Component
+// import io.reactivex.Single
+// import io.reactivex.schedulers.Schedulers
+// import org.junit.Assert
+// import org.junit.Before
+// import org.junit.Ignore
+// import org.junit.Rule
+// import org.junit.Test
+// import org.junit.rules.ExpectedException
+// import org.threeten.bp.LocalDate
+// import retrofit2.HttpException
+// import timber.log.Timber
+// import java.util.concurrent.CountDownLatch
+// import javax.inject.Inject
+// import javax.inject.Singleton
 //
 //
-///**
+// /**
 // * @author [Ugi](ugi@mobilabsolutions.com)
 // */
-//@Ignore("Hypercharge tests are failing because backend is not receiving callback on time " +
+// @Ignore("Hypercharge tests are failing because backend is not receiving callback on time " +
 //        "(instead of inside 60 secconds callbacks are dispatched from Hypercharge ~30 minutes later)")
-//class HyperchargeRegistrationInstrumentedTest {
+// class HyperchargeRegistrationInstrumentedTest {
 //
 //    val testPublicKey = BuildConfig.newBsTestKey
 //    val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
@@ -264,10 +264,10 @@
 //        registrationDisposable.dispose()
 //    }
 //
-//}
+// }
 //
-//@Singleton
-//@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
-//internal interface TestHyperchargeRegistrationSdkComponent : PaymentSdkComponent {
+// @Singleton
+// @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+// internal interface TestHyperchargeRegistrationSdkComponent : PaymentSdkComponent {
 //    fun injectTest(test: HyperchargeRegistrationInstrumentedTest)
-//}
+// }

@@ -1,7 +1,12 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.*
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneApi
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneBaseRequest
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneCreditCardVerifcationRequest
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationErrorResponse
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationInvalidResponse
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationSuccessResponse
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
@@ -17,9 +22,9 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BsPayoneHandler @Inject constructor(
-        private val bsPayoneApi: BsPayoneApi,
-        private val mobilabApi: MobilabApi,
-        private val mobilabApiV2: MobilabApiV2
+    private val bsPayoneApi: BsPayoneApi,
+    private val mobilabApi: MobilabApi,
+    private val mobilabApiV2: MobilabApiV2
 
 ) {
     /**
@@ -28,10 +33,11 @@ class BsPayoneHandler @Inject constructor(
     val mockResponse = true
 
     fun registerCreditCard(
-            aliasId: String,
-            bsPayoneRegistrationRequest: BsPayoneRegistrationRequest,
-            creditCardData: CreditCardData)
-            : Single<String> {
+        aliasId: String,
+        bsPayoneRegistrationRequest: BsPayoneRegistrationRequest,
+        creditCardData: CreditCardData
+    ):
+            Single<String> {
 
         val baseRequest =
                 bsPayoneRegistrationRequest.let {
@@ -83,13 +89,12 @@ class BsPayoneHandler @Inject constructor(
                 }
             }
         }
-
     }
 
     fun registerSepa(
-            aliasId: String,
-            sepaData: SepaData,
-            billingData: BillingData
+        aliasId: String,
+        sepaData: SepaData,
+        billingData: BillingData
     ): Single<String> {
 
         val sepaConfig = SepaConfig(

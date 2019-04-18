@@ -7,7 +7,7 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class AppInitializers @Inject constructor(
-        private val initializers: Set<@JvmSuppressWildcards AppInitializer>
+    private val initializers: Set<@JvmSuppressWildcards AppInitializer>
 ) {
     fun init(application: Application) {
         initializers.forEach {

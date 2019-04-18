@@ -6,17 +6,17 @@ import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 data class BsOldRegistrationRequest(
-        var url: String? = null,
-        var merchantId: String,
-        var action: String? = null,
-        var panAlias: String,
-        var username: String? = null,
-        var password: String? = null,
-        var eventExtId: String? = null,
-        var amount: String? = null,
-        var currency: String? = null,
-        var kind: String? = null,
-        val creditCardData: CreditCardData
+    var url: String? = null,
+    var merchantId: String,
+    var action: String? = null,
+    var panAlias: String,
+    var username: String? = null,
+    var password: String? = null,
+    var eventExtId: String? = null,
+    var amount: String? = null,
+    var currency: String? = null,
+    var kind: String? = null,
+    val creditCardData: CreditCardData
 ) {
     companion object {
         fun fromMapWitchCCData(extraData: Map<String, String>, creditCardData: CreditCardData): BsOldRegistrationRequest {

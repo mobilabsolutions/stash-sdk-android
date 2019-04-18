@@ -13,11 +13,11 @@ import javax.inject.Singleton
  */
 @Singleton
 class PaymentMethodRepositoryImpl @Inject constructor(
-        private val dispatchers: AppCoroutineDispatchers,
-        private val localPaymentMethodStore: LocalPaymentMethodStore
+    private val dispatchers: AppCoroutineDispatchers,
+    private val localPaymentMethodStore: LocalPaymentMethodStore
 ) : PaymentMethodRepository {
     init {
-        GlobalScope.launch(dispatchers.io){
+        GlobalScope.launch(dispatchers.io) {
             localPaymentMethodStore.insertSampleData()
         }
     }
@@ -25,11 +25,9 @@ class PaymentMethodRepositoryImpl @Inject constructor(
     override fun observePaymentMethods() = localPaymentMethodStore.observePaymentMethods()
 
     suspend fun addPaymentMethod() = coroutineScope {
-
     }
 
     override suspend fun deletePaymentMethod(paymentMethod: PaymentMethod) {
         localPaymentMethodStore.deletePaymentMethod(paymentMethod)
     }
-
 }

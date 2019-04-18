@@ -10,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import javax.inject.Named
-import javax.inject.Singleton
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -31,11 +30,10 @@ class BsOldModule(private val bsOld: String) {
     @Provides
     @IntegrationScope
     fun provideBSOldApi(
-            @Named("bsOkHttpClient") bsPayoneOkHttpClient: OkHttpClient,
-            simpleXmlConverterFactory: SimpleXmlConverterFactory,
-            rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
+        @Named("bsOkHttpClient") bsPayoneOkHttpClient: OkHttpClient,
+        simpleXmlConverterFactory: SimpleXmlConverterFactory,
+        rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
     ): OldBsPayoneApi {
-
 
         val bsPayoneRetrofit = Retrofit.Builder()
                 .addConverterFactory(simpleXmlConverterFactory)
@@ -46,5 +44,4 @@ class BsOldModule(private val bsOld: String) {
 
         return bsPayoneRetrofit.create(OldBsPayoneApi::class.java)
     }
-
 }

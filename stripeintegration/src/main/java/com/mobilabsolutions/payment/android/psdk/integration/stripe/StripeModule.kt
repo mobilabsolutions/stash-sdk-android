@@ -6,6 +6,4 @@ import dagger.Module
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Module
-class StripeModule {
-
-}
+class StripeModule

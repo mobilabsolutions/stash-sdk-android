@@ -16,10 +16,10 @@ import com.squareup.inject.assisted.AssistedInject
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 class CheckoutViewModel @AssistedInject constructor(
-        @Assisted initialState: CheckoutViewState,
-        schedulers: AppRxSchedulers,
-        loadCart: LoadCart,
-        private val changeCartQuantity: ChangeCartQuantity
+    @Assisted initialState: CheckoutViewState,
+    schedulers: AppRxSchedulers,
+    loadCart: LoadCart,
+    private val changeCartQuantity: ChangeCartQuantity
 ) : BaseViewModel<CheckoutViewState>(initialState) {
     @AssistedInject.Factory
     interface Factory {
@@ -58,6 +58,5 @@ class CheckoutViewModel @AssistedInject constructor(
     }
 
     fun onPayBtnClicked() {
-
     }
 }

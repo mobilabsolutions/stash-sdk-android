@@ -35,9 +35,5 @@ class SepaDataEntryFragment : Fragment() {
         super.onCreate(savedInstanceState)
         BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
         Timber.d("Created")
-
-
-
-
     }
 }

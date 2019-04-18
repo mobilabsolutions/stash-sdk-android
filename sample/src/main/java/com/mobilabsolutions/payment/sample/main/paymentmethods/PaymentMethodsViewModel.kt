@@ -16,10 +16,10 @@ import com.squareup.inject.assisted.AssistedInject
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
 class PaymentMethodsViewModel @AssistedInject constructor(
-        @Assisted initialStateMethods: PaymentMethodsViewState,
-        schedulers: AppRxSchedulers,
-        loadPaymentMethods: LoadPaymentMethods,
-        private val deletePaymentMethod: DeletePaymentMethod
+    @Assisted initialStateMethods: PaymentMethodsViewState,
+    schedulers: AppRxSchedulers,
+    loadPaymentMethods: LoadPaymentMethods,
+    private val deletePaymentMethod: DeletePaymentMethod
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
     @AssistedInject.Factory
     interface Factory {
@@ -44,7 +44,6 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     fun onAddBtnClicked() {
-
     }
 
     fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {

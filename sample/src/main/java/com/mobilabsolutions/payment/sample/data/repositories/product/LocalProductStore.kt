@@ -11,9 +11,9 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
 class LocalProductStore @Inject constructor(
-        private val entityInserter: EntityInserter,
-        private val transactionRunner: DatabaseTransactionRunner,
-        private val productDao: ProductDao
+    private val entityInserter: EntityInserter,
+    private val transactionRunner: DatabaseTransactionRunner,
+    private val productDao: ProductDao
 ) {
     companion object {
         private val mobilabTShirt = Product(

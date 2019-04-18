@@ -17,7 +17,6 @@ class SampleApplication : DaggerApplication() {
     override fun onCreate() {
         super.onCreate()
         initializers.init(this)
-
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

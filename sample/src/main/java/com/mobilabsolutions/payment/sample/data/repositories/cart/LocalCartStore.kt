@@ -12,10 +12,10 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 15-04-2019.
  */
 class LocalCartStore @Inject constructor(
-        private val transactionRunner: DatabaseTransactionRunner,
-        private val entityInserter: EntityInserter,
-        private val cartDao: CartDao,
-        private val productDao: ProductDao
+    private val transactionRunner: DatabaseTransactionRunner,
+    private val entityInserter: EntityInserter,
+    private val cartDao: CartDao,
+    private val productDao: ProductDao
 ) {
 
     fun observeCarts() = cartDao.entriesObservable()

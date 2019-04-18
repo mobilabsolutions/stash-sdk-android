@@ -12,5 +12,4 @@ class SuccessResponse<T>(val result: T) {
     override fun toString(): String {
         return String.format("SuccessResponse{result=%s}", this.result)
     }
-
 }

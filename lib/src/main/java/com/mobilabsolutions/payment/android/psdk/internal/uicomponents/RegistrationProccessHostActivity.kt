@@ -2,7 +2,6 @@ package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
 import javax.inject.Inject
@@ -39,12 +38,9 @@ class RegistrationProccessHostActivity : AppCompatActivity() {
             }
         }
         super.onBackPressed()
-
     }
 
-    fun setState(state : CurrentState) {
-        currentState  = state
+    fun setState(state: CurrentState) {
+        currentState = state
     }
-
-
 }

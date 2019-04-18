@@ -1,9 +1,13 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
-////import com.tspoon.traceur.Traceur
+// //import com.tspoon.traceur.Traceur
 import android.app.Application
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.*
+import com.mobilabsolutions.payment.android.psdk.PaymentManager
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
+import com.mobilabsolutions.payment.android.psdk.RegistrationManager
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
 import timber.log.Timber
@@ -11,21 +15,20 @@ import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 
-
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class NewPaymentSdk(
-        publicKey: String,
-        url : String?,
-        applicationContext: Application,
-        integrationList: List<IntegrationInitialization>,
-        testMode : Boolean,
-        sslSocketFactory: SSLSocketFactory?,
-        x509TrustManager: X509TrustManager?) {
+    publicKey: String,
+    url: String?,
+    applicationContext: Application,
+    integrationList: List<IntegrationInitialization>,
+    testMode: Boolean,
+    sslSocketFactory: SSLSocketFactory?,
+    x509TrustManager: X509TrustManager?
+) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
-
 
     @Inject
     lateinit var newRegistrationManager: NewRegistrationManager
@@ -40,7 +43,7 @@ class NewPaymentSdk(
 
     var paymentMethodSet: Set<PaymentMethodType> = emptySet()
 
-    private constructor(publicKey: String, url : String?, applicationContext: Application) : this(publicKey, url, applicationContext, emptyList(),true,null, null)
+    private constructor(publicKey: String, url: String?, applicationContext: Application) : this(publicKey, url, applicationContext, emptyList(), true, null, null)
 
     init {
         val backendUrl = url ?: MOBILAB_BE_URL
@@ -66,13 +69,8 @@ class NewPaymentSdk(
             initialized
         }
 
-
-
         daggerGraph.inject(this)
-
-
     }
-
 
     companion object {
 
@@ -88,13 +86,13 @@ class NewPaymentSdk(
 //        }
 
         @Synchronized
-        fun initialize(applicationContext : Application, configuration : PaymentSdkConfiguration) {
+        fun initialize(applicationContext: Application, configuration: PaymentSdkConfiguration) {
             val integrationInitializations = configuration.integrations.map { it.create() }.toList()
             initialize(configuration.publicKey, configuration.endpoint, applicationContext, integrationInitializations, configuration.testMode, configuration.sslFactory, configuration.x509TrustManager)
         }
 
         @Synchronized
-        fun initialize(publicKey: String?, url : String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode : Boolean = false, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
+        fun initialize(publicKey: String?, url: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode: Boolean = false, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
             if (publicKey == null) {
                 throw InvalidPublicKeyException("Public key not supplied")
             }
@@ -146,7 +144,6 @@ class NewPaymentSdk(
                 } else {
                     throw RuntimeException("Payment SDK not initialized!")
                 }
-
             }
         }
 
@@ -154,11 +151,8 @@ class NewPaymentSdk(
             this.testComponent = testComponent
         }
 
-
         fun reset() {
             initialized = false
         }
-
-
     }
 }

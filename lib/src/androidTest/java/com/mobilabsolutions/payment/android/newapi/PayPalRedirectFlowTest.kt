@@ -1,30 +1,30 @@
-//package com.mobilabsolutions.payment.android.newapi
+// package com.mobilabsolutions.payment.android.newapi
 //
-////import com.tspoon.traceur.Traceur
-//import android.app.Application
-//import androidx.test.InstrumentationRegistry
-//import androidx.test.ext.junit.rules.activityScenarioRule
-//import com.mobilabsolutions.payment.android.BuildConfig
-//import com.mobilabsolutions.payment.android.psdk.internal.*
-//import com.mobilabsolutions.payment.android.psdk.model.BillingData
-//import com.mobilabsolutions.payment.android.psdk.model.PaymentData
-//import dagger.Component
-//import okhttp3.mockwebserver.MockResponse
-//import okhttp3.mockwebserver.MockWebServer
-//import org.junit.Before
-//import org.junit.Rule
-//import org.junit.Test
-//import timber.log.Timber
-//import java.net.URL
-//import java.util.concurrent.CountDownLatch
-//import javax.inject.Inject
-//import javax.inject.Singleton
+// //import com.tspoon.traceur.Traceur
+// import android.app.Application
+// import androidx.test.InstrumentationRegistry
+// import androidx.test.ext.junit.rules.activityScenarioRule
+// import com.mobilabsolutions.payment.android.BuildConfig
+// import com.mobilabsolutions.payment.android.psdk.internal.*
+// import com.mobilabsolutions.payment.android.psdk.model.BillingData
+// import com.mobilabsolutions.payment.android.psdk.model.PaymentData
+// import dagger.Component
+// import okhttp3.mockwebserver.MockResponse
+// import okhttp3.mockwebserver.MockWebServer
+// import org.junit.Before
+// import org.junit.Rule
+// import org.junit.Test
+// import timber.log.Timber
+// import java.net.URL
+// import java.util.concurrent.CountDownLatch
+// import javax.inject.Inject
+// import javax.inject.Singleton
 //
 //
-///**
+// /**
 // * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
 // */
-//class PayPalRedirectFlowTest {
+// class PayPalRedirectFlowTest {
 //    val testPublicKey = "PD-PO-nhnEiKIFQiZeVjGCM0HZY3xvaI"
 //    private val MOBILAB_BE_URL = BuildConfig.mobilabBackendUrl
 //    private val OLD_BS_PAYONE_URL = BuildConfig.oldBsApiUrl
@@ -50,7 +50,7 @@
 //    "currency" : "EUR",
 //    "reason" : "Mock reason"
 //  }
-//}"""
+// }"""
 //
 //    lateinit var payPalMockWebServer: MockWebServer
 //    lateinit var backendMockWebServer: MockWebServer
@@ -114,24 +114,24 @@
 //        paypalMockPage.setHeader("Location", "http://pd.mblb.net/api/v1/success/123456789")
 //        paypalMockPage.setResponseCode(302)
 //        payPalMockWebServer.enqueue(paypalMockPage)
-////        paymentManager.executePayPalPayment(paymentData, billingData).subscribeBy(
-////                onSuccess = {
-////                    Timber.d("Got transaction id $it")
-////                    Assert.assertEquals("123", it)
-////                    latch.countDown()
-////                },
-////                onError = {
-////                    Timber.e("Failed")
-////                    latch.countDown()
-////                }
-////        )
-////        latch.await()
+// //        paymentManager.executePayPalPayment(paymentData, billingData).subscribeBy(
+// //                onSuccess = {
+// //                    Timber.d("Got transaction id $it")
+// //                    Assert.assertEquals("123", it)
+// //                    latch.countDown()
+// //                },
+// //                onError = {
+// //                    Timber.e("Failed")
+// //                    latch.countDown()
+// //                }
+// //        )
+// //        latch.await()
 //    }
-//}
+// }
 //
 //
-//@Singleton
-//@Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
-//internal interface TestPayPalRedirectSdkComponent : PaymentSdkComponent {
+// @Singleton
+// @Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
+// internal interface TestPayPalRedirectSdkComponent : PaymentSdkComponent {
 //    fun injectTest(test: PayPalRedirectFlowTest)
-//}
+// }

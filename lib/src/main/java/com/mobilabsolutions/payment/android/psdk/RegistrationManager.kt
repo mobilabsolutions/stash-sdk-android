@@ -4,10 +4,8 @@ import android.app.Activity
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
-
-import io.reactivex.Completable
 import io.reactivex.Single
-import java.util.*
+import java.util.UUID
 
 /**
  * @author [Ugi](ugi@mobilabsolutions.com)
@@ -19,7 +17,7 @@ interface RegistrationManager {
      * @param creditCardData credit card information
      * @return string representing payment aliasId
      */
-    fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData = BillingData(), idempotencyKey : UUID? = null): Single<String>
+    fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData = BillingData(), idempotencyKey: UUID? = null): Single<String>
 
     /**
      * Register a sepa debit account so you can use payment aliasId for future payments
@@ -32,7 +30,7 @@ interface RegistrationManager {
      * Returns a list of supported payment methods
      * @return list of supported payment methods
      */
-    fun getAvailablePaymentMethods() : Set<PaymentMethodType>
+    fun getAvailablePaymentMethods(): Set<PaymentMethodType>
 
     /**
      * Let payment SDK handle data using built-in UI components
@@ -41,7 +39,5 @@ interface RegistrationManager {
      * @param specificPaymentMethodType skip payment method chooser and immediately show specific type entry UI
      * @returnstring string representing aliasId
      */
-    fun registerPaymentMehodUsingUi(activity : Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyKey: UUID? = null) : Single<String>
-
-
+    fun registerPaymentMehodUsingUi(activity: Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyKey: UUID? = null): Single<String>
 }

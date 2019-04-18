@@ -11,8 +11,8 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 15-04-2019.
  */
 class ChangeCartQuantity @Inject constructor(
-        dispatchers: AppCoroutineDispatchers,
-        private val cartRepository: CartRepository
+    dispatchers: AppCoroutineDispatchers,
+    private val cartRepository: CartRepository
 ) : ChannelInteractor<ChangeCartQuantity.ExecuteParams, Unit>() {
     override val dispatcher: CoroutineDispatcher = dispatchers.io
 

@@ -1,7 +1,13 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.google.gson.GsonBuilder
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.*
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneApi
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneExpiryDateConverter
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationBaseResponse
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationErrorResponse
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationInvalidResponse
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationSuccessResponse
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.PayoneKeyPairConverterFactory
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.RuntimeTypeAdapterFactory
 import dagger.Module
@@ -13,20 +19,18 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
-import javax.inject.Singleton
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Module
-class BsPayoneModule(private val newBsPayoneUrl : String) {
+class BsPayoneModule(private val newBsPayoneUrl: String) {
 
     @Provides
     @IntegrationScope
-    fun provideNewBsPayoneConverterFactory() : PayoneKeyPairConverterFactory {
+    fun provideNewBsPayoneConverterFactory(): PayoneKeyPairConverterFactory {
         return PayoneKeyPairConverterFactory.create()
     }
-
 
     @Provides
     @IntegrationScope
@@ -41,12 +45,11 @@ class BsPayoneModule(private val newBsPayoneUrl : String) {
     @Provides
     @IntegrationScope
     fun provideBSPayoneApi(
-            @Named("newBsPayoneOkHttpClient") bsPayoneOkHttpClient: OkHttpClient,
-            payoneKeyPairConverterFactory: PayoneKeyPairConverterFactory,
-            @Named("bsPayoneGsonConverterFactory") gsonConverterFactory: GsonConverterFactory,
-            rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
+        @Named("newBsPayoneOkHttpClient") bsPayoneOkHttpClient: OkHttpClient,
+        payoneKeyPairConverterFactory: PayoneKeyPairConverterFactory,
+        @Named("bsPayoneGsonConverterFactory") gsonConverterFactory: GsonConverterFactory,
+        rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
     ): BsPayoneApi {
-
 
         val bsPayoneRetrofit = Retrofit.Builder()
                 .addConverterFactory(payoneKeyPairConverterFactory)
@@ -75,5 +78,4 @@ class BsPayoneModule(private val newBsPayoneUrl : String) {
                 .create()
         return GsonConverterFactory.create(gson)
     }
-
 }

@@ -10,9 +10,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import kotlinx.android.synthetic.main.payment_method_chooser_fragment.*
 import kotlinx.android.synthetic.main.payment_method_entry.view.*
@@ -48,8 +45,6 @@ class PaymentMethodChoiceFragment : Fragment() {
         cancelImageView.setOnClickListener {
             activity?.onBackPressed()
         }
-
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,11 +93,7 @@ class PaymentMethodChoiceFragment : Fragment() {
             )
             holder.rootView.setOnClickListener {
                 paymentMethodSubject.onNext(paymentMethodDefinition.paymentMethodType)
-
             }
-
         }
-
     }
 }
-

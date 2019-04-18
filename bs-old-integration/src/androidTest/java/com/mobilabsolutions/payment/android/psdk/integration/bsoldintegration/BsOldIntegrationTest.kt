@@ -32,9 +32,8 @@ class IntegrationTest {
     val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
     val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
 
-
     @Inject
-    lateinit var pspCoordinator : PspCoordinator
+    lateinit var pspCoordinator: PspCoordinator
 
     private var validCreditCardData: CreditCardData = CreditCardData(
             "4111111111111111",
@@ -63,7 +62,6 @@ class IntegrationTest {
             reason = "Test payment"
     )
 
-
     fun setUp() {
         val context = InstrumentationRegistry.getContext().applicationContext as Application
         val integrationInitialization = BsOldIntegration.create()
@@ -78,12 +76,9 @@ class IntegrationTest {
         }
         val graph = graphBuilder.build()
 
-
         integrationInitialization.initialize(graph)
         graph.inject(this)
     }
-
-
 
     @Test
     fun testCardRegistration() {
@@ -97,13 +92,12 @@ class IntegrationTest {
         )
         latch.await()
     }
-
 }
 
 @Singleton
 @Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
 internal interface TestOldBsIntegrationSdkComponent : PaymentSdkComponent {
-    fun inject(integrationTest : IntegrationTest)
+    fun inject(integrationTest: IntegrationTest)
 
-    fun providePspCoordinator() : PspCoordinator
+    fun providePspCoordinator(): PspCoordinator
 }

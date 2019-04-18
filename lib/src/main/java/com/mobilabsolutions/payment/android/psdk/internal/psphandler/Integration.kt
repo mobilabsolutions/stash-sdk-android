@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.android.psdk.internal.psphandler
 
-import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
@@ -13,23 +12,20 @@ import io.reactivex.Single
 typealias PspIdentifier = String
 
 interface Integration {
-    val identifier : PspIdentifier
+    val identifier: PspIdentifier
 
-    fun handleRegistrationRequest(registrationRequest: RegistrationRequest) : Single<String>
+    fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String>
 
-    fun getSupportedPaymentMethodDefinitions() : List<PaymentMethodDefinition>
+    fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition>
 
-    fun handlePaymentMethodEntryRequest(activity : AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition) : Single<Map<String, String>>
+    fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>>
 
-    fun supportsPaymentMethods(methodType: PaymentMethodType) : Boolean {
+    fun supportsPaymentMethods(methodType: PaymentMethodType): Boolean {
         return getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == methodType }.isNotEmpty()
     }
-
 }
 
 interface IntegrationCompanion {
 
-    fun create() : IntegrationInitialization
-
+    fun create(): IntegrationInitialization
 }
-

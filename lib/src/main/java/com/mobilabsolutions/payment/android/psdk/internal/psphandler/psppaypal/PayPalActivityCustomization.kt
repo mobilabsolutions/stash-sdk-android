@@ -5,7 +5,7 @@ import java.io.Serializable
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-data class PayPalActivityCustomization (
-        val showAppBar : Boolean = false,
-        val showUpNavigation : Boolean = false
+data class PayPalActivityCustomization(
+    val showAppBar: Boolean = false,
+    val showUpNavigation: Boolean = false
 ) : Serializable

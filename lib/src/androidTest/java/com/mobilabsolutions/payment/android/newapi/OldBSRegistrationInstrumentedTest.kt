@@ -1,34 +1,34 @@
-//package com.mobilabsolutions.payment.android.newapi
+// package com.mobilabsolutions.payment.android.newapi
 //
-//import android.app.Application
-//import android.os.Build
-//import androidx.test.InstrumentationRegistry
-//import com.jakewharton.threetenabp.AndroidThreeTen
-//import com.mobilabsolutions.payment.android.BuildConfig
-//import com.mobilabsolutions.payment.android.psdk.internal.*
-//import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
-//import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
-//import com.mobilabsolutions.payment.android.psdk.model.BillingData
-//import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-//import com.mobilabsolutions.payment.android.psdk.model.PaymentData
-//import com.mobilabsolutions.payment.android.psdk.model.SepaData
-////import com.tspoon.traceur.Traceur
-//import dagger.Component
-//import io.reactivex.schedulers.Schedulers
-//import org.junit.Assert
-//import org.junit.Before
-//import org.junit.Test
-//import org.threeten.bp.LocalDate
-//import timber.log.Timber
-//import java.util.concurrent.CountDownLatch
-//import javax.inject.Inject
-//import javax.inject.Singleton
+// import android.app.Application
+// import android.os.Build
+// import androidx.test.InstrumentationRegistry
+// import com.jakewharton.threetenabp.AndroidThreeTen
+// import com.mobilabsolutions.payment.android.BuildConfig
+// import com.mobilabsolutions.payment.android.psdk.internal.*
+// import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
+// import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule
+// import com.mobilabsolutions.payment.android.psdk.model.BillingData
+// import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+// import com.mobilabsolutions.payment.android.psdk.model.PaymentData
+// import com.mobilabsolutions.payment.android.psdk.model.SepaData
+// //import com.tspoon.traceur.Traceur
+// import dagger.Component
+// import io.reactivex.schedulers.Schedulers
+// import org.junit.Assert
+// import org.junit.Before
+// import org.junit.Test
+// import org.threeten.bp.LocalDate
+// import timber.log.Timber
+// import java.util.concurrent.CountDownLatch
+// import javax.inject.Inject
+// import javax.inject.Singleton
 //
 //
-///**
+// /**
 // * @author [Ugi](ugi@mobilabsolutions.com)
 // */
-//class OldBSRegistrationInstrumentedTest {
+// class OldBSRegistrationInstrumentedTest {
 //
 //    val testPublicKey: String = BuildConfig.oldBsTestKey
 //    val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
@@ -144,97 +144,97 @@
 //        registrationDisposable.dispose()
 //    }
 //
-////    @Test
-////    fun testCreditCardRemoval() {
-////        Timber.d("Starting remove card aliasId test")
-////
-////        val latch = CountDownLatch(1)
-////
-////        val registrationDisposable = registrationManager.registerCreditCard(
-////                validCreditCardData
-////        )
-////                .subscribeOn(Schedulers.io())
-////                .flatMap { aliasId ->
-////                    Timber.d("Got aliasId: $aliasId")
-////                    registrationManager.removeCreditCardAlias(aliasId).andThen(Single.just(aliasId))
-////                }.flatMap { aliasId -> paymentManager.executeCreditCardPaymentWithAlias(aliasId, paymentData) }
-////                .subscribeBy(
-////                        onSuccess = { transactionId ->
-////                            Timber.d("Got transaction id after aliasId deletion!")
-////                            latch.countDown()
-////                        },
-////                        onError = { error ->
-////                            Timber.d("Removing aliasId reported an error")
-////
-////                            Assert.assertTrue(error is UnknownBackendException)
-////                            Assert.assertEquals(error.message, "Payment method is inactive")
-//////                            if (error is HttpException) {
-//////                                if (error.code() != 400) {
-//////                                    Assert.fail(error.message)
-//////                                    Timber.e(error, "Removing aliasId reported an error")
-//////                                }
-//////                            } else {
-//////                                Assert.fail(error.message)
-//////                                Timber.e(error, "Removing aliasId reported an error")
-//////                            }
-////
-////                            latch.countDown()
-////                        }
-////
-////                )
-////        try {
-////            latch.await()
-////        } catch (e: InterruptedException) {
-////            e.printStackTrace()
-////        }
-////
-////        registrationDisposable.dispose()
-////    }
+// //    @Test
+// //    fun testCreditCardRemoval() {
+// //        Timber.d("Starting remove card aliasId test")
+// //
+// //        val latch = CountDownLatch(1)
+// //
+// //        val registrationDisposable = registrationManager.registerCreditCard(
+// //                validCreditCardData
+// //        )
+// //                .subscribeOn(Schedulers.io())
+// //                .flatMap { aliasId ->
+// //                    Timber.d("Got aliasId: $aliasId")
+// //                    registrationManager.removeCreditCardAlias(aliasId).andThen(Single.just(aliasId))
+// //                }.flatMap { aliasId -> paymentManager.executeCreditCardPaymentWithAlias(aliasId, paymentData) }
+// //                .subscribeBy(
+// //                        onSuccess = { transactionId ->
+// //                            Timber.d("Got transaction id after aliasId deletion!")
+// //                            latch.countDown()
+// //                        },
+// //                        onError = { error ->
+// //                            Timber.d("Removing aliasId reported an error")
+// //
+// //                            Assert.assertTrue(error is UnknownBackendException)
+// //                            Assert.assertEquals(error.message, "Payment method is inactive")
+// ////                            if (error is HttpException) {
+// ////                                if (error.code() != 400) {
+// ////                                    Assert.fail(error.message)
+// ////                                    Timber.e(error, "Removing aliasId reported an error")
+// ////                                }
+// ////                            } else {
+// ////                                Assert.fail(error.message)
+// ////                                Timber.e(error, "Removing aliasId reported an error")
+// ////                            }
+// //
+// //                            latch.countDown()
+// //                        }
+// //
+// //                )
+// //        try {
+// //            latch.await()
+// //        } catch (e: InterruptedException) {
+// //            e.printStackTrace()
+// //        }
+// //
+// //        registrationDisposable.dispose()
+// //    }
 //
-////    @Test
-////    fun testSepaRemoval() {
-////        Timber.d("Starting remove card aliasId test")
-////
-////        val latch = CountDownLatch(1)
-////
-////        val registrationDisposable = registrationManager.registerSepa(
-////                validSepaData
-////        )
-////                .subscribeOn(Schedulers.io())
-////                .flatMap { aliasId ->
-////                    Timber.d("Got aliasId: $aliasId")
-////                    registrationManager.removeSepaAlias(aliasId).andThen(Single.just(aliasId))
-////                }.flatMap { aliasId -> paymentManager.executeCreditCardPaymentWithAlias(aliasId, paymentData) }
-////                .subscribeBy(
-////                        onSuccess = { transactionId ->
-////                            Timber.d("Got transaction id after aliasId deletion!")
-////                            latch.countDown()
-////                        },
-////                        onError = { error ->
-////                            Timber.d("Removing aliasId reported an error")
-////
-////                            Assert.assertTrue(error is UnknownBackendException)
-////                            Assert.assertEquals(error.message, "Payment method is inactive")
-////
-////                            latch.countDown()
-////                        }
-////                )
-////        try {
-////            latch.await()
-////        } catch (e: InterruptedException) {
-////            e.printStackTrace()
-////        }
-////
-////        registrationDisposable.dispose()
-////    }
+// //    @Test
+// //    fun testSepaRemoval() {
+// //        Timber.d("Starting remove card aliasId test")
+// //
+// //        val latch = CountDownLatch(1)
+// //
+// //        val registrationDisposable = registrationManager.registerSepa(
+// //                validSepaData
+// //        )
+// //                .subscribeOn(Schedulers.io())
+// //                .flatMap { aliasId ->
+// //                    Timber.d("Got aliasId: $aliasId")
+// //                    registrationManager.removeSepaAlias(aliasId).andThen(Single.just(aliasId))
+// //                }.flatMap { aliasId -> paymentManager.executeCreditCardPaymentWithAlias(aliasId, paymentData) }
+// //                .subscribeBy(
+// //                        onSuccess = { transactionId ->
+// //                            Timber.d("Got transaction id after aliasId deletion!")
+// //                            latch.countDown()
+// //                        },
+// //                        onError = { error ->
+// //                            Timber.d("Removing aliasId reported an error")
+// //
+// //                            Assert.assertTrue(error is UnknownBackendException)
+// //                            Assert.assertEquals(error.message, "Payment method is inactive")
+// //
+// //                            latch.countDown()
+// //                        }
+// //                )
+// //        try {
+// //            latch.await()
+// //        } catch (e: InterruptedException) {
+// //            e.printStackTrace()
+// //        }
+// //
+// //        registrationDisposable.dispose()
+// //    }
 //
 //
-//}
+// }
 //
-//@Singleton
-//@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
-//internal interface TestOldBsRegistrationSdkComponent : PaymentSdkComponent {
+// @Singleton
+// @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+// internal interface TestOldBsRegistrationSdkComponent : PaymentSdkComponent {
 //    fun injectTest(test: OldBSRegistrationInstrumentedTest)
-//}
+// }
 //
 //

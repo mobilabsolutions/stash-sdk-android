@@ -1,45 +1,45 @@
-//package com.mobilabsolutions.payment.android.psdk.integration.bspayone
+// package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 //
-////import com.tspoon.traceur.Traceur
-//import android.app.Application
-//import android.content.SharedPreferences
-//import android.util.Base64
-//import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-//import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
-//import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-//import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
-//import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
-//import com.mobilabsolutions.payment.android.psdk.model.BillingData
-//import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-//import dagger.Component
-//import io.reactivex.rxkotlin.subscribeBy
-//import okhttp3.mockwebserver.MockResponse
-//import okhttp3.mockwebserver.MockWebServer
-//import org.junit.Assert
-//import org.junit.Assert.assertTrue
-//import org.junit.Before
-//import org.junit.Test
-//import org.junit.runner.RunWith
-//import org.mockito.ArgumentMatchers.*
-//import org.powermock.api.mockito.PowerMockito
-//import org.powermock.api.mockito.PowerMockito.`when`
-//import org.powermock.core.classloader.annotations.PowerMockIgnore
-//import org.powermock.core.classloader.annotations.PrepareForTest
-//import org.powermock.modules.junit4.PowerMockRunner
-//import org.threeten.bp.LocalDate
-//import java.net.URL
-//import java.util.concurrent.CountDownLatch
-//import javax.inject.Inject
-//import javax.inject.Singleton
+// //import com.tspoon.traceur.Traceur
+// import android.app.Application
+// import android.content.SharedPreferences
+// import android.util.Base64
+// import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
+// import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
+// import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
+// import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
+// import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
+// import com.mobilabsolutions.payment.android.psdk.model.BillingData
+// import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+// import dagger.Component
+// import io.reactivex.rxkotlin.subscribeBy
+// import okhttp3.mockwebserver.MockResponse
+// import okhttp3.mockwebserver.MockWebServer
+// import org.junit.Assert
+// import org.junit.Assert.assertTrue
+// import org.junit.Before
+// import org.junit.Test
+// import org.junit.runner.RunWith
+// import org.mockito.ArgumentMatchers.*
+// import org.powermock.api.mockito.PowerMockito
+// import org.powermock.api.mockito.PowerMockito.`when`
+// import org.powermock.core.classloader.annotations.PowerMockIgnore
+// import org.powermock.core.classloader.annotations.PrepareForTest
+// import org.powermock.modules.junit4.PowerMockRunner
+// import org.threeten.bp.LocalDate
+// import java.net.URL
+// import java.util.concurrent.CountDownLatch
+// import javax.inject.Inject
+// import javax.inject.Singleton
 //
 //
-///**
+// /**
 // * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
 // */
-//@RunWith(PowerMockRunner::class)
-//@PrepareForTest(Base64::class)
-//@PowerMockIgnore("javax.net.ssl.*")
-//class BsPayoneApiTest {
+// @RunWith(PowerMockRunner::class)
+// @PrepareForTest(Base64::class)
+// @PowerMockIgnore("javax.net.ssl.*")
+// class BsPayoneApiTest {
 //    val testPublicKey = "PD-PO-nhnEiKIFQiZeVjGCM0HZY3xvaI"
 //    private val MOBILAB_BE_URL = "https://webhook.site/2c04923a-f96a-40b7-a43c-fa756e5e993d/"
 //    private val OLD_BS_PAYONE_URL = "https://test.soap.bs-card-service.com/soap-api/"
@@ -71,9 +71,9 @@
 //
 //    @Inject
 //    lateinit var uiCustomizationManager: UiCustomizationManager
-////
-////    @Inject
-////    internal lateinit var newUiCustomizationManager: NewUiCustomizationManager
+// //
+// //    @Inject
+// //    internal lateinit var newUiCustomizationManager: NewUiCustomizationManager
 //
 //    lateinit var payoneMockWebServer: MockWebServer
 //    lateinit var backendMockWebServer: MockWebServer
@@ -245,55 +245,55 @@
 //
 //    @Test
 //    fun testPayPalCustomizations() {
-////        val context = mockedApplication
-////
-////        val integration = BsPayoneIntegration.create()
-////
-////        val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
-////                .sslSupportModule(SslSupportModule(null, null))
-////                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
-////                .hyperchargeModule(HyperchargeModule())
-////                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
-////                .build()
-////        graph.injectTest(this)
-////        assertNotNull(uiCustomizationManager)
-////        uiCustomizationManager.setPaypalRedirectActivityCustomizations(PayPalActivityCustomization(showAppBar = true, showUpNavigation = true))
-////        val customization = newUiCustomizationManager.getPaypalRedirectActivityCustomizations()
-////        assertTrue(customization.showAppBar)
-////        assertTrue(customization.showUpNavigation)
+// //        val context = mockedApplication
+// //
+// //        val integration = BsPayoneIntegration.create()
+// //
+// //        val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
+// //                .sslSupportModule(SslSupportModule(null, null))
+// //                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
+// //                .hyperchargeModule(HyperchargeModule())
+// //                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
+// //                .build()
+// //        graph.injectTest(this)
+// //        assertNotNull(uiCustomizationManager)
+// //        uiCustomizationManager.setPaypalRedirectActivityCustomizations(PayPalActivityCustomization(showAppBar = true, showUpNavigation = true))
+// //        val customization = newUiCustomizationManager.getPaypalRedirectActivityCustomizations()
+// //        assertTrue(customization.showAppBar)
+// //        assertTrue(customization.showUpNavigation)
 //
 //    }
 //
 //    @Test
 //    fun testPayPalCustomizationPersistence() {
-////        val context = mockedApplication
-////
-////        val integration = BsPayoneIntegration.create()
-////
-////        val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
-////                .sslSupportModule(SslSupportModule(null, null))
-////                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
-////                .hyperchargeModule(HyperchargeModule())
-////                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
-////                .build()
-////        graph.injectTest(this)
-////        val gson = Gson()
-////        val customization = PayPalActivityCustomization(showAppBar = true, showUpNavigation = true)
-////        val customizationString = gson.toJson(customization)
-////        PowerMockito.`when`(sharedPreferences.getString(eq(NewUiCustomizationManager.PAYPAL_CUSTOMIZATION_KEY), anyString())).thenReturn(customizationString)
-////
-////        assertNotNull(uiCustomizationManager)
-////        uiCustomizationManager.setPaypalRedirectActivityCustomizations(customization)
-////        val preferences = context.getSharedPreferences(PaymentSdkModule.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-////        val paypalCustomizationString = preferences.getString(NewUiCustomizationManager.PAYPAL_CUSTOMIZATION_KEY, "")
-////        assertNotNull(paypalCustomizationString)
-////        assertNotEquals(paypalCustomizationString, "")
-////        val paypalCustomization = gson.fromJson(paypalCustomizationString, PayPalActivityCustomization::class.java)
-////        assertTrue(paypalCustomization.showUpNavigation)
-////        assertTrue(paypalCustomization.showAppBar)
+// //        val context = mockedApplication
+// //
+// //        val integration = BsPayoneIntegration.create()
+// //
+// //        val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
+// //                .sslSupportModule(SslSupportModule(null, null))
+// //                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
+// //                .hyperchargeModule(HyperchargeModule())
+// //                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
+// //                .build()
+// //        graph.injectTest(this)
+// //        val gson = Gson()
+// //        val customization = PayPalActivityCustomization(showAppBar = true, showUpNavigation = true)
+// //        val customizationString = gson.toJson(customization)
+// //        PowerMockito.`when`(sharedPreferences.getString(eq(NewUiCustomizationManager.PAYPAL_CUSTOMIZATION_KEY), anyString())).thenReturn(customizationString)
+// //
+// //        assertNotNull(uiCustomizationManager)
+// //        uiCustomizationManager.setPaypalRedirectActivityCustomizations(customization)
+// //        val preferences = context.getSharedPreferences(PaymentSdkModule.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+// //        val paypalCustomizationString = preferences.getString(NewUiCustomizationManager.PAYPAL_CUSTOMIZATION_KEY, "")
+// //        assertNotNull(paypalCustomizationString)
+// //        assertNotEquals(paypalCustomizationString, "")
+// //        val paypalCustomization = gson.fromJson(paypalCustomizationString, PayPalActivityCustomization::class.java)
+// //        assertTrue(paypalCustomization.showUpNavigation)
+// //        assertTrue(paypalCustomization.showAppBar)
 //    }
 //
 //
-//}
+// }
 //
 //

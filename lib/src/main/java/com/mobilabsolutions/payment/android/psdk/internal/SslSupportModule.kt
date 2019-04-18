@@ -14,17 +14,15 @@ class SslSupportModule(private val sslSocketFactory: SSLSocketFactory?, private 
 
     constructor() : this(null, null)
 
-
     @Provides
     @Singleton
     fun provideSslSupportPackage(): SslSupportPackage {
         return SslSupportPackage(sslSocketFactory != null, sslSocketFactory, x509TrustManager)
     }
-
 }
 
 class SslSupportPackage(
-        val useCustomSslSocketFactory: Boolean,
-        val sslSocketFactory: SSLSocketFactory?,
-        val x509TrustManager: X509TrustManager?
+    val useCustomSslSocketFactory: Boolean,
+    val sslSocketFactory: SSLSocketFactory?,
+    val x509TrustManager: X509TrustManager?
 )
