@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/empty_checkout"
-            android:textColor="@color/colorDark"
+            android:textColor="@color/darkBlack"
             android:textSize="18sp" />
 
         <TextView
@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="@string/select_new_item"
-            android:textColor="@color/colorCoolGray"
+            android:textColor="@color/coolGray"
             android:textSize="12sp" />
 
     </LinearLayout>

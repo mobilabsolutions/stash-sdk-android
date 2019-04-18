@@ -1,5 +1,5 @@
 import org.gradle.api.Project
-import java.util.Properties
+import java.util.*
 
 object PaymentSdkRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
@@ -189,6 +189,11 @@ object Libs {
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"
+    }
+
+    object Utils {
+        val commonsValidator = "commons-validator:commons-validator:1.6"
+        val yearMonthPicker = "com.whiteelephant:monthandyearpicker:1.3.0"
     }
 }
 

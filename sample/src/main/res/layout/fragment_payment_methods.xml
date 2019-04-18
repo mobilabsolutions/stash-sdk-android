@@ -13,8 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
 
         <TextView
             android:id="@+id/payment_methods_title"
@@ -34,7 +34,7 @@
             android:layout_marginTop="48dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:padding="10dp"
+            android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_methods_title"
             tools:listitem="@layout/view_holder_payment_method_item" />

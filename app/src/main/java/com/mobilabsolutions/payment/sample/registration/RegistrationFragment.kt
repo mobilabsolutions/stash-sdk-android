@@ -112,13 +112,13 @@ class RegistrationFragment : DaggerCommonFragment<RegistrationPresenter>(), Regi
             }
         }.cache()
 
-        creditCardNumberEditText.visibility = View.VISIBLE
-        cvvEditText.visibility = View.VISIBLE
-        expiryDateEditText.visibility = View.VISIBLE
-        ibanEditText.visibility = View.GONE
-        bicEditText.visibility = View.GONE
-        registerSepaButton.isEnabled = false
-        registerCreditCardButton.isEnabled = true
+//        creditCardNumberEditText.visibility = View.VISIBLE
+//        cvvEditText.visibility = View.VISIBLE
+//        expiryDateEditText.visibility = View.VISIBLE
+//        ibanEditText.visibility = View.GONE
+//        bicEditText.visibility = View.GONE
+//        registerSepaButton.isEnabled = false
+//        registerCreditCardButton.isEnabled = true
 
         methodSelectorGroup.setOnCheckedChangeListener {
             group, checkedId ->

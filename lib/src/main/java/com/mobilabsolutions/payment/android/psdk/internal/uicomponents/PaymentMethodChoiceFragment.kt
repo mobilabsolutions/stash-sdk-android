@@ -79,14 +79,14 @@ class PaymentMethodChoiceFragment : Fragment() {
             val paymentMethodDefinition = availablePaymentMethods[position]
             holder.paymentMethodName.setText(
                     when (paymentMethodDefinition.paymentMethodType) {
-                        PaymentMethodType.CREDITCARD -> R.string.payment_chooser_credit_card
+                        PaymentMethodType.CC -> R.string.payment_chooser_credit_card
                         PaymentMethodType.SEPA -> R.string.payment_chooser_sepa
                         PaymentMethodType.PAYPAL -> R.string.payment_chooser_paypal
                     }
             )
             holder.paymentMethodIcon.setImageResource(
                     when (paymentMethodDefinition.paymentMethodType) {
-                        PaymentMethodType.CREDITCARD -> R.drawable.ic_credit
+                        PaymentMethodType.CC -> R.drawable.ic_credit
                         PaymentMethodType.SEPA -> R.drawable.ic_sepa_symbol
                         PaymentMethodType.PAYPAL -> R.drawable.ic_paypal_grey
                     }

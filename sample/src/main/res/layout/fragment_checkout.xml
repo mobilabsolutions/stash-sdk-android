@@ -13,9 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
-
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
 
         <TextView
             android:id="@+id/checkout_title"
@@ -36,9 +35,10 @@
             android:layout_marginBottom="24dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:padding="10dp"
+            android:padding="4dp"
             app:layout_constraintBottom_toTopOf="@+id/label_total_amount"
             app:layout_constraintTop_toBottomOf="@+id/checkout_title"
+            tools:layout_editor_absoluteX="4dp"
             tools:listitem="@layout/view_holder_checkout_item" />
 
         <TextView
@@ -49,13 +49,12 @@
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/lato_bold"
             android:text="@string/total_amount"
-            android:textColor="@color/colorDark"
+            android:textColor="@color/darkBlack"
             android:textSize="18sp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_pay"
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
-
 
         <TextView
             android:id="@+id/total_price_text"
@@ -63,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/lato_black"
-            android:textColor="@color/colorAquaMarine"
+            android:textColor="@color/aquaMarine"
             android:textSize="24sp"
             android:visibility="gone"
             app:layout_constraintBaseline_toBaselineOf="@+id/label_total_amount"
@@ -71,7 +70,6 @@
             app:priceWithCurrency="@{state.totalAmount}"
             tools:text="23,95 €"
             tools:visibility="visible" />
-
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_pay"
@@ -81,10 +79,10 @@
             android:gravity="center"
             android:text="@string/pay"
             android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/pureWhite"
             android:textSize="14sp"
             android:visibility="gone"
-            app:backgroundTint="@color/colorAquaMarine"
+            app:backgroundTint="@color/aquaMarine"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:visibility="visible" />
