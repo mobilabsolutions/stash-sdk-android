@@ -18,7 +18,6 @@ import org.mockito.ArgumentMatchers
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PowerMockIgnore
 import org.powermock.modules.junit4.PowerMockRunner
-import java.lang.RuntimeException
 import javax.inject.Singleton
 
 /**
@@ -44,7 +43,7 @@ class IntegrationTest {
         PowerMockito.`when`(sharedPreferences.edit()).thenReturn(mockedEditor)
         PowerMockito.`when`(mockedEditor.commit()).thenReturn(true)
         PowerMockito.`when`(mockedEditor.putString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn(mockedEditor)
-     }
+    }
 
     @Test
     fun testMultipleIntegrations() {

@@ -10,17 +10,17 @@ import retrofit2.Retrofit
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
 import java.lang.reflect.Type
+/* ktlint-disable no-wildcard-imports */
 import java.util.*
-
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class PayoneKeyPairConverterFactory private constructor(val requestConverter: PayoneKeyPairRequestConverter)
-    : Converter.Factory() {
+class PayoneKeyPairConverterFactory private constructor(val requestConverter: PayoneKeyPairRequestConverter) :
+        Converter.Factory() {
 
     companion object {
-        val REQUEST_CONVERTER_INSTANCE : PayoneKeyPairRequestConverter = PayoneKeyPairRequestConverter()
+        val REQUEST_CONVERTER_INSTANCE: PayoneKeyPairRequestConverter = PayoneKeyPairRequestConverter()
 
         fun create() = PayoneKeyPairConverterFactory(REQUEST_CONVERTER_INSTANCE)
     }
@@ -39,9 +39,7 @@ class PayoneKeyPairConverterFactory private constructor(val requestConverter: Pa
 class PayoneKeyPairRequestConverter : Converter<Any, RequestBody> {
     private val MEDIA_TYPE = MediaType.parse("application/x-www-form-urlencoded; charset=UTF-8")
 
-
-    override fun convert(data : Any) : RequestBody {
-
+    override fun convert(data: Any): RequestBody {
 
         val clazz = data.javaClass
         val fields = LinkedList<Field>()
@@ -51,8 +49,7 @@ class PayoneKeyPairRequestConverter : Converter<Any, RequestBody> {
             temporaryClass = temporaryClass.superclass as Class<Any>
         }
 
-        val request = fields.fold("", operation = {
-            acc, field ->
+        val request = fields.fold("", operation = { acc, field ->
             field.isAccessible = true
             if (!Modifier.isTransient(field.modifiers) && !Modifier.isStatic(field.modifiers)) {
                 val memberName = if (field.getAnnotation(SerializedName::class.java) != null) {
@@ -61,13 +58,12 @@ class PayoneKeyPairRequestConverter : Converter<Any, RequestBody> {
                     field.name
                 }
                 if (field.type == LocalDate::class.java) {
-                    acc + "${memberName}=${((field.get(data)) as LocalDate).format(DateTimeFormatter.ofPattern("MMyy"))}&"
+                    acc + "$memberName=${((field.get(data)) as LocalDate).format(DateTimeFormatter.ofPattern("MMyy"))}&"
                 } else {
-                    acc + "${memberName}=${field.get(data)}&"
+                    acc + "$memberName=${field.get(data)}&"
                 }
             } else acc
         }).removeSuffix("&")
         return RequestBody.create(MEDIA_TYPE, request)
     }
-
 }

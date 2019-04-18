@@ -9,7 +9,7 @@ import javax.inject.Provider
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
 class SampleViewModelFactory @Inject constructor(
-        private val creators: @JvmSuppressWildcards Map<Class<out ViewModel>, Provider<ViewModel>>
+    private val creators: @JvmSuppressWildcards Map<Class<out ViewModel>, Provider<ViewModel>>
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         var creator: Provider<out ViewModel>? = creators[modelClass]

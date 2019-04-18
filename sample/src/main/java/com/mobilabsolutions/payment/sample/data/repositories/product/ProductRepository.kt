@@ -11,12 +11,12 @@ import javax.inject.Singleton
  */
 @Singleton
 class ProductRepository @Inject constructor(
-        private val dispatchers: AppCoroutineDispatchers,
-        private val localProductStore: LocalProductStore
+    private val dispatchers: AppCoroutineDispatchers,
+    private val localProductStore: LocalProductStore
 ) {
     init {
         GlobalScope.launch(dispatchers.io) {
-            if(localProductStore.isInitData()){
+            if (localProductStore.isInitData()) {
                 localProductStore.populateInitData()
             }
         }

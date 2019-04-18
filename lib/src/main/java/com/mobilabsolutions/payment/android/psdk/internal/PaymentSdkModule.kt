@@ -8,7 +8,12 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PayoneSpecificData
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.ProviderSpecificData
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.RuntimeTypeAdapterFactory
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.SketchSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
 import dagger.Module
@@ -35,10 +40,13 @@ import javax.inject.Singleton
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Module
-open class PaymentSdkModule(private val publicKey: String, private val mobilabUrl: String,
-                            private val applicationContext: Application,
-                            private val integrationInitializers : List<IntegrationInitialization>,
-                            private val testMode : Boolean) {
+open class PaymentSdkModule(
+    private val publicKey: String,
+    private val mobilabUrl: String,
+    private val applicationContext: Application,
+    private val integrationInitializers: List<IntegrationInitialization>,
+    private val testMode: Boolean
+) {
     val MOBILAB_TIMEOUT = 60L
     val TIMEOUT_UNIT = TimeUnit.SECONDS
 
@@ -46,11 +54,9 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
         val SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
     }
 
+    internal val redirectActivitySubject: PublishSubject<PayPalRedirectHandler.RedirectResult> = PublishSubject.create()
 
-
-    internal val redirectActivitySubject : PublishSubject<PayPalRedirectHandler.RedirectResult> = PublishSubject.create()
-
-    internal var newUiCustomizationManager : NewUiCustomizationManager? = null
+    internal var newUiCustomizationManager: NewUiCustomizationManager? = null
 
     @Provides
     fun provideHttpLoggingInterceptor(@Named("isLogging") isLogging: Boolean): HttpLoggingInterceptor {
@@ -66,10 +72,10 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
     @Provides
     @Singleton
     fun provideMobilabApi(
-            mobilabBackendOkHttpClient: OkHttpClient,
-            @Named("mobilabBackendGsonConverterFactory")
-            gsonConverterFactory: GsonConverterFactory,
-            rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
+        mobilabBackendOkHttpClient: OkHttpClient,
+        @Named("mobilabBackendGsonConverterFactory")
+        gsonConverterFactory: GsonConverterFactory,
+        rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
     ): MobilabApi {
         val mobilabBackendRetrofit = Retrofit.Builder()
                 .addConverterFactory(gsonConverterFactory)
@@ -80,16 +86,16 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
         val mobilabApi = mobilabBackendRetrofit.create(MobilabApi::class.java)
         return mobilabApi
-
     }
 
     @Provides
     @Singleton
-    fun provideMobilabApiV2(@Named("mobilabV2HttpClient")
-                            mobilabBackendOkHttpClient: OkHttpClient,
-                            @Named("mobilabBackendGsonConverterFactory")
-                            gsonConverterFactory: GsonConverterFactory,
-                            rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
+    fun provideMobilabApiV2(
+        @Named("mobilabV2HttpClient")
+        mobilabBackendOkHttpClient: OkHttpClient,
+        @Named("mobilabBackendGsonConverterFactory")
+        gsonConverterFactory: GsonConverterFactory,
+        rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
     ): MobilabApiV2 {
         val mobilabBackendRetrofit = Retrofit.Builder()
                 .addConverterFactory(gsonConverterFactory)
@@ -100,14 +106,13 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
         val mobilabApiV2 = mobilabBackendRetrofit.create(MobilabApiV2::class.java)
         return mobilabApiV2
-
     }
 
     @Provides
     @Singleton
     fun provideMobilabHttpClient(
-            httpLoggingInterceptor: HttpLoggingInterceptor,
-            sslSupportPackage: SslSupportPackage
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        sslSupportPackage: SslSupportPackage
     ): OkHttpClient {
 
         val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
@@ -135,8 +140,8 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
     @Singleton
     @Named("mobilabV2HttpClient")
     fun provideMobilabV2HttpClient(
-            httpLoggingInterceptor: HttpLoggingInterceptor,
-            sslSupportPackage: SslSupportPackage
+        httpLoggingInterceptor: HttpLoggingInterceptor,
+        sslSupportPackage: SslSupportPackage
     ): OkHttpClient {
 
         val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
@@ -144,7 +149,7 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
                 .addInterceptor { chain ->
                     val requestBuilder = chain.request().newBuilder()
                             .addHeader("Publishable-Key", publicKey)
-                    if (testMode){
+                    if (testMode) {
                         requestBuilder.addHeader("PSP-Test-Mode", "true")
                     }
                     val request = requestBuilder.build()
@@ -201,48 +206,48 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
-    fun provideDefaultGson() : Gson = Gson()
+    fun provideDefaultGson(): Gson = Gson()
 
     @Provides
     @Singleton
-    fun provideSharedPreferences() : SharedPreferences = applicationContext.getSharedPreferences(
+    fun provideSharedPreferences(): SharedPreferences = applicationContext.getSharedPreferences(
             SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
     )
 
     @Provides
     @Singleton
-    fun provideExceptionMapper(gson : Gson): BackendExceptionMapper {
+    fun provideExceptionMapper(gson: Gson): BackendExceptionMapper {
         return BackendExceptionMapper(gson)
     }
 
     @Provides
     @Singleton
-    fun provideApplicationContext() : Application {
+    fun provideApplicationContext(): Application {
         return applicationContext
     }
 
     @Provides
     @Singleton
-    fun provideContext() : Context {
+    fun provideContext(): Context {
         return applicationContext
     }
 
     @Provides
     @Singleton
-    fun provideRedirectObservable() : Single<PayPalRedirectHandler.RedirectResult> {
+    fun provideRedirectObservable(): Single<PayPalRedirectHandler.RedirectResult> {
         return redirectActivitySubject.firstElement().toSingle()
     }
 
     @Provides
     @Singleton
-    fun provideRedirectSubject() : Subject<PayPalRedirectHandler.RedirectResult> {
+    fun provideRedirectSubject(): Subject<PayPalRedirectHandler.RedirectResult> {
         return redirectActivitySubject
     }
 
     @Provides
     @Singleton
-    fun provideUiCustomizationManager(gson : Gson, sharedPreferences: SharedPreferences) : UiCustomizationManager {
-        if (newUiCustomizationManager == null){
+    fun provideUiCustomizationManager(gson: Gson, sharedPreferences: SharedPreferences): UiCustomizationManager {
+        if (newUiCustomizationManager == null) {
             newUiCustomizationManager = NewUiCustomizationManager(gson, sharedPreferences)
         }
         return newUiCustomizationManager as UiCustomizationManager
@@ -250,8 +255,8 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
-    internal fun provideNewUiCustomizationManager(gson : Gson, sharedPreferences: SharedPreferences) : NewUiCustomizationManager {
-        if (newUiCustomizationManager == null){
+    internal fun provideNewUiCustomizationManager(gson: Gson, sharedPreferences: SharedPreferences): NewUiCustomizationManager {
+        if (newUiCustomizationManager == null) {
             newUiCustomizationManager = NewUiCustomizationManager(gson, sharedPreferences)
         }
         return newUiCustomizationManager as NewUiCustomizationManager
@@ -259,11 +264,9 @@ open class PaymentSdkModule(private val publicKey: String, private val mobilabUr
 
     @Provides
     @Singleton
-    fun providePspIntegrationsRegistered() : Set<Integration> {
-        return integrationInitializers.filter { it.initializedOrNull() != null  }
+    fun providePspIntegrationsRegistered(): Set<Integration> {
+        return integrationInitializers.filter { it.initializedOrNull() != null }
                 .map { it.initializedOrNull() as Integration }
                 .toSet()
     }
-
-
 }

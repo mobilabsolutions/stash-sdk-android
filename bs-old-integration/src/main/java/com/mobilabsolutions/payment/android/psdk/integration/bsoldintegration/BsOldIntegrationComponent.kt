@@ -10,13 +10,12 @@ import dagger.Component
 @IntegrationScope
 @Component(dependencies = arrayOf(PaymentSdkComponent::class), modules = arrayOf(BsOldModule::class))
 interface BsOldIntegrationComponent {
-    fun inject(integration : BsOldIntegration)
+    fun inject(integration: BsOldIntegration)
 
     @Component.Builder
     interface Builder {
-        fun coreComponent(paymentSdkComponent: PaymentSdkComponent) : Builder
-        fun bsOldModule(bsOldModule: BsOldModule) : Builder
-        fun build() : BsOldIntegrationComponent
+        fun coreComponent(paymentSdkComponent: PaymentSdkComponent): Builder
+        fun bsOldModule(bsOldModule: BsOldModule): Builder
+        fun build(): BsOldIntegrationComponent
     }
-
 }

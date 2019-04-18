@@ -29,15 +29,11 @@ class CreditCardDataEntryFragment : Fragment() {
         submitButton.setOnClickListener {
             uiComponentHandler.dataSubject.onNext(mapOf("1" to "2"))
         }
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
         Timber.d("Created")
-
-
-
     }
 }

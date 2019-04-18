@@ -14,7 +14,6 @@ enum class PaymentType(val sdkValue: String) {
     }
 }
 
-
 enum class CreditCardType(val sdkValue: String) {
     VISA("VISA"),
     MASTER_CARD("MASTERCARD");

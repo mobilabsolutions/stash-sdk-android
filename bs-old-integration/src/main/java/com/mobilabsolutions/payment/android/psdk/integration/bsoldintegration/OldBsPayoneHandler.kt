@@ -1,11 +1,9 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration
 
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationResponse
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.UpdatePaymentAliasRequest
 import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.pspapi.BsPayonePaymentRequest
 import com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.pspapi.OldBsPayoneApi
-import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.util.BSUtils
 import io.reactivex.Single
 import javax.inject.Inject
@@ -15,7 +13,7 @@ import javax.inject.Inject
  */
 class OldBsPayoneHandler @Inject constructor(private val oldBsPayoneApi: OldBsPayoneApi, private val mobilabApi: MobilabApi) {
 
-    fun registerCreditCard(requestedAlias : String, bsOldRegistrationRequest: BsOldRegistrationRequest): Single<String> {
+    fun registerCreditCard(requestedAlias: String, bsOldRegistrationRequest: BsOldRegistrationRequest): Single<String> {
 
         return oldBsPayoneApi.registerCreditCard(
                 authorization = getAuthorizationString(bsOldRegistrationRequest),
@@ -26,7 +24,7 @@ class OldBsPayoneHandler @Inject constructor(private val oldBsPayoneApi: OldBsPa
         ).map {
             val responseCode = it.apiResponse?.response?.rc ?: -1
             when (responseCode) {
-                -1 -> throw RuntimeException("Missing response code")//TODO specify error
+                -1 -> throw RuntimeException("Missing response code") // TODO specify error
                 0 -> {
                     it.apiResponse?.aliasResponse?.alias
                 }
@@ -39,9 +37,8 @@ class OldBsPayoneHandler @Inject constructor(private val oldBsPayoneApi: OldBsPa
                     ).blockingAwait()
                     requestedAlias
                 }
-                else -> throw RuntimeException("Unexpected response from BS Api")//TODO specify error
+                else -> throw RuntimeException("Unexpected response from BS Api") // TODO specify error
             }
-
         }
     }
 
@@ -49,6 +46,3 @@ class OldBsPayoneHandler @Inject constructor(private val oldBsPayoneApi: OldBsPa
         return "Basic ${BSUtils.getBasicAuthString(pbsOldRegistrationRequest.username, pbsOldRegistrationRequest.password)}"
     }
 }
-
-
-

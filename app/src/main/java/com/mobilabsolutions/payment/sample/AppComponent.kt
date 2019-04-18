@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.sample
 
-
 import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
@@ -18,8 +17,6 @@ interface AppComponent : AndroidInjector<DaggerApplication>, PresenterInjection 
 
     fun inject(app: PaymentSampleApplication)
 
-
-
     @Component.Builder
     interface Builder {
         @BindsInstance
@@ -27,5 +24,4 @@ interface AppComponent : AndroidInjector<DaggerApplication>, PresenterInjection 
 
         fun build(): AppComponent
     }
-
 }

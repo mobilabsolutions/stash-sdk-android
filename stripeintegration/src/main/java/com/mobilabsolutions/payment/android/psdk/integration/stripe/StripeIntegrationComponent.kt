@@ -10,5 +10,5 @@ import dagger.Component
 @IntegrationScope
 @Component(dependencies = arrayOf(PaymentSdkComponent::class), modules = arrayOf(StripeModule::class))
 interface StripeIntegrationComponent {
-    fun inject(integration : StripeIntegration)
+    fun inject(integration: StripeIntegration)
 }

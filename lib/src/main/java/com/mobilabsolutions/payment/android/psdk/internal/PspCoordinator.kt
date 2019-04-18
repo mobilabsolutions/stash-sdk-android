@@ -7,7 +7,13 @@ import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExcep
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PayPalRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PspIdentifier
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -16,6 +22,7 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
+/* ktlint-disable no-wildcard-imports */
 import java.util.*
 import javax.inject.Inject
 
@@ -23,23 +30,25 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
-        private val mobilabApi: MobilabApi,
-        private val mobilabApiV2: MobilabApiV2,
-        private val exceptionMapper: BackendExceptionMapper,
-        private val integrations: Set<@JvmSuppressWildcards Integration>,
-        private val uiRequestHandler: UiRequestHandler,
-        private val context: Context
+    private val mobilabApi: MobilabApi,
+    private val mobilabApiV2: MobilabApiV2,
+    private val exceptionMapper: BackendExceptionMapper,
+    private val integrations: Set<@JvmSuppressWildcards Integration>,
+    private val uiRequestHandler: UiRequestHandler,
+    private val context: Context
 ) {
     val BRAINTREE_PSP_NAME = "BRAINTREE"
 
-
     fun handleRegisterCreditCardOld(
-            creditCardData: CreditCardData): Single<String> {
+        creditCardData: CreditCardData
+    ): Single<String> {
         return handleRegisterCreditCardOld(creditCardData, integrations.first().identifier)
     }
 
     fun handleRegisterCreditCardOld(
-            creditCardData: CreditCardData, chosenPsp: PspIdentifier): Single<String> {
+        creditCardData: CreditCardData,
+        chosenPsp: PspIdentifier
+    ): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
         if (creditCardData.number.length < 16) {
@@ -57,7 +66,7 @@ class PspCoordinator @Inject constructor(
                 .processErrors()
                 .map { it.result }
                 .flatMap {
-                    //TODO temporary for validation, to be removed before going public
+                    // TODO temporary for validation, to be removed before going public
                     val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.paymentAlias)
                     val mappedValues = mapOf(
                             "paymentAlias" to it.paymentAlias!!,
@@ -76,12 +85,14 @@ class PspCoordinator @Inject constructor(
 
                     chosenIntegration.handleRegistrationRequest(registrationRequest)
                 }
-
     }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData, billingData: BillingData = BillingData(),
-            additionalUIData: Map<String, String> = emptyMap(), idempotencyKey: String): Single<String> {
+        creditCardData: CreditCardData,
+        billingData: BillingData = BillingData(),
+        additionalUIData: Map<String, String> = emptyMap(),
+        idempotencyKey: String
+    ): Single<String> {
         return handleRegisterCreditCard(
                 creditCardData,
                 billingData,
@@ -95,12 +106,16 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData, billingData: BillingData = BillingData(),
-            additionalUIData: Map<String, String>, chosenPsp: PspIdentifier, idempotencyKey: String): Single<String> {
+        creditCardData: CreditCardData,
+        billingData: BillingData = BillingData(),
+        additionalUIData: Map<String, String>,
+        chosenPsp: PspIdentifier,
+        idempotencyKey: String
+    ): Single<String> {
 
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
-        //TODO proper validation
+        // TODO proper validation
         if (creditCardData.number.length < 16) {
             return Single.error(RuntimeException("Invalid card number length"))
         }
@@ -118,8 +133,6 @@ class PspCoordinator @Inject constructor(
 
                     pspAliasSingle
                 }
-
-
     }
 
     fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData = BillingData(), additionalUIData: Map<String, String> = emptyMap(), idempotencyKey: String): Single<String> {
@@ -129,8 +142,7 @@ class PspCoordinator @Inject constructor(
     fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData, additionalUIData: Map<String, String> = emptyMap(), chosenPsp: PspIdentifier, idempotencyKey: String): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
-
-        //TODO validate
+        // TODO validate
 
         return mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
                 .subscribeOn(Schedulers.io())
@@ -141,7 +153,6 @@ class PspCoordinator @Inject constructor(
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                     chosenIntegration.handleRegistrationRequest(registrationRequest)
-
                 }
     }
 
@@ -159,7 +170,6 @@ class PspCoordinator @Inject constructor(
         ).flatMap { (creditCardData, additionalUIData) ->
             handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
         }
-
     }
 
     fun registerSepaUsingUIComponent(activity: Activity?, paymentMethodDefinition: PaymentMethodDefinition, idempotencyKey: String, requestId: Int): Single<String> {
@@ -171,9 +181,7 @@ class PspCoordinator @Inject constructor(
                 requestId
         ).flatMap { (sepaData, additionalUIData) ->
             handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
-
         }
-
     }
 
     fun registerCreditCardUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<String> {
@@ -218,7 +226,6 @@ class PspCoordinator @Inject constructor(
                 Single.error(it)
             }
         }
-
     }
 
     private fun registerPayPalUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<String> {
@@ -254,7 +261,6 @@ class PspCoordinator @Inject constructor(
                         ?: "PayPalNonce"), AdditionalRegistrationData(it)))
             }
         }
-
     }
 
     fun <T> Single<T>.processErrors(): Single<T> {
@@ -263,9 +269,6 @@ class PspCoordinator @Inject constructor(
                 is HttpException -> Single.error(exceptionMapper.mapError(it))
                 else -> Single.error(RuntimeException("Unknown exception ${it.message}"))
             }
-
         }
     }
-
-
 }

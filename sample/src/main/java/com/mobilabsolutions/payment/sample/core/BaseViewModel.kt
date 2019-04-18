@@ -12,7 +12,7 @@ import kotlinx.coroutines.Job
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
 open class BaseViewModel<S : MvRxState>(
-        initialState: S
+    initialState: S
 ) : BaseMvRxViewModel<S>(initialState, debugMode = BuildConfig.DEBUG) {
 
     private val job = Job()

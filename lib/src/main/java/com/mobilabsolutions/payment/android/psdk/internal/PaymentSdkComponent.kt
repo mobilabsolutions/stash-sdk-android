@@ -26,16 +26,16 @@ interface PaymentSdkComponent {
 
     fun inject(paymentMethodChoiceFragment: PaymentMethodChoiceFragment)
 
-    fun provideApplication() : Application
+    fun provideApplication(): Application
 
-    fun provideMobilabApi() : MobilabApi
-    fun provideMobilabApiV2() : MobilabApiV2
+    fun provideMobilabApi(): MobilabApi
+    fun provideMobilabApiV2(): MobilabApiV2
 
-    fun providesContext() : Context
+    fun providesContext(): Context
 
-    fun provideXmlConverterFactory() : SimpleXmlConverterFactory
-    fun provideRxJava2Converter() : RxJava2CallAdapterFactory
-    fun provideHttpLoggingInterceptor() : HttpLoggingInterceptor
+    fun provideXmlConverterFactory(): SimpleXmlConverterFactory
+    fun provideRxJava2Converter(): RxJava2CallAdapterFactory
+    fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor
 
-    fun provideUiCustomizationManager() : UiCustomizationManager
+    fun provideUiCustomizationManager(): UiCustomizationManager
 }
