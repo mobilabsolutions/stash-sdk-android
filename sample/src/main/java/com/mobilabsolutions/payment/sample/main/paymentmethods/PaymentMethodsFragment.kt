@@ -17,8 +17,6 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
 class PaymentMethodsFragment : BaseFragment() {
-    override val mvrxViewId: String = PaymentMethodsFragment::class.java.simpleName
-
     @Inject
     lateinit var paymentMethodsViewModelFactory: PaymentMethodsViewModel.Factory
 

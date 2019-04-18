@@ -34,7 +34,6 @@ interface Interactor<in P> {
  *
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
-@ObsoleteCoroutinesApi
 abstract class ChannelInteractor<P, T : Any> : Interactor<P> {
     private val channel = Channel<T>()
     val errorSubject: BehaviorSubject<Throwable> = BehaviorSubject.create<Throwable>()
@@ -47,6 +46,7 @@ abstract class ChannelInteractor<P, T : Any> : Interactor<P> {
         }
     }
 
+    @UseExperimental(ObsoleteCoroutinesApi::class)
     fun observe(): Observable<T> = channel.asObservable(dispatcher)
 
     protected abstract suspend fun execute(executeParams: P): T

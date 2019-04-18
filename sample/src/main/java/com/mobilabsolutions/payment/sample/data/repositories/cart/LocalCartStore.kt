@@ -12,7 +12,6 @@ import javax.inject.Inject
  */
 class LocalCartStore @Inject constructor(
     private val transactionRunner: DatabaseTransactionRunner,
-    private val entityInserter: EntityInserter,
     private val cartDao: CartDao
 ) {
 
@@ -35,7 +34,11 @@ class LocalCartStore @Inject constructor(
     }
 
     suspend fun addProductToCart(productId: Long) = transactionRunner {
-        val cartId = cartDao.cartByProductId(productId)?.id ?: 0L
-        entityInserter.insertOrUpdate(cartDao, Cart(id = cartId, productId = productId, quantity = 1))
+        val cart = cartDao.cartByProductId(productId)
+        if (cart == null) {
+            cartDao.insert(Cart(productId = productId, quantity = 1))
+        } else {
+            cartDao.update(cart.copy(quantity = cart.quantity + 1))
+        }
     }
 }

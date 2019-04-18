@@ -12,9 +12,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingStart="4dp"
-        android:paddingEnd="4dp">
+        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/checkout_title"
@@ -31,22 +29,22 @@
             android:id="@+id/checkout_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginTop="48dp"
             android:layout_marginBottom="24dp"
+            android:layout_marginTop="48dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:padding="4dp"
+            android:paddingEnd="8dp"
+            android:paddingStart="8dp"
             app:layout_constraintBottom_toTopOf="@+id/label_total_amount"
             app:layout_constraintTop_toBottomOf="@+id/checkout_title"
-            tools:layout_editor_absoluteX="4dp"
             tools:listitem="@layout/view_holder_checkout_item" />
 
         <TextView
             android:id="@+id/label_total_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
             android:layout_marginBottom="24dp"
+            android:layout_marginStart="16dp"
             android:fontFamily="@font/lato_bold"
             android:text="@string/total_amount"
             android:textColor="@color/darkBlack"
@@ -60,7 +58,7 @@
             android:id="@+id/total_price_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="@font/lato_black"
             android:textColor="@color/aquaMarine"
             android:textSize="24sp"
@@ -75,7 +73,7 @@
             android:id="@+id/btn_pay"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="16dp"
+            android:layout_margin="16dp"
             android:gravity="center"
             android:text="@string/pay"
             android:textAllCaps="true"

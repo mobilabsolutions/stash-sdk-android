@@ -11,6 +11,7 @@ import javax.inject.Singleton
 class CartRepositoryImpl @Inject constructor(
     private val localCartStore: LocalCartStore
 ) : CartRepository {
+
     override fun observeCarts() = localCartStore.observeCarts()
 
     override suspend fun changeCartQuantity(add: Boolean, cartWithProduct: CartWithProduct) {

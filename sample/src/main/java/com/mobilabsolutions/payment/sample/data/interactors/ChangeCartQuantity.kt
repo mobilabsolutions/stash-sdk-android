@@ -1,7 +1,7 @@
 package com.mobilabsolutions.payment.sample.data.interactors
 
 import com.mobilabsolutions.payment.sample.core.ChannelInteractor
-import com.mobilabsolutions.payment.sample.data.repositories.cart.CartRepositoryImpl
+import com.mobilabsolutions.payment.sample.data.repositories.cart.CartRepository
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.util.AppCoroutineDispatchers
 import kotlinx.coroutines.CoroutineDispatcher
@@ -12,7 +12,7 @@ import javax.inject.Inject
  */
 class ChangeCartQuantity @Inject constructor(
     dispatchers: AppCoroutineDispatchers,
-    private val cartRepository: CartRepositoryImpl
+    private val cartRepository: CartRepository
 ) : ChannelInteractor<ChangeCartQuantity.ExecuteParams, Unit>() {
     override val dispatcher: CoroutineDispatcher = dispatchers.io
 
