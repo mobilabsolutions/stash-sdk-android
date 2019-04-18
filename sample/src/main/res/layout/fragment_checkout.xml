@@ -13,9 +13,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp">
-
+        android:paddingStart="4dp"
+        android:paddingEnd="4dp">
 
         <TextView
             android:id="@+id/checkout_title"
@@ -49,7 +48,7 @@
             android:layout_marginBottom="24dp"
             android:fontFamily="@font/lato_bold"
             android:text="@string/total_amount"
-            android:textColor="@color/colorDark"
+            android:textColor="@color/darkBlack"
             android:textSize="18sp"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/btn_pay"
@@ -63,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:fontFamily="@font/lato_black"
-            android:textColor="@color/colorAquaMarine"
+            android:textColor="@color/aquaMarine"
             android:textSize="24sp"
             android:visibility="gone"
             app:layout_constraintBaseline_toBaselineOf="@+id/label_total_amount"
@@ -81,10 +80,10 @@
             android:gravity="center"
             android:text="@string/pay"
             android:textAllCaps="true"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/pureWhite"
             android:textSize="14sp"
             android:visibility="gone"
-            app:backgroundTint="@color/colorAquaMarine"
+            app:backgroundTint="@color/aquaMarine"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:visibility="visible" />
