@@ -11,6 +11,7 @@
 
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/billingAddressEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -23,6 +24,7 @@
             app:layout_constraintTop_toBottomOf="@+id/holderNameEditText" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/billingCityEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,6 +37,7 @@
             app:layout_constraintTop_toBottomOf="@+id/billingAddressEditText" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/billingCountryEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -47,6 +50,7 @@
             app:layout_constraintTop_toBottomOf="@+id/billingCityEditText" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/billingPhoneEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -68,6 +72,7 @@
             app:layout_constraintTop_toBottomOf="@+id/bicEditText"/>
 
         <TextView
+            android:visibility="visible"
             android:id="@+id/registrationStatusTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,6 +81,7 @@
             app:layout_constraintTop_toBottomOf="@+id/registerPayPalButton"/>
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/creditCardNumberEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,6 +95,7 @@
             app:layout_constraintTop_toBottomOf="@+id/billingPhoneEditText" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/cvvEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -101,6 +108,7 @@
             app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/expiryDateEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -122,6 +130,7 @@
             app:layout_constraintTop_toTopOf="@+id/registerCreditCardButton" />
 
         <RadioGroup
+            android:visibility="gone"
             android:id="@+id/methodSelectorGroup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -151,6 +160,7 @@
         </RadioGroup>
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/ibanEditText"
             android:layout_width="273dp"
             android:layout_height="43dp"
@@ -163,6 +173,7 @@
             app:layout_constraintTop_toBottomOf="@+id/expiryDateEditText" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/bicEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -175,6 +186,7 @@
             app:layout_constraintTop_toBottomOf="@+id/ibanEditText" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/holderNameEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

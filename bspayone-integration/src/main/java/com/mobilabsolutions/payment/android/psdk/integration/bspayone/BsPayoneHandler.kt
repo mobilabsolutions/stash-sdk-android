@@ -79,7 +79,7 @@ class BsPayoneHandler @Inject constructor(
                     is BsPayoneVerificationSuccessResponse -> {
                         mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
                                 it.cardAlias,
-                                AliasExtra(paymentMethod = PaymentMethodType.CREDITCARD.name)
+                                AliasExtra(paymentMethod = PaymentMethodType.CC.name)
                         )).blockingAwait()
                         aliasId
                     }

@@ -12,6 +12,11 @@ class SepaData(
     val holder: String
 
 ) {
+    companion object {
+        val FIRST_NAME = "FIRST_NAME"
+        val LAST_NAME = "LAST_NAME"
+        val IBAN = "IBAN"
+    }
     var iban: String = iban
         set(iban) {
             field = iban
