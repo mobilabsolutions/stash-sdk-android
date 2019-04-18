@@ -2,7 +2,6 @@ package com.mobilabsolutions.payment.sample.inject
 
 import com.mobilabsolutions.payment.sample.SampleApplication
 import com.mobilabsolutions.payment.sample.data.DataModule
-import com.mobilabsolutions.payment.sample.data.repositories.paymentmethod.PaymentMethodModule
 import com.mobilabsolutions.payment.sample.main.MainBuilder
 import dagger.Component
 import dagger.android.AndroidInjector

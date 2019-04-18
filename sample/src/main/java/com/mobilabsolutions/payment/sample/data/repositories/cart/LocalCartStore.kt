@@ -2,7 +2,6 @@ package com.mobilabsolutions.payment.sample.data.repositories.cart
 
 import com.mobilabsolutions.payment.sample.data.DatabaseTransactionRunner
 import com.mobilabsolutions.payment.sample.data.daos.CartDao
-import com.mobilabsolutions.payment.sample.data.daos.EntityInserter
 import com.mobilabsolutions.payment.sample.data.entities.Cart
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import javax.inject.Inject
