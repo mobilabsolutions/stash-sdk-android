@@ -19,7 +19,7 @@ buildscript {
 }
 
 plugins {
-    id("com.diffplug.gradle.spotless") version ("3.21.1")
+    id("com.diffplug.gradle.spotless") version ("3.22.0")
     id("com.github.ben-manes.versions") version ("0.21.0")
 }
 
@@ -27,6 +27,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven(url = "https://kotlin.bintray.com/kotlinx/")
         maven(url = "https://nexus.mblb.net/repository/mblb-internal/") {
             credentials {
                 username = propOrDefWithTravis(PaymentSdkRelease.mobilabNexusUser, "")
