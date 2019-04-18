@@ -48,7 +48,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
 
     fun onAddBtnClicked() {
         val registrationManager = PaymentSdk.getRegistrationManager()
-        registrationManager.registerPaymentMehodUsingUi().subscribeBy (
+        registrationManager.registerPaymentMehodUsingUi().subscribeBy(
             onSuccess = {
                 Timber.d("Got method $it")
             },
