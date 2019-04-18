@@ -37,7 +37,7 @@
     <string name="credit_card_data_entry_country">@string/sepa_data_entry_country</string>
     <string name="credit_card_data_number">Credit Card Number</string>
     <string name="credit_card_data_expiry">Expiration Date</string>
-    <string name="credit_card_data_expiry_hint">MM/YYYY</string>
+    <string name="credit_card_data_expiry_hint">MM/YY</string>
     <string name="credit_card_data_cvv">CCV</string>
 
     // Errors

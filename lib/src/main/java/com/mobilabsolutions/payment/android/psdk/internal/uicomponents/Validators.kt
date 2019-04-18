@@ -18,25 +18,26 @@ class CreditCardDataValidator @Inject constructor() {
     val validator = CreditCardValidator()
 
     fun validateCreditCardNumber(number: String): ValidationResult {
-        if (validator.isValid(number)) {
-            return ValidationResult(success = true)
+
+        return if (validator.isValid(number)) {
+            ValidationResult(success = true)
         } else {
-            return ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_number_validation_error)
+            ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_number_validation_error)
         }
     }
     fun validateCvv(cvv: String): ValidationResult {
-        if (cvv.length in 3..4) {
-            return ValidationResult(success = true)
+        return if (cvv.length == 3 || cvv.length == 4) {
+            ValidationResult(success = true)
         } else {
-            return ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_cvv_validation_error)
+            ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_cvv_validation_error)
         }
     }
 
     fun validateExpiry(expiryDate : LocalDate) : ValidationResult {
-        if (expiryDate.isAfter(LocalDate.now())) {
-            return ValidationResult(success = true)
+        return if (expiryDate.isAfter(LocalDate.now())) {
+            ValidationResult(success = true)
         } else {
-            return ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_expiry_validation_error)
+            ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_expiry_validation_error)
         }
     }
 }

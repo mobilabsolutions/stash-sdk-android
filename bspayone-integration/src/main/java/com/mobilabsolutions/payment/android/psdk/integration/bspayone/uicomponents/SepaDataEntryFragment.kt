@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
@@ -80,14 +81,25 @@ class SepaDataEntryFragment : Fragment() {
         }
     }
 
+    private fun TextView.customError(message: String) {
+        if (this.error == null) {
+            this.setBackgroundResource(R.drawable.edit_text_frame_error)
+            this.setError(message, resources.getDrawable(R.drawable.empty_drawable))
+            this.invalidate()
+        }
+    }
+
+    private fun TextView.clearError() {
+        this.setBackgroundResource(R.drawable.edit_text_frame)
+        this.error = null
+    }
+
     fun validateFirstName(name: String): Boolean {
         val validationResult = personalDataValidator.validateName(name)
         if (!validationResult.success) {
-            firstNameEditText.background = errorDrawable
-            firstNameEditText.setError(getString(validationResult.errorMessageResourceId), null)
+            firstNameEditText.customError(getString(validationResult.errorMessageResourceId))
         } else {
-            firstNameEditText.background = normalBacgroundDrawable
-            firstNameEditText.setError(null, null)
+            firstNameEditText.clearError()
         }
         return validationResult.success
     }
@@ -95,11 +107,9 @@ class SepaDataEntryFragment : Fragment() {
     fun validateLastName(name: String): Boolean {
         val validationResult = personalDataValidator.validateName(name)
         if (!validationResult.success) {
-            lastNameEditText.background = errorDrawable
-            lastNameEditText.setError(getString(validationResult.errorMessageResourceId), null)
+            lastNameEditText.customError(getString(validationResult.errorMessageResourceId))
         } else {
-            lastNameEditText.background = normalBacgroundDrawable
-            lastNameEditText.setError(null, null)
+            lastNameEditText.clearError()
         }
         return validationResult.success
     }
@@ -107,26 +117,19 @@ class SepaDataEntryFragment : Fragment() {
     fun validateIban(iban: String): Boolean {
         val validationResult = sepaDataValidator.validateIban(iban)
         if (!validationResult.success) {
-            creditCardNumberEditText.background = errorDrawable
-            creditCardNumberEditText.setError(
-                getString(validationResult.errorMessageResourceId),
-                null
-            )
+            creditCardNumberEditText.customError(getString(validationResult.errorMessageResourceId))
         } else {
-            creditCardNumberEditText.background = normalBacgroundDrawable
-            creditCardNumberEditText.setError(null, null)
+            creditCardNumberEditText.clearError()
         }
         return validationResult.success
     }
 
     fun validateCountry(country: String): Boolean {
         return if (!country.isEmpty()) {
-            countryText.background = normalBacgroundDrawable
-            countryText.setError(null, null)
+            countryText.clearError()
             true
         } else {
-            countryText.background = errorDrawable
-            countryText.setError(getString(R.string.validation_error_missing_country), null)
+            countryText.customError(getString(R.string.validation_error_missing_country))
             false
         }
     }
