@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.internal
 
 // //import com.tspoon.traceur.Traceur
 import android.app.Application
+import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentManager
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
@@ -107,6 +108,7 @@ class NewPaymentSdk(
             }
 
             Timber.plant(Timber.DebugTree())
+            AndroidThreeTen.init(applicationContext)
             NewPaymentSdk.instance = NewPaymentSdk(publicKey, url, applicationContext, integrationList, testMode, sslSocketFactory, x509TrustManager)
 
             NewPaymentSdk.initialized = true
