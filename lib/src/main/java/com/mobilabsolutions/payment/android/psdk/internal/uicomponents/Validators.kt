@@ -33,7 +33,7 @@ class CreditCardDataValidator @Inject constructor() {
         }
     }
 
-    fun validateExpiry(expiryDate : LocalDate) : ValidationResult {
+    fun validateExpiry(expiryDate: LocalDate): ValidationResult {
         return if (expiryDate.isAfter(LocalDate.now())) {
             ValidationResult(success = true)
         } else {

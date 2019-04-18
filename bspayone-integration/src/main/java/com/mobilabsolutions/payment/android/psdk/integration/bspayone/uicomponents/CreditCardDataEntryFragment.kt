@@ -107,8 +107,6 @@ class CreditCardDataEntryFragment : Fragment() {
         }
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)

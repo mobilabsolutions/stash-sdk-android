@@ -151,7 +151,7 @@ class UiRequestHandler @Inject constructor() {
                 it.getValue(CreditCardData.CVV),
                 it.getValue(BillingData.FIRST_NAME) + " " + it.getValue(BillingData.LAST_NAME)
             )
-            val additionalDataMap : Map<String, String> = emptyMap()
+            val additionalDataMap: Map<String, String> = emptyMap()
 
             Pair(validCreditCardData, additionalDataMap)
         }
