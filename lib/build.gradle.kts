@@ -136,7 +136,6 @@ dependencies {
     androidTestImplementation(Libs.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.core)
-    androidTestImplementation(Libs.AndroidX.Test.coreKtx)
     androidTestImplementation(Libs.AndroidX.Test.ext)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     kaptAndroidTest(Libs.Dagger.compiler)

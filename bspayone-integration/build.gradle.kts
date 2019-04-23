@@ -25,7 +25,7 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "stripe_public_key", "\""+stripePublicKey+"\"")
+            resValue("string", "stripe_public_key", "\"" + stripePublicKey + "\"")
         }
         getByName("release") {
             isMinifyEnabled = false
@@ -37,6 +37,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -55,13 +58,13 @@ dependencies {
     kapt(Libs.Dagger.compiler)
 
     testImplementation(Libs.junit)
-    kaptTest(Libs.Dagger.compiler)
-
     testImplementation(Libs.junit)
     testImplementation(Libs.mockitoCore)
     testImplementation(Libs.mockwebserver)
     testImplementation(Libs.PowerMock.module)
     testImplementation(Libs.PowerMock.api)
+    testImplementation(Libs.robolectric)
+    testImplementation(Libs.AndroidX.Test.core)
     kaptTest(Libs.Dagger.compiler)
 
     androidTestImplementation(project(Modules.paymentSdk))

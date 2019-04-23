@@ -1,5 +1,5 @@
 import org.gradle.api.Project
-import java.util.*
+import java.util.Properties
 
 object PaymentSdkRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
@@ -47,28 +47,20 @@ object Modules {
 
 object Libs {
     val androidGradlePlugin = "com.android.tools.build:gradle:3.4.0"
-
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
 
     val timber = "com.jakewharton.timber:timber:4.7.1"
-
     val stripe = "com.stripe:stripe-android:6.1.2"
+    val simpleframework = "org.simpleframework:simple-xml:2.7.1"
+    val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.1.1"
+    val iban4j = "org.iban4j:iban4j:3.2.1"
+    val braintree = "com.braintreepayments.api:braintree:3.0.0"
+    val mvrx = "com.airbnb.android:mvrx:1.0.0"
 
     val junit = "junit:junit:4.12"
-
     val mockitoCore = "org.mockito:mockito-core:2.27.0"
-
-    val simpleframework = "org.simpleframework:simple-xml:2.7.1"
-
-    val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.1.1"
-
     val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.14.1"
-
-    val iban4j = "org.iban4j:iban4j:3.2.1"
-
-    val braintree = "com.braintreepayments.api:braintree:3.0.0"
-
-    val mvrx = "com.airbnb.android:mvrx:1.0.0"
+    val robolectric = "org.robolectric:robolectric:4.3-alpha-2"
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha05"
@@ -108,7 +100,6 @@ object Libs {
 
         object Test {
             val core = "androidx.test:core:1.1.1-alpha02"
-            val coreKtx = "androidx.test:core:1.1.1-alpha02"
             val ext = "androidx.test.ext:junit-ktx:1.1.1-alpha02"
             val runner = "androidx.test:runner:1.1.1"
             val rules = "androidx.test:rules:1.1.1"
