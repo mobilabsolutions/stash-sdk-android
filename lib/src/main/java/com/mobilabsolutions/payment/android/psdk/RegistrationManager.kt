@@ -42,4 +42,4 @@ interface RegistrationManager {
     fun registerPaymentMehodUsingUi(activity: Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyKey: UUID? = null): Single<PaymentMethoAlias>
 }
 
-data class PaymentMethoAlias(val alias : String, val paymentMethodType: PaymentMethodType)
+data class PaymentMethoAlias(val alias: String, val paymentMethodType: PaymentMethodType)
