@@ -17,7 +17,8 @@ class LocalPaymentMethodStore @Inject constructor(
 
     fun observePaymentMethods() = paymentMethodDao.entriesObservable()
 
-    suspend fun savePaymentMethod() = transactionRunner {
+    suspend fun savePaymentMethod(paymentMethods: List<PaymentMethod>) = transactionRunner {
+        entityInserter.insertOrUpdate(paymentMethodDao, paymentMethods)
     }
 
     suspend fun deletePaymentMethod(paymentMethod: PaymentMethod) = transactionRunner {

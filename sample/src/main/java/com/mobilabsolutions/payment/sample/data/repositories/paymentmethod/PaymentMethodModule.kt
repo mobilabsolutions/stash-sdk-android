@@ -9,5 +9,8 @@ import dagger.Module
 @Module
 abstract class PaymentMethodModule {
     @Binds
-    abstract fun bind(source: PaymentMethodRepositoryImpl): PaymentMethodRepository
+    abstract fun bindPaymentMethodRepository(source: PaymentMethodRepositoryImpl): PaymentMethodRepository
+
+    @Binds
+    abstract fun bindPaymentMethodDataSource(source: RemotePaymentMethodsDataSource): PaymentMethodDataSource
 }
