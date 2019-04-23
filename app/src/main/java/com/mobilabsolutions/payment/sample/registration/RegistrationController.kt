@@ -2,7 +2,7 @@ package com.mobilabsolutions.payment.sample.registration
 
 import android.app.Activity
 import com.mobilabsolutions.commonsv3.mvp.controller.Controller
-import com.mobilabsolutions.payment.android.psdk.PaymentMethoAlias
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.sample.state.PaymentMethodState
@@ -36,7 +36,7 @@ class RegistrationController @Inject constructor() : Controller() {
         exipryDate: LocalDate,
         activity: Activity? = null
 
-    ): Single<PaymentMethoAlias> {
+    ): Single<PaymentMethodAlias> {
         val nameList = holderName.split(' ')
         val firstName = nameList[0]
         val lastName = if (nameList.size > 1) {
@@ -71,7 +71,7 @@ class RegistrationController @Inject constructor() : Controller() {
         country: String = "",
         phone: String = "",
         activity: Activity? = null
-    ): Single<PaymentMethoAlias> {
+    ): Single<PaymentMethodAlias> {
         val nameList = holderName.split(' ')
         val firstName = nameList[0]
         val lastName = if (nameList.size > 1) {
@@ -99,7 +99,7 @@ class RegistrationController @Inject constructor() : Controller() {
                 }
     }
 
-    fun registerPayPal(activity: Activity? = null): Single<PaymentMethoAlias> {
+    fun registerPayPal(activity: Activity? = null): Single<PaymentMethodAlias> {
         return registrationManager.registerPaymentMehodUsingUi(activity = activity, specificPaymentMethodType = PaymentMethodType.PAYPAL)
                 .doOnSuccess {
                     Timber.d("Nonce ${it.alias}")
@@ -111,7 +111,7 @@ class RegistrationController @Inject constructor() : Controller() {
                 }
     }
 
-    fun registerPaymentMethod(activity: Activity? = null): Single<PaymentMethoAlias> {
+    fun registerPaymentMethod(activity: Activity? = null): Single<PaymentMethodAlias> {
         return registrationManager.registerPaymentMehodUsingUi(activity = activity)
                 .doOnSuccess {
                     Timber.d("Nonce ${it.alias}")
