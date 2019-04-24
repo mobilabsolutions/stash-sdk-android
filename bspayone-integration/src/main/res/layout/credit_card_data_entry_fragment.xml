@@ -109,7 +109,7 @@
             android:background="@drawable/edit_text_selector"
             android:ems="10"
             android:hint="@string/credit_card_data_number"
-            android:inputType="number"
+            android:inputType="number|textNoSuggestions"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"

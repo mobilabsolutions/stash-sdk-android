@@ -30,6 +30,8 @@ fun EditText.getContentsAsString(): String = this.text.toString()
 
 fun TextView.getContentsAsString(): String = this.text.toString()
 
+fun EditText.getContentAsSpacesRemovedString(): String = this.text.toString().replace("\\D".toRegex(), "")
+
 fun EditText.focusObserver(onFocusChanged: (Boolean) -> Unit) {
     this.onFocusChangeListener = object : View.OnFocusChangeListener {
         override fun onFocusChange(p0: View?, p1: Boolean) {

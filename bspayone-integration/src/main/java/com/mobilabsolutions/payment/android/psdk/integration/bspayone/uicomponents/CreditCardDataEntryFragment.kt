@@ -8,10 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.*
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.whiteelephant.monthpicker.MonthPickerDialog
@@ -38,9 +35,9 @@ class CreditCardDataEntryFragment : Fragment() {
     var selectedExpiry: LocalDate? = null
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.credit_card_data_entry_fragment, container, false)
         return view
@@ -58,29 +55,29 @@ class CreditCardDataEntryFragment : Fragment() {
             Timber.d("Country selector")
         }
 
+        creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher())
+
         saveButton.setOnClickListener {
             var success = true
             success = validateFirstName(firstNameEditText.getContentsAsString()) && success
             success = validateLastName(lastNameEditText.getContentsAsString()) && success
-            success =
-                validateCreditCardNumber(creditCardNumberEditText.getContentsAsString()) && success
+            success = validateCreditCardNumber(creditCardNumberEditText.getContentAsSpacesRemovedString()) && success
             success = validateCvv(ccvEditText.getContentsAsString()) && success
             success = validateCountry(countryText.text.toString()) && success
-            success =
-                validateExpirationDate(selectedExpiry) && success
+            success = validateExpirationDate(selectedExpiry) && success
             if (success) {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap.put(BillingData.FIRST_NAME, firstNameEditText.getContentsAsString())
                 dataMap.put(BillingData.LAST_NAME, lastNameEditText.getContentsAsString())
 
                 dataMap.put(
-                    CreditCardData.CREDIT_CARD_NUMBER,
-                    creditCardNumberEditText.getContentsAsString()
+                        CreditCardData.CREDIT_CARD_NUMBER,
+                        creditCardNumberEditText.getContentAsSpacesRemovedString()
                 )
                 dataMap.put(CreditCardData.CVV, ccvEditText.getContentsAsString())
                 dataMap.put(
-                    CreditCardData.EXPIRY_DATE,
-                    expirationDateTextView.getContentsAsString()
+                        CreditCardData.EXPIRY_DATE,
+                        expirationDateTextView.getContentsAsString()
                 )
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
@@ -89,21 +86,21 @@ class CreditCardDataEntryFragment : Fragment() {
         expirationDateTextView.setOnClickListener {
             val today = LocalDate.now()
             val monthYearPicker = MonthPickerDialog.Builder(
-                activity,
-                MonthPickerDialog.OnDateSetListener { selectedMonth, selectedYear ->
-                    selectedExpiry = LocalDate.of(selectedYear, selectedMonth, 1)
-                    expirationDateTextView.text =
-                        selectedExpiry!!.format(DateTimeFormatter.ofPattern("MM/yy"))
-                    expirationDateTextView.clearError()
-                },
-                today.year, today.monthValue + 1
+                    activity,
+                    MonthPickerDialog.OnDateSetListener { selectedMonth, selectedYear ->
+                        selectedExpiry = LocalDate.of(selectedYear, selectedMonth, 1)
+                        expirationDateTextView.text =
+                                selectedExpiry!!.format(DateTimeFormatter.ofPattern("MM/yy"))
+                        expirationDateTextView.clearError()
+                    },
+                    today.year, today.monthValue + 1
             )
             monthYearPicker
-                .setMinMonth(today.monthValue)
-                .setMinYear(today.year)
-                .setYearRange(today.year, today.year + 20)
-                .build()
-                .show()
+                    .setMinMonth(today.monthValue)
+                    .setMinYear(today.year)
+                    .setYearRange(today.year, today.year + 20)
+                    .build()
+                    .show()
         }
     }
 
