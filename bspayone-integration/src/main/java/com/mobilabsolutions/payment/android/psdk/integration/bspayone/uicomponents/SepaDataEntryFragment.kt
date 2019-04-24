@@ -1,14 +1,17 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
 
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
@@ -34,6 +37,9 @@ class SepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var personalDataValidator: PersonalDataValidator
 
+    @Inject
+    lateinit var uiCustomizationManager: UiCustomizationManager
+
     lateinit var errorDrawable: Drawable
     lateinit var normalBacgroundDrawable: Drawable
 
@@ -50,6 +56,12 @@ class SepaDataEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         errorDrawable = resources.getDrawable(R.drawable.edit_text_frame_error)
         normalBacgroundDrawable = resources.getDrawable(R.drawable.edit_text_frame)
+
+
+        (normalBacgroundDrawable as GradientDrawable).setStroke(4, resources.getColor(uiCustomizationManager.getBackgroundColor()))
+
+
+
         firstNameEditText.getContentOnFocusLost {
             validateFirstName(it)
         }
@@ -92,6 +104,12 @@ class SepaDataEntryFragment : Fragment() {
     private fun TextView.clearError() {
         this.setBackgroundResource(R.drawable.edit_text_frame)
         this.error = null
+    }
+
+    private fun TextView.refreshBackground() {
+        if (this.error == null) {
+            background = normalBacgroundDrawable
+        }
     }
 
     fun validateFirstName(name: String): Boolean {
