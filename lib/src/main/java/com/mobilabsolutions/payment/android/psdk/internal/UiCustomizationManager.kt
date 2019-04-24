@@ -3,8 +3,6 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.R
-import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalActivityCustomization
 import javax.inject.Inject
 
 /**
@@ -22,7 +20,7 @@ data class CustomizationPreference(
 
 )
 
-internal class NewUiCustomizationManager @Inject constructor(val gson: Gson, val sharedPreferences: SharedPreferences) : UiCustomizationManager {
+class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sharedPreferences: SharedPreferences) {
     lateinit var customizationPreference: CustomizationPreference
 
     companion object {
@@ -33,12 +31,12 @@ internal class NewUiCustomizationManager @Inject constructor(val gson: Gson, val
         loadPreference()
     }
 
-    override fun setBackgroundColor(color: Int) {
+    fun setBackgroundColor(color: Int) {
         customizationPreference = customizationPreference.copy(backgroundColor = color)
         storePreference()
     }
 
-    override fun getBackgroundColor() : Int{
+    fun getBackgroundColor() : Int{
         return customizationPreference.backgroundColor
     }
 

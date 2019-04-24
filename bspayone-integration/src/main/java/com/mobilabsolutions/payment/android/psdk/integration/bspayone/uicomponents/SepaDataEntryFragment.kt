@@ -8,10 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
@@ -58,19 +57,23 @@ class SepaDataEntryFragment : Fragment() {
         normalBacgroundDrawable = resources.getDrawable(R.drawable.edit_text_frame)
 
 
-        (normalBacgroundDrawable as GradientDrawable).setStroke(4, resources.getColor(uiCustomizationManager.getBackgroundColor()))
+        (normalBacgroundDrawable as GradientDrawable).setStroke(1, resources.getColor(uiCustomizationManager.getBackgroundColor()))
+        (errorDrawable as GradientDrawable).setStroke(1, resources.getColor(uiCustomizationManager.getBackgroundColor()))
 
 
 
         firstNameEditText.getContentOnFocusLost {
             validateFirstName(it)
         }
+        firstNameEditText.refreshCustomizations()
         creditCardNumberEditText.getContentOnFocusLost {
             validateIban(it)
         }
+        lastNameEditText.refreshCustomizations()
         lastNameEditText.getContentOnFocusLost {
             validateLastName(it)
         }
+        countryText.refreshCustomizations()
         countryText.setOnClickListener {
             Timber.d("Country selector")
         }
@@ -102,11 +105,12 @@ class SepaDataEntryFragment : Fragment() {
     }
 
     private fun TextView.clearError() {
-        this.setBackgroundResource(R.drawable.edit_text_frame)
+        background = normalBacgroundDrawable
+//        this.setBackgroundResource(R.drawable.edit_text_frame)
         this.error = null
     }
 
-    private fun TextView.refreshBackground() {
+    private fun TextView.refreshCustomizations() {
         if (this.error == null) {
             background = normalBacgroundDrawable
         }
