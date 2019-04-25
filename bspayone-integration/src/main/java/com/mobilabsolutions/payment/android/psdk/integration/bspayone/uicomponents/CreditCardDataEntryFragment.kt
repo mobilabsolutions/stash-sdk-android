@@ -55,7 +55,9 @@ class CreditCardDataEntryFragment : Fragment() {
             Timber.d("Country selector")
         }
 
-        creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher())
+        creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
+            creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
+        })
 
         saveButton.setOnClickListener {
             var success = true
