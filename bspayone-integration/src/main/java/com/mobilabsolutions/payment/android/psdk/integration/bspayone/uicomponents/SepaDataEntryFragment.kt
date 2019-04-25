@@ -13,6 +13,7 @@ import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIn
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.disposables.CompositeDisposable
@@ -71,9 +72,32 @@ class SepaDataEntryFragment : Fragment() {
                 ::SepaDataEntryViewState)
                 .subscribe(this::onViewStateNext)
 
-        firstNameEditText.onTextChanged { firstNameSubject.onNext(it.toString().trim()) }
-        lastNameEditText.onTextChanged { lastNameSubject.onNext(it.toString().trim()) }
-        creditCardNumberEditText.onTextChanged { ibanSubject.onNext(it.toString().trim()) }
+        disposables += firstNameSubject
+                .doOnNext {
+                    validateFirstName(it)
+                }
+                .subscribe()
+
+        disposables += lastNameSubject
+                .doOnNext {
+                    validateLastName(it)
+                }
+                .subscribe()
+
+        disposables += ibanSubject
+                .doOnNext {
+                    validateIban(it)
+                }
+                .subscribe()
+
+        firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
+        lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
+        creditCardNumberEditText.getContentOnFocusLost { ibanSubject.onNext(it.trim()) }
+        creditCardNumberEditText.onTextChanged {
+            if (it.isNotEmpty()) {
+                ibanSubject.onNext(it.toString().trim())
+            }
+        }
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
