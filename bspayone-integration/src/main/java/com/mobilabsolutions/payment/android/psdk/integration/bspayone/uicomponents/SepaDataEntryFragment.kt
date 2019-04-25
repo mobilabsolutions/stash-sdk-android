@@ -1,7 +1,10 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
 
+import android.graphics.Color
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.DrawableContainer
 import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +13,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.internal.CustomizationUtil.darken
 import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
@@ -39,8 +43,14 @@ class SepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    lateinit var errorDrawable: Drawable
-    lateinit var normalBacgroundDrawable: Drawable
+    lateinit var textFieldBackgroundErrorDrawable: Drawable
+    lateinit var textFieldBackgroundNormalDrawable: Drawable
+    var textColor : Int = 0
+    lateinit var buttonColorDrawable : Drawable
+    var buttonTextColor : Int = 0
+    var cellBackgroundColor : Int = 0
+    var mediumEmphasisColor : Int = 0
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,14 +61,27 @@ class SepaDataEntryFragment : Fragment() {
         return view
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        errorDrawable = resources.getDrawable(R.drawable.edit_text_frame_error)
-        normalBacgroundDrawable = resources.getDrawable(R.drawable.edit_text_frame)
+        textFieldBackgroundErrorDrawable = resources.getDrawable(R.drawable.edit_text_frame_error)
+        textFieldBackgroundNormalDrawable = resources.getDrawable(R.drawable.edit_text_selector)
+        buttonColorDrawable = resources.getDrawable(R.drawable.rounded_corner_button_selector)
 
 
-        (normalBacgroundDrawable as GradientDrawable).setStroke(1, resources.getColor(uiCustomizationManager.getBackgroundColor()))
-        (errorDrawable as GradientDrawable).setStroke(1, resources.getColor(uiCustomizationManager.getBackgroundColor()))
+
+        val textFieldDrawableContainerState = (textFieldBackgroundNormalDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
+        val textFieldDrawableStates = textFieldDrawableContainerState.children.map { it as GradientDrawable }
+        textFieldDrawableStates[0].setStroke(1, resources.getColor(uiCustomizationManager.getCustomizationPreferences().mediumEmphasisColor))
+        textFieldDrawableStates[1].setStroke(1, darken(resources.getColor(uiCustomizationManager.getCustomizationPreferences().mediumEmphasisColor)))
+
+        val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
+        val states = buttonBackgroundDrawableContainterStates.children
+        (states[0] as GradientDrawable).setStroke(10, Color.CYAN)
+        (states[1] as GradientDrawable).setStroke(5, Color.RED)
+
+
+
 
 
 
@@ -66,30 +89,37 @@ class SepaDataEntryFragment : Fragment() {
             validateFirstName(it)
         }
         firstNameEditText.refreshCustomizations()
-        creditCardNumberEditText.getContentOnFocusLost {
+
+        ibanAccount.getContentOnFocusLost {
             validateIban(it)
         }
-        lastNameEditText.refreshCustomizations()
+        ibanAccount.refreshCustomizations()
+
+
         lastNameEditText.getContentOnFocusLost {
             validateLastName(it)
         }
-        countryText.refreshCustomizations()
+        lastNameEditText.refreshCustomizations()
+
+
         countryText.setOnClickListener {
             Timber.d("Country selector")
         }
+        countryText.refreshCustomizations()
+
 
         saveButton.setOnClickListener {
             var success = true
             success = validateFirstName(firstNameEditText.getContentsAsString()) && success
             success = validateLastName(lastNameEditText.getContentsAsString()) && success
-            success = validateIban(creditCardNumberEditText.getContentsAsString()) && success
+            success = validateIban(ibanAccount.getContentsAsString()) && success
             success = validateCountry(countryText.text.toString()) && success
 
             if (success) {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap.put(SepaData.FIRST_NAME, firstNameEditText.getContentsAsString())
                 dataMap.put(SepaData.LAST_NAME, lastNameEditText.getContentsAsString())
-                dataMap.put(SepaData.IBAN, creditCardNumberEditText.getContentsAsString())
+                dataMap.put(SepaData.IBAN, ibanAccount.getContentsAsString())
                 dataMap.put(BillingData.COUNTRY, countryText.text.toString())
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
@@ -105,14 +135,14 @@ class SepaDataEntryFragment : Fragment() {
     }
 
     private fun TextView.clearError() {
-        background = normalBacgroundDrawable
+        background = textFieldBackgroundNormalDrawable
 //        this.setBackgroundResource(R.drawable.edit_text_frame)
         this.error = null
     }
 
     private fun TextView.refreshCustomizations() {
         if (this.error == null) {
-            background = normalBacgroundDrawable
+            background = textFieldBackgroundNormalDrawable
         }
     }
 
@@ -139,9 +169,9 @@ class SepaDataEntryFragment : Fragment() {
     fun validateIban(iban: String): Boolean {
         val validationResult = sepaDataValidator.validateIban(iban)
         if (!validationResult.success) {
-            creditCardNumberEditText.customError(getString(validationResult.errorMessageResourceId))
+            ibanAccount.customError(getString(validationResult.errorMessageResourceId))
         } else {
-            creditCardNumberEditText.clearError()
+            ibanAccount.clearError()
         }
         return validationResult.success
     }

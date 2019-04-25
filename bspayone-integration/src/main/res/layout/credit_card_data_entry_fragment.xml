@@ -36,7 +36,7 @@
             android:text="@string/credit_card_data_expiry"
             android:textColor="@color/dark_two"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/ibanAccount"/>
 
         <TextView
             android:id="@+id/expirationDateTextView"
@@ -64,7 +64,7 @@
             android:text="@string/credit_card_data_cvv"
             android:textColor="@color/dark_two"
             app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText"/>
+            app:layout_constraintTop_toBottomOf="@+id/ibanAccount"/>
 
         <EditText
             android:id="@+id/ccvEditText"
@@ -113,8 +113,8 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
-            app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView"/>
+            app:layout_constraintStart_toStartOf="@+id/ibanNumberTitleTextView"
+            app:layout_constraintTop_toBottomOf="@+id/ibanNumberTitleTextView"/>
 
         <TextView
             android:id="@+id/countryText"
@@ -133,7 +133,7 @@
             app:layout_constraintHorizontal_bias="0.0"
             android:textColor="?attr/editTextColor"
             android:textAppearance="?android:attr/textAppearanceMediumInverse"
-            app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
+            app:layout_constraintStart_toStartOf="@+id/ibanNumberTitleTextView"
             app:layout_constraintTop_toBottomOf="@+id/countryTitleTextView"/>
 
         <EditText
@@ -153,7 +153,7 @@
             app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView"/>
 
         <TextView
-            android:id="@+id/creditCardNumberTitleTextView"
+            android:id="@+id/ibanNumberTitleTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"

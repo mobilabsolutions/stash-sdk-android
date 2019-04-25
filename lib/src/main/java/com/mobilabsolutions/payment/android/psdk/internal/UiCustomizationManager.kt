@@ -1,6 +1,8 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
 import android.content.SharedPreferences
+import android.graphics.Color
+import androidx.core.graphics.ColorUtils
 import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.R
 import javax.inject.Inject
@@ -11,7 +13,7 @@ import javax.inject.Inject
 
 data class CustomizationPreference(
         val textColor : Int = R.color.dark_two,
-        val backgroundColor: Int = R.color.unknown_blue,
+        val backgroundColor: Int = R.color.ice_blue_two,
         val buttonColor : Int = R.color.unknown_blue,
         val buttonTextColor : Int = R.color.white,
         val cellBackgroundColor : Int = R.color.white,
@@ -31,17 +33,18 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
         loadPreference()
     }
 
-    fun setBackgroundColor(color: Int) {
-        customizationPreference = customizationPreference.copy(backgroundColor = color)
+    fun setCustomizationPreferences(customizationPreference: CustomizationPreference) {
+        this.customizationPreference = customizationPreference
         storePreference()
     }
 
-    fun getBackgroundColor() : Int{
-        return customizationPreference.backgroundColor
+    fun getCustomizationPreferences() : CustomizationPreference {
+        return customizationPreference
     }
 
     private fun storePreference() {
         val preferenceJson = gson.toJson(customizationPreference)
+        sharedPreferences.edit().putString(CUSTOMIZATION_KEY, preferenceJson).commit()
     }
 
     private fun loadPreference() {
@@ -54,4 +57,11 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
 
     }
 
+}
+
+object CustomizationUtil {
+
+    fun darken(color : Int) : Int {
+        return ColorUtils.blendARGB(color, Color.BLACK, 0.2f)
+    }
 }
