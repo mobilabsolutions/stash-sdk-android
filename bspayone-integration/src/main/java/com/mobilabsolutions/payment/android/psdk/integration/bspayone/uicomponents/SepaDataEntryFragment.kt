@@ -71,7 +71,6 @@ class SepaDataEntryFragment : Fragment() {
                 ::SepaDataEntryViewState)
                 .subscribe(this::onViewStateNext)
 
-
         firstNameEditText.onTextChanged { firstNameSubject.onNext(it.toString().trim()) }
         lastNameEditText.onTextChanged { lastNameSubject.onNext(it.toString().trim()) }
         creditCardNumberEditText.onTextChanged { ibanSubject.onNext(it.toString().trim()) }
@@ -84,13 +83,18 @@ class SepaDataEntryFragment : Fragment() {
         saveButton.setOnClickListener {
             viewState?.let {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
-                dataMap.put(SepaData.FIRST_NAME, it.firstName)
-                dataMap.put(SepaData.LAST_NAME, it.lastName)
-                dataMap.put(SepaData.IBAN, it.iban)
-                dataMap.put(BillingData.COUNTRY, it.country)
+                dataMap[SepaData.FIRST_NAME] = it.firstName
+                dataMap[SepaData.LAST_NAME] = it.lastName
+                dataMap[SepaData.IBAN] = it.iban
+                dataMap[BillingData.COUNTRY] = it.country
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposables.clear()
     }
 
     private fun onViewStateNext(state: SepaDataEntryViewState) {

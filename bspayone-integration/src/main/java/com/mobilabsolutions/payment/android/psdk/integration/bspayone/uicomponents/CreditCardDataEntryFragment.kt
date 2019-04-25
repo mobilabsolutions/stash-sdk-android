@@ -56,7 +56,6 @@ class CreditCardDataEntryFragment : Fragment() {
         Timber.d("Created")
     }
 
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.credit_card_data_entry_fragment, container, false)
     }
