@@ -13,7 +13,7 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
     private var changeLocation: Int = 0
 
     // Default to Visa, as most cards falls in this number grouping pattern
-    private var groupingPattern: String = GroupingPattern.VISA_MASTERCARD.pattern
+    private var groupingPattern: String = GroupingPattern.VISA_MASTER.pattern
 
     override fun beforeTextChanged(sequence: CharSequence, start: Int, count: Int, after: Int) {
     }
@@ -43,7 +43,7 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
                     CardType.MAESTRO_13 -> GroupingPattern.MAESTRO_13.pattern
                     CardType.MAESTRO_15 -> GroupingPattern.MAESTRO_15.pattern
                     CardType.UNIONPAY_19 -> GroupingPattern.UNIONPAY_19.pattern
-                    else -> GroupingPattern.VISA_MASTERCARD.pattern
+                    else -> GroupingPattern.VISA_MASTER.pattern
                 })
                 cardIconChanged(matchingPattern.resource)
                 break
@@ -78,9 +78,9 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
     /**
      * Ref : https://baymard.com/checkout-usability/credit-card-patterns
      */
-    private enum class GroupingPattern(val pattern: String) {
+    enum class GroupingPattern(val pattern: String) {
 
-        VISA_MASTERCARD("(\\d{4})(\\d{0,4})(\\d{0,4})(\\d{0,4})(\\d{0,3})"),    // 4-4-4-4(-3)
+        VISA_MASTER("(\\d{4})(\\d{0,4})(\\d{0,4})(\\d{0,4})(\\d{0,3})"),        // 4-4-4-4(-3)
 
         AMEX("(\\d{4})(\\d{0,6})(\\d{0,5})"),                                   // 4-6-5
 
@@ -93,9 +93,9 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
         UNIONPAY_19("(\\d{6})(\\d{0,13})")                                      // 6-13
     }
 
-    private enum class CardType(val regex: Regex, @DrawableRes val resource: Int) {
+    enum class CardType(val regex: Regex, @DrawableRes val resource: Int) {
 
-        JBC(Regex("^(?:2131|1800|35[0-9]{3})[0-9]{3,}$"), R.drawable.ic_card_jcb),
+        JCB(Regex("^(?:2131|1800|35[0-9]{3})[0-9]{3,}$"), R.drawable.ic_card_jcb),
 
         AMEX(Regex("^3[47][0-9]{1,13}$"), R.drawable.ic_card_amex),
 
@@ -105,7 +105,7 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
 
         MAESTRO_13(Regex("^50[0-9]{1,11}$"), R.drawable.ic_card_maestro),
 
-        MAESTRO_15(Regex("^5[68][0-9]{1,12}$"), R.drawable.ic_card_maestro),
+        MAESTRO_15(Regex("^5[68][0-9]{1,13}$"), R.drawable.ic_card_maestro),
 
         MASTER_CARD(Regex("^5[1-5][0-9]{1,14}$"), R.drawable.ic_card_master),
 
