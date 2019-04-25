@@ -20,24 +20,24 @@
     </data>
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
         android:layout_height="86dp"
         android:layout_marginBottom="8dp"
+        android:layout_width="match_parent"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_width="match_parent"
             android:padding="8dp">
 
             <ImageView
-                android:id="@+id/payment_type_icon"
-                android:layout_width="46dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="8dp"
                 android:background="@drawable/ripple_rounded_corner_box_white"
                 android:contentDescription="@string/image_description"
+                android:id="@+id/payment_type_icon"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_width="46dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -46,9 +46,9 @@
 
             <TextView
                 android:id="@+id/payment_name"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_width="wrap_content"
                 android:text="@{paymentMethod._type}"
                 android:textAppearance="@style/itemTitle"
                 app:layout_constraintBottom_toTopOf="@+id/payment_alias"
@@ -59,24 +59,25 @@
 
             <TextView
                 android:id="@+id/payment_alias"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_width="wrap_content"
                 android:text="@{paymentMethod.alias}"
                 android:textAppearance="@style/itemDescription"
+                android:textIsSelectable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/payment_type_icon"
                 app:layout_constraintTop_toBottomOf="@+id/payment_name"
                 tools:text="@string/payment_type_alias_placeholder" />
 
             <ImageView
-                android:id="@+id/btn_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="20dp"
                 android:background="@drawable/ripple_circle_grey"
                 android:contentDescription="@string/image_description"
+                android:id="@+id/btn_delete"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="20dp"
+                android:layout_width="wrap_content"
                 android:onClick="@{deleteBtnClickListener}"
                 android:padding="8dp"
                 android:src="@drawable/ic_delete"
