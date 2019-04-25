@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.sample.registration
 
 import android.app.Activity
 import com.mobilabsolutions.commonsv3.mvp.controller.Controller
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.sample.state.PaymentMethodState
@@ -35,7 +36,7 @@ class RegistrationController @Inject constructor() : Controller() {
         exipryDate: LocalDate,
         activity: Activity? = null
 
-    ): Single<String> {
+    ): Single<PaymentMethodAlias> {
         val nameList = holderName.split(' ')
         val firstName = nameList[0]
         val lastName = if (nameList.size > 1) {
@@ -56,7 +57,7 @@ class RegistrationController @Inject constructor() : Controller() {
                     paymentMethodStateSubject.apply {
                         val paymentMethodState = take(1).blockingLast()
                         val paymentMethodMap = paymentMethodState.paymentMethodMap
-                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("CC" + creditCardNumber.takeLast(4) to it)))
+                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("CC" + creditCardNumber.takeLast(4) to it.alias)))
                     }
                 }
     }
@@ -70,7 +71,7 @@ class RegistrationController @Inject constructor() : Controller() {
         country: String = "",
         phone: String = "",
         activity: Activity? = null
-    ): Single<String> {
+    ): Single<PaymentMethodAlias> {
         val nameList = holderName.split(' ')
         val firstName = nameList[0]
         val lastName = if (nameList.size > 1) {
@@ -93,31 +94,31 @@ class RegistrationController @Inject constructor() : Controller() {
                     paymentMethodStateSubject.apply {
                         val paymentMethodState = take(1).blockingLast()
                         val paymentMethodMap = paymentMethodState.paymentMethodMap
-                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("SEPA" + iban.takeLast(4) to it)))
+                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("SEPA" + iban.takeLast(4) to it.alias)))
                     }
                 }
     }
 
-    fun registerPayPal(activity: Activity? = null): Single<String> {
+    fun registerPayPal(activity: Activity? = null): Single<PaymentMethodAlias> {
         return registrationManager.registerPaymentMehodUsingUi(activity = activity, specificPaymentMethodType = PaymentMethodType.PAYPAL)
                 .doOnSuccess {
-                    Timber.d("Nonce $it")
+                    Timber.d("Nonce ${it.alias}")
                     paymentMethodStateSubject.apply {
                         val paymentMethodState = take(1).blockingLast()
                         val paymentMethodMap = paymentMethodState.paymentMethodMap
-                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("PayPal" + LocalDate.now().toString() to it)))
+                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("PayPal" + LocalDate.now().toString() to it.alias)))
                     }
                 }
     }
 
-    fun registerPaymentMethod(activity: Activity? = null): Single<String> {
+    fun registerPaymentMethod(activity: Activity? = null): Single<PaymentMethodAlias> {
         return registrationManager.registerPaymentMehodUsingUi(activity = activity)
                 .doOnSuccess {
-                    Timber.d("Nonce $it")
+                    Timber.d("Nonce ${it.alias}")
                     paymentMethodStateSubject.apply {
                         val paymentMethodState = take(1).blockingLast()
                         val paymentMethodMap = paymentMethodState.paymentMethodMap
-                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("PayPal" + LocalDate.now().toString() to it)))
+                        onNext(paymentMethodState.copy(paymentMethodMap = paymentMethodMap + ("PayPal" + LocalDate.now().toString() to it.alias)))
                     }
                 }
     }
