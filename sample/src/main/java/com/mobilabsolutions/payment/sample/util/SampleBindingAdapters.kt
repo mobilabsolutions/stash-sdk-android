@@ -39,6 +39,7 @@ fun paymentImageByType(imageView: ImageView, paymentMethod: PaymentMethod) {
         PaymentType.CREDIT_CARD -> R.drawable.credit_card
         PaymentType.SEPA -> R.drawable.sepa
         PaymentType.PAYPAL -> R.drawable.paypal
+        else -> R.drawable.credit_card
     }
     imageView.setImageResource(resId)
 }

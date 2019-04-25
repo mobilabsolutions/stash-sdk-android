@@ -18,7 +18,7 @@ import com.mobilabsolutions.payment.sample.data.entities.Product
             Cart::class,
             PaymentMethod::class
         ],
-        version = 2
+        version = 3
 )
 abstract class SampleDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
