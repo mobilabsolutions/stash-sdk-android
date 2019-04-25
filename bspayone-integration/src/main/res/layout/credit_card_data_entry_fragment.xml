@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -10,8 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@color/ice_blue_two"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        >
+        android:layout_width="match_parent">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -36,7 +36,7 @@
                 android:text="@string/credit_card_data_expiry"
                 android:textColor="@color/dark_two"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText" />
+                app:layout_constraintTop_toBottomOf="@+id/errorCreditCardNumber" />
 
             <TextView
                 android:background="@drawable/edit_text_selector"
@@ -64,7 +64,7 @@
                 android:text="@string/credit_card_data_cvv"
                 android:textColor="@color/dark_two"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText" />
+                app:layout_constraintTop_toBottomOf="@+id/errorCreditCardNumber" />
 
             <EditText
                 android:background="@drawable/edit_text_selector"
@@ -119,12 +119,24 @@
                 app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView" />
 
             <TextView
+                android:id="@+id/errorCreditCardNumber"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:text="@string/credit_card_data_number_validation_error"
+                android:textColor="@color/coral"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText"
+                tools:visibility="visible" />
+
+            <TextView
                 android:background="@drawable/edit_text_selector"
                 android:ems="10"
                 android:gravity="center_vertical"
                 android:hint="@string/credit_card_data_entry_country"
                 android:id="@+id/countryText"
-                android:inputType="textPersonName"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="16dp"
@@ -211,6 +223,7 @@
 
         <Button
             android:background="@drawable/rounded_corner_button_selector"
+            android:enabled="false"
             android:id="@+id/saveButton"
             android:layout_height="wrap_content"
             android:layout_marginBottom="18dp"
