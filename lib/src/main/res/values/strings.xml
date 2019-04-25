@@ -41,7 +41,7 @@
     <string name="credit_card_data_cvv">CCV</string>
 
     // Errors
-    <string name="credit_card_data_number_validation_error">Invalid credit card number</string>
+    <string name="credit_card_data_number_validation_error">Please enter a correct credit card number.</string>
     <string name="credit_card_data_cvv_validation_error">Invalid CVC/CVV</string>
     <string name="credit_card_data_expiry_validation_error">Invalid expiration date</string>
 
