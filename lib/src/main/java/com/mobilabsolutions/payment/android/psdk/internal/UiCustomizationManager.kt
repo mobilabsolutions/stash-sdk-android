@@ -17,7 +17,8 @@ data class CustomizationPreference(
         val buttonColor : Int = R.color.unknown_blue,
         val buttonTextColor : Int = R.color.white,
         val cellBackgroundColor : Int = R.color.white,
-        val mediumEmphasisColor : Int = R.color.cool_gray
+//        val mediumEmphasisColor : Int = R.color.cool_gray
+        val mediumEmphasisColor : Int = android.R.color.holo_green_light
 
 
 )

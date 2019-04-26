@@ -1,15 +1,13 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.DrawableContainer
-import android.graphics.drawable.GradientDrawable
-import android.graphics.drawable.StateListDrawable
+import android.graphics.drawable.*
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
@@ -17,11 +15,12 @@ import com.mobilabsolutions.payment.android.psdk.internal.CustomizationUtil.dark
 import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
-// ktlint-disable no-wildcard-imports
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.plusAssign
+import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
@@ -52,98 +51,109 @@ class SepaDataEntryFragment : Fragment() {
     var mediumEmphasisColor : Int = 0
 
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.sepa_data_entry_fragment, container, false)
-        return view
+    private val disposables = CompositeDisposable()
+    private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val lastNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val ibanSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.createDefault("Germany")
+
+    private var viewState: SepaDataEntryViewState? = null
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
+        Timber.d("Created")
     }
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        return inflater.inflate(R.layout.sepa_data_entry_fragment, container, false)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        textFieldBackgroundErrorDrawable = resources.getDrawable(R.drawable.edit_text_frame_error)
-        textFieldBackgroundNormalDrawable = resources.getDrawable(R.drawable.edit_text_selector)
-        buttonColorDrawable = resources.getDrawable(R.drawable.rounded_corner_button_selector)
+        textFieldBackgroundErrorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_frame_error) ?: ColorDrawable(Color.BLACK)
+        textFieldBackgroundNormalDrawable =  ContextCompat.getDrawable(requireContext(), R.drawable.edit_text_selector) ?: ColorDrawable(Color.BLACK)
+        buttonColorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.rounded_corner_button_selector) ?: ColorDrawable(Color.BLACK)
 
-
-
+        textFieldBackgroundErrorDrawable = firstNameEditText.background
         val textFieldDrawableContainerState = (textFieldBackgroundNormalDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
-        val textFieldDrawableStates = textFieldDrawableContainerState.children.map { it as GradientDrawable }
-        textFieldDrawableStates[0].setStroke(1, resources.getColor(uiCustomizationManager.getCustomizationPreferences().mediumEmphasisColor))
-        textFieldDrawableStates[1].setStroke(1, darken(resources.getColor(uiCustomizationManager.getCustomizationPreferences().mediumEmphasisColor)))
+        val textFieldDrawableStates = textFieldDrawableContainerState.children.filter { it != null }.map { it as GradientDrawable }
+        textFieldDrawableStates[0].setStroke(7, resources.getColor(uiCustomizationManager.getCustomizationPreferences().mediumEmphasisColor))
+        textFieldDrawableStates[1].setStroke(15, darken(resources.getColor(uiCustomizationManager.getCustomizationPreferences().mediumEmphasisColor)))
 
         val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
-        val states = buttonBackgroundDrawableContainterStates.children
-        (states[0] as GradientDrawable).setStroke(10, Color.CYAN)
-        (states[1] as GradientDrawable).setStroke(5, Color.RED)
+        val states = buttonBackgroundDrawableContainterStates.children.filter { it != null }.map { it as GradientDrawable }
+        states[0].setStroke(10, Color.CYAN)
+        states[1].setStroke(5, Color.RED)
 
-
-
-
-
-
-        firstNameEditText.getContentOnFocusLost {
-            validateFirstName(it)
-        }
         firstNameEditText.refreshCustomizations()
-
-        ibanAccount.getContentOnFocusLost {
-            validateIban(it)
-        }
-        ibanAccount.refreshCustomizations()
-
-
-        lastNameEditText.getContentOnFocusLost {
-            validateLastName(it)
-        }
         lastNameEditText.refreshCustomizations()
+        countryText.refreshCustomizations()
+        ibanNumberEditText.refreshCustomizations()
 
+
+        disposables += Observables.combineLatest(
+                firstNameSubject,
+                lastNameSubject,
+                ibanSubject,
+                countrySubject,
+                ::SepaDataEntryViewState)
+                .subscribe(this::onViewStateNext)
+
+        firstNameEditText.onTextChanged { firstNameSubject.onNext(it.toString().trim()) }
+        lastNameEditText.onTextChanged { lastNameSubject.onNext(it.toString().trim()) }
+        ibanNumberEditText.onTextChanged { ibanSubject.onNext(it.toString().trim()) }
+        countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
             Timber.d("Country selector")
         }
-        countryText.refreshCustomizations()
-
 
         saveButton.setOnClickListener {
-            var success = true
-            success = validateFirstName(firstNameEditText.getContentsAsString()) && success
-            success = validateLastName(lastNameEditText.getContentsAsString()) && success
-            success = validateIban(ibanAccount.getContentsAsString()) && success
-            success = validateCountry(countryText.text.toString()) && success
-
-            if (success) {
+            viewState?.let {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
-                dataMap.put(SepaData.FIRST_NAME, firstNameEditText.getContentsAsString())
-                dataMap.put(SepaData.LAST_NAME, lastNameEditText.getContentsAsString())
-                dataMap.put(SepaData.IBAN, ibanAccount.getContentsAsString())
-                dataMap.put(BillingData.COUNTRY, countryText.text.toString())
+                dataMap[SepaData.FIRST_NAME] = it.firstName
+                dataMap[SepaData.LAST_NAME] = it.lastName
+                dataMap[SepaData.IBAN] = it.iban
+                dataMap[BillingData.COUNTRY] = it.country
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        disposables.clear()
+    }
+
+    private fun onViewStateNext(state: SepaDataEntryViewState) {
+        this.viewState = state
+        var success = true
+        success = validateFirstName(state.firstName) && success
+        success = validateLastName(state.lastName) && success
+        success = validateIban(state.iban) && success
+        success = validateCountry(state.country) && success
+        saveButton.isEnabled = success
+    }
+
     private fun TextView.customError(message: String) {
         if (this.error == null) {
             this.setBackgroundResource(R.drawable.edit_text_frame_error)
-            this.setError(message, resources.getDrawable(R.drawable.empty_drawable))
+            this.setError(message, ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
             this.invalidate()
         }
-    }
-
-    private fun TextView.clearError() {
-        background = textFieldBackgroundNormalDrawable
-//        this.setBackgroundResource(R.drawable.edit_text_frame)
-        this.error = null
     }
 
     private fun TextView.refreshCustomizations() {
         if (this.error == null) {
             background = textFieldBackgroundNormalDrawable
         }
+    }
+
+    private fun TextView.clearError() {
+        this.setBackground(textFieldBackgroundNormalDrawable)
+//        this.setBackgroundResource(R.drawable.edit_text_frame)
+        this.error = null
     }
 
     fun validateFirstName(name: String): Boolean {
@@ -156,7 +166,7 @@ class SepaDataEntryFragment : Fragment() {
         return validationResult.success
     }
 
-    fun validateLastName(name: String): Boolean {
+    private fun validateLastName(name: String): Boolean {
         val validationResult = personalDataValidator.validateName(name)
         if (!validationResult.success) {
             lastNameEditText.customError(getString(validationResult.errorMessageResourceId))
@@ -166,18 +176,20 @@ class SepaDataEntryFragment : Fragment() {
         return validationResult.success
     }
 
-    fun validateIban(iban: String): Boolean {
+    private fun validateIban(iban: String): Boolean {
         val validationResult = sepaDataValidator.validateIban(iban)
         if (!validationResult.success) {
-            ibanAccount.customError(getString(validationResult.errorMessageResourceId))
+            ibanNumberEditText.setBackgroundResource(R.drawable.edit_text_frame_error)
+            errorIban.visibility = View.VISIBLE
         } else {
-            ibanAccount.clearError()
+            ibanNumberEditText.setBackgroundResource(R.drawable.edit_text_frame)
+            errorIban.visibility = View.GONE
         }
         return validationResult.success
     }
 
-    fun validateCountry(country: String): Boolean {
-        return if (!country.isEmpty()) {
+    private fun validateCountry(country: String): Boolean {
+        return if (country.isNotEmpty()) {
             countryText.clearError()
             true
         } else {
@@ -186,9 +198,10 @@ class SepaDataEntryFragment : Fragment() {
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
-        Timber.d("Created")
-    }
+    data class SepaDataEntryViewState(
+        val firstName: String = "",
+        val lastName: String = "",
+        val iban: String = "",
+        val country: String = "Germany"
+    )
 }

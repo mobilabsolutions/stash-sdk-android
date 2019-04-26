@@ -33,7 +33,7 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeBy(
                                 onSuccess = {
-                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it.alias))
                                     applyOnUi { it.renderState(registrationViewState) }
                                 },
                                 onError = {
@@ -70,7 +70,7 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeBy(
                                 onSuccess = {
-                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it.alias))
                                     applyOnUi { it.renderState(registrationViewState) }
                                 },
                                 onError = {
@@ -95,7 +95,7 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeBy(
                                 onSuccess = {
-                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it.alias))
                                     applyOnUi { it.renderState(registrationViewState) }
                                 },
                                 onError = {
@@ -125,7 +125,7 @@ class RegistrationPresenter : CommonPresenter<RegistrationView>() {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeBy(
                                 onSuccess = {
-                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it))
+                                    registrationViewState = copy(executingRegistration = false, successfullRegistration = Pair(true, it.alias))
                                     applyOnUi { it.renderState(registrationViewState) }
                                 },
                                 onError = {

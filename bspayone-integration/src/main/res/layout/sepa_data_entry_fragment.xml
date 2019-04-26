@@ -3,158 +3,173 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:fillViewport="true"
-    >
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:background="@color/ice_blue_two"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
         android:orientation="vertical">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:background="@drawable/rounded_corner_white"
             android:id="@+id/constraintLayout2"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rounded_corner_white"
+            android:layout_width="match_parent"
             android:paddingBottom="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/credit_card_entry_title">
 
             <EditText
-                android:id="@+id/firstNameEditText"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/edit_text_selector"
                 android:ems="10"
                 android:hint="@string/sepa_data_entry_first_name"
+                android:id="@+id/firstNameEditText"
                 android:inputType="textPersonName"
+                android:layout_height="40dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="0dp"
+                android:nextFocusDown="@+id/lastNameEditText"
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView" />
 
             <EditText
-                android:id="@+id/ibanAccount"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/edit_text_selector"
                 android:ems="10"
                 android:hint="@string/sepa_data_entry_iban"
+                android:id="@+id/ibanNumberEditText"
                 android:inputType="textNoSuggestions"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="0dp"
                 android:paddingStart="16dp"
+                android:paddingEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/ibanNumberTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/ibanNumberTitleTextView"/>
+                app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
+                app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView" />
 
             <TextView
-                android:id="@+id/countryText"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+                android:id="@+id/errorIban"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
-                android:layout_marginTop="8dp"
-                android:gravity="center_vertical"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
+                android:layout_width="match_parent"
+                android:text="@string/sepa_data_entry_invalid_iban"
+                android:textColor="@color/coral"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@+id/ibanNumberEditText"
+                tools:visibility="visible" />
+
+            <TextView
                 android:background="@drawable/edit_text_selector"
                 android:ems="10"
+                android:gravity="center_vertical"
                 android:hint="@string/sepa_data_entry_country"
-                android:text="Germany"
-                android:textColor="?attr/editTextColor"
-                android:textAppearance="?android:attr/textAppearanceMediumInverse"
-                android:paddingStart="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/ibanNumberTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/countryTitleTextView"/>
-
-            <EditText
-                android:id="@+id/lastNameEditText"
-                android:layout_width="0dp"
+                android:id="@+id/countryText"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_width="0dp"
+                android:paddingStart="16dp"
+                android:text="Germany"
+                android:textAppearance="?android:attr/textAppearanceMediumInverse"
+                android:textColor="?attr/editTextColor"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
+                app:layout_constraintTop_toBottomOf="@+id/countryTitleTextView" />
+
+            <EditText
                 android:background="@drawable/edit_text_selector"
                 android:ems="10"
                 android:hint="@string/sepa_data_entry_last_name"
+                android:id="@+id/lastNameEditText"
                 android:inputType="textPersonName"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:layout_width="0dp"
+                android:nextFocusDown="@+id/ibanNumberEditText"
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/lastNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView" />
 
             <TextView
-                android:id="@+id/ibanNumberTitleTextView"
-                android:layout_width="wrap_content"
+                android:id="@+id/creditCardNumberTitleTextView"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
                 android:text="@string/sepa_data_entry_iban"
                 android:textColor="@color/dark_two"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/firstNameEditText"/>
+                app:layout_constraintTop_toBottomOf="@+id/firstNameEditText" />
 
             <TextView
                 android:id="@+id/countryTitleTextView"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
                 android:text="@string/sepa_data_entry_country"
                 android:textColor="@color/dark_two"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ibanAccount"/>
+                app:layout_constraintTop_toBottomOf="@+id/errorIban" />
 
             <TextView
                 android:id="@+id/firstNameTitleTextView"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
                 android:text="@string/sepa_data_entry_first_name"
                 android:textColor="@color/dark_two"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/lastNameTitleTextView"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_width="wrap_content"
                 android:text="@string/sepa_data_entry_last_name"
                 android:textColor="@color/dark_two"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/guideline"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5"/>
+                app:layout_constraintGuide_percent="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <Button
+            android:background="@drawable/rounded_corner_button_selector"
             android:id="@+id/saveButton"
-            android:layout_width="match_parent"
+            android:enabled="false"
             android:layout_height="wrap_content"
             android:layout_marginBottom="18dp"
             android:layout_marginEnd="34dp"
             android:layout_marginStart="34dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/rounded_corner_button_selector"
+            android:layout_width="match_parent"
             android:text="@string/sepa_data_entry_save"
             android:textColor="@android:color/white"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -162,20 +177,20 @@
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-            app:layout_constraintVertical_bias="0.949"/>
+            app:layout_constraintVertical_bias="0.949" />
 
 
         <TextView
             android:id="@+id/credit_card_entry_title"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="80dp"
+            android:layout_width="wrap_content"
             android:text="@string/sepa_data_entry_title"
             android:textColor="@color/dark_two"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
