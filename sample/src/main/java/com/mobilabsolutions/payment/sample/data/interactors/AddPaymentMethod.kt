@@ -17,8 +17,8 @@ class AddPaymentMethod @Inject constructor(
     override val dispatcher: CoroutineDispatcher = dispatchers.io
 
     override suspend fun execute(executeParams: ExecuteParams) {
-        paymentMethodRepository.addPaymentMethod(executeParams.paymentMethod)
+        paymentMethodRepository.addPaymentMethod(userId = executeParams.userId, paymentMethod = executeParams.paymentMethod)
     }
 
-    data class ExecuteParams(val paymentMethod: PaymentMethod)
+    data class ExecuteParams(val userId: String, val paymentMethod: PaymentMethod)
 }

@@ -9,9 +9,11 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
 import com.mobilabsolutions.payment.sample.core.launchInteractor
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
+import com.mobilabsolutions.payment.sample.data.entities.User
 import com.mobilabsolutions.payment.sample.data.interactors.AddPaymentMethod
 import com.mobilabsolutions.payment.sample.data.interactors.DeletePaymentMethod
-import com.mobilabsolutions.payment.sample.data.interactors.LoadPaymentMethods
+import com.mobilabsolutions.payment.sample.data.interactors.UpdatePaymentMethods
+import com.mobilabsolutions.payment.sample.data.interactors.UpdateUser
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -23,7 +25,8 @@ import timber.log.Timber
  */
 class PaymentMethodsViewModel @AssistedInject constructor(
     @Assisted initialStateMethods: PaymentMethodsViewState,
-    loadPaymentMethods: LoadPaymentMethods,
+    updateUser: UpdateUser,
+    updatePaymentMethods: UpdatePaymentMethods,
     private val schedulers: AppRxSchedulers,
     private val deletePaymentMethod: DeletePaymentMethod,
     private val addPaymentMethod: AddPaymentMethod
@@ -41,13 +44,22 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     init {
-        loadPaymentMethods.observe()
+        updateUser.observe()
+                .subscribeOn(schedulers.io)
+                .doOnNext {
+                    scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
+                }
+                .execute {
+                    copy(user = it() ?: User.EMPTY_USER)
+                }
+
+        updatePaymentMethods.observe()
                 .subscribeOn(schedulers.io)
                 .execute {
                     copy(paymentMethods = it() ?: emptyList())
                 }
-
-        loadPaymentMethods.setParams(Unit)
+        updateUser.setParams(Unit)
+        updatePaymentMethods.setParams(Unit)
     }
 
     fun onAddBtnClicked() {
@@ -66,8 +78,10 @@ class PaymentMethodsViewModel @AssistedInject constructor(
             PaymentMethodType.SEPA -> "SEPA"
             PaymentMethodType.PAYPAL -> "PayPal"
         }
-        val paymentMethod = PaymentMethod(alias = paymentMethodAlias.alias, _type = type)
-        scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(paymentMethod))
+        withState {
+            val paymentMethod = PaymentMethod(userId = it.user.userId, aliasId = paymentMethodAlias.alias, _type = type)
+            scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, paymentMethod = paymentMethod))
+        }
     }
 
     private fun onError(throwable: Throwable) {
