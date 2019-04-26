@@ -10,7 +10,7 @@ enum class PaymentType(val sdkValue: String) {
     PAYPAL("PayPal");
 
     companion object {
-        fun fromVapianoValue(value: String): PaymentType = PaymentType.values().first { it.sdkValue == value }
+        fun fromVapianoValue(value: String): PaymentType? = values().firstOrNull { it.sdkValue == value }
     }
 }
 

@@ -9,4 +9,5 @@ import io.reactivex.Observable
 interface PaymentMethodRepository {
     fun observePaymentMethods(): Observable<List<PaymentMethod>>
     suspend fun deletePaymentMethod(paymentMethod: PaymentMethod)
+    suspend fun addPaymentMethod(paymentMethod: PaymentMethod)
 }
