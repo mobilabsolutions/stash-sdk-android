@@ -93,11 +93,6 @@ class SepaDataEntryFragment : Fragment() {
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         creditCardNumberEditText.getContentOnFocusLost { ibanSubject.onNext(it.trim()) }
-        creditCardNumberEditText.onTextChanged {
-            if (it.isNotEmpty()) {
-                ibanSubject.onNext(it.toString().trim())
-            }
-        }
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {

@@ -112,11 +112,6 @@ class CreditCardDataEntryFragment : Fragment() {
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.trim()) }
-        creditCardNumberEditText.onTextChanged {
-            if (it.isNotEmpty()) {
-                ccNumberSubject.onNext(it.toString().trim())
-            }
-        }
         ccvEditText.getContentOnFocusLost { ccvSubject.onNext(it.toString().trim()) }
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
