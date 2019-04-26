@@ -12,12 +12,8 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.*
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
+import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.* // ktlint-disable no-wildcard-imports
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.whiteelephant.monthpicker.MonthPickerDialog
@@ -25,12 +21,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.*
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameEditText
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameEditText
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.* // ktlint-disable no-wildcard-imports
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
@@ -53,7 +44,7 @@ class CreditCardDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    lateinit var customizationPreference : CustomizationPreference
+    lateinit var customizationPreference: CustomizationPreference
 
     private val disposables = CompositeDisposable()
     private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
@@ -132,7 +123,6 @@ class CreditCardDataEntryFragment : Fragment() {
         creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
         creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
 
-
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.replace("\\D".toRegex(), "")) }
@@ -203,7 +193,6 @@ class CreditCardDataEntryFragment : Fragment() {
     private fun EditText.clearError() {
         this.error = null
         this.applyEditTextCustomization(customizationPreference)
-
     }
 
     private fun validateFirstName(name: String): Boolean {

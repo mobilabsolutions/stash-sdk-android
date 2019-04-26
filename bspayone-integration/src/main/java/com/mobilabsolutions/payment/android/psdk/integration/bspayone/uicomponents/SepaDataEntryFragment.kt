@@ -9,7 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.*
+import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
@@ -19,7 +19,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.* // ktlint-disable no-wildcard-imports
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -31,7 +31,7 @@ class SepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
-    lateinit var customizationPreference : CustomizationPreference
+    lateinit var customizationPreference: CustomizationPreference
 
     @Inject
     lateinit var sepaDataValidator: SepaDataValidator
@@ -64,8 +64,6 @@ class SepaDataEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
 
-
-
         firstNameEditText.applyEditTextCustomization(customizationPreference)
         lastNameEditText.applyEditTextCustomization(customizationPreference)
         countryText.applyFakeEditTextCustomization(customizationPreference)
@@ -73,7 +71,6 @@ class SepaDataEntryFragment : Fragment() {
         saveButton.applyCustomization(customizationPreference)
         sepaScreenMainLayout.applyBackgroundCustomization(customizationPreference)
         sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
-
 
         disposables += Observables.combineLatest(
                 firstNameSubject,
@@ -148,7 +145,6 @@ class SepaDataEntryFragment : Fragment() {
     private fun EditText.clearError() {
         this.error = null
         this.applyEditTextCustomization(customizationPreference)
-
     }
 
     private fun validateFirstName(name: String): Boolean {
