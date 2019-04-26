@@ -6,13 +6,17 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.internal.*
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -22,6 +26,11 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.*
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
@@ -40,6 +49,11 @@ class CreditCardDataEntryFragment : Fragment() {
 
     @Inject
     lateinit var personalDataValidator: PersonalDataValidator
+
+    @Inject
+    lateinit var uiCustomizationManager: UiCustomizationManager
+
+    lateinit var customizationPreference : CustomizationPreference
 
     private val disposables = CompositeDisposable()
     private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
@@ -78,15 +92,60 @@ class CreditCardDataEntryFragment : Fragment() {
                 ::CreditCardDataEntryViewState)
                 .subscribe(this::onViewState)
 
-        firstNameEditText.onTextChanged { firstNameSubject.onNext(it.toString().trim()) }
-        lastNameEditText.onTextChanged { lastNameSubject.onNext(it.toString().trim()) }
-        creditCardNumberEditText.onTextChanged { ccNumberSubject.onNext(it.toString().trim()) }
-        ccvEditText.onTextChanged { ccvSubject.onNext(it.toString().trim()) }
+        disposables += firstNameSubject
+                .doOnNext {
+                    validateFirstName(it)
+                }
+                .subscribe()
+
+        disposables += lastNameSubject
+                .doOnNext {
+                    validateLastName(it)
+                }
+                .subscribe()
+
+        disposables += ccNumberSubject
+                .doOnNext {
+                    validateCreditCardNumber(it)
+                }
+                .subscribe()
+
+        disposables += expDateSubject
+                .doOnNext {
+                    validateExpirationDate(it)
+                }
+                .subscribe()
+
+        disposables += ccvSubject
+                .doOnNext {
+                    validateCvv(it)
+                }
+                .subscribe()
+
+        customizationPreference = uiCustomizationManager.getCustomizationPreferences()
+        firstNameEditText.applyEditTextCustomization(customizationPreference)
+        lastNameEditText.applyEditTextCustomization(customizationPreference)
+        creditCardNumberEditText.applyEditTextCustomization(customizationPreference)
+        ccvEditText.applyEditTextCustomization(customizationPreference)
+        expirationDateTextView.applyFakeEditTextCustomization(customizationPreference)
+        countryText.applyFakeEditTextCustomization(customizationPreference)
+        creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
+        creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+
+
+        firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
+        lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
+        creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.replace("\\D".toRegex(), "")) }
+        ccvEditText.getContentOnFocusLost { ccvSubject.onNext(it.trim()) }
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
             Timber.d("Country selector")
         }
+
+        creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
+            creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
+        })
 
         saveButton.setOnClickListener {
             viewState?.let {
@@ -134,17 +193,17 @@ class CreditCardDataEntryFragment : Fragment() {
         saveButton.isEnabled = success
     }
 
-    private fun TextView.customError(message: String) {
+    private fun EditText.customError(message: String) {
         if (this.error == null) {
-            this.setBackgroundResource(R.drawable.edit_text_frame_error)
             this.setError(message, ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
-            this.invalidate()
+            this.applyEditTextCustomization(customizationPreference)
         }
     }
 
-    private fun TextView.clearError() {
-        this.setBackgroundResource(R.drawable.edit_text_frame)
+    private fun EditText.clearError() {
         this.error = null
+        this.applyEditTextCustomization(customizationPreference)
+
     }
 
     private fun validateFirstName(name: String): Boolean {
@@ -180,11 +239,12 @@ class CreditCardDataEntryFragment : Fragment() {
     }
 
     private fun validateCountry(country: String): Boolean {
-        return if (!country.isEmpty()) {
-            countryText.clearError()
+        return if (country.isNotEmpty()) {
+            countryText.error = null
+            countryText.applyFakeEditTextCustomization(customizationPreference)
             true
         } else {
-            countryText.customError(getString(R.string.validation_error_missing_country))
+            countryText.setError(getString(R.string.validation_error_missing_country), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
             false
         }
     }
@@ -201,14 +261,16 @@ class CreditCardDataEntryFragment : Fragment() {
 
     private fun validateExpirationDate(expiryDate: LocalDate?): Boolean {
         return if (expiryDate == null) {
-            expirationDateTextView.customError(getString(R.string.credit_card_data_expiry_validation_error))
+            countryText.error = null
+            countryText.applyFakeEditTextCustomization(customizationPreference)
             false
         } else {
             val validationResult = creditCardDataValidator.validateExpiry(expiryDate)
             if (!validationResult.success) {
-                expirationDateTextView.customError(getString(validationResult.errorMessageResourceId))
+                countryText.setError(getString(validationResult.errorMessageResourceId), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
             } else {
-                expirationDateTextView.clearError()
+                countryText.error = null
+                countryText.applyFakeEditTextCustomization(customizationPreference)
             }
             validationResult.success
         }

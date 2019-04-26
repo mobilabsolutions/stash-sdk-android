@@ -12,14 +12,13 @@ import androidx.room.PrimaryKey
 @Entity(
         tableName = "payment_method",
         indices = [
-            Index(value = ["payment_method_id"], unique = true)
+            Index(value = ["alias"], unique = true)
         ]
 )
 data class PaymentMethod(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
-    @ColumnInfo(name = "payment_method_id") val paymentMethodId: String = "",
     @ColumnInfo(name = "alias") val alias: String = "",
-    @ColumnInfo(name = "type") val _type: String = "credit_card"
+    @ColumnInfo(name = "type") val _type: String = "Credit Card"
 ) : SampleEntity {
 
     @delegate:Ignore

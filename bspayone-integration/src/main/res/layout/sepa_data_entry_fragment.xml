@@ -8,6 +8,7 @@
     android:layout_width="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/sepaScreenMainLayout"
         android:background="@color/ice_blue_two"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
@@ -16,7 +17,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/rounded_corner_white"
-            android:id="@+id/constraintLayout2"
+            android:id="@+id/sepaScreenCellLayout"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
@@ -176,7 +177,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
+            app:layout_constraintTop_toBottomOf="@+id/sepaScreenCellLayout"
             app:layout_constraintVertical_bias="0.949" />
 
 

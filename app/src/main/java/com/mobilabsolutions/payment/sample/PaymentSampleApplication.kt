@@ -7,6 +7,8 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
+import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.internal.CustomizationUtil
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
@@ -26,6 +28,23 @@ class PaymentSampleApplication : DaggerApplication() {
         )
         PaymentSdk.initalize(this, configuration)
 //        PaymentSdk.initalize(BuildConfig.newBsApiKey, "https://payment-dev.mblb.net/api/", this, setOf(BsPayoneIntegration, BraintreeIntegration), true)
+
+        val textColor: Int = android.R.color.holo_orange_dark,
+        val backgroundColor: Int = R.color.coral,
+        val buttonColor: Int = android.R.color.holo_purple,
+        val buttonTextColor: Int = android.R.color.holo_blue_bright,
+        val cellBackgroundColor: Int = R.color.unknown_blue,
+        val mediumEmphasisColor: Int = android.R.color.holo_green_light
+
+        val customizationPreference = CustomizationPreference(
+                textColor,
+                backgroundColor,
+                buttonColor,
+                buttonTextColor,
+                cellBackgroundColor,
+                mediumEmphasisColor
+        )
+        PaymentSdk.getUiCustomizationManager().setCustomizationPreferences(customizationPreference)
 
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this)

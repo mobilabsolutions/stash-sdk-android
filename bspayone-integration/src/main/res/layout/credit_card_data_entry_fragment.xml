@@ -10,13 +10,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@color/ice_blue_two"
+        android:id="@+id/creditCardScreenMainLayout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/rounded_corner_white"
-            android:id="@+id/constraintLayout"
+            android:id="@+id/creditCardScreenCellLayout"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
@@ -105,13 +106,14 @@
                 android:ems="10"
                 android:hint="@string/credit_card_data_number"
                 android:id="@+id/creditCardNumberEditText"
-                android:inputType="number"
+                android:inputType="number|textNoSuggestions"
+                android:drawableEnd="@drawable/ic_card_default"
                 android:layout_height="40dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_width="match_parent"
-                android:paddingEnd="16dp"
+                android:paddingEnd="12dp"
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
@@ -127,7 +129,7 @@
                 android:text="@string/credit_card_data_number_validation_error"
                 android:textColor="@color/coral"
                 android:visibility="gone"
-                app:layout_constraintTop_toBottomOf="@+id/ibanNumberEditText"
+                app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText"
                 tools:visibility="visible" />
 
             <TextView
@@ -160,7 +162,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_width="0dp"
-                android:nextFocusDown="@+id/ibanNumberEditText"
+                android:nextFocusDown="@+id/creditCardNumberEditText"
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/lastNameTitleTextView"
@@ -236,7 +238,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            app:layout_constraintTop_toBottomOf="@+id/creditCardScreenCellLayout"
             app:layout_constraintVertical_bias="0.859" />
 
 

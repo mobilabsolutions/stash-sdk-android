@@ -16,6 +16,6 @@ abstract class PaymentMethodDao : EntityDao<PaymentMethod> {
     @Query("SELECT COUNT(*) FROM payment_method")
     abstract suspend fun paymentMethodsCount(): Int
 
-    @Query("SELECT * FROM payment_method WHERE payment_method_id=:id")
-    abstract suspend fun entityById(id: String): PaymentMethod?
+    @Query("SELECT * FROM payment_method WHERE alias=:alias")
+    abstract suspend fun entityByAlias(alias: String): PaymentMethod?
 }

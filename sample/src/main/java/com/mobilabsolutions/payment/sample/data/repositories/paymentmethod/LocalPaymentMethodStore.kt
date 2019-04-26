@@ -17,10 +17,12 @@ class LocalPaymentMethodStore @Inject constructor(
 
     fun observePaymentMethods() = paymentMethodDao.entriesObservable()
 
-    suspend fun savePaymentMethod() = transactionRunner {
-    }
-
     suspend fun deletePaymentMethod(paymentMethod: PaymentMethod) = transactionRunner {
         paymentMethodDao.delete(paymentMethod)
+    }
+
+    suspend fun savePaymentMethod(paymentMethod: PaymentMethod) = transactionRunner {
+        val id = paymentMethodDao.entityByAlias(paymentMethod.alias)?.id ?: 0L
+        entityInserter.insertOrUpdate(paymentMethodDao, paymentMethod.copy(id = id))
     }
 }
