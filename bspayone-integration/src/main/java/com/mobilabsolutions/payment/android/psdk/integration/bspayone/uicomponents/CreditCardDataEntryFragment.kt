@@ -14,6 +14,7 @@ import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -79,10 +80,40 @@ class CreditCardDataEntryFragment : Fragment() {
                 ::CreditCardDataEntryViewState)
                 .subscribe(this::onViewState)
 
-        firstNameEditText.onTextChanged { firstNameSubject.onNext(it.toString().trim()) }
-        lastNameEditText.onTextChanged { lastNameSubject.onNext(it.toString().trim()) }
-        creditCardNumberEditText.onTextChanged { ccNumberSubject.onNext(it.toString().trim()) }
-        ccvEditText.onTextChanged { ccvSubject.onNext(it.toString().trim()) }
+        disposables += firstNameSubject
+                .doOnNext {
+                    validateFirstName(it)
+                }
+                .subscribe()
+
+        disposables += lastNameSubject
+                .doOnNext {
+                    validateLastName(it)
+                }
+                .subscribe()
+
+        disposables += ccNumberSubject
+                .doOnNext {
+                    validateCreditCardNumber(it)
+                }
+                .subscribe()
+
+        disposables += expDateSubject
+                .doOnNext {
+                    validateExpirationDate(it)
+                }
+                .subscribe()
+
+        disposables += ccvSubject
+                .doOnNext {
+                    validateCvv(it)
+                }
+                .subscribe()
+
+        firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
+        lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
+        creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.trim()) }
+        ccvEditText.getContentOnFocusLost { ccvSubject.onNext(it.toString().trim()) }
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
