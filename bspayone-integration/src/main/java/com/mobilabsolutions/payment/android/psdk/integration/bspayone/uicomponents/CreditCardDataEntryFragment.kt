@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
@@ -87,6 +88,10 @@ class CreditCardDataEntryFragment : Fragment() {
         countryText.setOnClickListener {
             Timber.d("Country selector")
         }
+
+        creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
+            creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
+        })
 
         saveButton.setOnClickListener {
             viewState?.let {

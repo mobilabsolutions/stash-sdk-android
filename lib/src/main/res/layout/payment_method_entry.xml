@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/paymentMethodRootView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/paymentMethodRootView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginStart="16dp"
@@ -21,7 +21,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/paymentMethodIconImageView"
         app:layout_constraintStart_toEndOf="@+id/paymentMethodIconImageView"
         app:layout_constraintTop_toTopOf="@+id/paymentMethodIconImageView"
-        app:layout_constraintVertical_bias="0.695"/>
+        app:layout_constraintVertical_bias="0.695" />
 
     <ImageView
         android:id="@+id/paymentMethodIconImageView"
@@ -33,5 +33,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/ic_credit"/>
+        tools:srcCompat="@drawable/ic_credit" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

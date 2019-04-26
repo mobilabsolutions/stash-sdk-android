@@ -14,7 +14,6 @@ import io.reactivex.subjects.ReplaySubject
 import kotlinx.android.synthetic.main.payment_method_chooser_fragment.*
 import kotlinx.android.synthetic.main.payment_method_entry.view.*
 import timber.log.Timber
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 /**
