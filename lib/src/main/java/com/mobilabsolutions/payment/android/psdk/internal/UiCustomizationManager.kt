@@ -10,9 +10,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
-import androidx.annotation.IdRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import com.google.gson.Gson
@@ -28,12 +26,12 @@ import javax.inject.Inject
  * or you can use the Builder supplied
  */
 data class CustomizationPreference(
-        @ColorRes val textColor: Int = R.color.dark_two,
-        @ColorRes val backgroundColor: Int = R.color.ice_blue_two,
-        @ColorRes val buttonColor: Int = R.color.unknown_blue,
-        @ColorRes val buttonTextColor: Int = R.color.white,
-        @ColorRes val cellBackgroundColor: Int = R.color.white,
-        @ColorRes val mediumEmphasisColor: Int = R.color.cool_gray
+    @ColorRes val textColor: Int = R.color.dark_two,
+    @ColorRes val backgroundColor: Int = R.color.ice_blue_two,
+    @ColorRes val buttonColor: Int = R.color.unknown_blue,
+    @ColorRes val buttonTextColor: Int = R.color.white,
+    @ColorRes val cellBackgroundColor: Int = R.color.white,
+    @ColorRes val mediumEmphasisColor: Int = R.color.cool_gray
 
 ) {
     class Builder() {
