@@ -1,5 +1,5 @@
 import org.gradle.api.Project
-import java.util.*
+import java.util.Properties
 
 object PaymentSdkRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
@@ -60,7 +60,7 @@ object Libs {
 
     val simpleframework = "org.simpleframework:simple-xml:2.7.1"
 
-    val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.1.1"
+    val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.0"
 
     val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.14.1"
 
@@ -77,7 +77,7 @@ object Libs {
     }
 
     object Kotlin {
-        private const val version = "1.3.30"
+        private const val version = "1.3.31"
         val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
         val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
@@ -85,7 +85,7 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.2.0"
+        private const val version = "1.2.1"
         val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         val rx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$version"
         val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
@@ -173,7 +173,7 @@ object Libs {
     }
 
     object PowerMock {
-        private const val version = "2.0.0"
+        private const val version = "2.0.2"
         val module = "org.powermock:powermock-module-junit4:$version"
         val api = "org.powermock:powermock-api-mockito2:$version"
     }
@@ -185,7 +185,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.4.1"
+        private const val version = "3.4.2"
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"
