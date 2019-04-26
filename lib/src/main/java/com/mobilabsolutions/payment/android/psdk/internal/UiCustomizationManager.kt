@@ -105,7 +105,7 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
 object CustomizationUtil {
 
     fun darken(color: Int): Int {
-        return ColorUtils.blendARGB(color, Color.BLACK, 0.2f)
+        return ColorUtils.blendARGB(color, Color.BLACK, 0.5f)
     }
 
     fun lighten(color: Int): Int {
@@ -126,8 +126,8 @@ private fun TextView.applyOnTextView(customizationPreference: CustomizationPrefe
         val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.edit_text_selector)
         val textFieldDrawableContainerState = (backgroundDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
         val textFieldDrawableStates = textFieldDrawableContainerState.children.filter { it != null }.map { it as GradientDrawable }
-        textFieldDrawableStates[0].setStroke(1.px, ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor))
-        textFieldDrawableStates[1].setStroke(1.px, CustomizationUtil.darken(ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor)))
+        textFieldDrawableStates[0].setStroke(1.px, CustomizationUtil.darken(ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor)))
+        textFieldDrawableStates[1].setStroke(1.px, ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor))
         background = backgroundDrawable
     } else {
         background = resources.getDrawable(R.drawable.edit_text_frame_error)
