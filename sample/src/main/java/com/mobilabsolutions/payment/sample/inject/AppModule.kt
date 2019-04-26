@@ -45,5 +45,4 @@ class AppModule {
     @Singleton
     @Named("cache")
     fun provideCacheDir(application: SampleApplication): File = application.cacheDir
-
 }

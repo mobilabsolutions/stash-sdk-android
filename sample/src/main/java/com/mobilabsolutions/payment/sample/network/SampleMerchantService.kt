@@ -30,5 +30,4 @@ interface SampleMerchantService {
 
     @GET("/getPaymentMethods/{User-Id}")
     fun getPaymentMethods(@Path("User-Id") userId: String): Call<PaymentMethodListResponse>
-
 }
