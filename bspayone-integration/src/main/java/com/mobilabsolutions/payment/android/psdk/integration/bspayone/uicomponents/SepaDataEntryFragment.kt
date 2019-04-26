@@ -19,7 +19,15 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.*
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.* // ktlint-disable no-wildcard-imports
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameEditText
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.lastNameEditText
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.lastNameTitleTextView
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.saveButton
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryTitleTextView
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -63,6 +71,12 @@ class SepaDataEntryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
+
+        ibanTitleTextView.applyTextCustomization(customizationPreference)
+        firstNameTitleTextView.applyTextCustomization(customizationPreference)
+        lastNameTitleTextView.applyTextCustomization(customizationPreference)
+        sepaScreenTitle.applyTextCustomization(customizationPreference)
+        countryTitleTextView.applyTextCustomization(customizationPreference)
 
         firstNameEditText.applyEditTextCustomization(customizationPreference)
         lastNameEditText.applyEditTextCustomization(customizationPreference)

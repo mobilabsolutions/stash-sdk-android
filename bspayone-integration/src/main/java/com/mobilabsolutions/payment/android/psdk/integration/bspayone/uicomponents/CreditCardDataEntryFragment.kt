@@ -114,6 +114,15 @@ class CreditCardDataEntryFragment : Fragment() {
                 .subscribe()
 
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
+
+        creditCardScreenTitle.applyTextCustomization(customizationPreference)
+        firstNameTitleTextView.applyTextCustomization(customizationPreference)
+        lastNameTitleTextView.applyTextCustomization(customizationPreference)
+        creditCardNumberTitleTextView.applyTextCustomization(customizationPreference)
+        expirationDateTitleTextView.applyTextCustomization(customizationPreference)
+        countryTitleTextView.applyTextCustomization(customizationPreference)
+        ccvTitleTextView.applyTextCustomization(customizationPreference)
+
         firstNameEditText.applyEditTextCustomization(customizationPreference)
         lastNameEditText.applyEditTextCustomization(customizationPreference)
         creditCardNumberEditText.applyEditTextCustomization(customizationPreference)

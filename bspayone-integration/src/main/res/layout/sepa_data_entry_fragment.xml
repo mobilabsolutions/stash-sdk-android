@@ -26,7 +26,7 @@
             android:paddingBottom="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/credit_card_entry_title">
+            app:layout_constraintTop_toBottomOf="@+id/sepaScreenTitle">
 
             <EditText
                 android:background="@drawable/edit_text_selector"
@@ -56,8 +56,8 @@
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView" />
+                app:layout_constraintStart_toStartOf="@+id/ibanTitleTextView"
+                app:layout_constraintTop_toBottomOf="@+id/ibanTitleTextView" />
 
             <TextView
                 android:id="@+id/errorIban"
@@ -88,7 +88,7 @@
                 android:textColor="?attr/editTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
+                app:layout_constraintStart_toStartOf="@+id/ibanTitleTextView"
                 app:layout_constraintTop_toBottomOf="@+id/countryTitleTextView" />
 
             <EditText
@@ -108,7 +108,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView" />
 
             <TextView
-                android:id="@+id/creditCardNumberTitleTextView"
+                android:id="@+id/ibanTitleTextView"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
@@ -182,7 +182,7 @@
 
 
         <TextView
-            android:id="@+id/credit_card_entry_title"
+            android:id="@+id/sepaScreenTitle"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="80dp"
