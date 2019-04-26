@@ -1,7 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher.CardType
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher.GroupingPattern.*
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher.GroupingPattern
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
@@ -17,7 +17,7 @@ class CardNumberTest {
         val testCard = "4111111111111111"
         // 4-4-4-4(-3)
         assertEquals(
-                applyPattern(VISA_MASTER.pattern, testCard),
+                applyPattern(GroupingPattern.VISA_MASTER.pattern, testCard),
                 "4111 1111 1111 1111"
         )
     }
@@ -27,7 +27,7 @@ class CardNumberTest {
         val testCard = "41111"
         // 4-4-4-4(-3)
         assertEquals(
-                applyPattern(VISA_MASTER.pattern, testCard),
+                applyPattern(GroupingPattern.VISA_MASTER.pattern, testCard),
                 "4111 1"
         )
     }
@@ -37,7 +37,7 @@ class CardNumberTest {
         val testCard = "411111111"
         // 4-4-4-4(-3)
         assertEquals(
-                applyPattern(VISA_MASTER.pattern, testCard),
+                applyPattern(GroupingPattern.VISA_MASTER.pattern, testCard),
                 "4111 1111 1"
         )
     }
@@ -47,7 +47,7 @@ class CardNumberTest {
         val testCard = "4111111111111"
         // 4-4-4-4(-3)
         assertEquals(
-                applyPattern(VISA_MASTER.pattern, testCard),
+                applyPattern(GroupingPattern.VISA_MASTER.pattern, testCard),
                 "4111 1111 1111 1"
         )
     }
@@ -57,7 +57,7 @@ class CardNumberTest {
         val testCard = "340000000000000"
         // 4-6-5
         assertEquals(
-                applyPattern(AMEX.pattern, testCard),
+                applyPattern(GroupingPattern.AMEX.pattern, testCard),
                 "3400 000000 00000"
         )
     }
@@ -67,7 +67,7 @@ class CardNumberTest {
         val testCard = "34000"
         // 4-6-5
         assertEquals(
-                applyPattern(AMEX.pattern, testCard),
+                applyPattern(GroupingPattern.AMEX.pattern, testCard),
                 "3400 0"
         )
     }
@@ -77,7 +77,7 @@ class CardNumberTest {
         val testCard = "34000000000"
         // 4-6-5
         assertEquals(
-                applyPattern(AMEX.pattern, testCard),
+                applyPattern(GroupingPattern.AMEX.pattern, testCard),
                 "3400 000000 0"
         )
     }
@@ -87,7 +87,7 @@ class CardNumberTest {
         val testCard = "36000000000000"
         // 4-6-4
         assertEquals(
-                applyPattern(DINERS.pattern, testCard),
+                applyPattern(GroupingPattern.DINERS.pattern, testCard),
                 "3600 000000 0000"
         )
     }
@@ -97,7 +97,7 @@ class CardNumberTest {
         val testCard = "36000"
         // 4-6-4
         assertEquals(
-                applyPattern(DINERS.pattern, testCard),
+                applyPattern(GroupingPattern.DINERS.pattern, testCard),
                 "3600 0"
         )
     }
@@ -107,7 +107,7 @@ class CardNumberTest {
         val testCard = "36000000000"
         // 4-6-4
         assertEquals(
-                applyPattern(DINERS.pattern, testCard),
+                applyPattern(GroupingPattern.DINERS.pattern, testCard),
                 "3600 000000 0"
         )
     }
@@ -117,7 +117,7 @@ class CardNumberTest {
         val testCard = "5000000000000"
         // 4-4-5
         assertEquals(
-                applyPattern(MAESTRO_13.pattern, testCard),
+                applyPattern(GroupingPattern.MAESTRO_13.pattern, testCard),
                 "5000 0000 00000"
         )
     }
@@ -127,7 +127,7 @@ class CardNumberTest {
         val testCard = "50000"
         // 4-4-5
         assertEquals(
-                applyPattern(MAESTRO_13.pattern, testCard),
+                applyPattern(GroupingPattern.MAESTRO_13.pattern, testCard),
                 "5000 0"
         )
     }
@@ -137,7 +137,7 @@ class CardNumberTest {
         val testCard = "500000000"
         // 4-4-5
         assertEquals(
-                applyPattern(MAESTRO_13.pattern, testCard),
+                applyPattern(GroupingPattern.MAESTRO_13.pattern, testCard),
                 "5000 0000 0"
         )
     }
@@ -147,7 +147,7 @@ class CardNumberTest {
         val testCard = "500000000000000"
         // 4-6-5
         assertEquals(
-                applyPattern(MAESTRO_15.pattern, testCard),
+                applyPattern(GroupingPattern.MAESTRO_15.pattern, testCard),
                 "5000 000000 00000"
         )
     }
@@ -157,7 +157,7 @@ class CardNumberTest {
         val testCard = "50000"
         // 4-6-5
         assertEquals(
-                applyPattern(MAESTRO_15.pattern, testCard),
+                applyPattern(GroupingPattern.MAESTRO_15.pattern, testCard),
                 "5000 0"
         )
     }
@@ -167,7 +167,7 @@ class CardNumberTest {
         val testCard = "50000000000"
         // 4-6-5
         assertEquals(
-                applyPattern(MAESTRO_15.pattern, testCard),
+                applyPattern(GroupingPattern.MAESTRO_15.pattern, testCard),
                 "5000 000000 0"
         )
     }
@@ -177,7 +177,7 @@ class CardNumberTest {
         val testCard = "6200000000000000000"
         // 6-13
         assertEquals(
-                applyPattern(UNIONPAY_19.pattern, testCard),
+                applyPattern(GroupingPattern.UNIONPAY_19.pattern, testCard),
                 "620000 0000000000000"
         )
     }
@@ -187,7 +187,7 @@ class CardNumberTest {
         val testCard = "6200000"
         // 6-13
         assertEquals(
-                applyPattern(UNIONPAY_19.pattern, testCard),
+                applyPattern(GroupingPattern.UNIONPAY_19.pattern, testCard),
                 "620000 0"
         )
     }
@@ -320,5 +320,4 @@ class CardNumberTest {
         )
     }
     //endregion
-
 }

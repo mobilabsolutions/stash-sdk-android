@@ -80,17 +80,17 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
      */
     enum class GroupingPattern(val pattern: String) {
 
-        VISA_MASTER("(\\d{4})(\\d{0,4})(\\d{0,4})(\\d{0,4})(\\d{0,3})"),        // 4-4-4-4(-3)
+        VISA_MASTER("(\\d{4})(\\d{0,4})(\\d{0,4})(\\d{0,4})(\\d{0,3})"), // 4-4-4-4(-3)
 
-        AMEX("(\\d{4})(\\d{0,6})(\\d{0,5})"),                                   // 4-6-5
+        AMEX("(\\d{4})(\\d{0,6})(\\d{0,5})"), // 4-6-5
 
-        DINERS("(\\d{4})(\\d{0,6})(\\d{0,4})"),                                 // 4-6-4
+        DINERS("(\\d{4})(\\d{0,6})(\\d{0,4})"), // 4-6-4
 
-        MAESTRO_13("(\\d{4})(\\d{0,4})(\\d{0,5})"),                             // 4-4-5
+        MAESTRO_13("(\\d{4})(\\d{0,4})(\\d{0,5})"), // 4-4-5
 
-        MAESTRO_15("(\\d{4})(\\d{0,6})(\\d{0,5})"),                             // 4-6-5
+        MAESTRO_15("(\\d{4})(\\d{0,6})(\\d{0,5})"), // 4-6-5
 
-        UNIONPAY_19("(\\d{6})(\\d{0,13})")                                      // 6-13
+        UNIONPAY_19("(\\d{6})(\\d{0,13})") // 6-13
     }
 
     enum class CardType(val regex: Regex, @DrawableRes val resource: Int) {
