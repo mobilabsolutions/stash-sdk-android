@@ -80,18 +80,18 @@ class IntegrationTest {
         graph.inject(this)
     }
 
-    @Test
-    fun testCardRegistration() {
-        setUp()
-        val latch = CountDownLatch(1)
-        pspCoordinator.handleRegisterCreditCardOld(validCreditCardData).subscribeBy(
-                onSuccess = {
-                    assert(it.isNotEmpty()) { "Empty alias" }
-                    latch.countDown()
-                }
-        )
-        latch.await()
-    }
+//    @Test
+//    fun testCardRegistration() {
+//        setUp()
+//        val latch = CountDownLatch(1)
+//        pspCoordinator.handleRegisterCreditCardOld(validCreditCardData).subscribeBy(
+//                onSuccess = {
+//                    assert(it.isNotEmpty()) { "Empty alias" }
+//                    latch.countDown()
+//                }
+//        )
+//        latch.await()
+//    }
 }
 
 @Singleton

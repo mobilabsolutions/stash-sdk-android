@@ -29,6 +29,10 @@ class StripeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration 
 
     lateinit var stripe: Stripe
 
+    override fun getPreparationData(method : PaymentMethodType): Single<Map<String, String>> {
+        return Single.just(emptyMap())
+    }
+
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
