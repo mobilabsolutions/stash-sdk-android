@@ -1,20 +1,18 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+/* ktlint-disable no-wildcard-imports */
 import android.app.Activity
 import android.content.Context
+import android.content.SharedPreferences
+import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PayPalRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PspIdentifier
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasResponse
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -23,32 +21,34 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
-/* ktlint-disable no-wildcard-imports */
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
-    private val mobilabApi: MobilabApi,
-    private val mobilabApiV2: MobilabApiV2,
-    private val exceptionMapper: BackendExceptionMapper,
-    private val integrations: Set<@JvmSuppressWildcards Integration>,
-    private val uiRequestHandler: UiRequestHandler,
-    private val context: Context
+        private val mobilabApi: MobilabApi,
+        private val mobilabApiV2: MobilabApiV2,
+        private val exceptionMapper: BackendExceptionMapper,
+        private val integrations: Set<@JvmSuppressWildcards Integration>,
+        private val uiRequestHandler: UiRequestHandler,
+        private val context: Context,
+        private val gson: Gson,
+        @Named("idempotency") private val sharedPreferences: SharedPreferences
 ) {
     val BRAINTREE_PSP_NAME = "BRAINTREE"
 
     fun handleRegisterCreditCardOld(
-        creditCardData: CreditCardData
+            creditCardData: CreditCardData
     ): Single<String> {
         return handleRegisterCreditCardOld(creditCardData, integrations.first().identifier)
     }
 
     fun handleRegisterCreditCardOld(
-        creditCardData: CreditCardData,
-        chosenPsp: PspIdentifier
+            creditCardData: CreditCardData,
+            chosenPsp: PspIdentifier
     ): Single<String> {
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
@@ -89,10 +89,10 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterCreditCard(
-        creditCardData: CreditCardData,
-        billingData: BillingData = BillingData(),
-        additionalUIData: Map<String, String> = emptyMap(),
-        idempotencyKey: String
+            creditCardData: CreditCardData,
+            billingData: BillingData = BillingData(),
+            additionalUIData: Map<String, String> = emptyMap(),
+            idempotencyKey: String
     ): Single<PaymentMethodAlias> {
         return handleRegisterCreditCard(
                 creditCardData,
@@ -107,11 +107,11 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterCreditCard(
-        creditCardData: CreditCardData,
-        billingData: BillingData = BillingData(),
-        additionalUIData: Map<String, String>,
-        chosenPsp: PspIdentifier,
-        idempotencyKey: String
+            creditCardData: CreditCardData,
+            billingData: BillingData = BillingData(),
+            additionalUIData: Map<String, String>,
+            chosenPsp: PspIdentifier,
+            idempotencyKey: String
     ): Single<PaymentMethodAlias> {
 
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
@@ -121,21 +121,29 @@ class PspCoordinator @Inject constructor(
             return Single.error(RuntimeException("Invalid card number length"))
         }
 
-        return mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
-                .subscribeOn(Schedulers.io())
-                .processErrors()
-                .flatMap {
+        sharedPreferences.getString(idempotencyKey, null)?.let {
+            val saved = gson.fromJson(it, IdempotencyData::class.java)
+            return when {
+                saved.aliasResponse != null -> Single.just(PaymentMethodAlias(saved.aliasResponse.aliasId, PaymentMethodType.CC))
+                else -> Single.error(saved.error)
+            }
+        } ?: run {
+            return mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
+                    .subscribeOn(Schedulers.io())
+                    .processErrors()
+                    .flatMap {
 
-                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
-                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
-                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+                        val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
+                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
+                        val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
-                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
+                        val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
 
-                    pspAliasSingle.map {
-                        PaymentMethodAlias(it, PaymentMethodType.CC)
-                    }
-                }
+                        pspAliasSingle.map { alias ->
+                            PaymentMethodAlias(alias, PaymentMethodType.CC)
+                        }
+                    }.persistResult(idempotencyKey)
+        }
     }
 
     fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData = BillingData(), additionalUIData: Map<String, String> = emptyMap(), idempotencyKey: String): Single<PaymentMethodAlias> {
@@ -276,7 +284,7 @@ class PspCoordinator @Inject constructor(
         }
     }
 
-    fun <T> Single<T>.processErrors(): Single<T> {
+    private fun <T> Single<T>.processErrors(): Single<T> {
         return onErrorResumeNext {
             when (it) {
                 is HttpException -> Single.error(exceptionMapper.mapError(it))
@@ -284,4 +292,19 @@ class PspCoordinator @Inject constructor(
             }
         }
     }
+
+    private fun <T> Single<T>.persistResult(idempotencyKey: String): Single<T> {
+        return doOnEvent { result, error ->
+            sharedPreferences.edit()
+                    .putString(idempotencyKey, gson.toJson(IdempotencyData(Date(), result as AliasResponse, error)))
+                    .apply()
+        }
+    }
+
+
+    data class IdempotencyData(
+            val timestamp: Date,
+            val aliasResponse: AliasResponse?,
+            val error: Throwable?
+    )
 }

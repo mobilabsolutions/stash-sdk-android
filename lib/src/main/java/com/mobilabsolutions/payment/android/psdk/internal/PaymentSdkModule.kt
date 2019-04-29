@@ -8,12 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PayoneSpecificData
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.ProviderSpecificData
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.RuntimeTypeAdapterFactory
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.SketchSpecificData
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.*
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
 import dagger.Module
@@ -41,17 +36,19 @@ import javax.inject.Singleton
  */
 @Module
 open class PaymentSdkModule(
-    private val publicKey: String,
-    private val mobilabUrl: String,
-    private val applicationContext: Application,
-    private val integrationInitializers: List<IntegrationInitialization>,
-    private val testMode: Boolean
+        private val publicKey: String,
+        private val mobilabUrl: String,
+        private val applicationContext: Application,
+        private val integrationInitializers: List<IntegrationInitialization>,
+        private val testMode: Boolean
 ) {
+
     val MOBILAB_TIMEOUT = 60L
     val TIMEOUT_UNIT = TimeUnit.SECONDS
 
     companion object {
-        val SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
+        const val DEFAULT_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
+        const val IDEMPOTENCY_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
     }
 
     internal val redirectActivitySubject: PublishSubject<PayPalRedirectHandler.RedirectResult> = PublishSubject.create()
@@ -72,10 +69,10 @@ open class PaymentSdkModule(
     @Provides
     @Singleton
     fun provideMobilabApi(
-        mobilabBackendOkHttpClient: OkHttpClient,
-        @Named("mobilabBackendGsonConverterFactory")
-        gsonConverterFactory: GsonConverterFactory,
-        rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
+            mobilabBackendOkHttpClient: OkHttpClient,
+            @Named("mobilabBackendGsonConverterFactory")
+            gsonConverterFactory: GsonConverterFactory,
+            rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
     ): MobilabApi {
         val mobilabBackendRetrofit = Retrofit.Builder()
                 .addConverterFactory(gsonConverterFactory)
@@ -91,11 +88,11 @@ open class PaymentSdkModule(
     @Provides
     @Singleton
     fun provideMobilabApiV2(
-        @Named("mobilabV2HttpClient")
-        mobilabBackendOkHttpClient: OkHttpClient,
-        @Named("mobilabBackendGsonConverterFactory")
-        gsonConverterFactory: GsonConverterFactory,
-        rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
+            @Named("mobilabV2HttpClient")
+            mobilabBackendOkHttpClient: OkHttpClient,
+            @Named("mobilabBackendGsonConverterFactory")
+            gsonConverterFactory: GsonConverterFactory,
+            rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
     ): MobilabApiV2 {
         val mobilabBackendRetrofit = Retrofit.Builder()
                 .addConverterFactory(gsonConverterFactory)
@@ -111,8 +108,8 @@ open class PaymentSdkModule(
     @Provides
     @Singleton
     fun provideMobilabHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor,
-        sslSupportPackage: SslSupportPackage
+            httpLoggingInterceptor: HttpLoggingInterceptor,
+            sslSupportPackage: SslSupportPackage
     ): OkHttpClient {
 
         val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
@@ -140,8 +137,8 @@ open class PaymentSdkModule(
     @Singleton
     @Named("mobilabV2HttpClient")
     fun provideMobilabV2HttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor,
-        sslSupportPackage: SslSupportPackage
+            httpLoggingInterceptor: HttpLoggingInterceptor,
+            sslSupportPackage: SslSupportPackage
     ): OkHttpClient {
 
         val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
@@ -210,8 +207,16 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    fun provideSharedPreferences(): SharedPreferences = applicationContext.getSharedPreferences(
-            SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
+    @Named("default")
+    fun provideDefaultSharedPreferences(): SharedPreferences = applicationContext.getSharedPreferences(
+            DEFAULT_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
+    )
+
+    @Provides
+    @Singleton
+    @Named("idempotency")
+    fun provideIdempotencySharedPreferences(): SharedPreferences = applicationContext.getSharedPreferences(
+            IDEMPOTENCY_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
     )
 
     @Provides
@@ -246,7 +251,7 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    fun provideUiCustomizationManager(gson: Gson, sharedPreferences: SharedPreferences): UiCustomizationManager {
+    fun provideUiCustomizationManager(gson: Gson, @Named("default") sharedPreferences: SharedPreferences): UiCustomizationManager {
         if (newUiCustomizationManager == null) {
             newUiCustomizationManager = NewUiCustomizationManager(gson, sharedPreferences)
         }
@@ -255,7 +260,7 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    internal fun provideNewUiCustomizationManager(gson: Gson, sharedPreferences: SharedPreferences): NewUiCustomizationManager {
+    internal fun provideNewUiCustomizationManager(gson: Gson, @Named("default") sharedPreferences: SharedPreferences): NewUiCustomizationManager {
         if (newUiCustomizationManager == null) {
             newUiCustomizationManager = NewUiCustomizationManager(gson, sharedPreferences)
         }
