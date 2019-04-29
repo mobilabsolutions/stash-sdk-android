@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization;
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
+import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager;
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 
 import java.util.LinkedList;

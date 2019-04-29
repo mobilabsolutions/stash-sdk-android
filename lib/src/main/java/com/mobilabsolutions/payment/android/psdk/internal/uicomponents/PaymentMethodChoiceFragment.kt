@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
+import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager
 import io.reactivex.subjects.ReplaySubject
 import kotlinx.android.synthetic.main.payment_method_chooser_fragment.*
 import kotlinx.android.synthetic.main.payment_method_entry.view.*
@@ -24,6 +26,11 @@ class PaymentMethodChoiceFragment : Fragment() {
     @Inject
     lateinit var uiRequestHandler: UiRequestHandler
 
+    @Inject
+    lateinit var uiCustomizationManager: UiCustomizationManager
+
+    lateinit var customizationPreference: CustomizationPreference
+
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -32,6 +39,7 @@ class PaymentMethodChoiceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        customizationPreference = uiCustomizationManager.getCustomizationPreferences()
         paymentMethodAdapter = PaymentMethodAdapter(
                 uiRequestHandler.availablePaymentMethods(),
                 uiRequestHandler.paymentMethodTypeSubject

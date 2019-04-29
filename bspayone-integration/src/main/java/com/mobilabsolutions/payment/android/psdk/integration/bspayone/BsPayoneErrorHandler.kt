@@ -9,6 +9,7 @@ import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsP
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 object BsPayoneErrorHandler {
+
     fun handleError(error: BsPayoneVerificationErrorResponse): Throwable {
         return when (error.errorCode) {
             7, 43, 56, 62, 880 -> CreditCardRegistrationException(providerMessage = error.customerMessage ?: "No custom message provided")
