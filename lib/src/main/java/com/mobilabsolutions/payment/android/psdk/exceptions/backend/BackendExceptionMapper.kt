@@ -12,16 +12,24 @@ import retrofit2.HttpException
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BackendExceptionMapper(val gson: Gson) {
-    val noProviderMessage = "There was no specific message from payment provider supplied"
     fun mapError(httpException: HttpException): RuntimeException {
         val errorBody = httpException.response().errorBody()?.string()
         val errorResponse = gson.fromJson(errorBody, ErrorResponse::class.java)
         return when (httpException.code()) {
-            701 -> CreditCardRegistrationException(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
-            702 -> SepaRegistrationFailed(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
-            703 -> PaymentFailedException(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
-            705 -> TemporaryException(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
-            else -> UnknownBackendException(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
+            701 -> CreditCardRegistrationException(errorResponse.error.message, errorResponse.error.providerDetails
+                ?: NO_PROVIDER_MESSAGE)
+            702 -> SepaRegistrationFailed(errorResponse.error.message, errorResponse.error.providerDetails
+                ?: NO_PROVIDER_MESSAGE)
+            703 -> PaymentFailedException(errorResponse.error.message, errorResponse.error.providerDetails
+                ?: NO_PROVIDER_MESSAGE)
+            705 -> TemporaryException(errorResponse.error.message, errorResponse.error.providerDetails
+                ?: NO_PROVIDER_MESSAGE)
+            else -> UnknownBackendException(errorResponse.error.message, errorResponse.error.providerDetails
+                ?: NO_PROVIDER_MESSAGE)
         }
+    }
+
+    companion object {
+        private const val NO_PROVIDER_MESSAGE = "There was no specific message from payment provider supplied"
     }
 }
