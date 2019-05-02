@@ -9,9 +9,4 @@ class PaymentFailedException(
     override val message: String = "Payment failed",
     override val code: Int? = null,
     override val originalException: Throwable? = null
-) : BasePaymentException(message, CODE) {
-    companion object {
-        @JvmStatic
-        val CODE = 1234
-    }
-}
+) : BasePaymentException(message, code)

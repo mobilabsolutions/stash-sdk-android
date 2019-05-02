@@ -54,7 +54,6 @@ open class PaymentSdkModule(
         const val IDEMPOTENCY_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
     }
 
-
     internal val redirectActivitySubject: PublishSubject<PayPalRedirectHandler.RedirectResult> = PublishSubject.create()
 
     internal var uiCustomizationManager: UiCustomizationManager? = null
