@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
@@ -47,7 +46,6 @@ open class PaymentSdkModule(
     private val integrationInitializers: List<IntegrationInitialization>,
     private val testMode: Boolean
 ) {
-
     val MOBILAB_TIMEOUT = 60L
     val TIMEOUT_UNIT = TimeUnit.SECONDS
 
@@ -56,9 +54,10 @@ open class PaymentSdkModule(
         const val IDEMPOTENCY_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
     }
 
+
     internal val redirectActivitySubject: PublishSubject<PayPalRedirectHandler.RedirectResult> = PublishSubject.create()
 
-    internal var newUiCustomizationManager: NewUiCustomizationManager? = null
+    internal var uiCustomizationManager: UiCustomizationManager? = null
 
     @Provides
     fun provideHttpLoggingInterceptor(@Named("isLogging") isLogging: Boolean): HttpLoggingInterceptor {
@@ -257,19 +256,10 @@ open class PaymentSdkModule(
     @Provides
     @Singleton
     fun provideUiCustomizationManager(gson: Gson, @Named("default") sharedPreferences: SharedPreferences): UiCustomizationManager {
-        if (newUiCustomizationManager == null) {
-            newUiCustomizationManager = NewUiCustomizationManager(gson, sharedPreferences)
+        if (uiCustomizationManager == null) {
+            uiCustomizationManager = UiCustomizationManager(gson, sharedPreferences)
         }
-        return newUiCustomizationManager as UiCustomizationManager
-    }
-
-    @Provides
-    @Singleton
-    internal fun provideNewUiCustomizationManager(gson: Gson, @Named("default") sharedPreferences: SharedPreferences): NewUiCustomizationManager {
-        if (newUiCustomizationManager == null) {
-            newUiCustomizationManager = NewUiCustomizationManager(gson, sharedPreferences)
-        }
-        return newUiCustomizationManager as NewUiCustomizationManager
+        return uiCustomizationManager as UiCustomizationManager
     }
 
     @Provides

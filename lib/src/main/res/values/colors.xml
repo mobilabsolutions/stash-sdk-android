@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="white">#ffffff</color>
     <color name="ice_blue_two">#f6f7f7</color>
     <color name="cool_gray">#a3aaaf</color>
     <color name="cool_gray_pressed">#BEBEBE</color>

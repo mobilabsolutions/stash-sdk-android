@@ -104,8 +104,8 @@
             android:hint="CVV"
             android:inputType="textPersonName"
             android:text="123"
-            app:layout_constraintStart_toStartOf="@+id/creditCardNumberEditText"
-            app:layout_constraintTop_toBottomOf="@+id/creditCardNumberEditText" />
+            app:layout_constraintStart_toStartOf="@+id/ibanAccount"
+            app:layout_constraintTop_toBottomOf="@+id/ibanAccount" />
 
         <EditText
             android:visibility="gone"

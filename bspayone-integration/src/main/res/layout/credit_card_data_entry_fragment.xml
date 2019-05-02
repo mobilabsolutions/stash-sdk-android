@@ -10,13 +10,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:background="@color/ice_blue_two"
+        android:id="@+id/creditCardScreenMainLayout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:background="@drawable/rounded_corner_white"
-            android:id="@+id/constraintLayout"
+            android:id="@+id/creditCardScreenCellLayout"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
@@ -25,7 +26,7 @@
             android:paddingBottom="40dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/credit_card_entry_title">
+            app:layout_constraintTop_toBottomOf="@+id/creditCardScreenTitle">
 
             <TextView
                 android:id="@+id/expirationDateTitleTextView"
@@ -237,12 +238,12 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/constraintLayout"
+            app:layout_constraintTop_toBottomOf="@+id/creditCardScreenCellLayout"
             app:layout_constraintVertical_bias="0.859" />
 
 
         <TextView
-            android:id="@+id/credit_card_entry_title"
+            android:id="@+id/creditCardScreenTitle"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="80dp"

@@ -30,7 +30,7 @@ class BsPayoneHandler @Inject constructor(
     /**
      * We use this just for testing so we don't hit bspayone api rate limit, which seems to be quite low
      */
-    val mockResponse = true
+    val mockResponse = false
 
     fun registerCreditCard(
         aliasId: String,
