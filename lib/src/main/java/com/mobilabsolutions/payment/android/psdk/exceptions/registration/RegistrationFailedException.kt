@@ -1,12 +1,12 @@
-package com.mobilabsolutions.payment.android.psdk.exceptions.payment
+package com.mobilabsolutions.payment.android.psdk.exceptions.registration
 
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class PaymentFailedException(
-    override val message: String = "Payment failed",
+class RegistrationFailedException(
+    override val message: String = "Registration failed",
     override val code: Int? = null,
     override val originalException: Throwable? = null
 ) : BasePaymentException(message, CODE) {

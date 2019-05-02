@@ -1,7 +1,8 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
-import com.mobilabsolutions.payment.android.psdk.exceptions.other.UnknownError
-import com.mobilabsolutions.payment.android.psdk.exceptions.registration.CreditCardRegistrationException
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
+import com.mobilabsolutions.payment.android.psdk.exceptions.registration.RegistrationFailedException
+import com.mobilabsolutions.payment.android.psdk.exceptions.registration.UnknownError
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationErrorResponse
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationInvalidResponse
 
@@ -11,15 +12,19 @@ import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsP
 object BsPayoneErrorHandler {
     fun handleError(error: BsPayoneVerificationErrorResponse): Throwable {
         return when (error.errorCode) {
-            7, 43, 56, 62, 880 -> CreditCardRegistrationException(providerMessage = error.customerMessage ?: "No custom message provided")
-            else -> UnknownError(message = "Unknown error, code from provider ${error.errorCode}", providerMessage = error.customerMessage ?: "No custom message provided")
+            7, 43, 56, 62, 880 -> RegistrationFailedException(providerMessage = error.customerMessage
+                ?: "No custom message provided")
+            else -> UnknownError("Unknown error, code from provider ${error.errorCode}", error.errorCode, OtherException(error.customerMessage
+                ?: "No custom message provided", error.errorCode))
         }
     }
 
     fun handleError(error: BsPayoneVerificationInvalidResponse): Throwable {
         return when (error.errorCode) {
-            14 -> CreditCardRegistrationException(providerMessage = error.customerMessage ?: "No custom message provided")
-            else -> UnknownError(message = "Unknown error, invalid card number designation, code from provider ${error.errorCode}", providerMessage = error.customerMessage ?: "No custom message provided")
+            14 -> RegistrationFailedException(providerMessage = error.customerMessage
+                ?: "No custom message provided")
+            else -> UnknownError("Unknown error, code from provider ${error.errorCode}", error.errorCode, OtherException(error.customerMessage
+                ?: "No custom message provided", error.errorCode))
         }
     }
 }

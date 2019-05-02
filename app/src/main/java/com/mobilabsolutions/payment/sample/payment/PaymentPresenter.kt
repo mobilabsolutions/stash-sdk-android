@@ -1,8 +1,8 @@
 package com.mobilabsolutions.payment.sample.payment
 
 import com.mobilabsolutions.commonsv3.mvp.presenter.CommonPresenter
-import com.mobilabsolutions.payment.android.psdk.exceptions.ProviderOriginatedException
-import com.mobilabsolutions.payment.android.psdk.exceptions.other.TemporaryException
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.TemporaryException
 import com.mobilabsolutions.payment.android.psdk.exceptions.payment.PaymentFailedException
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -80,7 +80,7 @@ class PaymentPresenter : CommonPresenter<PaymentView>() {
                                 ui.render(PaymentViewState.PaymentSuccess(it))
                             },
                             onError = {
-                                if (it is ProviderOriginatedException) {
+                                if (it is BasePaymentException) {
                                     when (it) {
                                         is UnknownError -> ui.render(PaymentViewState.ErrorState(it.message))
                                         is PaymentFailedException -> ui.render(PaymentViewState.ErrorState("Payment failed!"))

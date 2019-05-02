@@ -166,7 +166,7 @@
 // //                        onError = { error ->
 // //                            Timber.d("Removing aliasId reported an error")
 // //
-// //                            Assert.assertTrue(error is UnknownBackendException)
+// //                            Assert.assertTrue(error is OtherException)
 // //                            Assert.assertEquals(error.message, "Payment method is inactive")
 // ////                            if (error is HttpException) {
 // ////                                if (error.code() != 400) {
@@ -213,7 +213,7 @@
 // //                        onError = { error ->
 // //                            Timber.d("Removing aliasId reported an error")
 // //
-// //                            Assert.assertTrue(error is UnknownBackendException)
+// //                            Assert.assertTrue(error is OtherException)
 // //                            Assert.assertEquals(error.message, "Payment method is inactive")
 // //
 // //                            latch.countDown()

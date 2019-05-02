@@ -7,7 +7,7 @@ import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
+import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PayoneSpecificData
@@ -226,8 +226,8 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    fun provideExceptionMapper(gson: Gson): BackendExceptionMapper {
-        return BackendExceptionMapper(gson)
+    fun provideExceptionMapper(gson: Gson): ExceptionMapper {
+        return ExceptionMapper(gson)
     }
 
     @Provides

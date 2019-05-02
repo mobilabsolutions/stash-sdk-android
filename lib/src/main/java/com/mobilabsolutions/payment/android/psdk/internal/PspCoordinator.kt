@@ -8,7 +8,8 @@ import android.text.format.DateUtils
 import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
+import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
+import com.mobilabsolutions.payment.android.psdk.exceptions.validation.IdempotencyKeyInUseException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
@@ -29,7 +30,7 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
-import java.util.Random
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,7 +40,7 @@ import javax.inject.Named
 class PspCoordinator @Inject constructor(
     private val mobilabApi: MobilabApi,
     private val mobilabApiV2: MobilabApiV2,
-    private val exceptionMapper: BackendExceptionMapper,
+    private val exceptionMapper: ExceptionMapper,
     private val integrations: Set<@JvmSuppressWildcards Integration>,
     private val uiRequestHandler: UiRequestHandler,
     private val context: Context,
@@ -332,7 +333,7 @@ class PspCoordinator @Inject constructor(
             val idempotencyData = gson.fromJson(it, IdempotencyData::class.java)
             // Check for the same Idempotency key Used for a different Payment method
             return if (idempotencyData.paymentMethodType != paymentMethodType) {
-                Single.error(RuntimeException("Idempotency key in use for different payment method type")) // TODO: Define it
+                Single.error(IdempotencyKeyInUseException())
             } else when {
                 idempotencyData.aliasResponse != null -> Single.just(PaymentMethodAlias(idempotencyData.aliasResponse.aliasId, paymentMethodType))
                 else -> Single.error(idempotencyData.error)

@@ -1,0 +1,14 @@
+package com.mobilabsolutions.payment.android.psdk.exceptions.base
+
+/**
+ * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
+ */
+abstract class BasePaymentException(
+    override val message: String = NO_PROVIDER_MESSAGE,
+    open val code: Int? = null,
+    open val originalException: Throwable? = null
+) : RuntimeException(message) {
+    companion object {
+        const val NO_PROVIDER_MESSAGE = "There was no specific message from payment provider supplied"
+    }
+}

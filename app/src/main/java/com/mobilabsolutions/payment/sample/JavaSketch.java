@@ -74,7 +74,7 @@ public class JavaSketch {
 
 
 //        PaymentSdk.getRegistrationManager().executePayoneRequest(creditCardData, billingData);
-//        ProviderOriginatedException exception = new TemporaryException();
+//        BasePaymentException exception = new TemporaryException();
 //        switch (exception.getCode()) {
 //            case TemporaryException.CODE:
 //                Timber.d("Temporary error");
