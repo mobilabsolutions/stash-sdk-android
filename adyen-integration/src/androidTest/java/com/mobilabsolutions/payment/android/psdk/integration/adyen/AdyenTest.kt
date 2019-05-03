@@ -75,7 +75,7 @@ class AdyenTest {
                 },
                 onError = {
                     Timber.e(it, "Error")
-                    Assert.fail()
+                    Assert.fail(it.message)
                     latch.countDown()
                 }
         )

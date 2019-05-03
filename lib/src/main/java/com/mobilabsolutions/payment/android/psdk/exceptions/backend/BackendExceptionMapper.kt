@@ -17,11 +17,11 @@ class BackendExceptionMapper(val gson: Gson) {
         val errorBody = httpException.response().errorBody()?.string()
         val errorResponse = gson.fromJson(errorBody, ErrorResponse::class.java)
         return when (httpException.code()) {
-            701 -> CreditCardRegistrationException(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
-            702 -> SepaRegistrationFailed(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
-            703 -> PaymentFailedException(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
-            705 -> TemporaryException(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
-            else -> UnknownBackendException(errorResponse.error.message, errorResponse.error.providerDetails ?: noProviderMessage)
+            701 -> CreditCardRegistrationException(errorResponse.message, errorResponse.providerDetails ?: noProviderMessage)
+            702 -> SepaRegistrationFailed(errorResponse.message, errorResponse.providerDetails ?: noProviderMessage)
+            703 -> PaymentFailedException(errorResponse.message, errorResponse.providerDetails ?: noProviderMessage)
+            705 -> TemporaryException(errorResponse.message, errorResponse.providerDetails ?: noProviderMessage)
+            else -> UnknownBackendException(errorResponse.message, errorResponse.providerDetails ?: noProviderMessage)
         }
     }
 }

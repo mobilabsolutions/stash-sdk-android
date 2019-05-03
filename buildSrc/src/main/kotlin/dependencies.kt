@@ -69,7 +69,11 @@ object Libs {
 
     val braintree = "com.braintreepayments.api:braintree:3.0.0"
 
+    val adyenCheckoutBase = "com.adyen.checkout:base:2.4.3"
+    val adyenUi = "com.adyen.checkout:ui:2.4.3"
     val adyenCore = "com.adyen.checkout:core:2.4.3"
+    val adyenCardCore = "com.adyen.checkout:core-card:2.4.3"
+
 
     val mvrx = "com.airbnb.android:mvrx:1.0.0"
 

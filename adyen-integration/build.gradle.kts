@@ -80,6 +80,9 @@ dependencies {
     kaptAndroidTest(Libs.Dagger.compiler)
 
     implementation(Libs.adyenCore)
+    implementation(Libs.adyenCardCore)
+    implementation(Libs.adyenUi)
+    implementation(Libs.adyenCheckoutBase)
 
 
 }
