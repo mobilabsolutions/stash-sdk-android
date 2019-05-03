@@ -22,6 +22,14 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.* // ktlint-disable no-wildcard-imports
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
@@ -190,6 +198,7 @@ class CreditCardDataEntryFragment : Fragment() {
         success = validateExpirationDate(state.expDate) && success
 
         saveButton.isEnabled = success
+        saveButton.applyCustomization(customizationPreference)
     }
 
     private fun EditText.customError(message: String) {
