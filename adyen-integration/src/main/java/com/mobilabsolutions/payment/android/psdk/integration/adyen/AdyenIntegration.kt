@@ -19,6 +19,9 @@ import com.adyen.checkout.core.model.CardDetails
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
@@ -39,6 +42,9 @@ class AdyenIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
 
     @Inject
     lateinit var context: Context
+
+    @Inject
+    lateinit var mobilabApiV2: MobilabApiV2
 
     companion object : IntegrationCompanion {
         var integration: AdyenIntegration? = null
@@ -191,6 +197,14 @@ class AdyenIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
 
             Timber.d("Payment init complete")
 //        val paymentMethod = paymentSession.paymentMethods.filter { it.n }
+            mobilabApiV2.updateAlias(registrationRequest.standardizedData.aliasId , AliasUpdateRequest(
+                    extra = AliasExtra(
+                            paymentMethod = PaymentMethodType.CC.name,
+                            payload = paymentInitiationResult.completeFields!!.payload
+
+                    )
+            )).subscribeOn(Schedulers.io()).blockingAwait()
+            Timber.d("Payment init complete")
 
         }.subscribeOn(AndroidSchedulers.mainThread())
 
