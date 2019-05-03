@@ -16,6 +16,7 @@ import javax.inject.Singleton
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import io.reactivex.rxkotlin.subscribeBy
+import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.Before
 import org.threeten.bp.LocalDate

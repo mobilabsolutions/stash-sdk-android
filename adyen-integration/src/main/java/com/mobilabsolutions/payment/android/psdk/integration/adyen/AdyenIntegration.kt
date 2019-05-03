@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.adyen.checkout.core.CheckoutException
 import com.adyen.checkout.core.PaymentSetupParameters
 import com.adyen.checkout.core.StartPaymentParameters
+import com.adyen.checkout.core.card.Card
+import com.adyen.checkout.core.card.Cards
 import com.adyen.checkout.core.handler.PaymentSetupParametersHandler
 import com.adyen.checkout.core.handler.StartPaymentParametersHandler
 import com.adyen.checkout.core.internal.*
@@ -158,17 +160,22 @@ class AdyenIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
             Timber.d("Payment methods: ${paymentSession.paymentMethods.joinToString { it.name }}")
             val visaPaymentMethod = paymentSession.paymentMethodImpls.filter { it.name == "VISA" }.first()
             val inputDetails = visaPaymentMethod.inputDetails
-            val visaCardDetails = CardDetails.Builder()
-                    .setHolderName("Holder holderman")
-                    .setEncryptedCardNumber("4111111111111111")
-                    .setEncryptedExpiryMonth("03")
-                    .setEncryptedExpiryYear("2030")
-                    .setEncryptedSecurityCode("737")
+
+
+            val publicKey = paymentSession.publicKey!!
+            val card = Card.Builder()
+                    .setNumber("4111111111111111")
+                    .setExpiryDate(10, 2020)
+                    .setSecurityCode("737")
                     .build()
-
-            paymentSession
-
-            paymentHandlerImpl.initiatePayment(visaPaymentMethod, visaCardDetails)
+            val encryptedCard = Cards.ENCRYPTOR.encryptFields(card, paymentSession.generationTime, publicKey).call();
+            val visaCardDetails = CardDetails.Builder()
+                    .setHolderName("Holder Holderman")
+                    .setEncryptedCardNumber(encryptedCard.encryptedNumber)
+                    .setEncryptedExpiryMonth(encryptedCard.encryptedExpiryMonth)
+                    .setEncryptedExpiryYear(encryptedCard.encryptedExpiryYear)
+                    .setEncryptedSecurityCode(encryptedCard.encryptedSecurityCode)
+                    .build()
 
             val paymentInitiation = PaymentInitiation.Builder(
                     paymentSession.paymentData, visaPaymentMethod.paymentMethodData)
