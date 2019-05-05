@@ -54,9 +54,9 @@ open class PaymentSdkModule(
         const val IDEMPOTENCY_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
     }
 
-    internal val redirectActivitySubject: PublishSubject<PayPalRedirectHandler.RedirectResult> = PublishSubject.create()
+    private val redirectActivitySubject: PublishSubject<PayPalRedirectHandler.RedirectResult> = PublishSubject.create()
 
-    internal var uiCustomizationManager: UiCustomizationManager? = null
+    private var uiCustomizationManager: UiCustomizationManager? = null
 
     @Provides
     fun provideHttpLoggingInterceptor(@Named("isLogging") isLogging: Boolean): HttpLoggingInterceptor {
@@ -189,6 +189,7 @@ open class PaymentSdkModule(
 
         val gson = GsonBuilder()
             .registerTypeAdapterFactory(runtimeTypeAdapterFactory)
+            .registerTypeHierarchyAdapter(Throwable::class.java, ThrowableSerializer())
             .create()
         return GsonConverterFactory.create(gson)
     }
