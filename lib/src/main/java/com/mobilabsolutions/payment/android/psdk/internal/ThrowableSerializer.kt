@@ -18,7 +18,7 @@ class ThrowableSerializer : JsonSerializer<Throwable> {
         typeOfSrc: Type?,
         context: JsonSerializationContext?
     ): JsonElement {
-        val jsonElement = gson.toJsonTree(throwable)
+        val jsonElement = gson.toJsonTree(throwable, Throwable::class.java)
         fillStackTrace(jsonElement, throwable)
         return jsonElement
     }

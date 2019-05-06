@@ -13,7 +13,6 @@ import com.mobilabsolutions.payment.android.psdk.exceptions.validation.Idempoten
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasResponse
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.IdempotencyData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
@@ -320,10 +319,10 @@ class PspCoordinator @Inject constructor(
         }
     }
 
-    private fun <T> Single<T>.persistResult(idempotencyKey: String, paymentMethodType: PaymentMethodType): Single<T> {
+    private fun Single<PaymentMethodAlias>.persistResult(idempotencyKey: String, paymentMethodType: PaymentMethodType): Single<PaymentMethodAlias> {
         return doOnEvent { result, error ->
             sharedPreferences.edit()
-                .putString(idempotencyKey, gson.toJson(IdempotencyData(System.currentTimeMillis(), paymentMethodType, result as AliasResponse, error)))
+                .putString(idempotencyKey, gson.toJson(IdempotencyData(System.currentTimeMillis(), paymentMethodType, result, error)))
                 .apply()
         }
     }
@@ -335,7 +334,7 @@ class PspCoordinator @Inject constructor(
             return if (idempotencyData.paymentMethodType != paymentMethodType) {
                 Single.error(IdempotencyKeyInUseException())
             } else when {
-                idempotencyData.aliasResponse != null -> Single.just(PaymentMethodAlias(idempotencyData.aliasResponse.aliasId, paymentMethodType))
+                idempotencyData.paymentMethodAlias != null -> Single.just(PaymentMethodAlias(idempotencyData.paymentMethodAlias.alias, paymentMethodType))
                 else -> Single.error(idempotencyData.error)
             }
         } ?: run {

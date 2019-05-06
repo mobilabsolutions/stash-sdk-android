@@ -1,7 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.exceptions.registration.RegistrationFailedException
-import com.mobilabsolutions.payment.android.psdk.exceptions.registration.UnknownError
+import com.mobilabsolutions.payment.android.psdk.exceptions.registration.UnknownException
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationErrorResponse
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationInvalidResponse
 
@@ -14,7 +14,7 @@ object BsPayoneErrorHandler {
         return when (error.errorCode) {
             7, 43, 56, 62, 880 -> RegistrationFailedException(error.customerMessage
                 ?: "No custom message provided", error.errorCode)
-            else -> UnknownError(error.customerMessage
+            else -> UnknownException(error.customerMessage
                 ?: "No custom message provided", error.errorCode)
         }
     }
@@ -23,7 +23,7 @@ object BsPayoneErrorHandler {
         return when (error.errorCode) {
             14 -> RegistrationFailedException(error.customerMessage
                 ?: "No custom message provided", error.errorCode)
-            else -> UnknownError(error.customerMessage
+            else -> UnknownException(error.customerMessage
                 ?: "No custom message provided", error.errorCode)
         }
     }
