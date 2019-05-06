@@ -109,11 +109,6 @@ class PspCoordinator @Inject constructor(
 
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
-        // TODO proper validation
-        if (creditCardData.number.length < 16) {
-            return Single.error(RuntimeException("Invalid card number length"))
-        }
-
         return chosenIntegration.getPreparationData(PaymentMethodType.CC)
                 .flatMap {
                     mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, it)

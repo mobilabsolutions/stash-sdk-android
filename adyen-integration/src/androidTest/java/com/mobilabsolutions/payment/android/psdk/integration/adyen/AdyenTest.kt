@@ -35,7 +35,10 @@ class AdyenTest {
     @Inject
     lateinit var registrationManager: NewRegistrationManager
 
-    lateinit var validCreditCardData: CreditCardData
+    lateinit var validVisaCreditCardData: CreditCardData
+    lateinit var validMastercardCreditCardData: CreditCardData
+    lateinit var validAmexCreditCardData: CreditCardData
+
 
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext() as Application
@@ -54,19 +57,69 @@ class AdyenTest {
 
         graph.injectTest(this)
 
-        validCreditCardData = CreditCardData(
+        validVisaCreditCardData = CreditCardData(
                 number = "4111111111111111",
                 expiryDate = LocalDate.of(2020, 10, 1),
                 cvv = "737",
                 holder = "Holder Holdermann"
         )
+
+        validMastercardCreditCardData = CreditCardData(
+                number = "5555 3412 4444 1115",
+                expiryDate = LocalDate.of(2020, 10, 1),
+                cvv = "737",
+                holder = "Holder Holdermann"
+        )
+
+        validAmexCreditCardData = CreditCardData(
+                number = "370000000000002",
+                expiryDate = LocalDate.of(2020, 10, 1),
+                cvv = "7373",
+                holder = "Holder Holdermann"
+        )
     }
 
     @Test
-    fun retrieveToken() {
+    fun testVisaRegistration() {
         setUp()
         val latch = CountDownLatch(1)
-        registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
+        registrationManager.registerCreditCard(validVisaCreditCardData).subscribeBy(
+                onSuccess = {
+                    assertTrue(it.alias.isNotEmpty())
+                    latch.countDown()
+                },
+                onError = {
+                    Timber.e(it, "Error")
+                    Assert.fail(it.message)
+                    latch.countDown()
+                }
+        )
+        latch.await()
+    }
+
+    @Test
+    fun testMastercardRegistration() {
+        setUp()
+        val latch = CountDownLatch(1)
+        registrationManager.registerCreditCard(validMastercardCreditCardData).subscribeBy(
+                onSuccess = {
+                    assertTrue(it.alias.isNotEmpty())
+                    latch.countDown()
+                },
+                onError = {
+                    Timber.e(it, "Error")
+                    Assert.fail(it.message)
+                    latch.countDown()
+                }
+        )
+        latch.await()
+    }
+
+    @Test
+    fun testAmexRegistration() {
+        setUp()
+        val latch = CountDownLatch(1)
+        registrationManager.registerCreditCard(validAmexCreditCardData).subscribeBy(
                 onSuccess = {
                     assertTrue(it.alias.isNotEmpty())
                     latch.countDown()
@@ -88,7 +141,7 @@ class AdyenTest {
 //        val latch = CountDownLatch(1)
 //
 //        val registrationDisposable = registrationManager.registerCreditCard(
-//                validCreditCardData
+//                validVisaCreditCardData
 //        )
 //                .subscribeOn(Schedulers.io())
 //                .subscribeBy(
@@ -145,14 +198,14 @@ class AdyenTest {
 //
 //        val latch = CountDownLatch(1)
 //
-//        val validCreditCardData = CreditCardData(
+//        val validVisaCreditCardData = CreditCardData(
 //                "4111111111111111",
 //                LocalDate.of(2021, 1, 1),
 //                "123",
 //                "Holder Holderman"
 //        )
 //
-//        registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
+//        registrationManager.registerCreditCard(validVisaCreditCardData).subscribeBy(
 //                onSuccess = { alias ->
 //                    System.out.print("Test")
 //                    latch.countDown()

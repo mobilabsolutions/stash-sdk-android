@@ -3,19 +3,19 @@ package com.mobilabsolutions.payment.android.psdk.integration.adyen
 import android.app.Application
 import android.content.Context
 import android.util.Base64
-import com.adyen.checkout.core.CheckoutException
-import com.adyen.checkout.core.StartPaymentParameters
 import com.adyen.checkout.core.card.Card
+import com.adyen.checkout.core.card.CardType
 import com.adyen.checkout.core.card.Cards
-import com.adyen.checkout.core.handler.StartPaymentParametersHandler
 /* ktlint-disable no-wildcard-imports */
 import com.adyen.checkout.core.internal.*
 import com.adyen.checkout.core.internal.model.PaymentInitiation
 import com.adyen.checkout.core.internal.model.PaymentInitiationResponse
+import com.adyen.checkout.core.internal.model.PaymentMethodImpl
 import com.adyen.checkout.core.internal.model.PaymentSessionImpl
 import com.adyen.checkout.core.internal.persistence.PaymentRepository
 import com.adyen.checkout.core.internal.persistence.PaymentSessionEntity
 import com.adyen.checkout.core.model.CardDetails
+import com.adyen.checkout.ui.internal.card.CardCheckoutMethodFactory
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
@@ -71,23 +71,10 @@ class AdyenHandler @Inject constructor(private val mobilabApiV2: MobilabApiV2, v
             handlerConstructor.isAccessible = true
             val paymentHandlerImpl = handlerConstructor.newInstance(context.applicationContext, paymentSessionEntity, null)
             PaymentHandlerStore.getInstance().storePaymentHandler(paymentReferenceImpl, paymentHandlerImpl)
-            val startPaymentParametersImpl = StartPaymentParametersImpl(paymentReferenceImpl, paymentSession)
 
-            val handler = object : StartPaymentParametersHandler {
-                override fun onPaymentInitialized(startPaymentParameters: StartPaymentParameters) {
-                    Timber.d("Got payment parameters")
-                }
-
-                override fun onError(error: CheckoutException) {
-                    Timber.e("Error")
-                    it.onError(error)
-                }
-            }
-            handler.onPaymentInitialized(startPaymentParametersImpl)
-            Timber.d("Payment methods: ${paymentSession.paymentMethods.joinToString { it.name }}")
-            val visaPaymentMethod = paymentSession.paymentMethodImpls.filter { it.name == "VISA" }.first()
-            val inputDetails = visaPaymentMethod.inputDetails
-
+            val cardCheckoutMethodFactory = CardCheckoutMethodFactory(context as Application)
+            val cardCheckoutMethod = cardCheckoutMethodFactory.initCheckoutMethods(paymentSession).call()
+            val resolvedPaymentMethod = cardCheckoutMethod[0].paymentMethod as PaymentMethodImpl
             val publicKey = paymentSession.publicKey!!
             val card = Card.Builder()
                     .setNumber(creditCardData.number)
@@ -104,7 +91,7 @@ class AdyenHandler @Inject constructor(private val mobilabApiV2: MobilabApiV2, v
                     .build()
 
             val paymentInitiation = PaymentInitiation.Builder(
-                    paymentSession.paymentData, visaPaymentMethod.paymentMethodData)
+                    paymentSession.paymentData, resolvedPaymentMethod.paymentMethodData)
                     .setPaymentMethodDetails(visaCardDetails)
                     .build()
 
