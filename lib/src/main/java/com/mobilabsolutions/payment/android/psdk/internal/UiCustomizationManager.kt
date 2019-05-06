@@ -36,32 +36,32 @@ data class CustomizationPreference(
 ) {
     class Builder() {
         private var preference = CustomizationPreference()
-        fun setTextColor(@ColorRes resourceId: Int) : Builder {
+        fun setTextColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(textColor = resourceId)
             return this
         }
 
-        fun setBackgroundColor(@ColorRes resourceId: Int) : Builder {
+        fun setBackgroundColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(backgroundColor = resourceId)
             return this
         }
 
-        fun setButtonColor(@ColorRes resourceId: Int) : Builder {
+        fun setButtonColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(buttonColor = resourceId)
             return this
         }
 
-        fun setButtonTextColor(@ColorRes resourceId: Int) : Builder {
+        fun setButtonTextColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(buttonTextColor = resourceId)
             return this
         }
 
-        fun setCellBackgroundColor(@ColorRes resourceId: Int) : Builder {
+        fun setCellBackgroundColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(cellBackgroundColor = resourceId)
             return this
         }
 
-        fun setMediumEmphasisColor(@ColorRes resourceId: Int) : Builder {
+        fun setMediumEmphasisColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(mediumEmphasisColor = resourceId)
             return this
         }
