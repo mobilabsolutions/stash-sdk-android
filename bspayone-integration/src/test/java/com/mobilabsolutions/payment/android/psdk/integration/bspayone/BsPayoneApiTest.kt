@@ -284,7 +284,7 @@
 // //
 // //        assertNotNull(uiCustomizationManager)
 // //        uiCustomizationManager.setPaypalRedirectActivityCustomizations(customization)
-// //        val preferences = context.getSharedPreferences(PaymentSdkModule.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+// //        val preferences = context.getSharedPreferences(PaymentSdkModule.DEFAULT_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 // //        val paypalCustomizationString = preferences.getString(NewUiCustomizationManager.PAYPAL_CUSTOMIZATION_KEY, "")
 // //        assertNotNull(paypalCustomizationString)
 // //        assertNotEquals(paypalCustomizationString, "")

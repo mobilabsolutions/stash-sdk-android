@@ -28,9 +28,6 @@ class AdyenTest {
 
     val testPublicKey = BuildConfig.newBsTestKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
-    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
-    val NEW_BS_PAYONE_URL = BuildConfig.newBsApiUrl
-    val ccAlias = "ybDqWplVEqbnoAARpmcIXvwluuSEbLVN"
 
     @Inject
     lateinit var registrationManager: NewRegistrationManager
@@ -132,92 +129,7 @@ class AdyenTest {
         )
         latch.await()
     }
-
-//    @Ignore("Idempotent-Key needs to be implemented.")
-//    @Test
-//    fun testRegisterCreditCard() {
-//        setUp()
-//
-//        val latch = CountDownLatch(1)
-//
-//        val registrationDisposable = registrationManager.registerCreditCard(
-//                validVisaCreditCardData
-//        )
-//                .subscribeOn(Schedulers.io())
-//                .subscribeBy(
-//                        onSuccess = { paymentAlias ->
-//                            Assert.assertNotNull(paymentAlias)
-//                            println("Payment aliasId: $paymentAlias")
-//                            latch.countDown()
-//                        },
-//                        onError = {
-//                            Timber.e(it, "Failed")
-//                            fail(it.message)
-//                            latch.countDown()
-//                        }
-//                )
-//
-//        latch.await()
-//
-//        registrationDisposable.dispose()
-//    }
-//
-//    @Ignore("Not implemented on backend yet")
-//    @Test
-//    fun testBSSepaRegistration() {
-//        val latch = CountDownLatch(1)
-//
-//        val registrationDisposable = registrationManager.registerSepa(
-//                validSepaData, validBillingData)
-//                .subscribeOn(Schedulers.io())
-//                .subscribe(
-//                        { paymentAlias ->
-//                            Assert.assertNotNull(paymentAlias)
-//                            println("Payment aliasId: $paymentAlias")
-//                            latch.countDown()
-//                        }
-//
-//                ) { error ->
-//
-//                    Assert.fail(error.message)
-//
-//                    latch.countDown()
-//                }
-//
-//        try {
-//            latch.await()
-//        } catch (e: InterruptedException) {
-//            e.printStackTrace()
-//        }
-//
-//        registrationDisposable.dispose()
-//    }
-//    @Ignore("Not implemented on backend yet")
-//    @Test
-//    fun registerCreditCardFailure() {
-//
-//        val latch = CountDownLatch(1)
-//
-//        val validVisaCreditCardData = CreditCardData(
-//                "4111111111111111",
-//                LocalDate.of(2021, 1, 1),
-//                "123",
-//                "Holder Holderman"
-//        )
-//
-//        registrationManager.registerCreditCard(validVisaCreditCardData).subscribeBy(
-//                onSuccess = { alias ->
-//                    System.out.print("Test")
-//                    latch.countDown()
-//                },
-//                onError = {
-//                    latch.countDown()
-//                    it.printStackTrace()
-//                }
-//        )
-//
-//        latch.await()
-//    }
+    
 }
 
 @Singleton
