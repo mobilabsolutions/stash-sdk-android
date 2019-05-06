@@ -7,7 +7,6 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.backend.BackendExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
@@ -31,12 +30,12 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
-        private val mobilabApi: MobilabApi,
-        private val mobilabApiV2: MobilabApiV2,
-        private val exceptionMapper: BackendExceptionMapper,
-        private val integrations: Set<@JvmSuppressWildcards Integration>,
-        private val uiRequestHandler: UiRequestHandler,
-        private val context: Context
+    private val mobilabApi: MobilabApi,
+    private val mobilabApiV2: MobilabApiV2,
+    private val exceptionMapper: BackendExceptionMapper,
+    private val integrations: Set<@JvmSuppressWildcards Integration>,
+    private val uiRequestHandler: UiRequestHandler,
+    private val context: Context
 ) {
     val BRAINTREE_PSP_NAME = "BRAINTREE"
 
@@ -83,10 +82,10 @@ class PspCoordinator @Inject constructor(
 //    }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData,
-            billingData: BillingData = BillingData(),
-            additionalUIData: Map<String, String> = emptyMap(),
-            idempotencyKey: String
+        creditCardData: CreditCardData,
+        billingData: BillingData = BillingData(),
+        additionalUIData: Map<String, String> = emptyMap(),
+        idempotencyKey: String
     ): Single<PaymentMethodAlias> {
         return handleRegisterCreditCard(
                 creditCardData,
@@ -101,11 +100,11 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterCreditCard(
-            creditCardData: CreditCardData,
-            billingData: BillingData = BillingData(),
-            additionalUIData: Map<String, String>,
-            chosenPsp: PspIdentifier,
-            idempotencyKey: String
+        creditCardData: CreditCardData,
+        billingData: BillingData = BillingData(),
+        additionalUIData: Map<String, String>,
+        chosenPsp: PspIdentifier,
+        idempotencyKey: String
     ): Single<PaymentMethodAlias> {
 
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()

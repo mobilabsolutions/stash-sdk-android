@@ -7,7 +7,7 @@ data class AliasExtra(
     val creditCardConfig: CreditCardConfig? = null,
     val sepaConfig: SepaConfig? = null,
     val paymentMethod: String,
-    val payload : String? = null
+    val payload: String? = null
 
 )
 

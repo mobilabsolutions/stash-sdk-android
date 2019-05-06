@@ -13,6 +13,7 @@ import java.util.Locale
 data class BillingData(
     var firstName: String? = null,
     var lastName: String? = null,
+    var firstAndLastName: String? = null,
     var email: String? = null,
     var address1: String? = null,
     var address2: String? = null,

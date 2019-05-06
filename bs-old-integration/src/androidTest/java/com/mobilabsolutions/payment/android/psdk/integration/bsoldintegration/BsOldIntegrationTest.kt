@@ -15,10 +15,7 @@ import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import dagger.Component
-import io.reactivex.rxkotlin.subscribeBy
-import org.junit.Test
 import org.threeten.bp.LocalDate
-import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 import javax.inject.Singleton
 

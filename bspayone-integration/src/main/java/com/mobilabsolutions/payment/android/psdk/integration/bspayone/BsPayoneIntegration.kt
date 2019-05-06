@@ -64,7 +64,7 @@ class BsPayoneIntegration private constructor(
         bsPayoneIntegrationComponent.inject(this)
     }
 
-    override fun getPreparationData(method : PaymentMethodType): Single<Map<String, String>> {
+    override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
         return Single.just(emptyMap())
     }
 

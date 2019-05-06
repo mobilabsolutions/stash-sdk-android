@@ -2,7 +2,6 @@ package com.mobilabsolutions.payment.android.psdk.integration.adyen
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.platform.app.InstrumentationRegistry
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
@@ -16,9 +15,8 @@ import javax.inject.Singleton
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import io.reactivex.rxkotlin.subscribeBy
-import junit.framework.Assert.assertEquals
+import junit.framework.Assert.assertTrue
 import org.junit.Assert
-import org.junit.Before
 import org.threeten.bp.LocalDate
 import timber.log.Timber
 import java.util.concurrent.CountDownLatch
@@ -37,7 +35,7 @@ class AdyenTest {
     @Inject
     lateinit var registrationManager: NewRegistrationManager
 
-    lateinit var validCreditCardData : CreditCardData
+    lateinit var validCreditCardData: CreditCardData
 
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext() as Application
@@ -58,12 +56,11 @@ class AdyenTest {
 
         validCreditCardData = CreditCardData(
                 number = "4111111111111111",
-                expiryDate = LocalDate.now(),
-                cvv = "123",
-                holder = "Holder"
+                expiryDate = LocalDate.of(2020, 10, 1),
+                cvv = "737",
+                holder = "Holder Holdermann"
         )
     }
-
 
     @Test
     fun retrieveToken() {
@@ -71,7 +68,7 @@ class AdyenTest {
         val latch = CountDownLatch(1)
         registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
                 onSuccess = {
-                    Timber.d("Alias ${it.alias}")
+                    assertTrue(it.alias.isNotEmpty())
                     latch.countDown()
                 },
                 onError = {
@@ -169,10 +166,6 @@ class AdyenTest {
 //        latch.await()
 //    }
 }
-
-
-
-
 
 @Singleton
 @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, AdyenModule::class])

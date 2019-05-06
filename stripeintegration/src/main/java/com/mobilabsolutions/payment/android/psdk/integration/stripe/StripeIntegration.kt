@@ -29,7 +29,7 @@ class StripeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration 
 
     lateinit var stripe: Stripe
 
-    override fun getPreparationData(method : PaymentMethodType): Single<Map<String, String>> {
+    override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
         return Single.just(emptyMap())
     }
 
