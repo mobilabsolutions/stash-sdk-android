@@ -12,7 +12,7 @@ object BsPayoneErrorHandler {
 
     fun handleError(error: BsPayoneVerificationErrorResponse): Throwable {
         return when (error.errorCode) {
-            7, 43, 56, 62, 880 -> RegistrationFailedException(error.customerMessage
+            7, 43, 56, 62, 63, 880 -> RegistrationFailedException(error.customerMessage
                 ?: "No custom message provided", error.errorCode)
             else -> UnknownException(error.customerMessage
                 ?: "No custom message provided", error.errorCode)

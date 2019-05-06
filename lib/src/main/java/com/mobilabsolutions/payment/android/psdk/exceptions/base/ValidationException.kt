@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.android.psdk.exceptions.base
 
-@Suppress("unused")
 open class ValidationException(
     @Transient override val message: String = "Validation Exception",
     @Transient override val code: Int? = null,

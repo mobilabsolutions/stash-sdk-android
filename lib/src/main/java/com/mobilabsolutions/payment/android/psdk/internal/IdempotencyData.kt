@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2
+package com.mobilabsolutions.payment.android.psdk.internal
 
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType

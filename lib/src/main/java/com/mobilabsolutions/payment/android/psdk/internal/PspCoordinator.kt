@@ -3,17 +3,12 @@ package com.mobilabsolutions.payment.android.psdk.internal
 /* ktlint-disable no-wildcard-imports */
 import android.app.Activity
 import android.content.Context
-import android.content.SharedPreferences
-import android.text.format.DateUtils
-import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.IdempotencyKeyInUseException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.IdempotencyData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
@@ -31,7 +26,6 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import java.util.*
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -43,21 +37,8 @@ class PspCoordinator @Inject constructor(
     private val integrations: Set<@JvmSuppressWildcards Integration>,
     private val uiRequestHandler: UiRequestHandler,
     private val context: Context,
-    private val gson: Gson,
-    @Named("idempotency") private val sharedPreferences: SharedPreferences
+    private val idempotencyManager: IdempotencyManager
 ) {
-
-    init {
-        sharedPreferences.all
-            .mapValues { gson.fromJson(it.value.toString(), IdempotencyData::class.java) }
-            .filterValues { !DateUtils.isToday(it.timestamp) } // TODO: Today or 24Hr?
-            .keys
-            .forEach {
-                sharedPreferences.edit()
-                    .remove(it)
-                    .apply()
-            }
-    }
 
     companion object {
         private const val BRAINTREE_PSP_NAME = "BRAINTREE"
@@ -144,25 +125,23 @@ class PspCoordinator @Inject constructor(
             return Single.error(RuntimeException("Invalid card number length"))
         }
 
-        return verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC,
-            function = {
-                mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
-                    .subscribeOn(Schedulers.io())
-                    .processErrors()
-                    .flatMap {
+        return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
+            mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
+                .subscribeOn(Schedulers.io())
+                .processErrors()
+                .flatMap {
 
-                        val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
-                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
-                        val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
+                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
-                        val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
+                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
 
-                        pspAliasSingle.map { alias ->
-                            PaymentMethodAlias(alias, PaymentMethodType.CC)
-                        }
+                    pspAliasSingle.map { alias ->
+                        PaymentMethodAlias(alias, PaymentMethodType.CC)
                     }
-            }
-        )
+                }
+        }
     }
 
     fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData = BillingData(), additionalUIData: Map<String, String> = emptyMap(), idempotencyKey: String): Single<PaymentMethodAlias> {
@@ -176,23 +155,21 @@ class PspCoordinator @Inject constructor(
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
         // TODO validate
-        return verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.SEPA,
-            function = {
-                mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
-                    .subscribeOn(Schedulers.io())
-                    .flatMap {
+        return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.SEPA) {
+            mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey)
+                .subscribeOn(Schedulers.io())
+                .flatMap {
 
-                        val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
-                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
-                        val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+                    val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
+                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
+                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
-                        chosenIntegration.handleRegistrationRequest(registrationRequest)
-                            .map {
-                                PaymentMethodAlias(it, PaymentMethodType.SEPA)
-                            }
-                    }
-            }
-        )
+                    chosenIntegration.handleRegistrationRequest(registrationRequest)
+                        .map {
+                            PaymentMethodAlias(it, PaymentMethodType.SEPA)
+                        }
+                }
+        }
     }
 
     //
@@ -268,33 +245,31 @@ class PspCoordinator @Inject constructor(
     }
 
     private fun registerPayPalUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        val chosenIntegration = integrations.filter { it.identifier == Companion.BRAINTREE_PSP_NAME }.first()
+        val chosenIntegration = integrations.filter { it.identifier == BRAINTREE_PSP_NAME }.first()
         val backendImplemented = false
 
         val selectedPaymentMethodDefinition = integrations.flatMap {
             it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.PAYPAL }
         }.first()
         if (backendImplemented) {
-            return verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.PAYPAL,
-                function = {
-                    mobilabApiV2.createAlias(Companion.BRAINTREE_PSP_NAME, idempotencyKey)
-                        .subscribeOn(Schedulers.io())
-                        .flatMap { aliasResponse ->
-                            uiRequestHandler.handlePaypalMethodEntryRequest(
-                                activity,
-                                chosenIntegration,
-                                selectedPaymentMethodDefinition,
-                                requestId).flatMap {
-                                val additionalData = AdditionalRegistrationData(it)
-                                val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
-                                val registrationRequest = RegistrationRequest(standardizedData, additionalData)
-                                chosenIntegration.handleRegistrationRequest(registrationRequest)
-                            }
-                        }.map {
-                            PaymentMethodAlias(it, PaymentMethodType.PAYPAL)
+            return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.PAYPAL) {
+                mobilabApiV2.createAlias(BRAINTREE_PSP_NAME, idempotencyKey)
+                    .subscribeOn(Schedulers.io())
+                    .flatMap { aliasResponse ->
+                        uiRequestHandler.handlePaypalMethodEntryRequest(
+                            activity,
+                            chosenIntegration,
+                            selectedPaymentMethodDefinition,
+                            requestId).flatMap {
+                            val additionalData = AdditionalRegistrationData(it)
+                            val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
+                            val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+                            chosenIntegration.handleRegistrationRequest(registrationRequest)
                         }
-                }
-            )
+                    }.map {
+                        PaymentMethodAlias(it, PaymentMethodType.PAYPAL)
+                    }
+            }
         } else {
             return uiRequestHandler.handlePaypalMethodEntryRequest(
                 activity,
@@ -316,30 +291,6 @@ class PspCoordinator @Inject constructor(
                 is HttpException -> Single.error(exceptionMapper.mapError(it))
                 else -> Single.error(RuntimeException("Unknown exception ${it.message}"))
             }
-        }
-    }
-
-    private fun Single<PaymentMethodAlias>.persistResult(idempotencyKey: String, paymentMethodType: PaymentMethodType): Single<PaymentMethodAlias> {
-        return doOnEvent { result, error ->
-            sharedPreferences.edit()
-                .putString(idempotencyKey, gson.toJson(IdempotencyData(System.currentTimeMillis(), paymentMethodType, result, error)))
-                .apply()
-        }
-    }
-
-    private fun verifyIdempotencyAndContinue(idempotencyKey: String, paymentMethodType: PaymentMethodType, function: () -> Single<PaymentMethodAlias>): Single<PaymentMethodAlias> {
-        sharedPreferences.getString(idempotencyKey, null)?.let {
-            val idempotencyData = gson.fromJson(it, IdempotencyData::class.java)
-            // Check for the same Idempotency key Used for a different Payment method
-            return if (idempotencyData.paymentMethodType != paymentMethodType) {
-                Single.error(IdempotencyKeyInUseException())
-            } else when {
-                idempotencyData.paymentMethodAlias != null -> Single.just(PaymentMethodAlias(idempotencyData.paymentMethodAlias.alias, paymentMethodType))
-                else -> Single.error(idempotencyData.error)
-            }
-        } ?: run {
-            return function()
-                .persistResult(idempotencyKey, paymentMethodType)
         }
     }
 }

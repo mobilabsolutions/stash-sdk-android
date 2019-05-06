@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.android.psdk.exceptions.base
 
-@Suppress("unused")
 class AuthenticationException(
     @Transient override val message: String = "Authentication Failed",
     @Transient override val code: Int? = null,
