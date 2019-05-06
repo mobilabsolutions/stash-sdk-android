@@ -4,7 +4,7 @@
 // import android.os.Build
 // import androidx.test.InstrumentationRegistry
 // import com.mobilabsolutions.payment.android.BuildConfig
-// import com.mobilabsolutions.payment.android.psdk.exceptions.backend.UnknownBackendException
+// import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
 // import com.mobilabsolutions.payment.android.psdk.internal.*
 // import com.mobilabsolutions.payment.android.psdk.internal.psphandler.bspayone.BsPayoneModule
 // import com.mobilabsolutions.payment.android.psdk.internal.psphandler.hypercharge.HyperchargeModule
@@ -197,7 +197,7 @@
 //                        }
 //                ) { error ->
 //                    when (error) {
-//                        is UnknownBackendException ->
+//                        is OtherException ->
 //                            Timber.e(error, "BS credit card payment failed " +
 //                                    "${error.message} ${error.providerMessage}")
 //                        else -> {

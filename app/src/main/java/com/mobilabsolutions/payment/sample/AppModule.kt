@@ -36,7 +36,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun providieRegistrationManager(): RegistrationManager {
+    fun provideRegistrationManager(): RegistrationManager {
         return PaymentSdk.getRegistrationManager()
     }
 
