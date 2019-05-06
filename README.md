@@ -252,6 +252,49 @@ registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CRED
         );
 ``` 
 
+#### Customizing UI
+
+If you want you can change the color scheme of the screens shown when requesting payment method data from the user. To do this you should provide
+a `CustomizationPreference` object to the customization manager of payment SDK. `CustomizationPreference` expects colors defined as resource ids.
+
+Below is the sample using random colors provided by Android.
+
+Kotlin
+
+```kotlin
+val textColor: Int = android.R.color.holo_orange_dark
+val backgroundColor: Int = R.color.coral
+val buttonColor: Int = android.R.color.holo_purple
+val buttonTextColor: Int = android.R.color.holo_blue_bright
+val cellBackgroundColor: Int = R.color.unknown_blue
+val mediumEmphasisColor: Int = android.R.color.holo_green_light
+
+val customizationPreference = CustomizationPreference(
+        textColor,
+        backgroundColor,
+        buttonColor,
+        buttonTextColor,
+        cellBackgroundColor,
+        mediumEmphasisColor
+)
+PaymentSdk.getUiCustomizationManager().setCustomizationPreferences(customizationPreference)
+```
+
+Java
+
+```java
+CustomizationPreference customizationPreference = new CustomizationPreference.Builder()
+        .setTextColor(android.R.color.holo_orange_dark)
+        .setBackgroundColor(android.R.color.holo_blue_dark)
+        .setButtonColor(android.R.color.holo_purple)
+        .setButtonTextColor(android.R.color.holo_blue_bright)
+        .setCellBackgroundColor(android.R.color.holo_red_light)
+        .setMediumEmphasisColor(R.color.unknown_blue)
+        .build();
+
+PaymentSdk.getUiCustomizationManager().setCustomizationPreferences(customizationPreference);
+``` 
+
 ### Idempotency
 All calls provided by Payment SDK are idempotent. To use idempotency simply provide a UUID to with any of the registration methods used.
 
