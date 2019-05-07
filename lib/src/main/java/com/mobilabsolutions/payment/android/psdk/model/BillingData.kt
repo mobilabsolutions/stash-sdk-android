@@ -48,4 +48,14 @@ data class BillingData(
 
         fun build() = billingData
     }
+
+    fun resolveName(): String? {
+        if (firstAndLastName != null) {
+            return firstAndLastName
+        }
+        if (firstName == null && lastName == null) {
+            return null
+        }
+        return (firstName ?: "") + " " + (lastName ?: "")
+    }
 }

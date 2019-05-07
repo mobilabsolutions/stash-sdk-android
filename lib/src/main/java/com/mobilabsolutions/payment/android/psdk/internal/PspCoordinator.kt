@@ -120,8 +120,6 @@ class PspCoordinator @Inject constructor(
 
         val chosenIntegration = integrations.first { it.identifier == chosenPsp }
 
-
-
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
             chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
                 mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)

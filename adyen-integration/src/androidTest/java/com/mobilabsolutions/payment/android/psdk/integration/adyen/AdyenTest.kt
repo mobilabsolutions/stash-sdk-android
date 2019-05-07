@@ -13,10 +13,13 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.rxkotlin.subscribeBy
 import junit.framework.Assert.assertTrue
 import org.junit.Assert
+import org.junit.Ignore
 import org.threeten.bp.LocalDate
 import timber.log.Timber
 import java.util.concurrent.CountDownLatch
@@ -33,9 +36,11 @@ class AdyenTest {
     lateinit var registrationManager: NewRegistrationManager
 
     lateinit var validVisaCreditCardData: CreditCardData
+    lateinit var invalidVisaCreditCardData: CreditCardData
     lateinit var validMastercardCreditCardData: CreditCardData
     lateinit var validAmexCreditCardData: CreditCardData
 
+    lateinit var validSepaData: SepaData
 
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext() as Application
@@ -61,6 +66,13 @@ class AdyenTest {
                 holder = "Holder Holdermann"
         )
 
+        invalidVisaCreditCardData = CreditCardData(
+                number = "4111111111111111",
+                expiryDate = LocalDate.of(2020, 10, 1),
+                cvv = "7372",
+                holder = "Holder Holdermann"
+        )
+
         validMastercardCreditCardData = CreditCardData(
                 number = "5555 3412 4444 1115",
                 expiryDate = LocalDate.of(2020, 10, 1),
@@ -73,6 +85,11 @@ class AdyenTest {
                 expiryDate = LocalDate.of(2020, 10, 1),
                 cvv = "7373",
                 holder = "Holder Holdermann"
+        )
+
+        validSepaData = SepaData(
+                holder = "Holder Holdermann",
+                iban = "DE63123456791212121212"
         )
     }
 
@@ -88,6 +105,24 @@ class AdyenTest {
                 onError = {
                     Timber.e(it, "Error")
                     Assert.fail(it.message)
+                    latch.countDown()
+                }
+        )
+        latch.await()
+    }
+
+    @Test
+    fun testVisaRegistrationFailure() {
+        setUp()
+        val latch = CountDownLatch(1)
+        registrationManager.registerCreditCard(invalidVisaCreditCardData).subscribeBy(
+                onSuccess = {
+                    Assert.fail("Expected validation exception")
+                    latch.countDown()
+                },
+                onError = {
+                    Timber.e(it, "Error")
+                    Assert.assertTrue(it is ValidationException)
                     latch.countDown()
                 }
         )
@@ -129,7 +164,26 @@ class AdyenTest {
         )
         latch.await()
     }
-    
+
+    @Ignore("While backend catches up")
+    @Test
+    fun testSepaRegistration() {
+        setUp()
+        val latch = CountDownLatch(1)
+        registrationManager.registerSepa(validSepaData)
+                .subscribeBy(
+                onSuccess = {
+                    assertTrue(it.alias.isNotEmpty())
+                    latch.countDown()
+                },
+                onError = {
+                    Timber.e(it, "Error")
+                    Assert.fail(it.message)
+                    latch.countDown()
+                }
+        )
+        latch.await()
+    }
 }
 
 @Singleton
