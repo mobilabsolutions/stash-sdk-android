@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
+package com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,8 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
+import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
 import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
@@ -19,22 +19,21 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.*
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.* // ktlint-disable no-wildcard-imports
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryText
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameEditText
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameTitleTextView
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.lastNameEditText
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.lastNameTitleTextView
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.saveButton
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.* // ktlint-disable no-wildcard-imports
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.firstNameEditText
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.lastNameEditText
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.lastNameTitleTextView
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.saveButton
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryTitleTextView
 import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class SepaDataEntryFragment : Fragment() {
+class AdyenSepaDataEntryFragment : Fragment() {
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
@@ -60,12 +59,12 @@ class SepaDataEntryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
+        AdyenIntegration.integration?.adyenIntegrationComponent?.inject(this)
         Timber.d("Created")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.sepa_data_entry_fragment, container, false)
+        return inflater.inflate(R.layout.adyen_sepa_data_entry_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

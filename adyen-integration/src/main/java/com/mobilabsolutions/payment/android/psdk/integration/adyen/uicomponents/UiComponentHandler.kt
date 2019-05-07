@@ -1,7 +1,7 @@
-package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
+package com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents
 
 import androidx.appcompat.app.AppCompatActivity
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -18,7 +18,7 @@ class UiComponentHandler @Inject constructor() {
 
     fun handleSepaDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
         dataSubject = PublishSubject.create()
-        val sepaDataEntryFragment = BsPayoneSepaDataEntryFragment()
+        val sepaDataEntryFragment = AdyenSepaDataEntryFragment()
         Timber.d("Current thread: ${Thread.currentThread().name}")
         activity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, sepaDataEntryFragment).commitNow()
         return dataSubject.doFinally {
@@ -28,7 +28,7 @@ class UiComponentHandler @Inject constructor() {
 
     fun handleCreditCardDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
         dataSubject = PublishSubject.create()
-        val creditCardDataEntryFragment = BsPayoneCreditCardDataEntryFragment()
+        val creditCardDataEntryFragment = AdyenCreditCardDataEntryFragment()
         activity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, creditCardDataEntryFragment).commitNow()
         return dataSubject.doFinally {
             activity.supportFragmentManager.beginTransaction().remove(creditCardDataEntryFragment).commitNow()

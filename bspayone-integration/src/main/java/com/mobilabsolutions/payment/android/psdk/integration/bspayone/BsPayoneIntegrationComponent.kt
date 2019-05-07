@@ -1,7 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.CreditCardDataEntryFragment
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.SepaDataEntryFragment
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.BsPayoneCreditCardDataEntryFragment
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.BsPayoneSepaDataEntryFragment
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import dagger.Component
@@ -14,7 +14,7 @@ import dagger.Component
 interface BsPayoneIntegrationComponent {
     fun inject(integration: BsPayoneIntegration)
 
-    fun inject(creditCardFragment: CreditCardDataEntryFragment)
+    fun inject(bsPayoneCreditCardFragment: BsPayoneCreditCardDataEntryFragment)
 
-    fun inject(sepaDataEntryFragment: SepaDataEntryFragment)
+    fun inject(bsPayoneSepaDataEntryFragment: BsPayoneSepaDataEntryFragment)
 }
