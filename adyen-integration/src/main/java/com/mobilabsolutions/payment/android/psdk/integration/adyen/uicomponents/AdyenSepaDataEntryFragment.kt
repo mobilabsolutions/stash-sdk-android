@@ -53,7 +53,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
     private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val lastNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val ibanSubject: BehaviorSubject<String> = BehaviorSubject.create()
-    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.createDefault("Germany")
 
     private var viewState: SepaDataEntryViewState? = null
 
@@ -69,6 +68,10 @@ class AdyenSepaDataEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        countryText.visibility = View.GONE
+        countryTitleTextView.visibility = View.GONE
+
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
 
         ibanTitleTextView.applyTextCustomization(customizationPreference)
@@ -89,7 +92,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 firstNameSubject,
                 lastNameSubject,
                 ibanSubject,
-                countrySubject,
                 ::SepaDataEntryViewState)
                 .subscribe(this::onViewStateNext)
 
@@ -114,7 +116,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         ibanNumberEditText.getContentOnFocusLost { ibanSubject.onNext(it.trim()) }
-        countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
             Timber.d("Country selector")
@@ -126,7 +127,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 dataMap[SepaData.FIRST_NAME] = it.firstName
                 dataMap[SepaData.LAST_NAME] = it.lastName
                 dataMap[SepaData.IBAN] = it.iban
-                dataMap[BillingData.COUNTRY] = it.country
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
         }
@@ -143,7 +143,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
         success = validateFirstName(state.firstName) && success
         success = validateLastName(state.lastName) && success
         success = validateIban(state.iban) && success
-        success = validateCountry(state.country) && success
         saveButton.isEnabled = success
         saveButton.applyCustomization(customizationPreference)
     }
@@ -206,7 +205,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
     data class SepaDataEntryViewState(
         val firstName: String = "",
         val lastName: String = "",
-        val iban: String = "",
-        val country: String = "Germany"
+        val iban: String = ""
     )
 }

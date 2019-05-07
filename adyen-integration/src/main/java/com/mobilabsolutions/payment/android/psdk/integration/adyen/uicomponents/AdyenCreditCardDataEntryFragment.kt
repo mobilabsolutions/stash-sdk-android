@@ -52,7 +52,6 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private val ccNumberSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val expDateSubject: BehaviorSubject<LocalDate> = BehaviorSubject.create()
     private val ccvSubject: BehaviorSubject<String> = BehaviorSubject.create()
-    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.createDefault("Germany")
     private var viewState: CreditCardDataEntryViewState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,6 +71,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        countryText.visibility = View.GONE
+        countryTitleTextView.visibility = View.GONE
 
         disposables += Observables.combineLatest(
                 firstNameSubject,
@@ -79,7 +80,6 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 ccNumberSubject,
                 expDateSubject,
                 ccvSubject,
-                countrySubject,
                 ::CreditCardDataEntryViewState)
                 .subscribe(this::onViewState)
 
@@ -136,7 +136,6 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.replace("\\D".toRegex(), "")) }
         ccvEditText.getContentOnFocusLost { ccvSubject.onNext(it.trim()) }
-        countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
             Timber.d("Country selector")
@@ -186,7 +185,6 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         success = validateLastName(state.lastName) && success
         success = validateCreditCardNumber(state.ccNumber) && success
         success = validateCvv(state.ccv) && success
-        success = validateCountry(state.country) && success
         success = validateExpirationDate(state.expDate) && success
 
         saveButton.isEnabled = success
@@ -280,8 +278,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         val lastName: String = "",
         val ccNumber: String = "",
         val expDate: LocalDate? = null,
-        val ccv: String = "",
-        val country: String = "Germany"
+        val ccv: String = ""
     )
 }
 
