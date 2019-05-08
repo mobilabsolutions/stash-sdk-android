@@ -1,14 +1,11 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
-/* ktlint-disable no-wildcard-imports */
 import android.app.Activity
 import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PaymentMethodRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
@@ -24,14 +21,13 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
-import java.util.*
+import java.util.Random
 import javax.inject.Inject
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
-    private val mobilabApi: MobilabApi,
     private val mobilabApiV2: MobilabApiV2,
     private val exceptionMapper: ExceptionMapper,
     private val integrations: Set<@JvmSuppressWildcards Integration>,
@@ -42,54 +38,6 @@ class PspCoordinator @Inject constructor(
 
     companion object {
         private const val BRAINTREE_PSP_NAME = "BRAINTREE"
-    }
-
-    fun handleRegisterCreditCardOld(
-        creditCardData: CreditCardData
-    ): Single<String> {
-        return handleRegisterCreditCardOld(creditCardData, integrations.first().identifier)
-    }
-
-    fun handleRegisterCreditCardOld(
-        creditCardData: CreditCardData,
-        chosenPsp: PspIdentifier
-    ): Single<String> {
-        val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
-
-        if (creditCardData.number.length < 16) {
-            return Single.error(RuntimeException("Invalid card number length"))
-        }
-        val paymentMethodRegistrationRequest = PaymentMethodRegistrationRequest()
-        if (creditCardData.number.length < 16) {
-            return Single.error(RuntimeException("Invalid card number length"))
-        }
-        paymentMethodRegistrationRequest.cardMask = creditCardData.number?.substring(0..5)
-        paymentMethodRegistrationRequest.oneTimePayment = false
-
-        return mobilabApi.registerCreditCard(paymentMethodRegistrationRequest)
-            .subscribeOn(Schedulers.io())
-            .processErrors()
-            .map { it.result }
-            .flatMap {
-                // TODO temporary for validation, to be removed before going public
-                val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, aliasId = it.paymentAlias)
-                val mappedValues = mapOf(
-                    "paymentAlias" to it.paymentAlias!!,
-                    "url" to it.url!!,
-                    "merchantId" to it.merchantId!!,
-                    "action" to it.action!!,
-                    "panAlias" to it.panAlias!!,
-                    "username" to it.username!!,
-                    "password" to it.password!!,
-                    "eventExtId" to it.eventExtId!!,
-                    "amount" to it.amount!!,
-                    "currency" to it.currency!!
-                )
-                val additionalData = AdditionalRegistrationData(mappedValues)
-                val registrationRequest = RegistrationRequest(standardizedData, additionalData)
-
-                chosenIntegration.handleRegistrationRequest(registrationRequest)
-            }
     }
 
     fun handleRegisterCreditCard(

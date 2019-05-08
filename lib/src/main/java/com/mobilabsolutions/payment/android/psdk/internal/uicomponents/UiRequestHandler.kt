@@ -165,7 +165,6 @@ class UiRequestHandler @Inject constructor() {
     ): Single<Pair<SepaData, Map<String, String>>> {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
-        var validSepaData = SepaData("PBNKDEFF", "DE42721622981375897982", "Holder Holderman")
         return hostActivitySingle.flatMap { hostActivity ->
             (hostActivity as RegistrationProcessHostActivity).setState(
                 RegistrationProcessHostActivity.CurrentState.ENTRY
@@ -180,7 +179,12 @@ class UiRequestHandler @Inject constructor() {
                 iban = it.getValue(SepaData.IBAN),
                 holder = it.getValue(SepaData.FIRST_NAME) + " " + it.getValue(SepaData.LAST_NAME)
             )
-            Pair(sepaData, mapOf(BillingData.COUNTRY to it.getValue(BillingData.COUNTRY)))
+            if (it.containsKey(BillingData.COUNTRY)) {
+                val country = it.getValue(BillingData.COUNTRY)
+                Pair(sepaData, mapOf(BillingData.COUNTRY to country))
+            } else {
+                Pair(sepaData, emptyMap())
+            }
         }
     }
 

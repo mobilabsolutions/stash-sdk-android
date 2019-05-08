@@ -3,7 +3,7 @@
     <application>
 
         <activity android:name=".BraintreePayPalActivity"
-                  android:theme="@style/Theme.AppCompat"
+                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
                   android:launchMode="singleTask">
