@@ -66,11 +66,11 @@ public class JavaSketch {
 
 //        UiDetailType uiDetailType = UiDetailType.NAME
 
-//        StripeAdditionalRegistrationData stripeAdditionalRegistrationData = new StripeAdditionalRegistrationData();
+//        TemplateAdditionalRegistrationData templateAdditionalRegistrationData = new TemplateAdditionalRegistrationData();
 
 
-//        StripeIntegration stripeIntegration = new StripeIntegration();
-//        stripeIntegration.executePayoneRequest(null, creditCardData, stripeAdditionalRegistrationData);
+//        TemplateIntegration templateIntegration = new TemplateIntegration();
+//        templateIntegration.executePayoneRequest(null, creditCardData, templateAdditionalRegistrationData);
 
 
 //        PaymentSdk.getRegistrationManager().executePayoneRequest(creditCardData, billingData);

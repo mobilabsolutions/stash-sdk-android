@@ -7,7 +7,6 @@ import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsP
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationErrorResponse
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationInvalidResponse
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationSuccessResponse
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
@@ -23,7 +22,6 @@ import javax.inject.Inject
  */
 class BsPayoneHandler @Inject constructor(
     private val bsPayoneApi: BsPayoneApi,
-    private val mobilabApi: MobilabApi,
     private val mobilabApiV2: MobilabApiV2
 
 ) {
