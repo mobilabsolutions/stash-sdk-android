@@ -119,6 +119,7 @@ dependencies {
     implementation(Libs.iban4j)
 
     testImplementation(project(Modules.bsPayoneIntegration))
+    testImplementation(project(Modules.adyenIntegration))
     testImplementation(project(Modules.braintreeIntegration))
 
     testImplementation(Libs.junit)
