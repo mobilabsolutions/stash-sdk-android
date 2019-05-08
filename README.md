@@ -15,7 +15,7 @@ This repository contains multiple modules:
 * `app` - Sample application using the payment SDK
 * `*-integration` - Various PSP integration modules (Implementation in progress)
 
-A normal use case for a third party developer would be to include `lib` and a specific integration module, i.e. `stripe-integration`
+A normal use case for a third party developer would be to include `lib` and a specific integration module, i.e. `template-integration`
 
 The follwoing integration and usage steps are pre-modularization and as such expect only `lib` module to be included in the project. This
 read me will be updated to reflect changes once the integration modules are implemented completely.

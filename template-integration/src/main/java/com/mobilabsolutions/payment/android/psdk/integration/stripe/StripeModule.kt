@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.integration.stripe
+package com.mobilabsolutions.payment.android.psdk.integration.template
 
 import dagger.Module
 
@@ -6,4 +6,4 @@ import dagger.Module
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Module
-class StripeModule
+class TemplateModule

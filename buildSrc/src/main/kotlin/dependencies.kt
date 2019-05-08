@@ -4,7 +4,7 @@ import java.util.Properties
 object PaymentSdkRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
     val travisTag = "TRAVIS_TAG"
-    val stripePublicKey = "STRIPE_PUBLIC_KEY"
+    val templatePublicKey = "TEMPLATE_PUBLIC_KEY"
     val mobilabBackendUrl = "BACKEND_DEVELOPMENT"
     val oldBsTestKey = "BS_TEST_PUBLIC_KEY"
     val oldBsApiUrl = "BS_TEST_API_URL"
@@ -38,7 +38,7 @@ object DemoRelease {
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
 
 object Modules {
-    val stripeIntegration = ":stripeintegration"
+    val templateIntegration = ":template-integration"
     val bsOldIntegration = ":bs-old-integration"
     val bsPayoneIntegration = ":bspayone-integration"
     val braintreeIntegration = ":braintree-integration"
@@ -52,8 +52,6 @@ object Libs {
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
 
     val timber = "com.jakewharton.timber:timber:4.7.1"
-
-    val stripe = "com.stripe:stripe-android:6.1.2"
 
     val junit = "junit:junit:4.12"
 

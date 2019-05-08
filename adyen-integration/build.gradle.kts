@@ -8,7 +8,7 @@ plugins {
     kotlin("android.extensions")
 }
 
-val stripePublicKey = propOrDefWithTravis(PaymentSdkRelease.stripePublicKey, "")
+val templatePublicKey = propOrDefWithTravis(PaymentSdkRelease.templatePublicKey, "")
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
@@ -24,11 +24,11 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "stripe_public_key", "\""+stripePublicKey+"\"")
+            resValue("string", "template_public_key", "\""+templatePublicKey+"\"")
         }
         getByName("release") {
             isMinifyEnabled = false
-            resValue("string", "stripe_public_key", "\""+stripePublicKey+"\"")
+            resValue("string", "template_public_key", "\""+templatePublicKey+"\"")
         }
     }
 
