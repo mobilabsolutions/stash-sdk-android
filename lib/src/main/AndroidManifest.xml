@@ -5,7 +5,7 @@
 
     <application>
         <!--android:usesCleartextTraffic="true"-->
-        <activity android:name=".psdk.internal.uicomponents.RegistrationProccessHostActivity"
+        <activity android:name=".psdk.internal.uicomponents.RegistrationProcessHostActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 

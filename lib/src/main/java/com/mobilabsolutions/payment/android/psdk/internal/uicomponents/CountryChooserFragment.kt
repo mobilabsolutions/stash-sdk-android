@@ -10,11 +10,10 @@ import com.mobilabsolutions.payment.android.R
 /**
  * @author [Ugljesa Jovanovic](ugi@mobilabsolutions.com)
  */
-class CountryChooserScreen : Fragment() {
+class CountryChooserFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val view = inflater.inflate(R.layout.country_chooser_fragment, container, false)
-        return view
+        return inflater.inflate(R.layout.country_chooser_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

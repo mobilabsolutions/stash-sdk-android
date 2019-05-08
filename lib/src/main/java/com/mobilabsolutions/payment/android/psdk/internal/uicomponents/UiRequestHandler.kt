@@ -111,12 +111,12 @@ class UiRequestHandler @Inject constructor() {
             if (activity != null) {
                 startedNewTask = false
                 val launchHostIntent =
-                    Intent(activity, RegistrationProccessHostActivity::class.java)
+                    Intent(activity, RegistrationProcessHostActivity::class.java)
                 activity.startActivity(launchHostIntent)
             } else {
                 startedNewTask = true
                 val launchHostIntent =
-                    Intent(applicationContext, RegistrationProccessHostActivity::class.java)
+                    Intent(applicationContext, RegistrationProcessHostActivity::class.java)
                 launchHostIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
                 applicationContext.startActivity(launchHostIntent)
             }
@@ -133,8 +133,8 @@ class UiRequestHandler @Inject constructor() {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
         return hostActivitySingle.flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(
-                RegistrationProccessHostActivity.CurrentState.ENTRY
+            (hostActivity as RegistrationProcessHostActivity).setState(
+                RegistrationProcessHostActivity.CurrentState.ENTRY
             )
             integration.handlePaymentMethodEntryRequest(hostActivity, definition)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -167,8 +167,8 @@ class UiRequestHandler @Inject constructor() {
         val hostActivitySingle = launchHostActivity(activity)
         var validSepaData = SepaData("PBNKDEFF", "DE42721622981375897982", "Holder Holderman")
         return hostActivitySingle.flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(
-                RegistrationProccessHostActivity.CurrentState.ENTRY
+            (hostActivity as RegistrationProcessHostActivity).setState(
+                RegistrationProcessHostActivity.CurrentState.ENTRY
             )
             integration.handlePaymentMethodEntryRequest(hostActivity, definition)
                 .subscribeOn(AndroidSchedulers.mainThread())
@@ -192,8 +192,8 @@ class UiRequestHandler @Inject constructor() {
     ): Single<Map<String, String>> {
         checkFlow(requestId)
         return launchHostActivity(activity).flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(
-                RegistrationProccessHostActivity.CurrentState.ENTRY
+            (hostActivity as RegistrationProcessHostActivity).setState(
+                RegistrationProcessHostActivity.CurrentState.ENTRY
             )
             integration.handlePaymentMethodEntryRequest(
                 hostActivity,
@@ -213,8 +213,8 @@ class UiRequestHandler @Inject constructor() {
         chooserUsed = true
         return launchHostActivity(activity).flatMap { hostActivity ->
             val supportFragmentManager = hostActivity.supportFragmentManager
-            (hostActivity as RegistrationProccessHostActivity).setState(
-                RegistrationProccessHostActivity.CurrentState.CHOOSER
+            (hostActivity as RegistrationProcessHostActivity).setState(
+                RegistrationProcessHostActivity.CurrentState.CHOOSER
             )
             paymentMethodTypeSubject = ReplaySubject.create()
             val paymentMethodChoiceFragment = PaymentMethodChoiceFragment()
