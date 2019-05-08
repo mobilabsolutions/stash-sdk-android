@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="80dp"
+        android:layout_marginBottom="20dp"
         android:text="@string/country_chooser_title_text"
         android:textColor="@color/gable_green"
         android:textSize="24sp"
@@ -32,16 +33,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginTop="20dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:queryHint="@string/country_chooser_search_text"
+        tools:ignore="MissingConstraints" />
+
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/paymentMethodRecyclerView"
+        android:id="@+id/countryChooserRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="61dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/searchView"
         tools:listitem="@layout/country_chooser_name" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,6 @@
 
     // --- General ----
 
-
     // Error
     <string name="general_error">Error</string>
     <string name="validation_error_empty_name">Please enter your name</string>
@@ -27,7 +26,6 @@
     // Errors
     <string name="sepa_data_entry_invalid_iban">Please enter a correct iban number</string>
 
-
     // ---- Credit card entry screen ----
     <string name="credit_card_data_entry_title">Credit card</string>
     <string name="credit_card_data_entry_first_name">@string/sepa_data_entry_first_name</string>
@@ -45,6 +43,6 @@
 
     // --- Country chooser screen ----
     <string name="country_chooser_title_text">Select Your Country</string>
-
+    <string name="country_chooser_search_text">Search Country</string>
 
 </resources>
