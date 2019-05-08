@@ -13,31 +13,6 @@ import retrofit2.http.Path
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-interface MobilabApi {
-
-    @POST("v1/register/creditcard")
-    fun registerCreditCard(
-        @Body paymentMethodRegistrationRequest: PaymentMethodRegistrationRequest
-    ): Single<SuccessResponse<PaymentMethodRegistrationResponse>>
-
-    @POST("v1/register/sepa")
-    fun registerSepa(
-        @Body paymentMethodRegistrationRequest: PaymentMethodRegistrationRequest
-    ): Single<SuccessResponse<PaymentMethodRegistrationResponse>>
-
-    @PUT("v1/update/panalias")
-    fun updatePaymentMethodAlias(@Body updatePaymentAliasRequest: UpdatePaymentAliasRequest): Completable
-
-    @POST("v1/payment/creditcard")
-    fun executePaypalPayment(
-        @Body paymentWithPayPalRequest: PaymentWithPayPalRequest
-    ): Single<SuccessResponse<PaymentWithPayPalResponse>>
-
-    @POST("v1/paypal/callback")
-    fun reportPayPalResult(
-        @Body payPalConfirmationRequest: PayPalConfirmationRequest
-    ): Completable
-}
 
 interface MobilabApiV2 {
     @POST("v1/alias")

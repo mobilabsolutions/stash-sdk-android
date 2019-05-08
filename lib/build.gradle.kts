@@ -122,7 +122,6 @@ dependencies {
     implementation("org.iban4j:iban4j:3.2.1")
     implementation(Libs.iban4j)
 
-    testImplementation(project(Modules.bsOldIntegration))
     testImplementation(project(Modules.bsPayoneIntegration))
     testImplementation(project(Modules.braintreeIntegration))
 
