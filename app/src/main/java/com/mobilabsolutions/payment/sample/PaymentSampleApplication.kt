@@ -5,8 +5,8 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.commonsv3_dagger.mvp.presenter.DaggerPresenterManager
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
+import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
@@ -22,7 +22,7 @@ class PaymentSampleApplication : DaggerApplication() {
         val configuration = PaymentSdkConfiguration(
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = "https://payment-dev.mblb.net/api/",
-                integrations = setOf(BsPayoneIntegration, BraintreeIntegration),
+                integrations = setOf(AdyenIntegration, BraintreeIntegration),
                 testMode = true
         )
         PaymentSdk.initalize(this, configuration)

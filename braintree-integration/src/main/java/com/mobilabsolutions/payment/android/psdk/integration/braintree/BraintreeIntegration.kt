@@ -55,6 +55,10 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         braintreeIntegrationComponent.inject(this)
     }
 
+    override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
+        return Single.just(emptyMap())
+    }
+
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
         val backendImplemented = false
         return if (backendImplemented) {

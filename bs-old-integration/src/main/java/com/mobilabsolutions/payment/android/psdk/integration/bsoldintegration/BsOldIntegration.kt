@@ -58,6 +58,10 @@ class BsOldIntegration(paymentSdkComponent: PaymentSdkComponent, val url: String
         graph.inject(this)
     }
 
+    override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
+        return Single.just(emptyMap())
+    }
+
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
         val standardizedData = registrationRequest.standardizedData
 

@@ -6,7 +6,9 @@ data class AliasExtra(
     @SerializedName("ccConfig")
     val creditCardConfig: CreditCardConfig? = null,
     val sepaConfig: SepaConfig? = null,
-    val paymentMethod: String
+    val paymentMethod: String,
+    val payload: String? = null
+
 )
 
 data class CreditCardConfig(
