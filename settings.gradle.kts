@@ -1,4 +1,5 @@
 include("lib")
+include("adyen-integration")
 include("stripeintegration")
 include("app")
 include("bs-old-integration")

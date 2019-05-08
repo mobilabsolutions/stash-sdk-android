@@ -15,10 +15,7 @@ import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import dagger.Component
-import io.reactivex.rxkotlin.subscribeBy
-import org.junit.Test
 import org.threeten.bp.LocalDate
-import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -80,18 +77,18 @@ class IntegrationTest {
         graph.inject(this)
     }
 
-    @Test
-    fun testCardRegistration() {
-        setUp()
-        val latch = CountDownLatch(1)
-        pspCoordinator.handleRegisterCreditCardOld(validCreditCardData).subscribeBy(
-                onSuccess = {
-                    assert(it.isNotEmpty()) { "Empty alias" }
-                    latch.countDown()
-                }
-        )
-        latch.await()
-    }
+//    @Test
+//    fun testCardRegistration() {
+//        setUp()
+//        val latch = CountDownLatch(1)
+//        pspCoordinator.handleRegisterCreditCardOld(validCreditCardData).subscribeBy(
+//                onSuccess = {
+//                    assert(it.isNotEmpty()) { "Empty alias" }
+//                    latch.countDown()
+//                }
+//        )
+//        latch.await()
+//    }
 }
 
 @Singleton

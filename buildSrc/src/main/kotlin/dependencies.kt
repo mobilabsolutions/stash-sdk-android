@@ -42,6 +42,7 @@ object Modules {
     val bsOldIntegration = ":bs-old-integration"
     val bsPayoneIntegration = ":bspayone-integration"
     val braintreeIntegration = ":braintree-integration"
+    val adyenIntegration = ":adyen-integration"
     val paymentSdk = ":lib"
 }
 
@@ -67,6 +68,12 @@ object Libs {
     val iban4j = "org.iban4j:iban4j:3.2.1"
 
     val braintree = "com.braintreepayments.api:braintree:3.0.0"
+
+    val adyenCheckoutBase = "com.adyen.checkout:base:2.4.3"
+    val adyenUi = "com.adyen.checkout:ui:2.4.3"
+    val adyenCore = "com.adyen.checkout:core:2.4.3"
+    val adyenCardCore = "com.adyen.checkout:core-card:2.4.3"
+
 
     val mvrx = "com.airbnb.android:mvrx:1.0.0"
 

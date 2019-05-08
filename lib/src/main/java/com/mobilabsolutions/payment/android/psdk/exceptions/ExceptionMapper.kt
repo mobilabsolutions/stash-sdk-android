@@ -19,12 +19,12 @@ class ExceptionMapper(val gson: Gson) {
         val errorBody = httpException.response().errorBody()?.string()
         val errorResponse = gson.fromJson(errorBody, ErrorResponse::class.java)
         return when (httpException.code()) {
-            in 1000..1003 -> AuthenticationException(errorResponse.error.message, errorResponse.error.code)
-            in 2000..2006 -> ValidationException(errorResponse.error.message, errorResponse.error.code)
-            in 3000..3017 -> ConfigurationException(errorResponse.error.message, errorResponse.error.code)
-            4000 -> NetworkException(errorResponse.error.message, errorResponse.error.code)
-            5000 -> OtherException(errorResponse.error.message, errorResponse.error.code)
-            else -> UnknownException(errorResponse.error.message, errorResponse.error.code)
+            in 1000..1003 -> AuthenticationException(errorResponse.message, errorResponse.code)
+            in 2000..2006 -> ValidationException(errorResponse.message, errorResponse.code)
+            in 3000..3017 -> ConfigurationException(errorResponse.message, errorResponse.code)
+            4000 -> NetworkException(errorResponse.message, errorResponse.code)
+            5000 -> OtherException(errorResponse.message, errorResponse.code)
+            else -> UnknownException(errorResponse.message, errorResponse.code)
         }
     }
 }

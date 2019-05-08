@@ -14,6 +14,8 @@ typealias PspIdentifier = String
 interface Integration {
     val identifier: PspIdentifier
 
+    fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>>
+
     fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String>
 
     fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition>

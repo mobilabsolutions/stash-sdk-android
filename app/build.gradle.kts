@@ -58,6 +58,7 @@ dependencies {
     implementation(project(Modules.paymentSdk)) //Core
     implementation(project(Modules.bsPayoneIntegration))
     implementation(project(Modules.braintreeIntegration))
+    implementation(project(Modules.adyenIntegration))
 
     implementation(Libs.Kotlin.stdlib)
 

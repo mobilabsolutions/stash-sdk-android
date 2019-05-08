@@ -1,8 +1,10 @@
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.project
+
 plugins {
     id("com.android.library")
     kotlin("android")
     kotlin("kapt")
-    kotlin("android.extensions")
 }
 
 val stripePublicKey = propOrDefWithTravis(PaymentSdkRelease.stripePublicKey, "")
@@ -18,10 +20,6 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
     }
-    lintOptions {
-        isAbortOnError = false
-    }
-
 
     buildTypes {
         getByName("debug") {
@@ -29,12 +27,17 @@ android {
         }
         getByName("release") {
             isMinifyEnabled = false
+            resValue("string", "stripe_public_key", "\""+stripePublicKey+"\"")
         }
     }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        isAbortOnError = false
     }
 
 }
@@ -62,6 +65,7 @@ dependencies {
     testImplementation(Libs.mockwebserver)
     testImplementation(Libs.PowerMock.module)
     testImplementation(Libs.PowerMock.api)
+
     testImplementation(Libs.AndroidX.Test.core)
     kaptTest(Libs.Dagger.compiler)
 
@@ -71,10 +75,18 @@ dependencies {
     androidTestImplementation(Libs.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+
     androidTestImplementation(Libs.AndroidX.Test.core)
     kaptAndroidTest(Libs.Dagger.compiler)
 
+    implementation(Libs.adyenCore)
+    implementation(Libs.adyenCardCore)
+    implementation(Libs.adyenUi)
+    implementation(Libs.adyenCheckoutBase)
+
+
 }
+
 repositories {
     mavenCentral()
 }
