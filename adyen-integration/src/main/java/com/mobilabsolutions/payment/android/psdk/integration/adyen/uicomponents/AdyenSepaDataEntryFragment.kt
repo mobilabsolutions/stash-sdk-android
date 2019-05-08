@@ -13,7 +13,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
-import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
