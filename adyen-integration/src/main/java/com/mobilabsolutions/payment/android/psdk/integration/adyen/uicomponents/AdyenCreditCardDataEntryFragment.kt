@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
+package com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents
 
 import android.os.Bundle
 import android.text.Editable
@@ -10,8 +10,8 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
+import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
 import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.* // ktlint-disable no-wildcard-imports
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -21,15 +21,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.* // ktlint-disable no-wildcard-imports
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryTitleTextView
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameEditText
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameTitleTextView
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameEditText
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameTitleTextView
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.* // ktlint-disable no-wildcard-imports
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
@@ -38,7 +30,7 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class CreditCardDataEntryFragment : Fragment() {
+class AdyenCreditCardDataEntryFragment : Fragment() {
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
@@ -60,17 +52,16 @@ class CreditCardDataEntryFragment : Fragment() {
     private val ccNumberSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val expDateSubject: BehaviorSubject<LocalDate> = BehaviorSubject.create()
     private val ccvSubject: BehaviorSubject<String> = BehaviorSubject.create()
-    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.createDefault("Germany")
     private var viewState: CreditCardDataEntryViewState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
+        AdyenIntegration.integration?.adyenIntegrationComponent?.inject(this)
         Timber.d("Created")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.credit_card_data_entry_fragment, container, false)
+        return inflater.inflate(R.layout.adyen_credit_card_data_entry_fragment, container, false)
     }
 
     override fun onDestroyView() {
@@ -80,6 +71,8 @@ class CreditCardDataEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        countryText.visibility = View.GONE
+        countryTitleTextView.visibility = View.GONE
 
         disposables += Observables.combineLatest(
                 firstNameSubject,
@@ -87,7 +80,6 @@ class CreditCardDataEntryFragment : Fragment() {
                 ccNumberSubject,
                 expDateSubject,
                 ccvSubject,
-                countrySubject,
                 ::CreditCardDataEntryViewState)
                 .subscribe(this::onViewState)
 
@@ -144,7 +136,6 @@ class CreditCardDataEntryFragment : Fragment() {
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.replace("\\D".toRegex(), "")) }
         ccvEditText.getContentOnFocusLost { ccvSubject.onNext(it.trim()) }
-        countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
             Timber.d("Country selector")
@@ -171,8 +162,8 @@ class CreditCardDataEntryFragment : Fragment() {
             val monthYearPicker = MonthPickerDialog.Builder(
                     requireActivity(),
                     MonthPickerDialog.OnDateSetListener { selectedMonth, selectedYear ->
-                        val selectedExpiry = LocalDate.of(selectedYear, selectedMonth, 1)
-                        expDateSubject.onNext(LocalDate.of(selectedYear, selectedMonth, 1))
+                        val selectedExpiry = LocalDate.of(selectedYear, selectedMonth + 1, 1)
+                        expDateSubject.onNext(LocalDate.of(selectedYear, selectedMonth + 1, 1))
                         val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
                         expirationDateTextView.text = expDate
                     },
@@ -194,7 +185,6 @@ class CreditCardDataEntryFragment : Fragment() {
         success = validateLastName(state.lastName) && success
         success = validateCreditCardNumber(state.ccNumber) && success
         success = validateCvv(state.ccv) && success
-        success = validateCountry(state.country) && success
         success = validateExpirationDate(state.expDate) && success
 
         saveButton.isEnabled = success
@@ -288,8 +278,7 @@ class CreditCardDataEntryFragment : Fragment() {
         val lastName: String = "",
         val ccNumber: String = "",
         val expDate: LocalDate? = null,
-        val ccv: String = "",
-        val country: String = "Germany"
+        val ccv: String = ""
     )
 }
 

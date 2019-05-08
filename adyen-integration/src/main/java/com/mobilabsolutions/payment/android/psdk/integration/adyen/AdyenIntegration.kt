@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.adyen
 
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents.UiComponentHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 /* ktlint-disable no-wildcard-imports */
@@ -18,6 +19,9 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
 
     @Inject
     lateinit var adyenHandler: AdyenHandler
+
+    @Inject
+    lateinit var uiComponentHandler: UiComponentHandler
 
     companion object : IntegrationCompanion {
         var integration: AdyenIntegration? = null
@@ -93,6 +97,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
     }
 
     override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
-        TODO("Separate user story for UI")
+        return when (paymentMethodDefinition.paymentMethodType) {
+            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
+            PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity)
+            PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
+        }
     }
 }

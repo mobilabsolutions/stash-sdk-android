@@ -34,7 +34,7 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class SepaDataEntryFragment : Fragment() {
+class BsPayoneSepaDataEntryFragment : Fragment() {
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
