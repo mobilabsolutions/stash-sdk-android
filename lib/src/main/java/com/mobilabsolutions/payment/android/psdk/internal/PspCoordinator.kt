@@ -21,7 +21,7 @@ import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
-import java.util.*
+import java.util.Random
 import javax.inject.Inject
 
 /**

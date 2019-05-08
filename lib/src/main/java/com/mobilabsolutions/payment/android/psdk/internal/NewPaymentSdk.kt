@@ -28,7 +28,6 @@ class NewPaymentSdk(
     x509TrustManager: X509TrustManager?
 ) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
-    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
 
     @Inject
     lateinit var newRegistrationManager: NewRegistrationManager

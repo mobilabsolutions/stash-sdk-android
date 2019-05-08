@@ -39,7 +39,6 @@ val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
 
 object Modules {
     val templateIntegration = ":template-integration"
-    val bsOldIntegration = ":bs-old-integration"
     val bsPayoneIntegration = ":bspayone-integration"
     val braintreeIntegration = ":braintree-integration"
     val adyenIntegration = ":adyen-integration"
