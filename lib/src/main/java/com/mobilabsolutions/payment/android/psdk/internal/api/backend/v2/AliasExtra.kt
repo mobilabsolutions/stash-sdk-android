@@ -7,6 +7,7 @@ data class AliasExtra(
     val creditCardConfig: CreditCardConfig? = null,
     val sepaConfig: SepaConfig? = null,
     val paymentMethod: String,
+    val payPalConfig: PayPalConfig? = null,
     val payload: String? = null
 
 )
@@ -30,5 +31,8 @@ data class SepaConfig(
 )
 
 data class PayPalConfig(
-    val nonce: String = ""
+    val nonce: String = "",
+    val deviceData : String = ""
 )
+
+data class DeviceData(@SerializedName("correlation_id") val correlationId : String)

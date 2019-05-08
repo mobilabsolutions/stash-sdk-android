@@ -65,6 +65,7 @@ object Libs {
     val iban4j = "org.iban4j:iban4j:3.2.1"
 
     val braintree = "com.braintreepayments.api:braintree:3.0.0"
+    val braintreeDropIn = "com.braintreepayments.api:drop-in:4.1.1"
 
     val adyenCheckoutBase = "com.adyen.checkout:base:2.4.3"
     val adyenUi = "com.adyen.checkout:ui:2.4.3"

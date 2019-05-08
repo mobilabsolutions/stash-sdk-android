@@ -49,7 +49,7 @@ class NewPaymentSdk(
 
         daggerGraph = DaggerPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-                .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationList, true))
+                .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationList, testMode))
                 .build()
 
         integrationList.map {
