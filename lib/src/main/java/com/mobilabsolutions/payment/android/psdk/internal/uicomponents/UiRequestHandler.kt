@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -136,7 +137,7 @@ class UiRequestHandler @Inject constructor() {
             (hostActivity as RegistrationProcessHostActivity).setState(
                 RegistrationProcessHostActivity.CurrentState.ENTRY
             )
-            integration.handlePaymentMethodEntryRequest(hostActivity, definition)
+            integration.handlePaymentMethodEntryRequest(hostActivity, definition, AdditionalRegistrationData())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .doFinally {
                     flowCompleted(hostActivity)
@@ -169,7 +170,7 @@ class UiRequestHandler @Inject constructor() {
             (hostActivity as RegistrationProcessHostActivity).setState(
                 RegistrationProcessHostActivity.CurrentState.ENTRY
             )
-            integration.handlePaymentMethodEntryRequest(hostActivity, definition)
+            integration.handlePaymentMethodEntryRequest(hostActivity, definition, AdditionalRegistrationData())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .doFinally {
                     flowCompleted(hostActivity)
@@ -191,7 +192,7 @@ class UiRequestHandler @Inject constructor() {
     fun handlePaypalMethodEntryRequest(
         activity: Activity?,
         integration: Integration,
-        definition: PaymentMethodDefinition,
+        additionalRegistrationData: AdditionalRegistrationData,
         requestId: Int
     ): Single<Map<String, String>> {
         checkFlow(requestId)
@@ -201,7 +202,8 @@ class UiRequestHandler @Inject constructor() {
             )
             integration.handlePaymentMethodEntryRequest(
                 hostActivity,
-                PaymentMethodDefinition("", "BRAINTREE", PaymentMethodType.PAYPAL)
+                PaymentMethodDefinition("", "BRAINTREE", PaymentMethodType.PAYPAL),
+                additionalRegistrationData
             )
                 .doFinally {
                     flowCompleted(hostActivity)

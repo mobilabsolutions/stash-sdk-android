@@ -5,12 +5,16 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.PayPalConfig
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
@@ -19,7 +23,9 @@ import javax.inject.Inject
 class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
     override val identifier = "BRAINTREE"
 
-    val NONCE = "nonce"
+    val DESCRIPTION = "DESCRIPTION"
+    val NONCE = "NONCE"
+    val DEVICE_FINGERPRINT = "DEVICE_FINGERPRINT"
 
     @Inject
     lateinit var braintreeHandler: BraintreeHandler
@@ -28,6 +34,8 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     lateinit var mobilabApiV2: MobilabApiV2
 
     companion object : IntegrationCompanion {
+        val CLIENT_TOKEN = "clientToken"
+
         var integration: BraintreeIntegration? = null
 
         override fun create(): IntegrationInitialization {
@@ -60,21 +68,38 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     }
 
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
-        val backendImplemented = false
-        return if (backendImplemented) {
-            mobilabApiV2.updateAlias(registrationRequest.standardizedData.aliasId,
-                    AliasUpdateRequest(registrationRequest.additionalData.extraData[NONCE])).blockingAwait()
+        return mobilabApiV2.updateAlias(
+                registrationRequest.standardizedData.aliasId,
+                AliasUpdateRequest(
+                        extra = AliasExtra(
+                                payPalConfig = PayPalConfig(
+                                        nonce = registrationRequest.additionalData.extraData[NONCE]!!,
+                                        deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]!!
+                                ),
+//                                paymentMethod = PaymentMethodType.PAYPAL.name
+                                paymentMethod = "PAY_PAL"
+
+                        )
+                )
+        ).subscribeOn(Schedulers.io()).andThen(
             Single.just(registrationRequest.standardizedData.aliasId)
-        } else {
-            Single.just(registrationRequest.additionalData.extraData[NONCE])
-        }
+        )
     }
 
     override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
-        return listOf(PaymentMethodDefinition("PayPal", identifier, PaymentMethodType.PAYPAL))
+        return listOf(PaymentMethodDefinition("Braintree-Paypal", identifier, PaymentMethodType.PAYPAL))
     }
 
-    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition): Single<Map<String, String>> {
-        return braintreeHandler.tokenizePaymentMethods(activity).flatMap { Single.just(mapOf(NONCE to it)) }
+    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {
+        return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMap {
+            Single.just(
+                    mapOf(
+                            DESCRIPTION to it.first,
+                            NONCE to it.second,
+                            DEVICE_FINGERPRINT to it.third
+
+                    )
+            )
+        }
     }
 }

@@ -99,7 +99,7 @@ class RegistrationController @Inject constructor() : Controller() {
                 }
     }
 
-    fun registerPayPal(activity: Activity? = null): Single<PaymentMethodAlias> {
+    fun registerPayPal(activity: Activity? = null, billingAgreement: String = "Placeholder"): Single<PaymentMethodAlias> {
         return registrationManager.registerPaymentMehodUsingUi(activity = activity, specificPaymentMethodType = PaymentMethodType.PAYPAL)
                 .doOnSuccess {
                     Timber.d("Nonce ${it.alias}")
