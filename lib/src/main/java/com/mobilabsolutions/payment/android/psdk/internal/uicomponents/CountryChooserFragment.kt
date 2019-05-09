@@ -37,7 +37,7 @@ class CountryChooserFragment : Fragment() {
                 for (group in adapter.groups) {
                     group.filter(newText)
                 }
-                adapter.notifyDataSetChanged()
+                adapter.update()
                 return true
             }
 
@@ -70,8 +70,15 @@ class CountryChooserFragment : Fragment() {
     private fun getCountryList(): List<Country> {
         val countryList = arrayListOf<Country>()
 
-        for (locale in Locale.getAvailableLocales()) {
-            countryList.add(Country(locale.displayCountry, locale.country, locale.isO3Country))
+        for (code in Locale.getISOCountries()) {
+            val locale = Locale("", code)
+            val displayName = locale.displayCountry
+            if (displayName.isNotBlank()) {
+                try {
+                    countryList.add(Country(displayName, locale.country, locale.isO3Country))
+                } catch (ignore: Exception) {
+                }
+            }
         }
 
         return ArrayList(countryList.sortedWith(compareBy { it.displayName }))

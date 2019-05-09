@@ -12,8 +12,20 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.* // ktlint-disable no-wildcard-imports
+import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager
+import com.mobilabsolutions.payment.android.psdk.internal.applyBackgroundCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyCellBackgroundCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyEditTextCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyFakeEditTextCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyTextCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserFragment
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.whiteelephant.monthpicker.MonthPickerDialog
@@ -21,15 +33,23 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.* // ktlint-disable no-wildcard-imports
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.ccvEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.ccvTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardNumberEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardNumberTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenCellLayout
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenMainLayout
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenTitle
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardNumber
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.expirationDateTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.expirationDateTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameEditText
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameEditText
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
@@ -82,44 +102,44 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         disposables += Observables.combineLatest(
-                firstNameSubject,
-                lastNameSubject,
-                ccNumberSubject,
-                expDateSubject,
-                ccvSubject,
-                countrySubject,
-                ::CreditCardDataEntryViewState)
-                .subscribe(this::onViewState)
+            firstNameSubject,
+            lastNameSubject,
+            ccNumberSubject,
+            expDateSubject,
+            ccvSubject,
+            countrySubject,
+            ::CreditCardDataEntryViewState)
+            .subscribe(this::onViewState)
 
         disposables += firstNameSubject
-                .doOnNext {
-                    validateFirstName(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstName(it)
+            }
+            .subscribe()
 
         disposables += lastNameSubject
-                .doOnNext {
-                    validateLastName(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastName(it)
+            }
+            .subscribe()
 
         disposables += ccNumberSubject
-                .doOnNext {
-                    validateCreditCardNumber(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCreditCardNumber(it)
+            }
+            .subscribe()
 
         disposables += expDateSubject
-                .doOnNext {
-                    validateExpirationDate(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateExpirationDate(it)
+            }
+            .subscribe()
 
         disposables += ccvSubject
-                .doOnNext {
-                    validateCvv(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCvv(it)
+            }
+            .subscribe()
 
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
 
@@ -148,6 +168,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
         countryText.setOnClickListener {
             Timber.d("Country selector")
+            activity!!.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, CountryChooserFragment()).commitNow()
         }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
@@ -169,21 +190,21 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         expirationDateTextView.setOnClickListener {
             val today = LocalDate.now()
             val monthYearPicker = MonthPickerDialog.Builder(
-                    requireActivity(),
-                    MonthPickerDialog.OnDateSetListener { selectedMonth, selectedYear ->
-                        val selectedExpiry = LocalDate.of(selectedYear, selectedMonth + 1, 1)
-                        expDateSubject.onNext(LocalDate.of(selectedYear, selectedMonth + 1, 1))
-                        val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
-                        expirationDateTextView.text = expDate
-                    },
-                    today.year, today.monthValue + 1
+                requireActivity(),
+                MonthPickerDialog.OnDateSetListener { selectedMonth, selectedYear ->
+                    val selectedExpiry = LocalDate.of(selectedYear, selectedMonth + 1, 1)
+                    expDateSubject.onNext(LocalDate.of(selectedYear, selectedMonth + 1, 1))
+                    val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
+                    expirationDateTextView.text = expDate
+                },
+                today.year, today.monthValue + 1
             )
             monthYearPicker
-                    .setMinMonth(today.monthValue)
-                    .setMinYear(today.year)
-                    .setYearRange(today.year, today.year + 20)
-                    .build()
-                    .show()
+                .setMinMonth(today.monthValue)
+                .setMinYear(today.year)
+                .setYearRange(today.year, today.year + 20)
+                .build()
+                .show()
         }
     }
 

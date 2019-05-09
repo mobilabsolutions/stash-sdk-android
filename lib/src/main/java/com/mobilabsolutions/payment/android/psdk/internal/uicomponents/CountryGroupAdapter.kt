@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.country_chooser_name.view.textView
 
 class CountryGroupAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    val groups: MutableList<CountryGroup> = ArrayList()
+    internal val groups: MutableList<CountryGroup> = ArrayList()
     private var lastSelected: View? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -23,13 +23,17 @@ class CountryGroupAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return groups
+        return getFilteredGroups()
             .sumBy { it.length }
+    }
+
+    private fun getFilteredGroups(): List<CountryGroup> {
+        return groups.filter { it.filteredList.isNotEmpty() }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         var lastPosition = 0
-        for (group in groups) {
+        for (group in getFilteredGroups()) {
             val length = group.length
             if (position in lastPosition until lastPosition + length) {
                 val viewHolder = holder as TextViewHolder
@@ -39,14 +43,12 @@ class CountryGroupAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         val index = position - lastPosition - 1
                         viewHolder.textView.text = group.filteredList[index].displayName
                         viewHolder.rootView.setOnClickListener {
-                            // Update Selection
-                            lastSelected?.isSelected = false
-                            it.isSelected = true
-                            lastSelected = it
+                            updateSelection(it)
+                            onCountryClicked(group.filteredList[index])
 
-                            // And do something with it
+                            // TODO: Remove
                             with(group.filteredList[index]) {
-                                Snackbar.make(it, "${this.displayName} [${this.alpha2Code}][${this.alpha3Code}]", Snackbar.LENGTH_SHORT).show()
+                                Snackbar.make(it, "${this.displayName} [${this.alpha2Code}][${this.alpha3Code}]", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
                             }
                         }
                     }
@@ -56,9 +58,13 @@ class CountryGroupAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }
     }
 
+    private fun onCountryClicked(country: Country) {
+        //TODO: Pass the selected country back
+    }
+
     override fun getItemViewType(position: Int): Int {
         var lastPosition = 0
-        return groups
+        return getFilteredGroups()
             .map { it.length }
             .mapIndexed { _, i ->
                 lastPosition += i; lastPosition - i // Start with 0, Skip the last
@@ -77,6 +83,20 @@ class CountryGroupAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             else -> 0
         }
     }
+
+    private fun updateSelection(view: View?) {
+        lastSelected?.isSelected = false
+        view?.isSelected = true
+        lastSelected = view
+    }
+
+    fun update() {
+        // Old selected item may invisible as query grows,
+        // but selection remains on index.
+        // Clear selection
+        updateSelection(null)
+        notifyDataSetChanged()
+    }
 }
 
 class TextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -92,9 +112,9 @@ data class Country(
 
 class CountryGroup(
     internal val title: String,
-    internal val list: List<Country>
+    private val list: List<Country>
 ) {
-    internal var filteredList: List<Country> = ArrayList()
+    internal var filteredList: List<Country> = ArrayList(list)
 
     fun filter(query: String) {
         if (TextUtils.isEmpty(query)) {
@@ -106,6 +126,6 @@ class CountryGroup(
 
     val length: Int
         get() {
-            return list.size + 1 // Including Title
+            return filteredList.size + 1 // Including Title
         }
 }
