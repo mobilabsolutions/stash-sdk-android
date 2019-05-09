@@ -7,24 +7,18 @@ import com.braintreepayments.api.DataCollector
 import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.interfaces.BraintreeCancelListener
 import com.braintreepayments.api.interfaces.BraintreeErrorListener
-import com.braintreepayments.api.interfaces.BraintreeResponseListener
 import com.braintreepayments.api.interfaces.ConfigurationListener
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.Configuration
 import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.models.PayPalRequest
 import com.braintreepayments.api.models.PaymentMethodNonce
-import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
-import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
-import io.reactivex.Single
-import io.reactivex.SingleEmitter
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.ReplaySubject
 import timber.log.Timber
 import javax.inject.Inject
-
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -34,7 +28,7 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
 
     val deviceFingerprintSubject = ReplaySubject.create<String>()
 
-    var pointOfNoReturnReached : Boolean = false
+    var pointOfNoReturnReached: Boolean = false
 
     override fun onCancel(requestCode: Int) {
         braintreeHandler.resultSubject.onError(RuntimeException("Braintree canceled"))
@@ -69,14 +63,13 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
                         braintreeHandler.resultSubject.onComplete()
                     }
             )
-
         }
 
         this.finish()
     }
 
     override fun onError(error: Exception?) {
-        val wrappedException  = when(error) {
+        val wrappedException = when (error) {
             is com.braintreepayments.api.exceptions.ConfigurationException -> ConfigurationException(originalException = error)
             else -> OtherException(originalException = error)
         }
@@ -92,9 +85,7 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
 
         setContentView(R.layout.activity_braintree_paypal)
 
-
         val braintreeFragment = BraintreeFragment.newInstance(this, token)
-
 
         DataCollector.collectDeviceData(braintreeFragment) { t ->
             if (t != null) {
@@ -108,9 +99,8 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         pointOfNoReturnReached = true
     }
 
-
-    //We want to disable back press once the request has been sent out, because otherwise it will
-    //go back to the main screen and then launch braintree activity
+    // We want to disable back press once the request has been sent out, because otherwise it will
+    // go back to the main screen and then launch braintree activity
     override fun onBackPressed() {
         if (!pointOfNoReturnReached) {
             super.onBackPressed()

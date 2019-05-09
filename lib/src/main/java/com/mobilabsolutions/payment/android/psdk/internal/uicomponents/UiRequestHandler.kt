@@ -126,10 +126,10 @@ class UiRequestHandler @Inject constructor() {
     }
 
     fun handleCreditCardMethodEntryRequest(
-            activity: Activity?,
-            integration: Integration,
-            definition: PaymentMethodDefinition,
-            requestId: Int
+        activity: Activity?,
+        integration: Integration,
+        definition: PaymentMethodDefinition,
+        requestId: Int
     ): Single<Pair<CreditCardData, Map<String, String>>> {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
@@ -159,10 +159,10 @@ class UiRequestHandler @Inject constructor() {
     }
 
     fun handleSepaMethodEntryRequest(
-            activity: Activity?,
-            integration: Integration,
-            definition: PaymentMethodDefinition,
-            requestId: Int
+        activity: Activity?,
+        integration: Integration,
+        definition: PaymentMethodDefinition,
+        requestId: Int
     ): Single<Pair<SepaData, Map<String, String>>> {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
@@ -190,10 +190,10 @@ class UiRequestHandler @Inject constructor() {
     }
 
     fun handlePaypalMethodEntryRequest(
-            activity: Activity?,
-            integration: Integration,
-            additionalRegistrationData: AdditionalRegistrationData,
-            requestId: Int
+        activity: Activity?,
+        integration: Integration,
+        additionalRegistrationData: AdditionalRegistrationData,
+        requestId: Int
     ): Single<Map<String, String>> {
         checkFlow(requestId)
         return launchHostActivity(activity).flatMap { hostActivity ->
@@ -212,8 +212,8 @@ class UiRequestHandler @Inject constructor() {
     }
 
     fun askUserToChosePaymentMethod(
-            activity: Activity? = null,
-            requestId: Int
+        activity: Activity? = null,
+        requestId: Int
     ): Single<PaymentMethodType> {
         checkFlow(requestId)
         chooserUsed = true

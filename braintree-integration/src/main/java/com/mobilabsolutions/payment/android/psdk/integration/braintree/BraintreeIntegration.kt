@@ -1,14 +1,12 @@
 package com.mobilabsolutions.payment.android.psdk.integration.braintree
 
 import androidx.appcompat.app.AppCompatActivity
-import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.DeviceData
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.PayPalConfig
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
@@ -28,7 +26,6 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     val DESCRIPTION = "DESCRIPTION"
     val NONCE = "NONCE"
     val DEVICE_FINGERPRINT = "DEVICE_FINGERPRINT"
-
 
     @Inject
     lateinit var braintreeHandler: BraintreeHandler
@@ -87,8 +84,6 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         ).subscribeOn(Schedulers.io()).andThen(
             Single.just(registrationRequest.standardizedData.aliasId)
         )
-
-
     }
 
     override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
