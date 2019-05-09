@@ -28,4 +28,4 @@ data class SepaRegistrationRequest(
     override val aliasId: String
 ) : StandardizedData
 
-data class PayPalRegistrationRequest(override val aliasId: String, val token : String) : StandardizedData
+data class PayPalRegistrationRequest(override val aliasId: String) : StandardizedData

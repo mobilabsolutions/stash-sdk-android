@@ -15,7 +15,9 @@ import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.models.PayPalRequest
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import io.reactivex.Single
 import io.reactivex.SingleEmitter
 import io.reactivex.rxkotlin.subscribeBy
@@ -72,9 +74,11 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
     }
 
     override fun onError(error: Exception?) {
-        Timber.d(error, "Error")
-        braintreeHandler.resultSubject.onError(error
-                ?: RuntimeException("Unknown error received from Braintree SDK"))
+        val wrappedException  = when(error) {
+            is com.braintreepayments.api.exceptions.ConfigurationException -> ConfigurationException(originalException = error)
+            else -> OtherException(originalException = error)
+        }
+        braintreeHandler.resultSubject.onError(wrappedException)
         this.finish()
     }
 
@@ -82,7 +86,7 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         super.onCreate(savedInstanceState)
         BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
 
-        val token = intent.getStringExtra("clientToken")
+        val token = intent.getStringExtra(BraintreeIntegration.CLIENT_TOKEN)
 
         setContentView(R.layout.activity_braintree_paypal)
 

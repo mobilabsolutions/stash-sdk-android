@@ -212,8 +212,7 @@ class PspCoordinator @Inject constructor(
                                     requestId)
                                     .flatMap {
                                         val additionalData = AdditionalRegistrationData(it)
-                                        val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId, aliasResponse.pspExtra["clientToken"]
-                                                ?: throw OtherException("Missing Braintree token, check your PSP configuration"))
+                                        val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
                                         val registrationRequest = RegistrationRequest(standardizedData, additionalData)
                                         chosenIntegration.handleRegistrationRequest(registrationRequest)
                                     }

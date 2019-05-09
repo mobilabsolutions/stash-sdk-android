@@ -29,6 +29,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     val NONCE = "NONCE"
     val DEVICE_FINGERPRINT = "DEVICE_FINGERPRINT"
 
+
     @Inject
     lateinit var braintreeHandler: BraintreeHandler
 
@@ -36,6 +37,8 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     lateinit var mobilabApiV2: MobilabApiV2
 
     companion object : IntegrationCompanion {
+        val CLIENT_TOKEN = "clientToken"
+
         var integration: BraintreeIntegration? = null
 
         override fun create(): IntegrationInitialization {

@@ -25,7 +25,7 @@ class BraintreeHandler @Inject constructor() {
             resultSubject = PublishSubject.create()
             val payPalActivityIntent = Intent(activity, BraintreePayPalActivity::class.java)
             payPalActivityIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
-            payPalActivityIntent.putExtra("clientToken", additionalRegistrationData.extraData["clientToken"])
+            payPalActivityIntent.putExtra(BraintreeIntegration.CLIENT_TOKEN, additionalRegistrationData.extraData[BraintreeIntegration.CLIENT_TOKEN])
             activity.startActivity(payPalActivityIntent)
             resultSubject
                     .doOnEach {
