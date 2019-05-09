@@ -34,6 +34,8 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
 
     val deviceFingerprintSubject = ReplaySubject.create<String>()
 
+    var pointOfNoReturnReached : Boolean = false
+
     override fun onCancel(requestCode: Int) {
         braintreeHandler.resultSubject.onError(RuntimeException("Braintree canceled"))
         this.finish()
@@ -103,5 +105,16 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         }
         val payment = PayPalRequest()
         PayPal.requestBillingAgreement(braintreeFragment, payment)
+        pointOfNoReturnReached = true
+    }
+
+
+    //We want to disable back press once the request has been sent out, because otherwise it will
+    //go back to the main screen and then launch braintree activity
+    override fun onBackPressed() {
+        if (!pointOfNoReturnReached) {
+            super.onBackPressed()
+            braintreeHandler.resultSubject.onError(OtherException("User cancelled PayPal registration"))
+        }
     }
 }
