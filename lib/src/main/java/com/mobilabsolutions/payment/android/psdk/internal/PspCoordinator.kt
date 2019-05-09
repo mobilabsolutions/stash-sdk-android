@@ -36,10 +36,6 @@ class PspCoordinator @Inject constructor(
     private val idempotencyManager: IdempotencyManager
 ) {
 
-    companion object {
-        private const val BRAINTREE_PSP_NAME = "BRAINTREE"
-    }
-
     fun handleRegisterCreditCard(
         creditCardData: CreditCardData,
         billingData: BillingData = BillingData(),
@@ -192,16 +188,15 @@ class PspCoordinator @Inject constructor(
     }
 
     private fun registerPayPalUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        val chosenIntegration = integrations.filter { it.identifier == BRAINTREE_PSP_NAME }.first()
-        val backendImplemented = true
 
         val selectedPaymentMethodDefinition = integrations.flatMap {
             it.getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == PaymentMethodType.PAYPAL }
         }.first()
+        val chosenIntegration = integrations.filter { it.identifier == selectedPaymentMethodDefinition.pspIdentifier }.first()
 
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.PAYPAL) {
             chosenIntegration.getPreparationData(PaymentMethodType.PAYPAL).flatMap { preparationData ->
-                mobilabApiV2.createAlias(BRAINTREE_PSP_NAME, idempotencyKey, preparationData)
+                mobilabApiV2.createAlias(selectedPaymentMethodDefinition.pspIdentifier, idempotencyKey, preparationData)
                         .subscribeOn(Schedulers.io())
                         .flatMap { aliasResponse ->
                             uiRequestHandler.handlePaypalMethodEntryRequest(
