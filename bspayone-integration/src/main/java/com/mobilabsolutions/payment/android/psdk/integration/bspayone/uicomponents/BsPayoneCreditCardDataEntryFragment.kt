@@ -1,5 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
 
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
@@ -21,7 +24,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.applyEditTextCustomiza
 import com.mobilabsolutions.payment.android.psdk.internal.applyFakeEditTextCustomization
 import com.mobilabsolutions.payment.android.psdk.internal.applyTextCustomization
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserFragment
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Country
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
@@ -167,8 +171,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
-            Timber.d("Country selector")
-            activity!!.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, CountryChooserFragment()).commitNow()
+            startActivityForResult(Intent(context, CountryChooserActivity::class.java)
+                .putExtra("CURRENT_LOCATION_ENABLE", true)
+                .putExtra("CURRENT_LOCATION_CUSTOM", "DE"), 0) // TODO: Change Country
         }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
@@ -205,6 +210,19 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 .setYearRange(today.year, today.year + 20)
                 .build()
                 .show()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        try {
+            if (requestCode == 0 && resultCode == RESULT_OK) {
+                data?.getParcelableExtra<Country>("SELECTED_COUNTRY")?.let {
+                    countryText.text = it.displayName
+                }
+            }
+        } catch (ex: Exception) {
+            Toast.makeText(activity, ex.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 

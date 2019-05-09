@@ -1,15 +1,27 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
+import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager
+import com.mobilabsolutions.payment.android.psdk.internal.applyBackgroundCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyCellBackgroundCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyEditTextCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyFakeEditTextCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.applyTextCustomization
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Country
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
@@ -19,15 +31,19 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.*
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.* // ktlint-disable no-wildcard-imports
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorIban
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameEditText
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.ibanNumberEditText
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.ibanTitleTextView
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.lastNameEditText
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.lastNameTitleTextView
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.saveButton
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenCellLayout
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenMainLayout
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenTitle
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -87,30 +103,30 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
 
         disposables += Observables.combineLatest(
-                firstNameSubject,
-                lastNameSubject,
-                ibanSubject,
-                countrySubject,
-                ::SepaDataEntryViewState)
-                .subscribe(this::onViewStateNext)
+            firstNameSubject,
+            lastNameSubject,
+            ibanSubject,
+            countrySubject,
+            ::SepaDataEntryViewState)
+            .subscribe(this::onViewStateNext)
 
         disposables += firstNameSubject
-                .doOnNext {
-                    validateFirstName(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstName(it)
+            }
+            .subscribe()
 
         disposables += lastNameSubject
-                .doOnNext {
-                    validateLastName(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastName(it)
+            }
+            .subscribe()
 
         disposables += ibanSubject
-                .doOnNext {
-                    validateIban(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateIban(it)
+            }
+            .subscribe()
 
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
@@ -118,7 +134,9 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
-            Timber.d("Country selector")
+            startActivityForResult(Intent(context, CountryChooserActivity::class.java)
+                .putExtra("CURRENT_LOCATION_ENABLE", true)
+                .putExtra("CURRENT_LOCATION_CUSTOM", "-"), 0) // TODO: Add Country (If not added, we'll consider default Locale )
         }
 
         saveButton.setOnClickListener {
@@ -201,6 +219,19 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         } else {
             countryText.setError(getString(R.string.validation_error_missing_country), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
             false
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        try {
+            if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+                data?.getParcelableExtra<Country>("SELECTED_COUNTRY")?.let {
+                    countryText.text = it.displayName
+                }
+            }
+        } catch (ex: Exception) {
+            Toast.makeText(activity, ex.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 

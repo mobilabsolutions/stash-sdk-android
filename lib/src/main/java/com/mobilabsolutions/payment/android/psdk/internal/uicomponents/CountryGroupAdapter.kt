@@ -1,16 +1,19 @@
 package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.R
 import kotlinx.android.synthetic.main.country_chooser_name.view.textView
 
-class CountryGroupAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CountryGroupAdapter(
+    private val callback: (country: Country) -> Unit
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     internal val groups: MutableList<CountryGroup> = ArrayList()
     private var lastSelected: View? = null
@@ -44,22 +47,13 @@ class CountryGroupAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         viewHolder.textView.text = group.filteredList[index].displayName
                         viewHolder.rootView.setOnClickListener {
                             updateSelection(it)
-                            onCountryClicked(group.filteredList[index])
-
-                            // TODO: Remove
-                            with(group.filteredList[index]) {
-                                Snackbar.make(it, "${this.displayName} [${this.alpha2Code}][${this.alpha3Code}]", com.google.android.material.snackbar.Snackbar.LENGTH_SHORT).show()
-                            }
+                            callback(group.filteredList[index])
                         }
                     }
                 }
             }
             lastPosition += length
         }
-    }
-
-    private fun onCountryClicked(country: Country) {
-        //TODO: Pass the selected country back
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -108,7 +102,32 @@ data class Country(
     val displayName: String,
     val alpha2Code: String,
     val alpha3Code: String
-)
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "")
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(displayName)
+        parcel.writeString(alpha2Code)
+        parcel.writeString(alpha3Code)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Country> {
+        override fun createFromParcel(parcel: Parcel): Country {
+            return Country(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Country?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
 
 class CountryGroup(
     internal val title: String,
