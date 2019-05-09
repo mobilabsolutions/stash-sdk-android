@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.model
 
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import java.util.Locale
 
 /**
@@ -13,7 +14,6 @@ import java.util.Locale
 data class BillingData(
     var firstName: String? = null,
     var lastName: String? = null,
-    var firstAndLastName: String? = null,
     var email: String? = null,
     var address1: String? = null,
     var address2: String? = null,
@@ -24,38 +24,62 @@ data class BillingData(
 ) {
 
     companion object {
-        @JvmStatic
-        fun fromEmail(emailValue: String) = BillingData(email = emailValue)
-
-        @JvmStatic
-        fun fromName(name: String) = BillingData(name.split(' ')[0], name.split(' ')[1]) // TODO well it's obvious this is just a placeholder
 
         @JvmStatic
         fun empty() = BillingData()
 
-        val FIRST_NAME = "FIRST_NAME"
-        val LAST_NAME = "LAST_NAME"
-        val COUNTRY = "COUNTRY"
+        const val FIRST_NAME = "FIRST_NAME"
+        const val LAST_NAME = "LAST_NAME"
+        const val COUNTRY = "COUNTRY"
     }
 
     class Builder {
         var billingData = BillingData()
 
+        fun setFirstName(firstName: String): Builder {
+            billingData = billingData.copy(firstName = firstName)
+            return this
+        }
+        fun setLastName(lastName: String): Builder {
+            billingData = billingData.copy(lastName = lastName)
+            return this
+        }
+        fun setEmail(email: String): Builder {
+            billingData = billingData.copy(email = email)
+            return this
+        }
+        fun setAddress1(address1: String): Builder {
+            billingData = billingData.copy(address1 = address1)
+            return this
+        }
+        fun setAddress2(address2: String): Builder {
+            billingData = billingData.copy(address2 = address2)
+            return this
+        }
+        fun setZip(zip: String): Builder {
+            billingData = billingData.copy(zip = zip)
+            return this
+        }
         fun setCity(city: String): Builder {
             billingData = billingData.copy(city = city)
+            return this
+        }
+        fun setCountry(country: String): Builder {
+            billingData = billingData.copy(country = country)
+            return this
+        }
+        fun setLanguageId(languageId: String): Builder {
+            billingData = billingData.copy(languageId = languageId)
             return this
         }
 
         fun build() = billingData
     }
 
-    fun resolveName(): String? {
-        if (firstAndLastName != null) {
-            return firstAndLastName
-        }
+    fun fullName(): String? {
         if (firstName == null && lastName == null) {
-            return null
+            throw ValidationException("First name and last name were not supplied")
         }
-        return (firstName ?: "") + " " + (lastName ?: "")
+        return "${firstName ?: ""} ${lastName ?: ""}"
     }
 }
