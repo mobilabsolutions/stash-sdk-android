@@ -6,8 +6,7 @@
     <color name="cool_gray_pressed">#BEBEBE</color>
     <color name="gable_green">#12202a</color>
     <color name="tropical_blue">#CCE6F9</color>
-    <color name="unknown_blue">#0083e1</color>
-    <color name="unknown_blue_pressed">#5BA7DD</color>
+    <color name="lochmara">#0083e1</color>
+    <color name="havelock_blue">#5BA7DD</color>
     <color name="coral">#ef4e4e</color>
-
 </resources>
