@@ -87,6 +87,7 @@ object Libs {
         val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
         val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
+        val test = "org.jetbrains.kotlin:kotlin-test-junit:$version"
     }
 
     object Coroutines {

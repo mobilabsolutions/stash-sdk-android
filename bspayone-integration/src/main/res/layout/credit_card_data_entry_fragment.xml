@@ -143,7 +143,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="0dp"
                 android:paddingStart="16dp"
-                android:text="Germany"
+                android:text=""
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
                 android:textColor="?attr/editTextColor"
                 app:layout_constraintEnd_toEndOf="parent"
