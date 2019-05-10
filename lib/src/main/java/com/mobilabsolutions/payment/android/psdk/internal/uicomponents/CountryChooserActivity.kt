@@ -13,13 +13,19 @@ import kotlin.collections.ArrayList
 
 class CountryChooserActivity : AppCompatActivity() {
 
+    companion object {
+        const val CURRENT_LOCATION_ENABLE_EXTRA = "CURRENT_LOCATION_ENABLE"
+        const val CURRENT_LOCATION_CUSTOM_EXTRA = "CURRENT_LOCATION_CUSTOM"
+        const val SELECTED_COUNTRY = "SELECTED_COUNTRY"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.country_chooser_activity)
 
         val adapter = prepareCountryGroupAdapter(
-            intent.getBooleanExtra("CURRENT_LOCATION_ENABLE", false),
-            intent.getStringExtra("CURRENT_LOCATION_CUSTOM")
+            intent.getBooleanExtra(CURRENT_LOCATION_ENABLE_EXTRA, false),
+            intent.getStringExtra(CURRENT_LOCATION_CUSTOM_EXTRA)
         )
 
         val recyclerView = findViewById<RecyclerView>(R.id.countryChooserRecyclerView)
@@ -51,7 +57,7 @@ class CountryChooserActivity : AppCompatActivity() {
         val adapter = CountryGroupAdapter {
             setResult(
                 RESULT_OK,
-                Intent().putExtra("SELECTED_COUNTRY", it)
+                Intent().putExtra(SELECTED_COUNTRY, it)
             )
             finish()
         }
