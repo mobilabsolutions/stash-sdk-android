@@ -77,9 +77,11 @@ data class BillingData(
     }
 
     fun fullName(): String? {
-        if (firstName == null && lastName == null) {
-            throw ValidationException("First name and last name were not supplied")
+        return when {
+            firstName != null && lastName != null -> "$firstName $lastName"
+            firstName != null -> firstName
+            lastName != null -> lastName
+            else -> throw ValidationException("First name and last name were not supplied")
         }
-        return "${firstName ?: ""} ${lastName ?: ""}"
     }
 }
