@@ -109,7 +109,7 @@ class AdyenHandler @Inject constructor(
                     .build()
             val encryptedCard = Cards.ENCRYPTOR.encryptFields(card, paymentSession.generationTime, publicKey).call()
             val creditCardDetails = CardDetails.Builder()
-                    .setHolderName(billingData.resolveName())
+                    .setHolderName(billingData.fullName())
                     .setEncryptedCardNumber(encryptedCard.encryptedNumber)
                     .setEncryptedExpiryMonth(encryptedCard.encryptedExpiryMonth)
                     .setEncryptedExpiryYear(encryptedCard.encryptedExpiryYear)
@@ -176,7 +176,7 @@ class AdyenHandler @Inject constructor(
         val sepaConfig = SepaConfig(
                 iban = sepaData.iban,
                 bic = sepaData.bic,
-                name = billingData.resolveName(),
+                name = billingData.fullName(),
                 lastname = billingData.lastName,
                 street = billingData.address1,
                 zip = billingData.zip,

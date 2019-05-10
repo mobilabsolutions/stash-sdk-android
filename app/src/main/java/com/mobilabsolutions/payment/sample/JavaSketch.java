@@ -27,7 +27,7 @@ import io.reactivex.disposables.Disposable;
 public class JavaSketch {
 
     public void bla() {
-        BillingData billingData = BillingData.fromEmail("bla@bla.com");
+        BillingData billingData = new BillingData.Builder().setEmail("test@test.test").build();
         BillingData builtBillingData = new BillingData.Builder().build();
         Application context = null;
 

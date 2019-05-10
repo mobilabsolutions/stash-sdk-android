@@ -122,6 +122,8 @@ dependencies {
     testImplementation(project(Modules.adyenIntegration))
     testImplementation(project(Modules.braintreeIntegration))
 
+    testImplementation(Libs.Kotlin.test)
+
     testImplementation(Libs.junit)
     testImplementation(Libs.mockitoCore)
     testImplementation(Libs.mockwebserver)
