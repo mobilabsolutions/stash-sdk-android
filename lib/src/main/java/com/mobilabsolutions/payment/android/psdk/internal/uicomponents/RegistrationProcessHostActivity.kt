@@ -9,7 +9,7 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class RegistrationProccessHostActivity : AppCompatActivity() {
+class RegistrationProcessHostActivity : AppCompatActivity() {
 
     @Inject
     lateinit var uiRequestHandler: UiRequestHandler
@@ -18,7 +18,7 @@ class RegistrationProccessHostActivity : AppCompatActivity() {
         CHOOSER, ENTRY
     }
 
-    var currentState = CurrentState.CHOOSER
+    private var currentState = CurrentState.CHOOSER
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

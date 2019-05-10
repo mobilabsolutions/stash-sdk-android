@@ -9,7 +9,7 @@
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/ice_blue_two"
+        android:background="@color/black_haze"
         android:id="@+id/creditCardScreenMainLayout"
         android:layout_height="wrap_content"
         android:layout_width="match_parent">
@@ -35,7 +35,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:text="@string/credit_card_data_expiry"
-                android:textColor="@color/dark_two"
+                android:textColor="@color/gable_green"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/errorCreditCardNumber" />
 
@@ -63,7 +63,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="0dp"
                 android:text="@string/credit_card_data_cvv"
-                android:textColor="@color/dark_two"
+                android:textColor="@color/gable_green"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toBottomOf="@+id/errorCreditCardNumber" />
 
@@ -175,7 +175,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:text="@string/credit_card_data_number"
-                android:textColor="@color/dark_two"
+                android:textColor="@color/gable_green"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/firstNameEditText" />
 
@@ -186,7 +186,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:text="@string/sepa_data_entry_country"
-                android:textColor="@color/dark_two"
+                android:textColor="@color/gable_green"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/expirationDateTextView" />
 
@@ -197,7 +197,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:text="@string/sepa_data_entry_first_name"
-                android:textColor="@color/dark_two"
+                android:textColor="@color/gable_green"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -208,7 +208,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_width="wrap_content"
                 android:text="@string/sepa_data_entry_last_name"
-                android:textColor="@color/dark_two"
+                android:textColor="@color/gable_green"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -249,7 +249,7 @@
             android:layout_marginTop="80dp"
             android:layout_width="wrap_content"
             android:text="Credit Card"
-            android:textColor="@color/dark_two"
+            android:textColor="@color/gable_green"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"

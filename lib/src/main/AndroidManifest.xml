@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mobilabsolutions.payment.android">
-    <uses-permission android:name="android.permission.INTERNET"/>
+    package="com.mobilabsolutions.payment.android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
         <!--android:usesCleartextTraffic="true"-->
-        <activity android:name=".psdk.internal.uicomponents.RegistrationProccessHostActivity"
-                  android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".psdk.internal.uicomponents.RegistrationProcessHostActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+        <activity
+            android:name=".psdk.internal.uicomponents.CountryChooserActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 
 </manifest>

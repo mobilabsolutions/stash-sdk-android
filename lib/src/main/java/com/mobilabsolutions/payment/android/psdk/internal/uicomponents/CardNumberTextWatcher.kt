@@ -109,7 +109,7 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
 
         MASTER_CARD(Regex("^5[1-5][0-9]{1,14}$"), R.drawable.ic_card_master),
 
-        // Conflicts with MASTER_CARD, need a way (number range) distinguish. Also, applicable only for US Cards
+        // Conflicts with MASTER_CARD, need a way (number range) to distinguish. Also, applicable only for US Cards
         // DINERS_US(Regex("^5[45][0-9]{1,14}$"), R.drawable.ic_card_diners_club),
 
         DISCOVER(Regex("^6(?:011|5[0-9]{2})[0-9]{3,}$"), R.drawable.ic_card_discover),
@@ -119,7 +119,5 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
         UNIONPAY_19(Regex("^62[0-9]{15,17}$"), R.drawable.ic_card_union_pay),
 
         MAESTRO(Regex("^6[0-9]{1,18}$"), R.drawable.ic_card_maestro)
-
-        // Carte Bleue, not implemented, as no known number range to distinguish
     }
 }

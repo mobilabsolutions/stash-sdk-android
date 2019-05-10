@@ -2,7 +2,6 @@
 
     // --- General ----
 
-
     // Error
     <string name="general_error">Error</string>
     <string name="validation_error_empty_name">Please enter your name</string>
@@ -10,7 +9,6 @@
     <string name="validation_error_missing_country">Please select country</string>
 
     // --- Payment chooser screen ----
-    <string name="app_name">payment-sdk-android</string>
     <string name="payment_chooser_title_text">Payment method</string>
     <string name="payment_chooser_subtitle_text">Please choose a payment method</string>
     <string name="payment_chooser_credit_card">Credit Card</string>
@@ -26,9 +24,7 @@
     <string name="sepa_data_entry_country">Country</string>
 
     // Errors
-
     <string name="sepa_data_entry_invalid_iban">Please enter a correct iban number</string>
-
 
     // ---- Credit card entry screen ----
     <string name="credit_card_data_entry_title">Credit card</string>
@@ -45,7 +41,8 @@
     <string name="credit_card_data_cvv_validation_error">Invalid CVC/CVV</string>
     <string name="credit_card_data_expiry_validation_error">Invalid expiration date</string>
 
-
-
+    // --- Country chooser screen ----
+    <string name="country_chooser_title_text">Select Your Country</string>
+    <string name="country_chooser_search_text">Search Country</string>
 
 </resources>
