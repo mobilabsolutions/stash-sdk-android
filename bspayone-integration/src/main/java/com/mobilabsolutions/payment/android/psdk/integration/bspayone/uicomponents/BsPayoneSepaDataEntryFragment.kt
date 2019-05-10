@@ -27,6 +27,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataV
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
+import com.mobilabsolutions.payment.android.util.CountryDetectorUtil
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -45,6 +46,7 @@ import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenCellLay
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenMainLayout
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenTitle
 import timber.log.Timber
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -70,13 +72,16 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val lastNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val ibanSubject: BehaviorSubject<String> = BehaviorSubject.create()
-    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.createDefault("Germany")
+    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     private var viewState: SepaDataEntryViewState? = null
+
+    private lateinit var suggestedCountry: Locale
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
+        suggestedCountry = CountryDetectorUtil.getBestGuessAtCurrentCountry(requireContext())
         Timber.d("Created")
     }
 
@@ -103,30 +108,30 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
 
         disposables += Observables.combineLatest(
-            firstNameSubject,
-            lastNameSubject,
-            ibanSubject,
-            countrySubject,
-            ::SepaDataEntryViewState)
-            .subscribe(this::onViewStateNext)
+                firstNameSubject,
+                lastNameSubject,
+                ibanSubject,
+                countrySubject,
+                ::SepaDataEntryViewState)
+                .subscribe(this::onViewStateNext)
 
         disposables += firstNameSubject
-            .doOnNext {
-                validateFirstName(it)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateFirstName(it)
+                }
+                .subscribe()
 
         disposables += lastNameSubject
-            .doOnNext {
-                validateLastName(it)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateLastName(it)
+                }
+                .subscribe()
 
         disposables += ibanSubject
-            .doOnNext {
-                validateIban(it)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateIban(it)
+                }
+                .subscribe()
 
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
@@ -135,8 +140,8 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
 
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
-                .putExtra("CURRENT_LOCATION_ENABLE", true)
-                .putExtra("CURRENT_LOCATION_CUSTOM", "-"), 0) // TODO: Add Country (If not added, we'll consider default Locale )
+                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
+                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), 1)
         }
 
         saveButton.setOnClickListener {
@@ -149,6 +154,8 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
         }
+
+        countryText.text = suggestedCountry.displayCountry
     }
 
     override fun onDestroyView() {
@@ -226,7 +233,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         try {
             if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-                data?.getParcelableExtra<Country>("SELECTED_COUNTRY")?.let {
+                data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
                     countryText.text = it.displayName
                 }
             }
@@ -239,6 +246,6 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         val firstName: String = "",
         val lastName: String = "",
         val iban: String = "",
-        val country: String = "Germany"
+        val country: String = ""
     )
 }

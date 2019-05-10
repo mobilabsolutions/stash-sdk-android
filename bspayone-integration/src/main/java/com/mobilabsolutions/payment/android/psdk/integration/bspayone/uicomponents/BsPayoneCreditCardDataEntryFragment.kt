@@ -32,6 +32,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getConten
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
+import com.mobilabsolutions.payment.android.util.CountryDetectorUtil
 import com.whiteelephant.monthpicker.MonthPickerDialog
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
@@ -57,6 +58,7 @@ import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
+import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -84,12 +86,15 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     private val ccNumberSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val expDateSubject: BehaviorSubject<LocalDate> = BehaviorSubject.create()
     private val ccvSubject: BehaviorSubject<String> = BehaviorSubject.create()
-    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.createDefault("Germany")
+    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.create()
     private var viewState: CreditCardDataEntryViewState? = null
+
+    private lateinit var suggestedCountry: Locale
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
+        suggestedCountry = CountryDetectorUtil.getBestGuessAtCurrentCountry(requireContext())
         Timber.d("Created")
     }
 
@@ -170,10 +175,12 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         ccvEditText.getContentOnFocusLost { ccvSubject.onNext(it.trim()) }
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
+        countryText.text = suggestedCountry.displayCountry
+
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
-                .putExtra("CURRENT_LOCATION_ENABLE", true)
-                .putExtra("CURRENT_LOCATION_CUSTOM", "DE"), 0) // TODO: Change Country
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), 0)
         }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
@@ -217,7 +224,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         try {
             if (requestCode == 0 && resultCode == RESULT_OK) {
-                data?.getParcelableExtra<Country>("SELECTED_COUNTRY")?.let {
+                data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
                     countryText.text = it.displayName
                 }
             }
