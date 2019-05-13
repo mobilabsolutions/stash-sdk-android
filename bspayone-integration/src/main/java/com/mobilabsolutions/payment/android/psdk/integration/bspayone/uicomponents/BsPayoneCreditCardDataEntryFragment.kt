@@ -38,6 +38,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.back
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.ccvEditText
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.ccvTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
@@ -217,6 +218,10 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 .setYearRange(today.year, today.year + 20)
                 .build()
                 .show()
+        }
+
+        back.setOnClickListener {
+            requireActivity().onBackPressed()
         }
     }
 

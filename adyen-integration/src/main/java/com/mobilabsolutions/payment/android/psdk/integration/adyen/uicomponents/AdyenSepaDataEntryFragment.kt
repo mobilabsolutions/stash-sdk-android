@@ -18,6 +18,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.back
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.* // ktlint-disable no-wildcard-imports
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.firstNameEditText
@@ -128,6 +129,10 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 dataMap[SepaData.IBAN] = it.iban
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
+        }
+
+        back.setOnClickListener {
+            requireActivity().onBackPressed()
         }
     }
 

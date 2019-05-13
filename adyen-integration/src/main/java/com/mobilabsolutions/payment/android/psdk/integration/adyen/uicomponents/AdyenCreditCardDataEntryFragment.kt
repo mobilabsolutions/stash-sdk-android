@@ -176,6 +176,10 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                     .build()
                     .show()
         }
+
+        back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
     private fun onViewState(state: CreditCardDataEntryViewState) {
