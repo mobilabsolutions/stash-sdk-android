@@ -32,6 +32,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.back
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryTitleTextView
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorIban
@@ -156,6 +157,10 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         }
 
         countryText.text = suggestedCountry.displayCountry
+
+        back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
     override fun onDestroyView() {
