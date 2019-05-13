@@ -34,7 +34,8 @@
     <string name="credit_card_data_number">Credit Card Number</string>
     <string name="credit_card_data_expiry">Expiration Date</string>
     <string name="credit_card_data_expiry_hint">MM/YY</string>
-    <string name="credit_card_data_cvv">CCV</string>
+    <string name="credit_card_data_cvv">CVV/CVC</string>
+
 
     // Errors
     <string name="credit_card_data_number_validation_error">Please enter a correct credit card number.</string>
