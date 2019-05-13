@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization;
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
-import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager;
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 
 import java.util.LinkedList;
@@ -20,7 +19,7 @@ import io.reactivex.Observable;
  * This is a main interface to Payment SDK.
  * <p>
  * It is used by providing a public key to the initialize method, and retrieving {@link RegistrationManager}
- * and {@link PaymentManager} instances to setup your payment methods and execute payments, respectively
+ * and {@link UiCustomizationManager} instances to setup your payment methods and customize UI components, respectively
  *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
@@ -116,14 +115,6 @@ public final class PaymentSdk {
         return NewPaymentSdk.Companion.getRegistrationManager();
     }
 
-    /**
-     * Retrieve the instance of payment manager, used to execute payments
-     *
-     * @return payment manager
-     */
-    public static PaymentManager getPaymentManager() {
-        return NewPaymentSdk.Companion.getPaymentManager();
-    }
 
     public static UiCustomizationManager getUiCustomizationManager() {
         return NewPaymentSdk.Companion.getUiCustomizationManager();

@@ -3,7 +3,6 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 import android.app.Application
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentManager
 import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
@@ -28,15 +27,11 @@ import javax.inject.Singleton
 class BsPayoneRegistrationInstrumentationTest {
     val testPublicKey = BuildConfig.newBsTestKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
-    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
     val NEW_BS_PAYONE_URL = BuildConfig.newBsApiUrl
     val ccAlias = "ybDqWplVEqbnoAARpmcIXvwluuSEbLVN"
 
     @Inject
     lateinit var registrationManager: NewRegistrationManager
-
-    @Inject
-    lateinit var paymentManager: NewPaymentManager
 
     private var validSepaData: SepaData = SepaData(
             bic = "PBNKDEFF",

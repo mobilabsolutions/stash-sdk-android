@@ -10,9 +10,16 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
+import com.mobilabsolutions.payment.android.psdk.applyBackgroundCustomization
+import com.mobilabsolutions.payment.android.psdk.applyCellBackgroundCustomization
+import com.mobilabsolutions.payment.android.psdk.applyCustomization
+import com.mobilabsolutions.payment.android.psdk.applyEditTextCustomization
+import com.mobilabsolutions.payment.android.psdk.applyFakeEditTextCustomization
+import com.mobilabsolutions.payment.android.psdk.applyTextCustomization
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
-import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.* // ktlint-disable no-wildcard-imports
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData

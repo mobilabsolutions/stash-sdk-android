@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.internal
+package com.mobilabsolutions.payment.android.psdk
 
 import android.content.SharedPreferences
 import android.content.res.Resources

@@ -7,7 +7,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
-import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
