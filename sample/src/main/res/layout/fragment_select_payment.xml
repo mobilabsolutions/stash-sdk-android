@@ -7,15 +7,15 @@
 
         <variable
             name="state"
-            type="com.mobilabsolutions.payment.sample.main.paymentmethods.PaymentMethodsViewState" />
+            type="com.mobilabsolutions.payment.sample.payment.selectpayment.SelectPaymentViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/black_haze"
         android:paddingStart="4dp"
-        android:paddingEnd="4dp"
-        android:background="@color/black_haze">
+        android:paddingEnd="4dp">
 
         <ImageView
             android:id="@+id/back"
@@ -50,7 +50,7 @@
             android:padding="4dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_methods_title"
-            tools:listitem="@layout/view_holder_select_payment_method_item" />
+            tools:listitem="@layout/view_holder_select_payment_item" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

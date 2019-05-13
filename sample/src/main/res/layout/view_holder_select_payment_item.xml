@@ -14,7 +14,7 @@
             type="com.mobilabsolutions.payment.sample.data.entities.PaymentMethod" />
 
         <variable
-            name="deleteBtnClickListener"
+            name="selectListener"
             type="android.view.View.OnClickListener" />
 
     </data>
@@ -23,6 +23,7 @@
         android:layout_width="match_parent"
         android:layout_height="86dp"
         android:layout_marginBottom="8dp"
+        android:onClick="@{selectListener}"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
@@ -77,7 +78,6 @@
                 android:layout_gravity="center"
                 android:layout_marginEnd="5dp"
                 android:contentDescription="@string/image_description"
-                android:onClick="@{deleteBtnClickListener}"
                 android:padding="8dp"
                 android:src="@drawable/payment_selection_icon_selector"
                 app:layout_constraintBottom_toBottomOf="parent"
