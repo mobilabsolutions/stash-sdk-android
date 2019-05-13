@@ -109,64 +109,69 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
     }
 }
 
-object CustomizationUtil {
+object CustomizationExtensions {
 
-    fun darken(color: Int): Int {
-        return ColorUtils.blendARGB(color, Color.BLACK, 0.5f)
+    operator fun invoke(body: CustomizationExtensions.() -> Unit): Unit = body.invoke(this)
+
+    object CustomizationUtil {
+
+        fun darken(color: Int): Int {
+            return ColorUtils.blendARGB(color, Color.BLACK, 0.5f)
+        }
+
+        fun lighten(color: Int): Int {
+            return ColorUtils.blendARGB(color, Color.WHITE, 0.2f)
+        }
     }
 
-    fun lighten(color: Int): Int {
-        return ColorUtils.blendARGB(color, Color.WHITE, 0.2f)
+    fun EditText.applyEditTextCustomization(customizationPreference: CustomizationPreference) {
+        applyOnTextView(customizationPreference)
     }
-}
 
-fun EditText.applyEditTextCustomization(customizationPreference: CustomizationPreference) {
-    applyOnTextView(customizationPreference)
-}
-
-fun TextView.applyFakeEditTextCustomization(customizationPreference: CustomizationPreference) {
-    applyOnTextView(customizationPreference)
-}
-
-private fun TextView.applyOnTextView(customizationPreference: CustomizationPreference) {
-    if (error == null) {
-        val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.edit_text_selector)
-        val textFieldDrawableContainerState = (backgroundDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
-        val textFieldDrawableStates = textFieldDrawableContainerState.children.filter { it != null }.map { it as GradientDrawable }
-        textFieldDrawableStates[0].setStroke(1.px, CustomizationUtil.darken(ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor)))
-        textFieldDrawableStates[1].setStroke(1.px, ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor))
-        background = backgroundDrawable
-    } else {
-        background = resources.getDrawable(R.drawable.edit_text_frame_error)
+    fun TextView.applyFakeEditTextCustomization(customizationPreference: CustomizationPreference) {
+        applyOnTextView(customizationPreference)
     }
-    this.applyTextCustomization(customizationPreference)
-}
 
-fun TextView.applyTextCustomization(customizationPreference: CustomizationPreference) {
-    setTextColor(ContextCompat.getColor(context, customizationPreference.textColor))
-}
-
-fun Button.applyCustomization(customizationPreference: CustomizationPreference) {
-    if (isEnabled) {
-        val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector)
-        val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
-        val states = buttonBackgroundDrawableContainterStates.children.filter { it != null }.map { it as GradientDrawable }
-        states[0].setColor(CustomizationUtil.lighten(ContextCompat.getColor(context, customizationPreference.buttonColor)))
-        states[1].setColor(ContextCompat.getColor(context, customizationPreference.buttonColor))
-        background = buttonColorDrawable
-    } else {
-        val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector_disabled)
-        background = buttonColorDrawable
+    private fun TextView.applyOnTextView(customizationPreference: CustomizationPreference) {
+        if (error == null) {
+            val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.edit_text_selector)
+            val textFieldDrawableContainerState = (backgroundDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
+            val textFieldDrawableStates = textFieldDrawableContainerState.children.filter { it != null }.map { it as GradientDrawable }
+            textFieldDrawableStates[0].setStroke(1.px, CustomizationUtil.darken(ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor)))
+            textFieldDrawableStates[1].setStroke(1.px, ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor))
+            background = backgroundDrawable
+        } else {
+            background = resources.getDrawable(R.drawable.edit_text_frame_error)
+        }
+        this.applyTextCustomization(customizationPreference)
     }
-    setTextColor(CustomizationUtil.lighten(ContextCompat.getColor(context, customizationPreference.buttonTextColor)))
-}
 
-fun View.applyBackgroundCustomization(customizationPreference: CustomizationPreference) {
-    background = ContextCompat.getDrawable(context, customizationPreference.backgroundColor)
-}
+    fun TextView.applyTextCustomization(customizationPreference: CustomizationPreference) {
+        setTextColor(ContextCompat.getColor(context, customizationPreference.textColor))
+    }
 
-fun View.applyCellBackgroundCustomization(customizationPreference: CustomizationPreference) {
-    background = ContextCompat.getDrawable(context, customizationPreference.cellBackgroundColor)
+    fun Button.applyCustomization(customizationPreference: CustomizationPreference) {
+        if (isEnabled) {
+            val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector)
+            val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
+            val states = buttonBackgroundDrawableContainterStates.children.filter { it != null }.map { it as GradientDrawable }
+            states[0].setColor(CustomizationUtil.lighten(ContextCompat.getColor(context, customizationPreference.buttonColor)))
+            states[1].setColor(ContextCompat.getColor(context, customizationPreference.buttonColor))
+            background = buttonColorDrawable
+        } else {
+            val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector_disabled)
+            background = buttonColorDrawable
+        }
+        setTextColor(CustomizationUtil.lighten(ContextCompat.getColor(context, customizationPreference.buttonTextColor)))
+    }
+
+    fun View.applyBackgroundCustomization(customizationPreference: CustomizationPreference) {
+        background = ContextCompat.getDrawable(context, customizationPreference.backgroundColor)
+    }
+
+    fun View.applyCellBackgroundCustomization(customizationPreference: CustomizationPreference) {
+        background = ContextCompat.getDrawable(context, customizationPreference.cellBackgroundColor)
+    }
 }
 
 val Int.dp: Int

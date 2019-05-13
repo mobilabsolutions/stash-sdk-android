@@ -10,16 +10,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-import com.mobilabsolutions.payment.android.psdk.applyBackgroundCustomization
-import com.mobilabsolutions.payment.android.psdk.applyCellBackgroundCustomization
-import com.mobilabsolutions.payment.android.psdk.applyCustomization
-import com.mobilabsolutions.payment.android.psdk.applyEditTextCustomization
-import com.mobilabsolutions.payment.android.psdk.applyFakeEditTextCustomization
-import com.mobilabsolutions.payment.android.psdk.applyTextCustomization
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Country
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
@@ -94,20 +89,21 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
 
-        ibanTitleTextView.applyTextCustomization(customizationPreference)
-        firstNameTitleTextView.applyTextCustomization(customizationPreference)
-        lastNameTitleTextView.applyTextCustomization(customizationPreference)
-        sepaScreenTitle.applyTextCustomization(customizationPreference)
-        countryTitleTextView.applyTextCustomization(customizationPreference)
+        CustomizationExtensions {
+            ibanTitleTextView.applyTextCustomization(customizationPreference)
+            firstNameTitleTextView.applyTextCustomization(customizationPreference)
+            lastNameTitleTextView.applyTextCustomization(customizationPreference)
+            sepaScreenTitle.applyTextCustomization(customizationPreference)
+            countryTitleTextView.applyTextCustomization(customizationPreference)
 
-        firstNameEditText.applyEditTextCustomization(customizationPreference)
-        lastNameEditText.applyEditTextCustomization(customizationPreference)
-        countryText.applyFakeEditTextCustomization(customizationPreference)
-        ibanNumberEditText.applyEditTextCustomization(customizationPreference)
-        saveButton.applyCustomization(customizationPreference)
-        sepaScreenMainLayout.applyBackgroundCustomization(customizationPreference)
-        sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
-
+            firstNameEditText.applyEditTextCustomization(customizationPreference)
+            lastNameEditText.applyEditTextCustomization(customizationPreference)
+            countryText.applyFakeEditTextCustomization(customizationPreference)
+            ibanNumberEditText.applyEditTextCustomization(customizationPreference)
+            saveButton.applyCustomization(customizationPreference)
+            sepaScreenMainLayout.applyBackgroundCustomization(customizationPreference)
+            sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+        }
         disposables += Observables.combineLatest(
                 firstNameSubject,
                 lastNameSubject,
@@ -176,19 +172,25 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         success = validateIban(state.iban) && success
         success = validateCountry(state.country) && success
         saveButton.isEnabled = success
-        saveButton.applyCustomization(customizationPreference)
+        CustomizationExtensions {
+            saveButton.applyCustomization(customizationPreference)
+        }
     }
 
     private fun EditText.customError(message: String) {
         if (this.error == null) {
             this.setError(message, ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
-            this.applyEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                this@customError.applyEditTextCustomization(customizationPreference)
+            }
         }
     }
 
     private fun EditText.clearError() {
         this.error = null
-        this.applyEditTextCustomization(customizationPreference)
+        CustomizationExtensions {
+            this@clearError.applyEditTextCustomization(customizationPreference)
+        }
     }
 
     private fun validateFirstName(name: String): Boolean {
@@ -226,7 +228,9 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     private fun validateCountry(country: String): Boolean {
         return if (country.isNotEmpty()) {
             countryText.error = null
-            countryText.applyFakeEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                countryText.applyFakeEditTextCustomization(customizationPreference)
+            }
             true
         } else {
             countryText.setError(getString(R.string.validation_error_missing_country), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
