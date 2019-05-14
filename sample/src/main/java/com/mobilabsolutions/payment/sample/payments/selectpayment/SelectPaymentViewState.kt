@@ -5,5 +5,6 @@ import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 
 data class SelectPaymentViewState(
     val loading: Boolean = false,
-    val paymentMethods: List<PaymentMethod> = emptyList()
+    val paymentMethods: List<PaymentMethod> = emptyList(),
+    val amount: Int = 0
 ) : MvRxState

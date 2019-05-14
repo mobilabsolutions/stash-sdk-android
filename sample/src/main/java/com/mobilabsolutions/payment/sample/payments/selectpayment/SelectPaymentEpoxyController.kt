@@ -4,9 +4,6 @@ import android.view.View
 import com.airbnb.epoxy.TypedEpoxyController
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.selectPaymentItem
-import kotlinx.coroutines.selects.select
-import timber.log.Timber
-
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
@@ -14,6 +11,8 @@ import timber.log.Timber
 class SelectPaymentEpoxyController(
     private val callbacks: Callbacks
 ) : TypedEpoxyController<SelectPaymentViewState>() {
+
+    private var lastSelected: View? = null
 
     interface Callbacks {
         fun onSelection(paymentMethod: PaymentMethod)
@@ -24,11 +23,21 @@ class SelectPaymentEpoxyController(
             selectPaymentItem {
                 id(it.id)
                 paymentMethod(it)
-                selectListener { _ ->
+                selectListener { view ->
                     callbacks.onSelection(it)
-                    Timber.d("XXX ${it.type}")
+                    updateSelection(view)
                 }
             }
+        }
+    }
+
+    private fun updateSelection(view: View) {
+        view.isSelected = true
+        if (lastSelected !== view) {
+            lastSelected?.let {
+                it.isSelected = false
+            }
+            lastSelected = view
         }
     }
 }

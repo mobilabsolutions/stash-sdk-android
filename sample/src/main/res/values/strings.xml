@@ -22,4 +22,6 @@
     <string name="delete_payment_method_message">Are you sure?</string>
     <string name="payment_type_placeholder">Credit Card</string>
     <string name="payment_type_alias_placeholder">maxmustermann@gmail.com</string>
+
+    <string name="pay_amount">Pay %1$s €</string>
 </resources>

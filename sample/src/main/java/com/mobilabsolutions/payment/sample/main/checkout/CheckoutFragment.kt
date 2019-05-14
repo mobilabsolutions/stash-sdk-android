@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.databinding.FragmentCheckoutBinding
@@ -48,7 +47,8 @@ class CheckoutFragment : BaseFragment() {
         binding.btnPay.setOnClickListener {
             viewModel.onPayBtnClicked()
             startActivityForResult(Intent(context, PaymentActivity::class.java)
-                .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true), 1)
+                .putExtra(PaymentActivity.PAY_AMOUNT_EXTRA, binding.state?.totalAmount),
+                1)
         }
     }
 

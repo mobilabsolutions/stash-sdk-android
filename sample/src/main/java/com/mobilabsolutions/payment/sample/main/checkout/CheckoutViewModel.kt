@@ -1,16 +1,13 @@
 package com.mobilabsolutions.payment.sample.main.checkout
 
-import android.content.Intent
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
 import com.mobilabsolutions.payment.sample.core.launchInteractor
 import com.mobilabsolutions.payment.sample.data.interactors.ChangeCartQuantity
 import com.mobilabsolutions.payment.sample.data.interactors.LoadCart
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
-import com.mobilabsolutions.payment.sample.payments.PaymentActivity
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -61,6 +58,5 @@ class CheckoutViewModel @AssistedInject constructor(
     }
 
     fun onPayBtnClicked() {
-
     }
 }

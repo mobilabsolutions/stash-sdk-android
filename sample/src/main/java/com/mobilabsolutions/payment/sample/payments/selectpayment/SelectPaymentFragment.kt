@@ -30,11 +30,26 @@ class SelectPaymentFragment : BaseFragment() {
 
         controller = SelectPaymentEpoxyController(object : SelectPaymentEpoxyController.Callbacks {
             override fun onSelection(paymentMethod: PaymentMethod) {
-
                 viewModel.onSelection()
             }
         })
         binding.paymentMethodsRv.setController(controller)
+    }
+
+    companion object {
+
+        fun newInstance(amount: Int): SelectPaymentFragment {
+            val fragment = SelectPaymentFragment()
+            val args = Bundle()
+            args.putInt("amount", amount)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val amount = arguments?.getInt("amount", 0)
     }
 
     override fun invalidate() {
