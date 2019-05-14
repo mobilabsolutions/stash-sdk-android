@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.sample.payment
+package com.mobilabsolutions.payment.sample.payments
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject

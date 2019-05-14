@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.sample.payment.selectpayment
+package com.mobilabsolutions.payment.sample.payments.selectpayment
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -6,5 +6,5 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class SelectPaymentBuilder {
     @ContributesAndroidInjector
-    abstract fun bindPaymentFragment(): SelectPaymentFragment
+    abstract fun bindSelectPaymentFragment(): SelectPaymentFragment
 }

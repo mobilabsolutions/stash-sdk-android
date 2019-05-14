@@ -24,12 +24,17 @@
         android:layout_height="86dp"
         android:layout_marginBottom="8dp"
         android:onClick="@{selectListener}"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/payment_selection_selector"
             android:padding="8dp">
 
             <ImageView

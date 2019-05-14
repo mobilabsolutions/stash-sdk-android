@@ -11,9 +11,9 @@
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/payment_container"
+            android:id="@+id/select_payment_container"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="match_parent"
             app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
