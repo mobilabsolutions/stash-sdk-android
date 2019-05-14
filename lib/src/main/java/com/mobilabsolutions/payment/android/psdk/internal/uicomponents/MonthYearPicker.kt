@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import com.mobilabsolutions.payment.android.R
-import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions.applyCustomization
 import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
 import kotlinx.android.synthetic.main.month_year_picker.monthNumberPicker
 import kotlinx.android.synthetic.main.month_year_picker.monthYearPickerRoot
@@ -16,8 +15,9 @@ import android.graphics.Paint
 import android.widget.NumberPicker
 import androidx.core.content.ContextCompat
 import android.widget.EditText
-
-
+import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
+import kotlinx.android.synthetic.main.month_year_picker.monthTitle
+import kotlinx.android.synthetic.main.month_year_picker.yearTitle
 
 
 /**
@@ -50,7 +50,11 @@ class MonthYearPicker(
 
         customizationPreference?.apply {
             monthYearPickerRoot.background = context.getDrawable(backgroundColor)
-            okButton.applyCustomization(this)
+            CustomizationExtensions {
+                okButton.applyCustomization(this@apply)
+                monthTitle.applyTextCustomization(this@apply)
+                yearTitle.applyTextCustomization(this@apply)
+            }
             try {
                 val selectorWheelPaintField = NumberPicker::class.java
                         .getDeclaredField("mSelectorWheelPaint")
