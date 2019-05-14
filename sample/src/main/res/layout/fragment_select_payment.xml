@@ -67,6 +67,7 @@
             app:backgroundTint="@color/aquaMarine"
             app:cornerRadius="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:priceWithCurrencyAndLabel="@{state.amount}"
             app:layout_constraintTop_toBottomOf="@id/payment_methods_rv" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

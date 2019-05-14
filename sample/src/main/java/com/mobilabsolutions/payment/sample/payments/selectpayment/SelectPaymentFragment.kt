@@ -49,7 +49,7 @@ class SelectPaymentFragment : BaseFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val amount = arguments?.getInt("amount", 0)
+        viewModel.setAmount(arguments?.getInt("amount", 0) ?: 0)
     }
 
     override fun invalidate() {

@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.sample.util
 
+import android.annotation.SuppressLint
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
@@ -19,6 +20,12 @@ import com.mobilabsolutions.payment.sample.extensions.priceWithCurrencyString
 @BindingAdapter("priceWithCurrency")
 fun priceWithCurrency(textView: TextView, price: Int) {
     textView.text = priceWithCurrencyString(price)
+}
+
+@SuppressLint("SetTextI18n")
+@BindingAdapter("priceWithCurrencyAndLabel")
+fun priceWithCurrencyAndLabel(textView: TextView, price: Int) {
+    textView.text = "PAY ${priceWithCurrencyString(price)}"
 }
 
 @BindingAdapter("imageByProductType")
