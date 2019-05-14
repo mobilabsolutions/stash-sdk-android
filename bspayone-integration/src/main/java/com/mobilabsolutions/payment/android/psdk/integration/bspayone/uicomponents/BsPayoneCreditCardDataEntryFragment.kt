@@ -22,13 +22,13 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumbe
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Country
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.util.CountryDetectorUtil
-import com.whiteelephant.monthpicker.MonthPickerDialog
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -78,7 +78,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
     lateinit var customizationPreference: CustomizationPreference
 
-    lateinit var selectedCountryCode : String
+    lateinit var selectedCountryCode: String
 
     private val disposables = CompositeDisposable()
     private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
@@ -203,25 +203,17 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             }
         }
 
+
         expirationDateTextView.setOnClickListener {
-            val today = LocalDate.now()
-            val monthYearPicker = MonthPickerDialog.Builder(
-                requireActivity(),
-                MonthPickerDialog.OnDateSetListener { selectedMonth, selectedYear ->
-                    val selectedExpiry = LocalDate.of(selectedYear, selectedMonth + 1, 1)
-                    expDateSubject.onNext(LocalDate.of(selectedYear, selectedMonth + 1, 1))
-                    val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
-                    expirationDateTextView.text = expDate
-                },
-                today.year, today.monthValue + 1
-            )
-            monthYearPicker
-                .setMinMonth(today.monthValue)
-                .setMinYear(today.year)
-                .setYearRange(today.year, today.year + 20)
-                .build()
-                .show()
+            val monthYearPicker = MonthYearPicker(requireContext(), customizationPreference = customizationPreference) {
+                val selectedExpiry = LocalDate.of(it.second, it.first, 1)
+                expDateSubject.onNext(selectedExpiry)
+                val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
+                expirationDateTextView.text = expDate
+            }
+            monthYearPicker.show()
         }
+
 
         back.setOnClickListener {
             requireActivity().onBackPressed()

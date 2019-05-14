@@ -45,4 +45,10 @@
     <string name="country_chooser_title_text">Select Your Country</string>
     <string name="country_chooser_search_text">Search Country</string>
 
+    // --- MonthYear Picker ---
+    <string name="month_year_picker_month_label">Month</string>
+    <string name="month_year_picker_year_label">Year</string>
+    <string name="month_year_picker_ok_button_label">OK</string>
+
+
 </resources>

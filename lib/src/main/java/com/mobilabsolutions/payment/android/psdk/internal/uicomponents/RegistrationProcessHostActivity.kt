@@ -8,7 +8,6 @@ import javax.inject.Inject
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import android.content.Context
 
-
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
