@@ -4,10 +4,10 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.PaymentManager
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
 import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
 import timber.log.Timber
@@ -31,9 +31,6 @@ class NewPaymentSdk(
 
     @Inject
     lateinit var newRegistrationManager: NewRegistrationManager
-
-    @Inject
-    lateinit var newPaymentManager: NewPaymentManager
 
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
@@ -115,11 +112,6 @@ class NewPaymentSdk(
         fun getRegistrationManager(): RegistrationManager {
             assertInitialized()
             return NewPaymentSdk.instance!!.newRegistrationManager
-        }
-
-        fun getPaymentManager(): PaymentManager {
-            assertInitialized()
-            return NewPaymentSdk.instance!!.newPaymentManager
         }
 
         fun getUiCustomizationManager(): UiCustomizationManager {

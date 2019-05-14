@@ -13,16 +13,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
+import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
-import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager
-import com.mobilabsolutions.payment.android.psdk.internal.applyBackgroundCustomization
-import com.mobilabsolutions.payment.android.psdk.internal.applyCellBackgroundCustomization
-import com.mobilabsolutions.payment.android.psdk.internal.applyCustomization
-import com.mobilabsolutions.payment.android.psdk.internal.applyEditTextCustomization
-import com.mobilabsolutions.payment.android.psdk.internal.applyFakeEditTextCustomization
-import com.mobilabsolutions.payment.android.psdk.internal.applyTextCustomization
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Country
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
@@ -153,22 +148,25 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
 
-        creditCardScreenTitle.applyTextCustomization(customizationPreference)
-        firstNameTitleTextView.applyTextCustomization(customizationPreference)
-        lastNameTitleTextView.applyTextCustomization(customizationPreference)
-        creditCardNumberTitleTextView.applyTextCustomization(customizationPreference)
-        expirationDateTitleTextView.applyTextCustomization(customizationPreference)
-        countryTitleTextView.applyTextCustomization(customizationPreference)
-        ccvTitleTextView.applyTextCustomization(customizationPreference)
+        CustomizationExtensions {
 
-        firstNameEditText.applyEditTextCustomization(customizationPreference)
-        lastNameEditText.applyEditTextCustomization(customizationPreference)
-        creditCardNumberEditText.applyEditTextCustomization(customizationPreference)
-        ccvEditText.applyEditTextCustomization(customizationPreference)
-        expirationDateTextView.applyFakeEditTextCustomization(customizationPreference)
-        countryText.applyFakeEditTextCustomization(customizationPreference)
-        creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
-        creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+            creditCardScreenTitle.applyTextCustomization(customizationPreference)
+            firstNameTitleTextView.applyTextCustomization(customizationPreference)
+            lastNameTitleTextView.applyTextCustomization(customizationPreference)
+            creditCardNumberTitleTextView.applyTextCustomization(customizationPreference)
+            expirationDateTitleTextView.applyTextCustomization(customizationPreference)
+            countryTitleTextView.applyTextCustomization(customizationPreference)
+            ccvTitleTextView.applyTextCustomization(customizationPreference)
+
+            firstNameEditText.applyEditTextCustomization(customizationPreference)
+            lastNameEditText.applyEditTextCustomization(customizationPreference)
+            creditCardNumberEditText.applyEditTextCustomization(customizationPreference)
+            ccvEditText.applyEditTextCustomization(customizationPreference)
+            expirationDateTextView.applyFakeEditTextCustomization(customizationPreference)
+            countryText.applyFakeEditTextCustomization(customizationPreference)
+            creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
+            creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+        }
 
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
@@ -249,19 +247,25 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         success = validateExpirationDate(state.expDate) && success
 
         saveButton.isEnabled = success
-        saveButton.applyCustomization(customizationPreference)
+        CustomizationExtensions {
+            saveButton.applyCustomization(customizationPreference)
+        }
     }
 
     private fun EditText.customError(message: String) {
         if (this.error == null) {
             this.setError(message, ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
-            this.applyEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                this@customError.applyEditTextCustomization(customizationPreference)
+            }
         }
     }
 
     private fun EditText.clearError() {
         this.error = null
-        this.applyEditTextCustomization(customizationPreference)
+        CustomizationExtensions {
+            this@clearError.applyEditTextCustomization(customizationPreference)
+        }
     }
 
     private fun validateFirstName(name: String): Boolean {
@@ -299,7 +303,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     private fun validateCountry(country: String): Boolean {
         return if (country.isNotEmpty()) {
             countryText.error = null
-            countryText.applyFakeEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                countryText.applyFakeEditTextCustomization(customizationPreference)
+            }
             true
         } else {
             countryText.setError(getString(R.string.validation_error_missing_country), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
@@ -320,7 +326,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     private fun validateExpirationDate(expiryDate: LocalDate?): Boolean {
         return if (expiryDate == null) {
             countryText.error = null
-            countryText.applyFakeEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                countryText.applyFakeEditTextCustomization(customizationPreference)
+            }
             false
         } else {
             val validationResult = creditCardDataValidator.validateExpiry(expiryDate)
@@ -328,7 +336,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 countryText.setError(getString(validationResult.errorMessageResourceId), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
             } else {
                 countryText.error = null
-                countryText.applyFakeEditTextCustomization(customizationPreference)
+                CustomizationExtensions {
+                    countryText.applyFakeEditTextCustomization(customizationPreference)
+                }
             }
             validationResult.success
         }

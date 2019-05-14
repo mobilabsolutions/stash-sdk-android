@@ -9,9 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.internal.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
-import com.mobilabsolutions.payment.android.psdk.internal.UiCustomizationManager
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import io.reactivex.subjects.ReplaySubject
 import kotlinx.android.synthetic.main.payment_method_chooser_fragment.*
 import kotlinx.android.synthetic.main.payment_method_entry.view.*
