@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
+import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
-import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
@@ -18,14 +20,20 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.* // ktlint-disable no-wildcard-imports
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.back
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.errorIban
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.firstNameEditText
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.ibanNumberEditText
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.ibanTitleTextView
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.lastNameEditText
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.lastNameTitleTextView
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.saveButton
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenCellLayout
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenMainLayout
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenTitle
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -73,19 +81,21 @@ class AdyenSepaDataEntryFragment : Fragment() {
 
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
 
-        ibanTitleTextView.applyTextCustomization(customizationPreference)
-        firstNameTitleTextView.applyTextCustomization(customizationPreference)
-        lastNameTitleTextView.applyTextCustomization(customizationPreference)
-        sepaScreenTitle.applyTextCustomization(customizationPreference)
-        countryTitleTextView.applyTextCustomization(customizationPreference)
+        CustomizationExtensions {
+            ibanTitleTextView.applyTextCustomization(customizationPreference)
+            firstNameTitleTextView.applyTextCustomization(customizationPreference)
+            lastNameTitleTextView.applyTextCustomization(customizationPreference)
+            sepaScreenTitle.applyTextCustomization(customizationPreference)
+            countryTitleTextView.applyTextCustomization(customizationPreference)
 
-        firstNameEditText.applyEditTextCustomization(customizationPreference)
-        lastNameEditText.applyEditTextCustomization(customizationPreference)
-        countryText.applyFakeEditTextCustomization(customizationPreference)
-        ibanNumberEditText.applyEditTextCustomization(customizationPreference)
-        saveButton.applyCustomization(customizationPreference)
-        sepaScreenMainLayout.applyBackgroundCustomization(customizationPreference)
-        sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+            firstNameEditText.applyEditTextCustomization(customizationPreference)
+            lastNameEditText.applyEditTextCustomization(customizationPreference)
+            countryText.applyFakeEditTextCustomization(customizationPreference)
+            ibanNumberEditText.applyEditTextCustomization(customizationPreference)
+            saveButton.applyCustomization(customizationPreference)
+            sepaScreenMainLayout.applyBackgroundCustomization(customizationPreference)
+            sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+        }
 
         disposables += Observables.combineLatest(
                 firstNameSubject,
@@ -129,6 +139,10 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
         }
+
+        back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
     override fun onDestroyView() {
@@ -143,19 +157,25 @@ class AdyenSepaDataEntryFragment : Fragment() {
         success = validateLastName(state.lastName) && success
         success = validateIban(state.iban) && success
         saveButton.isEnabled = success
-        saveButton.applyCustomization(customizationPreference)
+        CustomizationExtensions {
+            saveButton.applyCustomization(customizationPreference)
+        }
     }
 
     private fun EditText.customError(message: String) {
         if (this.error == null) {
             this.setError(message, ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
-            this.applyEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                this@customError.applyEditTextCustomization(customizationPreference)
+            }
         }
     }
 
     private fun EditText.clearError() {
         this.error = null
-        this.applyEditTextCustomization(customizationPreference)
+        CustomizationExtensions {
+            this@clearError.applyEditTextCustomization(customizationPreference)
+        }
     }
 
     private fun validateFirstName(name: String): Boolean {
@@ -193,7 +213,9 @@ class AdyenSepaDataEntryFragment : Fragment() {
     private fun validateCountry(country: String): Boolean {
         return if (country.isNotEmpty()) {
             countryText.error = null
-            countryText.applyFakeEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                countryText.applyFakeEditTextCustomization(customizationPreference)
+            }
             true
         } else {
             countryText.setError(getString(R.string.validation_error_missing_country), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))

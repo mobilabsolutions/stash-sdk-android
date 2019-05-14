@@ -10,10 +10,16 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
+import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
-import com.mobilabsolutions.payment.android.psdk.internal.* // ktlint-disable no-wildcard-imports
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.* // ktlint-disable no-wildcard-imports
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.whiteelephant.monthpicker.MonthPickerDialog
@@ -21,7 +27,24 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.* // ktlint-disable no-wildcard-imports
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.back
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.ccvEditText
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.ccvTitleTextView
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardNumberEditText
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardNumberTitleTextView
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenCellLayout
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenMainLayout
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenTitle
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardNumber
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.expirationDateTextView
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.expirationDateTitleTextView
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.firstNameEditText
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.lastNameEditText
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.lastNameTitleTextView
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.saveButton
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
@@ -115,23 +138,25 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
 
-        creditCardScreenTitle.applyTextCustomization(customizationPreference)
-        firstNameTitleTextView.applyTextCustomization(customizationPreference)
-        lastNameTitleTextView.applyTextCustomization(customizationPreference)
-        creditCardNumberTitleTextView.applyTextCustomization(customizationPreference)
-        expirationDateTitleTextView.applyTextCustomization(customizationPreference)
-        countryTitleTextView.applyTextCustomization(customizationPreference)
-        ccvTitleTextView.applyTextCustomization(customizationPreference)
+        CustomizationExtensions {
 
-        firstNameEditText.applyEditTextCustomization(customizationPreference)
-        lastNameEditText.applyEditTextCustomization(customizationPreference)
-        creditCardNumberEditText.applyEditTextCustomization(customizationPreference)
-        ccvEditText.applyEditTextCustomization(customizationPreference)
-        expirationDateTextView.applyFakeEditTextCustomization(customizationPreference)
-        countryText.applyFakeEditTextCustomization(customizationPreference)
-        creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
-        creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+            creditCardScreenTitle.applyTextCustomization(customizationPreference)
+            firstNameTitleTextView.applyTextCustomization(customizationPreference)
+            lastNameTitleTextView.applyTextCustomization(customizationPreference)
+            creditCardNumberTitleTextView.applyTextCustomization(customizationPreference)
+            expirationDateTitleTextView.applyTextCustomization(customizationPreference)
+            countryTitleTextView.applyTextCustomization(customizationPreference)
+            ccvTitleTextView.applyTextCustomization(customizationPreference)
 
+            firstNameEditText.applyEditTextCustomization(customizationPreference)
+            lastNameEditText.applyEditTextCustomization(customizationPreference)
+            creditCardNumberEditText.applyEditTextCustomization(customizationPreference)
+            ccvEditText.applyEditTextCustomization(customizationPreference)
+            expirationDateTextView.applyFakeEditTextCustomization(customizationPreference)
+            countryText.applyFakeEditTextCustomization(customizationPreference)
+            creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
+            creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+        }
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.replace("\\D".toRegex(), "")) }
@@ -176,6 +201,10 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                     .build()
                     .show()
         }
+
+        back.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 
     private fun onViewState(state: CreditCardDataEntryViewState) {
@@ -188,19 +217,25 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         success = validateExpirationDate(state.expDate) && success
 
         saveButton.isEnabled = success
-        saveButton.applyCustomization(customizationPreference)
+        CustomizationExtensions {
+            saveButton.applyCustomization(customizationPreference)
+        }
     }
 
     private fun EditText.customError(message: String) {
         if (this.error == null) {
             this.setError(message, ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
-            this.applyEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                this@customError.applyEditTextCustomization(customizationPreference)
+            }
         }
     }
 
     private fun EditText.clearError() {
         this.error = null
-        this.applyEditTextCustomization(customizationPreference)
+        CustomizationExtensions {
+            this@clearError.applyEditTextCustomization(customizationPreference)
+        }
     }
 
     private fun validateFirstName(name: String): Boolean {
@@ -238,7 +273,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private fun validateCountry(country: String): Boolean {
         return if (country.isNotEmpty()) {
             countryText.error = null
-            countryText.applyFakeEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                countryText.applyFakeEditTextCustomization(customizationPreference)
+            }
             true
         } else {
             countryText.setError(getString(R.string.validation_error_missing_country), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
@@ -259,7 +296,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private fun validateExpirationDate(expiryDate: LocalDate?): Boolean {
         return if (expiryDate == null) {
             countryText.error = null
-            countryText.applyFakeEditTextCustomization(customizationPreference)
+            CustomizationExtensions {
+                countryText.applyFakeEditTextCustomization(customizationPreference)
+            }
             false
         } else {
             val validationResult = creditCardDataValidator.validateExpiry(expiryDate)
@@ -267,7 +306,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 countryText.setError(getString(validationResult.errorMessageResourceId), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
             } else {
                 countryText.error = null
-                countryText.applyFakeEditTextCustomization(customizationPreference)
+                CustomizationExtensions {
+                    countryText.applyFakeEditTextCustomization(customizationPreference)
+                }
             }
             validationResult.success
         }
