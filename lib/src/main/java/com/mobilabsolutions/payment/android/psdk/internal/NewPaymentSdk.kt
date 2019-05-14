@@ -14,6 +14,11 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
+import android.R
+import io.github.inflationx.calligraphy3.CalligraphyConfig
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor
+import io.github.inflationx.viewpump.ViewPump
+
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -110,6 +115,13 @@ class NewPaymentSdk(
             NewPaymentSdk.instance = NewPaymentSdk(publicKey, url, applicationContext, integrationList, testMode, sslSocketFactory, x509TrustManager)
 
             NewPaymentSdk.initialized = true
+
+            ViewPump.init(ViewPump.builder()
+                    .addInterceptor(CalligraphyInterceptor(
+                            CalligraphyConfig.Builder()
+                                    .setDefaultFontPath("fonts/Lato-Regular.ttf")
+                                    .build()))
+                    .build())
         }
 
         fun getRegistrationManager(): RegistrationManager {
