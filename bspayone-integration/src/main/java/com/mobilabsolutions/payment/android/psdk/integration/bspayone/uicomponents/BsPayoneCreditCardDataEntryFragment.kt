@@ -67,6 +67,8 @@ import javax.inject.Inject
  */
 class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
+    private val COUNTRY_REQUEST_CODE = 1
+
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
@@ -80,6 +82,8 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     lateinit var uiCustomizationManager: UiCustomizationManager
 
     lateinit var customizationPreference: CustomizationPreference
+
+    lateinit var selectedCountryCode : String
 
     private val disposables = CompositeDisposable()
     private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
@@ -181,7 +185,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
                 .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
-                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), 0)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
         }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
@@ -193,6 +197,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap[BillingData.FIRST_NAME] = it.firstName
                 dataMap[BillingData.LAST_NAME] = it.lastName
+                dataMap[BillingData.COUNTRY] = countryText.getContentsAsString()
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.ccNumber
                 dataMap[CreditCardData.CVV] = it.ccv
                 dataMap[CreditCardData.EXPIRY_DATE] = expirationDateTextView.getContentsAsString()
@@ -228,7 +233,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         try {
-            if (requestCode == 0 && resultCode == RESULT_OK) {
+            if (requestCode == COUNTRY_REQUEST_CODE && resultCode == RESULT_OK) {
                 data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
                     countryText.text = it.displayName
                 }
