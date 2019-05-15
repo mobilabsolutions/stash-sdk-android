@@ -176,7 +176,7 @@ class AdyenHandler @Inject constructor(
         val sepaConfig = SepaConfig(
                 iban = sepaData.iban,
                 bic = sepaData.bic,
-                name = billingData.fullName(),
+                name = sepaData.holder,
                 lastname = billingData.lastName,
                 street = billingData.address1,
                 zip = billingData.zip,
