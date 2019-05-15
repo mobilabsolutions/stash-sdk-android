@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/paymentMethodChooserRootLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,7 +12,7 @@
     >
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/titleTextView"
         fontPath="fonts/Ubuntu-Bold.ttf"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,14 +27,14 @@
 
     <TextView
         fontPath="fonts/Lato-Medium.ttf"
-        android:id="@+id/textView2"
+        android:id="@+id/explanationTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="5dp"
         android:text="@string/payment_chooser_subtitle_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"/>
+        app:layout_constraintTop_toBottomOf="@+id/titleTextView"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/paymentMethodRecyclerView"
@@ -44,7 +45,7 @@
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/textView2"/>
+        app:layout_constraintTop_toTopOf="@+id/explanationTextView"/>
 
     <ImageView
         android:id="@+id/cancelImageView"

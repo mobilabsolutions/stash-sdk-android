@@ -19,7 +19,6 @@ import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import kotlinx.android.synthetic.main.month_year_picker.monthTitle
 import kotlinx.android.synthetic.main.month_year_picker.yearTitle
 
-
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
@@ -78,8 +77,8 @@ class MonthYearPicker(
                         child.setTextColor(color)
                 }
                 yearNumberPicker.invalidate()
-            } catch (e : Exception) {
-                //Just ignore applying customizations if any exception happens
+            } catch (e: Exception) {
+                // Just ignore applying customizations if any exception happens
             }
         }
 

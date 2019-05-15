@@ -56,7 +56,8 @@
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"
+                android:textSize="14dp"/>
 
             <EditText
                 fontPath="fonts/Lato-Regular.ttf"
@@ -73,7 +74,8 @@
                 android:paddingEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/ibanTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/ibanTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/ibanTitleTextView"
+                android:textSize="14dp"/>
 
             <TextView
                 fontPath="fonts/Lato-Medium.ttf"
@@ -124,7 +126,8 @@
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/lastNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView"
+                android:textSize="14dp"/>
 
             <TextView
                 fontPath="fonts/Lato-Medium.ttf"

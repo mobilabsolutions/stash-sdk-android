@@ -203,7 +203,6 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             }
         }
 
-
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(), customizationPreference = customizationPreference) {
                 val selectedExpiry = LocalDate.of(it.second, it.first, 1)
@@ -213,7 +212,6 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             }
             monthYearPicker.show()
         }
-
 
         back.setOnClickListener {
             requireActivity().onBackPressed()
