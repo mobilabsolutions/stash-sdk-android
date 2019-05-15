@@ -13,6 +13,7 @@
     <string name="pay">Pay</string>
     <string name="total_amount">Total Amount</string>
     <string name="payment_methods">Payment Methods</string>
+    <string name="select_payment_methods">Select Payment Methods</string>
     <string name="add_payment_method">Add new payment method</string>
     <string name="empty_checkout">No Items yet</string>
     <string name="select_new_item">Please select a new item.</string>
@@ -21,4 +22,6 @@
     <string name="delete_payment_method_message">Are you sure?</string>
     <string name="payment_type_placeholder">Credit Card</string>
     <string name="payment_type_alias_placeholder">maxmustermann@gmail.com</string>
+
+    <string name="pay_amount">Pay %1$s €</string>
 </resources>

@@ -32,7 +32,7 @@ class PaymentSampleApplication : DaggerApplication() {
         val backgroundColor: Int = R.color.coral
         val buttonColor: Int = android.R.color.holo_purple
         val buttonTextColor: Int = android.R.color.holo_blue_bright
-        val cellBackgroundColor: Int = R.color.unknown_blue
+        val cellBackgroundColor: Int = R.color.lochmara
         val mediumEmphasisColor: Int = android.R.color.holo_green_light
 
         val customizationPreference = CustomizationPreference(

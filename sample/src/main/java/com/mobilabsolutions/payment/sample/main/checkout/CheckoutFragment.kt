@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.sample.main.checkout
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import com.airbnb.mvrx.withState
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.databinding.FragmentCheckoutBinding
+import com.mobilabsolutions.payment.sample.payments.PaymentActivity
 import javax.inject.Inject
 
 /**
@@ -42,7 +44,12 @@ class CheckoutFragment : BaseFragment() {
             }
         })
         binding.checkoutRv.setController(controller)
-        binding.btnPay.setOnClickListener { viewModel.onPayBtnClicked() }
+        binding.btnPay.setOnClickListener {
+            viewModel.onPayBtnClicked()
+            startActivityForResult(Intent(context, PaymentActivity::class.java)
+                .putExtra(PaymentActivity.PAY_AMOUNT_EXTRA, binding.state?.totalAmount),
+                1)
+        }
     }
 
     override fun invalidate() {

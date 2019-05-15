@@ -28,7 +28,7 @@ import javax.inject.Inject
 data class CustomizationPreference(
     @ColorRes val textColor: Int = R.color.gable_green,
     @ColorRes val backgroundColor: Int = R.color.black_haze,
-    @ColorRes val buttonColor: Int = R.color.unknown_blue,
+    @ColorRes val buttonColor: Int = R.color.lochmara,
     @ColorRes val buttonTextColor: Int = R.color.white,
     @ColorRes val cellBackgroundColor: Int = R.color.white,
     @ColorRes val mediumEmphasisColor: Int = R.color.cool_gray

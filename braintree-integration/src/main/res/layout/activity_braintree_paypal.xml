@@ -16,9 +16,9 @@
         app:layout_constraintTop_toTopOf="parent">
         <ProgressBar
             android:id="@+id/paypal_progress"
-            android:progressTint="@color/unknown_blue"
+            android:progressTint="@color/lochmara"
             android:indeterminateTintMode="src_atop"
-            android:indeterminateTint="@color/unknown_blue"
+            android:indeterminateTint="@color/lochmara"
             android:indeterminate="true"
             android:layout_gravity="center"
             android:layout_width="65dp"
