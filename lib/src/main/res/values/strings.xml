@@ -9,7 +9,7 @@
     <string name="validation_error_missing_country">Please select country</string>
 
     // --- Payment chooser screen ----
-    <string name="payment_chooser_title_text">Payment method</string>
+    <string name="payment_chooser_title_text">Payment Method</string>
     <string name="payment_chooser_subtitle_text">Please choose a payment method</string>
     <string name="payment_chooser_credit_card">Credit Card</string>
     <string name="payment_chooser_sepa">SEPA</string>
@@ -18,8 +18,8 @@
     // ---- Sepa data enrty screen ----
     <string name="sepa_data_entry_title">SEPA</string>
     <string name="sepa_data_entry_save">Save</string>
-    <string name="sepa_data_entry_first_name">First name</string>
-    <string name="sepa_data_entry_last_name">Last name</string>
+    <string name="sepa_data_entry_first_name">First Name</string>
+    <string name="sepa_data_entry_last_name">Last Name</string>
     <string name="sepa_data_entry_iban">IBAN</string>
     <string name="sepa_data_entry_country">Country</string>
 
@@ -45,5 +45,11 @@
     // --- Country chooser screen ----
     <string name="country_chooser_title_text">Select Your Country</string>
     <string name="country_chooser_search_text">Search Country</string>
+
+    // --- MonthYear Picker ---
+    <string name="month_year_picker_month_label">Month</string>
+    <string name="month_year_picker_year_label">Year</string>
+    <string name="month_year_picker_ok_button_label">OK</string>
+
 
 </resources>

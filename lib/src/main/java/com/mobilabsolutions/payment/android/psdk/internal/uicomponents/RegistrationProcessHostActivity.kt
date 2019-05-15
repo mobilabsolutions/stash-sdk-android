@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
 import javax.inject.Inject
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import android.content.Context
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -42,5 +44,9 @@ class RegistrationProcessHostActivity : AppCompatActivity() {
 
     fun setState(state: CurrentState) {
         currentState = state
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(ViewPumpContextWrapper.wrap(newBase))
     }
 }

@@ -75,6 +75,9 @@ object Libs {
 
     val mvrx = "com.airbnb.android:mvrx:1.0.0"
 
+    val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
+    val viewPump = "io.github.inflationx:viewpump:1.0.0"
+
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha05"
         val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.9"

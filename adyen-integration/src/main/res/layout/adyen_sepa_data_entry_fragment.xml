@@ -8,6 +8,7 @@
     android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        tools:ignore="MissingPrefix"
         android:id="@+id/sepaScreenMainLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
             app:layout_constraintTop_toBottomOf="@+id/sepaScreenTitle">
 
             <EditText
+                fontPath="fonts/Lato-Regular.ttf"
                 android:id="@+id/firstNameEditText"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -54,9 +56,11 @@
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"
+                android:textSize="14dp"/>
 
             <EditText
+                fontPath="fonts/Lato-Regular.ttf"
                 android:id="@+id/ibanNumberEditText"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -70,9 +74,11 @@
                 android:paddingEnd="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/ibanTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/ibanTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/ibanTitleTextView"
+                android:textSize="14dp"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/errorIban"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -86,6 +92,7 @@
                 tools:visibility="visible"/>
 
             <TextView
+                fontPath="fonts/Lato-Regular.ttf"
                 android:id="@+id/countryText"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -105,6 +112,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/countryTitleTextView"/>
 
             <EditText
+                fontPath="fonts/Lato-Regular.ttf"
                 android:id="@+id/lastNameEditText"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
@@ -118,9 +126,11 @@
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/lastNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView"
+                android:textSize="14dp"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/ibanTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -129,9 +139,11 @@
                 android:text="@string/sepa_data_entry_iban"
                 android:textColor="@color/gable_green"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/firstNameEditText"/>
+                app:layout_constraintTop_toBottomOf="@+id/firstNameEditText"
+                />
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/countryTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -143,6 +155,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/errorIban"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/firstNameTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -154,6 +167,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/lastNameTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -195,6 +209,7 @@
 
 
         <TextView
+            fontPath="fonts/Ubuntu-Bold.ttf"
             android:id="@+id/sepaScreenTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
