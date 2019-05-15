@@ -107,7 +107,6 @@
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
                 android:textColor="?attr/editTextColor"
-                android:drawableEnd="@android:drawable/arrow_down_float"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/ibanTitleTextView"
