@@ -9,5 +9,6 @@
     <color name="unknown_blue">#0083e1</color>
     <color name="unknown_blue_pressed">#5BA7DD</color>
     <color name="coral">#ef4e4e</color>
+    <color name="grayish">#f3f3f3</color>
 
 </resources>

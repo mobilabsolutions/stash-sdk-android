@@ -9,7 +9,7 @@
     <string name="validation_error_missing_country">Please select country</string>
 
     // --- Payment chooser screen ----
-    <string name="payment_chooser_title_text">Payment method</string>
+    <string name="payment_chooser_title_text">Payment Method</string>
     <string name="payment_chooser_subtitle_text">Please choose a payment method</string>
     <string name="payment_chooser_credit_card">Credit Card</string>
     <string name="payment_chooser_sepa">SEPA</string>
