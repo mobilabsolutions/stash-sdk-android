@@ -17,7 +17,7 @@ object BindingAdapters {
 
     @JvmStatic
     @BindingAdapter("image")
-    fun ImageView.setImage(id: Int) {
-        setImageResource(id)
+    fun ImageView.setImage(name: String) {
+        setImageResource(context.resources.getIdentifier("drawable/$name", null, context.packageName))
     }
 }
