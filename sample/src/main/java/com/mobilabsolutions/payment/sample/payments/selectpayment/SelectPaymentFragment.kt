@@ -34,6 +34,9 @@ class SelectPaymentFragment : BaseFragment() {
             }
         })
         binding.paymentMethodsRv.setController(controller)
+        binding.back.setOnClickListener {
+            activity?.onBackPressed()
+        }
     }
 
     companion object {
