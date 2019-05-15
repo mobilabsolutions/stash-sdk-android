@@ -36,8 +36,8 @@ class SelectPaymentViewModel @AssistedInject constructor(
         loadPaymentMethods.setParams(Unit)
     }
 
-    fun setAmount(amount: Int){
-       setState { copy(amount = amount) }
+    fun setAmount(amount: Int) {
+        setState { copy(amount = amount) }
     }
 
     fun onSelection() {
