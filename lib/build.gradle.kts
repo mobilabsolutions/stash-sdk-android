@@ -114,6 +114,10 @@ dependencies {
     implementation(Libs.Dagger.androidSupport)
     kapt(Libs.Dagger.compiler)
 
+
+    implementation(Libs.caligraphy)
+    implementation(Libs.viewPump)
+
     api(Libs.threetenabp)
     implementation("org.iban4j:iban4j:3.2.1")
     implementation(Libs.iban4j)

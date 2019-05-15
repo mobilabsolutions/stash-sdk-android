@@ -10,6 +10,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/creditCardScreenMainLayout"
+        tools:ignore="MissingPrefix"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/black_haze">
@@ -42,6 +43,7 @@
             app:layout_constraintTop_toBottomOf="@+id/creditCardScreenTitle">
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/expirationDateTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,6 +63,7 @@
                 android:ems="10"
                 android:gravity="center_vertical"
                 android:hint="@string/credit_card_data_expiry_hint"
+                android:textSize="14sp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
@@ -70,6 +73,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/expirationDateTitleTextView"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/ccvTitleTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -96,7 +100,8 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/ccvTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/ccvTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/ccvTitleTextView"
+                android:textSize="14sp"/>
 
             <EditText
                 android:id="@+id/firstNameEditText"
@@ -112,7 +117,8 @@
                 android:paddingEnd="16dp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"
+                android:textSize="14sp"/>
 
             <EditText
                 android:id="@+id/creditCardNumberEditText"
@@ -130,7 +136,8 @@
                 android:paddingEnd="12dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/creditCardNumberTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/creditCardNumberTitleTextView"
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/errorCreditCardNumber"
@@ -149,13 +156,14 @@
                 android:id="@+id/countryText"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
                 android:background="@drawable/edit_text_selector"
                 android:ems="10"
                 android:gravity="center_vertical"
                 android:hint="@string/credit_card_data_entry_country"
                 android:paddingStart="16dp"
+                android:textSize="14sp"
                 android:text=""
                 android:textAppearance="?android:attr/textAppearanceMediumInverse"
                 android:textColor="?attr/editTextColor"
@@ -179,9 +187,11 @@
                 android:paddingStart="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/lastNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView"/>
+                app:layout_constraintTop_toBottomOf="@+id/lastNameTitleTextView"
+                android:textSize="14sp"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/creditCardNumberTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -193,17 +203,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/firstNameEditText"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/countryTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="@string/sepa_data_entry_country"
                 android:textColor="@color/gable_green"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/expirationDateTextView"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/firstNameTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -215,6 +227,7 @@
                 app:layout_constraintTop_toTopOf="parent"/>
 
             <TextView
+                fontPath="fonts/Lato-Medium.ttf"
                 android:id="@+id/lastNameTitleTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -263,9 +276,11 @@
             android:layout_marginTop="80dp"
             android:text="Credit Card"
             android:textColor="@color/gable_green"
+            fontPath="fonts/Ubuntu-Bold.ttf"
             android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

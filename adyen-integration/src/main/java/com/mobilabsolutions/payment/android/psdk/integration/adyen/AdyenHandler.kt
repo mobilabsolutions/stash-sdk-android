@@ -109,7 +109,7 @@ class AdyenHandler @Inject constructor(
                     .build()
             val encryptedCard = Cards.ENCRYPTOR.encryptFields(card, paymentSession.generationTime, publicKey).call()
             val creditCardDetails = CardDetails.Builder()
-                    .setHolderName(billingData.fullName())
+                    .setHolderName(creditCardData.holder)
                     .setEncryptedCardNumber(encryptedCard.encryptedNumber)
                     .setEncryptedExpiryMonth(encryptedCard.encryptedExpiryMonth)
                     .setEncryptedExpiryYear(encryptedCard.encryptedExpiryYear)

@@ -50,6 +50,8 @@ import javax.inject.Inject
  */
 class BsPayoneSepaDataEntryFragment : Fragment() {
 
+    private val COUNTRY_REQUEST_CODE = 1
+
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
@@ -138,7 +140,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
                     .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
-                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), 1)
+                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
         }
 
         saveButton.setOnClickListener {
@@ -241,7 +243,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         try {
-            if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            if (requestCode == COUNTRY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
                 data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
                     countryText.text = it.displayName
                 }

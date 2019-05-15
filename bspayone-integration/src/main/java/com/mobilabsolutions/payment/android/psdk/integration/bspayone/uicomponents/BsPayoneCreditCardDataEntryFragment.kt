@@ -22,13 +22,13 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumbe
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Country
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.util.CountryDetectorUtil
-import com.whiteelephant.monthpicker.MonthPickerDialog
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -62,6 +62,8 @@ import javax.inject.Inject
  */
 class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
+    private val COUNTRY_REQUEST_CODE = 1
+
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
@@ -75,6 +77,8 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     lateinit var uiCustomizationManager: UiCustomizationManager
 
     lateinit var customizationPreference: CustomizationPreference
+
+    lateinit var selectedCountryCode: String
 
     private val disposables = CompositeDisposable()
     private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
@@ -179,7 +183,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
                 .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
-                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), 0)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
         }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
@@ -191,6 +195,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap[BillingData.FIRST_NAME] = it.firstName
                 dataMap[BillingData.LAST_NAME] = it.lastName
+                dataMap[BillingData.COUNTRY] = countryText.getContentsAsString()
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.ccNumber
                 dataMap[CreditCardData.CVV] = it.ccv
                 dataMap[CreditCardData.EXPIRY_DATE] = expirationDateTextView.getContentsAsString()
@@ -199,23 +204,13 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         }
 
         expirationDateTextView.setOnClickListener {
-            val today = LocalDate.now()
-            val monthYearPicker = MonthPickerDialog.Builder(
-                requireActivity(),
-                MonthPickerDialog.OnDateSetListener { selectedMonth, selectedYear ->
-                    val selectedExpiry = LocalDate.of(selectedYear, selectedMonth + 1, 1)
-                    expDateSubject.onNext(LocalDate.of(selectedYear, selectedMonth + 1, 1))
-                    val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
-                    expirationDateTextView.text = expDate
-                },
-                today.year, today.monthValue + 1
-            )
-            monthYearPicker
-                .setMinMonth(today.monthValue)
-                .setMinYear(today.year)
-                .setYearRange(today.year, today.year + 20)
-                .build()
-                .show()
+            val monthYearPicker = MonthYearPicker(requireContext(), customizationPreference = customizationPreference) {
+                val selectedExpiry = LocalDate.of(it.second, it.first, 1)
+                expDateSubject.onNext(selectedExpiry)
+                val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
+                expirationDateTextView.text = expDate
+            }
+            monthYearPicker.show()
         }
 
         back.setOnClickListener {
@@ -226,7 +221,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         try {
-            if (requestCode == 0 && resultCode == RESULT_OK) {
+            if (requestCode == COUNTRY_REQUEST_CODE && resultCode == RESULT_OK) {
                 data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
                     countryText.text = it.displayName
                 }
