@@ -34,7 +34,9 @@
             android:layout_marginTop="48dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:padding="4dp"
+            android:paddingStart="8dp"
+            android:paddingTop="4dp"
+            android:paddingEnd="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_methods_title"
             tools:listitem="@layout/view_holder_payment_method_item" />
