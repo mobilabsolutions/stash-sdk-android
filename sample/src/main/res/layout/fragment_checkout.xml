@@ -75,7 +75,7 @@
             android:layout_height="48dp"
             android:layout_margin="16dp"
             android:gravity="center"
-            android:text="@string/pay"
+            android:text="@string/checkout_button_title"
             android:textAllCaps="true"
             android:textColor="@color/pureWhite"
             android:textSize="14sp"
