@@ -17,6 +17,7 @@ import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegrat
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
@@ -27,7 +28,6 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.back
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.ccvEditText
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.ccvTitleTextView
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryTitleTextView
@@ -36,6 +36,7 @@ import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.cred
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenCellLayout
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenMainLayout
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenTitle
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.cvvEditText
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardNumber
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.expirationDateTextView
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.expirationDateTitleTextView
@@ -48,7 +49,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
 import javax.inject.Inject
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.MonthYearPicker
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -98,43 +98,43 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         countryTitleTextView.visibility = View.GONE
 
         disposables += Observables.combineLatest(
-                firstNameSubject,
-                lastNameSubject,
-                ccNumberSubject,
-                expDateSubject,
-                ccvSubject,
-                ::CreditCardDataEntryViewState)
-                .subscribe(this::onViewState)
+            firstNameSubject,
+            lastNameSubject,
+            ccNumberSubject,
+            expDateSubject,
+            ccvSubject,
+            ::CreditCardDataEntryViewState)
+            .subscribe(this::onViewState)
 
         disposables += firstNameSubject
-                .doOnNext {
-                    validateFirstName(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstName(it)
+            }
+            .subscribe()
 
         disposables += lastNameSubject
-                .doOnNext {
-                    validateLastName(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastName(it)
+            }
+            .subscribe()
 
         disposables += ccNumberSubject
-                .doOnNext {
-                    validateCreditCardNumber(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCreditCardNumber(it)
+            }
+            .subscribe()
 
         disposables += expDateSubject
-                .doOnNext {
-                    validateExpirationDate(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateExpirationDate(it)
+            }
+            .subscribe()
 
         disposables += ccvSubject
-                .doOnNext {
-                    validateCvv(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCvv(it)
+            }
+            .subscribe()
 
         customizationPreference = uiCustomizationManager.getCustomizationPreferences()
 
@@ -151,7 +151,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             firstNameEditText.applyEditTextCustomization(customizationPreference)
             lastNameEditText.applyEditTextCustomization(customizationPreference)
             creditCardNumberEditText.applyEditTextCustomization(customizationPreference)
-            ccvEditText.applyEditTextCustomization(customizationPreference)
+            cvvEditText.applyEditTextCustomization(customizationPreference)
             expirationDateTextView.applyFakeEditTextCustomization(customizationPreference)
             countryText.applyFakeEditTextCustomization(customizationPreference)
             creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
@@ -160,7 +160,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.replace("\\D".toRegex(), "")) }
-        ccvEditText.getContentOnFocusLost { ccvSubject.onNext(it.trim()) }
+        cvvEditText.getContentOnFocusLost { ccvSubject.onNext(it.trim()) }
 
         countryText.setOnClickListener {
             Timber.d("Country selector")
@@ -276,9 +276,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private fun validateCvv(cvv: String): Boolean {
         val validationResult = creditCardDataValidator.validateCvv(cvv)
         if (!validationResult.success) {
-            ccvEditText.customError(getString(validationResult.errorMessageResourceId))
+            cvvEditText.customError(getString(validationResult.errorMessageResourceId))
         } else {
-            ccvEditText.clearError()
+            cvvEditText.clearError()
         }
         return validationResult.success
     }
