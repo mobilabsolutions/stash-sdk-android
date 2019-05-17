@@ -57,7 +57,9 @@
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView"
                 app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView"
-                android:textSize="14dp"/>
+                android:textSize="14dp">
+                <requestFocus />
+            </EditText>
 
             <EditText
                 fontPath="fonts/Lato-Regular.ttf"

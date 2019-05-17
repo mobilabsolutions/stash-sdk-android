@@ -28,7 +28,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.back
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.ccvTitleTextView
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.cvvTitleTextView
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryTitleTextView
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardNumberEditText
@@ -146,7 +146,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             creditCardNumberTitleTextView.applyTextCustomization(customizationPreference)
             expirationDateTitleTextView.applyTextCustomization(customizationPreference)
             countryTitleTextView.applyTextCustomization(customizationPreference)
-            ccvTitleTextView.applyTextCustomization(customizationPreference)
+            cvvTitleTextView.applyTextCustomization(customizationPreference)
 
             firstNameEditText.applyEditTextCustomization(customizationPreference)
             lastNameEditText.applyEditTextCustomization(customizationPreference)

@@ -45,6 +45,16 @@
             tools:srcCompat="@drawable/ic_credit_card" />
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        app:srcCompat="@drawable/ic_arrow"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

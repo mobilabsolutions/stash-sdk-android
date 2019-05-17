@@ -26,6 +26,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_drop_down" />
 
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/creditCardScreenCellLayout"
             android:layout_width="match_parent"
@@ -53,6 +54,7 @@
 
             <TextView
                 android:id="@+id/expirationDateTextView"
+                fontPath="fonts/Lato-Regular.ttf"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"
@@ -74,7 +76,7 @@
                 fontPath="fonts/Lato-Medium.ttf"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/credit_card_data_cvv"
                 android:textColor="@color/gable_green"
@@ -83,6 +85,7 @@
 
             <EditText
                 android:id="@+id/cvvEditText"
+                fontPath="fonts/Lato-Regular.ttf"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"
@@ -95,12 +98,12 @@
                 android:paddingEnd="16dp"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/cvvTitleTextView"
                 app:layout_constraintTop_toBottomOf="@+id/cvvTitleTextView" />
 
             <EditText
                 android:id="@+id/firstNameEditText"
+                fontPath="fonts/Lato-Regular.ttf"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"
@@ -114,10 +117,14 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toStartOf="@+id/guideline"
                 app:layout_constraintStart_toStartOf="@+id/firstNameTitleTextView"
-                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView" />
+                app:layout_constraintTop_toBottomOf="@+id/firstNameTitleTextView">
+
+                <requestFocus />
+            </EditText>
 
             <EditText
                 android:id="@+id/creditCardNumberEditText"
+                fontPath="fonts/Lato-Regular.ttf"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginStart="16dp"
@@ -137,6 +144,7 @@
 
             <TextView
                 android:id="@+id/errorCreditCardNumber"
+                fontPath="fonts/Lato-Medium.ttf"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -150,6 +158,7 @@
 
             <TextView
                 android:id="@+id/countryText"
+                fontPath="fonts/Lato-Regular.ttf"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"
@@ -170,6 +179,7 @@
 
             <EditText
                 android:id="@+id/lastNameEditText"
+                fontPath="fonts/Lato-Regular.ttf"
                 android:layout_width="0dp"
                 android:layout_height="40dp"
                 android:layout_marginTop="8dp"
@@ -226,7 +236,7 @@
                 fontPath="fonts/Lato-Medium.ttf"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/sepa_data_entry_last_name"
                 android:textColor="@color/gable_green"
@@ -249,13 +259,12 @@
                 android:id="@+id/errorCreditCardLastName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/credit_card_data_name_validation_error"
                 android:textColor="@color/coral"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="@+id/lastNameEditText"
                 app:layout_constraintTop_toBottomOf="@+id/lastNameEditText"
                 tools:visibility="visible" />
 
@@ -263,13 +272,12 @@
                 android:id="@+id/errorCreditCardCVV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginEnd="16dp"
                 android:text="@string/credit_card_data_cvv_validation_error"
                 android:textColor="@color/coral"
                 android:visibility="gone"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
+                app:layout_constraintStart_toStartOf="@+id/cvvEditText"
                 app:layout_constraintTop_toBottomOf="@+id/cvvEditText"
                 tools:visibility="visible" />
 
@@ -281,6 +289,7 @@
                 app:layout_constraintGuide_percent="0.5" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <Button
             android:id="@+id/saveButton"
@@ -301,6 +310,7 @@
             app:layout_constraintTop_toBottomOf="@+id/creditCardScreenCellLayout"
             app:layout_constraintVertical_bias="0.859" />
 
+
         <TextView
             android:id="@+id/creditCardScreenTitle"
             fontPath="fonts/Ubuntu-Bold.ttf"
@@ -314,7 +324,5 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>
