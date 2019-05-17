@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -48,7 +47,7 @@ class PaymentMethodChoiceFragment : Fragment() {
                 customizationPreference
         )
         CustomizationExtensions {
-            paymentMethodChooserRootLayout.setBackgroundColor(ContextCompat.getColor(requireContext(), customizationPreference.backgroundColor))
+            paymentMethodChooserRootLayout.applyBackgroundCustomization(customizationPreference)
             titleTextView.applyTextCustomization(customizationPreference)
             explanationTextView.applyTextCustomization(customizationPreference)
         }
@@ -116,7 +115,7 @@ class PaymentMethodChoiceFragment : Fragment() {
             }
             CustomizationExtensions {
                 holder.paymentMethodName.applyTextCustomization(customizationPreference)
-                holder.rootView.setBackgroundColor(ContextCompat.getColor(holder.rootView.context, customizationPreference.cellBackgroundColor))
+                holder.rootView.applyCellBackgroundCustomization(customizationPreference)
             }
         }
     }
