@@ -167,7 +167,6 @@ object CustomizationExtensions {
     }
 
     fun View.applyBackgroundCustomization(customizationPreference: CustomizationPreference) {
-//        background = ContextCompat.getDrawable(context, customizationPreference.backgroundColor)
         val backgroundColorDrawable = background as ColorDrawable
         backgroundColorDrawable.setColor(ContextCompat.getColor(context, customizationPreference.backgroundColor))
         background = backgroundColorDrawable
