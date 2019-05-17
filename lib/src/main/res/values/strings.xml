@@ -36,8 +36,8 @@
     <string name="credit_card_data_expiry_hint">MM/YY</string>
     <string name="credit_card_data_cvv">CVV/CVC</string>
 
-
     // Errors
+    <string name="credit_card_data_name_validation_error">Required field.</string>
     <string name="credit_card_data_number_validation_error">Please enter a correct credit card number.</string>
     <string name="credit_card_data_cvv_validation_error">Invalid CVC/CVV</string>
     <string name="credit_card_data_expiry_validation_error">Invalid expiration date</string>
@@ -50,6 +50,5 @@
     <string name="month_year_picker_month_label">Month</string>
     <string name="month_year_picker_year_label">Year</string>
     <string name="month_year_picker_ok_button_label">OK</string>
-
 
 </resources>

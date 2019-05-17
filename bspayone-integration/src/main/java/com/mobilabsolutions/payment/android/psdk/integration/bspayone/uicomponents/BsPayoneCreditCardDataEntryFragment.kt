@@ -34,8 +34,6 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.back
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.ccvEditText
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.ccvTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardNumberEditText
@@ -43,6 +41,8 @@ import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCard
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenCellLayout
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenMainLayout
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenTitle
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.cvvEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.cvvTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardNumber
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.expirationDateTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.expirationDateTitleTextView
@@ -54,7 +54,7 @@ import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -160,12 +160,12 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             creditCardNumberTitleTextView.applyTextCustomization(customizationPreference)
             expirationDateTitleTextView.applyTextCustomization(customizationPreference)
             countryTitleTextView.applyTextCustomization(customizationPreference)
-            ccvTitleTextView.applyTextCustomization(customizationPreference)
+            cvvTitleTextView.applyTextCustomization(customizationPreference)
 
             firstNameEditText.applyEditTextCustomization(customizationPreference)
             lastNameEditText.applyEditTextCustomization(customizationPreference)
             creditCardNumberEditText.applyEditTextCustomization(customizationPreference)
-            ccvEditText.applyEditTextCustomization(customizationPreference)
+            cvvEditText.applyEditTextCustomization(customizationPreference)
             expirationDateTextView.applyFakeEditTextCustomization(customizationPreference)
             countryText.applyFakeEditTextCustomization(customizationPreference)
             creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
@@ -175,7 +175,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
         creditCardNumberEditText.getContentOnFocusLost { ccNumberSubject.onNext(it.replace("\\D".toRegex(), "")) }
-        ccvEditText.getContentOnFocusLost { ccvSubject.onNext(it.trim()) }
+        cvvEditText.getContentOnFocusLost { ccvSubject.onNext(it.trim()) }
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.text = suggestedCountry.displayCountry
@@ -311,9 +311,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     private fun validateCvv(cvv: String): Boolean {
         val validationResult = creditCardDataValidator.validateCvv(cvv)
         if (!validationResult.success) {
-            ccvEditText.customError(getString(validationResult.errorMessageResourceId))
+            cvvEditText.customError(getString(validationResult.errorMessageResourceId))
         } else {
-            ccvEditText.clearError()
+            cvvEditText.clearError()
         }
         return validationResult.success
     }
