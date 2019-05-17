@@ -3,6 +3,7 @@ package com.mobilabsolutions.payment.android.psdk
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.DrawableContainer
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
@@ -166,11 +167,15 @@ object CustomizationExtensions {
     }
 
     fun View.applyBackgroundCustomization(customizationPreference: CustomizationPreference) {
-        background = ContextCompat.getDrawable(context, customizationPreference.backgroundColor)
+        val backgroundColorDrawable = background as ColorDrawable
+        backgroundColorDrawable.setColor(ContextCompat.getColor(context, customizationPreference.backgroundColor))
+        background = backgroundColorDrawable
     }
 
     fun View.applyCellBackgroundCustomization(customizationPreference: CustomizationPreference) {
-        background = ContextCompat.getDrawable(context, customizationPreference.cellBackgroundColor)
+        val backgroundColorDrawable = background as GradientDrawable
+        backgroundColorDrawable.setColor(ContextCompat.getColor(context, customizationPreference.cellBackgroundColor))
+        background = backgroundColorDrawable
     }
 }
 
