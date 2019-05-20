@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.graphics.Color
@@ -8,12 +9,14 @@ import android.graphics.drawable.DrawableContainer
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.R
 import javax.inject.Inject
@@ -176,6 +179,11 @@ object CustomizationExtensions {
         val backgroundColorDrawable = background as GradientDrawable
         backgroundColorDrawable.setColor(ContextCompat.getColor(context, customizationPreference.cellBackgroundColor))
         background = backgroundColorDrawable
+    }
+
+    fun View.showKeyboardAndFocus() {
+        val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        inputManager.showSoftInput(this, 0)
     }
 }
 

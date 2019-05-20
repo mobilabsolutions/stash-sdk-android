@@ -170,6 +170,8 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             countryText.applyFakeEditTextCustomization(customizationPreference)
             creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
             creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+
+            firstNameEditText.showKeyboardAndFocus()
         }
 
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }

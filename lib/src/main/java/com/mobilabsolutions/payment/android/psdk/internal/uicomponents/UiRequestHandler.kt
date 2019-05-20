@@ -74,7 +74,6 @@ class UiRequestHandler @Inject constructor() {
         }
         errorSubject = PublishSubject.create()
         processing.set(false)
-        chooserUsed = false
     }
 
     private fun flowCompleted(hostActivity: Activity) {
