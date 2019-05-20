@@ -14,12 +14,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.api.backend.ProviderSp
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.RuntimeTypeAdapterFactory
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.SketchSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.psppaypal.PayPalRedirectHandler
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
@@ -53,8 +49,6 @@ open class PaymentSdkModule(
         const val DEFAULT_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
         const val IDEMPOTENCY_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
     }
-
-    private val redirectActivitySubject: PublishSubject<PayPalRedirectHandler.RedirectResult> = PublishSubject.create()
 
     private var uiCustomizationManager: UiCustomizationManager? = null
 
@@ -220,18 +214,6 @@ open class PaymentSdkModule(
     @Singleton
     fun provideContext(): Context {
         return applicationContext
-    }
-
-    @Provides
-    @Singleton
-    fun provideRedirectObservable(): Single<PayPalRedirectHandler.RedirectResult> {
-        return redirectActivitySubject.firstElement().toSingle()
-    }
-
-    @Provides
-    @Singleton
-    fun provideRedirectSubject(): Subject<PayPalRedirectHandler.RedirectResult> {
-        return redirectActivitySubject
     }
 
     @Provides
