@@ -54,7 +54,7 @@ class IntegrationTest {
                 endpoint = "fakeUrl",
                 integrations = setOf(BsPayoneIntegration, AdyenIntegration)
         )
-        PaymentSdk.initalize(application, paymentSdkConfiguration )
+        PaymentSdk.initalize(application, paymentSdkConfiguration)
     }
 }
 

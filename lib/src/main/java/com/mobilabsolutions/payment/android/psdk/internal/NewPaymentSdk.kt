@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
-// //import com.tspoon.traceur.Traceur
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
@@ -8,8 +7,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
@@ -54,7 +52,9 @@ class NewPaymentSdk(
 
         integrationList.map {
             val initialized = it.initialize(daggerGraph)
-            val supportedMethods = initialized.getSupportedPaymentMethodDefinitions().map { it.paymentMethodType }
+            val supportedMethods =
+                    initialized.getSupportedPaymentMethodDefinitions()
+                            .map { integration -> integration.paymentMethodType }
             supportedMethods.forEach { paymentMethodType ->
                 if (paymentMethodSet.contains(paymentMethodType)) {
                     throw RuntimeException(
@@ -77,56 +77,40 @@ class NewPaymentSdk(
 
         private var initialized = false
 
-        internal var testComponent: PaymentSdkComponent? = null
-
-//        @Synchronized
-//        fun initialize(publicKey: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode : Boolean) {
-//            initialize(publicKey, applicationContext, integrationList, null, null)
-//        }
+        private var testComponent: PaymentSdkComponent? = null
 
         @Synchronized
         fun initialize(applicationContext: Application, configuration: PaymentSdkConfiguration) {
-            val integrationInitializations = configuration.integrations.map { it.create() }.toList()
-            initialize(configuration.publicKey, configuration.endpoint, applicationContext, integrationInitializations, configuration.testMode, configuration.sslFactory, configuration.x509TrustManager)
-        }
+            configuration.apply {
+                val integrationInitializations = configuration.integrations.map { it.create() }.toList()
 
-        @Synchronized
-        fun initialize(publicKey: String?, url: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode: Boolean = false, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
-            if (publicKey == null) {
-                throw InvalidPublicKeyException("Public key not supplied")
+                if (initialized) {
+                    throw ConfigurationException("Already initialized")
+                }
+
+                Timber.plant(Timber.DebugTree())
+                AndroidThreeTen.init(applicationContext)
+                instance = NewPaymentSdk(publicKey, endpoint, applicationContext, integrationInitializations, testMode, sslFactory, x509TrustManager)
+
+                initialized = true
+
+                ViewPump.init(ViewPump.builder()
+                        .addInterceptor(CalligraphyInterceptor(
+                                CalligraphyConfig.Builder()
+                                        .setDefaultFontPath("fonts/Lato-Regular.ttf")
+                                        .build()))
+                        .build())
             }
-
-            if (applicationContext == null) {
-                throw InvalidApplicationContextException("Application context not supplied")
-            }
-
-            if (initialized) {
-                Timber.w("Already initialized")
-                return
-            }
-
-            Timber.plant(Timber.DebugTree())
-            AndroidThreeTen.init(applicationContext)
-            NewPaymentSdk.instance = NewPaymentSdk(publicKey, url, applicationContext, integrationList, testMode, sslSocketFactory, x509TrustManager)
-
-            NewPaymentSdk.initialized = true
-
-            ViewPump.init(ViewPump.builder()
-                    .addInterceptor(CalligraphyInterceptor(
-                            CalligraphyConfig.Builder()
-                                    .setDefaultFontPath("fonts/Lato-Regular.ttf")
-                                    .build()))
-                    .build())
         }
 
         fun getRegistrationManager(): RegistrationManager {
             assertInitialized()
-            return NewPaymentSdk.instance!!.newRegistrationManager
+            return instance!!.newRegistrationManager
         }
 
         fun getUiCustomizationManager(): UiCustomizationManager {
             assertInitialized()
-            return NewPaymentSdk.instance!!.uiCustomizationManager
+            return instance!!.uiCustomizationManager
         }
 
         private fun assertInitialized() {

@@ -37,7 +37,7 @@ public final class PaymentSdk {
     public static void initalize(Application applicationContext, PaymentSdkConfiguration paymentSdkConfiguration) {
         NewPaymentSdk.Companion.initialize(applicationContext, paymentSdkConfiguration);
     }
-    
+
 
     /**
      * Retrieve the instance of registration manager used to register various payment methods
