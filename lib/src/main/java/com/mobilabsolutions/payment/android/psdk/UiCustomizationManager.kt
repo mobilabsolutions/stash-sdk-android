@@ -16,7 +16,6 @@ import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
-import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.R
 import javax.inject.Inject
