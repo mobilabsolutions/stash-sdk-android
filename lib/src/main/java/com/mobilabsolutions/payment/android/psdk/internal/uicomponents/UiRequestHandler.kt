@@ -62,6 +62,7 @@ class UiRequestHandler @Inject constructor() {
         errorSubject.onError(RuntimeException())
         errorSubject = PublishSubject.create()
         processing.set(false)
+        chooserUsed = false
     }
 
     fun entryCancelled() {
@@ -73,6 +74,7 @@ class UiRequestHandler @Inject constructor() {
         }
         errorSubject = PublishSubject.create()
         processing.set(false)
+        chooserUsed = false
     }
 
     private fun flowCompleted(hostActivity: Activity) {
