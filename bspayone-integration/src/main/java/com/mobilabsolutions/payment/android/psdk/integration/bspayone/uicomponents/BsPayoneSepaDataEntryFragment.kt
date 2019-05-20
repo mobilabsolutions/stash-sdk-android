@@ -105,6 +105,8 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
             saveButton.applyCustomization(customizationPreference)
             sepaScreenMainLayout.applyBackgroundCustomization(customizationPreference)
             sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+
+            firstNameEditText.showKeyboardAndFocus()
         }
         disposables += Observables.combineLatest(
                 firstNameSubject,
