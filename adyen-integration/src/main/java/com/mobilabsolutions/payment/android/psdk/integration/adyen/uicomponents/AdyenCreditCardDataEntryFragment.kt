@@ -156,6 +156,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             countryText.applyFakeEditTextCustomization(customizationPreference)
             creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
             creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+
+            firstNameEditText.showKeyboardAndFocus()
         }
         firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
         lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
