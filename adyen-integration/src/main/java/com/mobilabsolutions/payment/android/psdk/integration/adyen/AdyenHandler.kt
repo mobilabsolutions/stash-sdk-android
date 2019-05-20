@@ -73,7 +73,7 @@ class AdyenHandler @Inject constructor(
             val paymentSessionEntity = PaymentSessionEntity()
             paymentSessionEntity.uuid = paymentSessionUuid
             paymentSessionEntity.paymentSession = paymentSession
-            paymentSessionEntity.generationTime = paymentSession.getGenerationTime()
+            paymentSessionEntity.generationTime = paymentSession.generationTime
 
             PaymentRepository.getInstance(application).insertPaymentSessionEntity(paymentSessionEntity)
 

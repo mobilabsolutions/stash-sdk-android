@@ -37,7 +37,7 @@ data class CustomizationPreference(
     @ColorRes val mediumEmphasisColor: Int = R.color.cool_gray
 
 ) {
-    class Builder() {
+    class Builder {
         private var preference = CustomizationPreference()
         fun setTextColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(textColor = resourceId)
@@ -170,7 +170,7 @@ object CustomizationExtensions {
 
     fun View.applyBackgroundCustomization(customizationPreference: CustomizationPreference) {
         val backgroundColorDrawable = background as ColorDrawable
-        backgroundColorDrawable.setColor(ContextCompat.getColor(context, customizationPreference.backgroundColor))
+        backgroundColorDrawable.color = ContextCompat.getColor(context, customizationPreference.backgroundColor)
         background = backgroundColorDrawable
     }
 

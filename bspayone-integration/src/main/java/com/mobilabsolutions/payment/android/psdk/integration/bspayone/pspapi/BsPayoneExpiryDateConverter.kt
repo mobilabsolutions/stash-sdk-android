@@ -21,6 +21,6 @@ class BsPayoneExpiryDateConverter : JsonSerializer<LocalDate>, JsonDeserializer<
     }
 
     override fun deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): LocalDate {
-        return FORMATTER.parse(json.getAsString() + "01", LocalDate.FROM)
+        return FORMATTER.parse(json.asString + "01", LocalDate.FROM)
     }
 }

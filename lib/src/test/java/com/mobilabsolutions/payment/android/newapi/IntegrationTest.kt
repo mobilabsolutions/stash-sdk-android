@@ -3,6 +3,7 @@ package com.mobilabsolutions.payment.android.newapi
 import android.app.Application
 import android.content.SharedPreferences
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
+import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
@@ -48,7 +49,12 @@ class IntegrationTest {
     @Test
     fun testMultipleIntegrations() {
         expectedException.expect(RuntimeException::class.java)
-        PaymentSdk.initalize("123", "fakeUrl", application, setOf(BsPayoneIntegration, AdyenIntegration))
+        val paymentSdkConfiguration = PaymentSdkConfiguration(
+                publicKey = "123",
+                endpoint = "fakeUrl",
+                integrations = setOf(BsPayoneIntegration, AdyenIntegration)
+        )
+        PaymentSdk.initalize(application, paymentSdkConfiguration)
     }
 }
 
