@@ -62,7 +62,7 @@ class PayPalIntentRegistrationTest {
         coordinates[2] = Point(796, 1520)
         coordinates[3] = Point(796, 929)
 
-        if (!uiDevice.isScreenOn()) {
+        if (!uiDevice.isScreenOn) {
             uiDevice.wakeUp()
             uiDevice.swipe(coordinates, 10)
         }

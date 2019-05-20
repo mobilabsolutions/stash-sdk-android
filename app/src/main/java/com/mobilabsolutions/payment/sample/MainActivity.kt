@@ -80,7 +80,7 @@ class MainActivity : BaseNoPresenterFragmentActivity(), HasSupportFragmentInject
     }
 }
 
-fun EditText.getString() = this.getText().toString()
+fun EditText.getString() = this.text.toString()
 
 fun EditText.getStringObservable() = Observable.create<String> {
     it.onNext(this.editableText.toString())
