@@ -355,18 +355,6 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         return creditCardDataValidator.validateCreditCardNumber(number)
     }
 
-    private fun validateCountryAndUpdateUI(country: String): Boolean {
-        val validationResult = validateCountry(country)
-        return if (validationResult.success) {
-            CustomizationExtensions {
-                countryText.applyFakeEditTextCustomization(customizationPreference)
-            }
-            true
-        } else {
-            false
-        }
-    }
-
     private fun validateCountry(country: String): ValidationResult {
         return ValidationResult(success = country.isNotEmpty())
     }
