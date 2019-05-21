@@ -33,13 +33,12 @@ fun TextView.getContentsAsString(): String = this.text.toString()
 fun EditText.getContentAsSpacesRemovedString(): String = this.text.toString().replace("\\D".toRegex(), "")
 
 fun EditText.focusObserver(onFocusChanged: (Boolean) -> Unit) {
-    this.onFocusChangeListener = object : View.OnFocusChangeListener {
-        override fun onFocusChange(p0: View?, p1: Boolean) {
-            onFocusChanged.invoke(p1)
-        }
-    }
+    this.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> onFocusChanged.invoke(p1) }
 }
 
 fun EditText.getContentOnFocusLost(contentOnFocusLost: (String) -> Unit) {
     this.focusObserver { if (!it) contentOnFocusLost.invoke(this.getContentsAsString()) }
 }
+
+
+

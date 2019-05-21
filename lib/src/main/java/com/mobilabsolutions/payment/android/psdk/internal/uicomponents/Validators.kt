@@ -15,7 +15,7 @@ data class ValidationResult(val success: Boolean, val errorMessageResourceId: In
 
 @IntegrationScope
 class CreditCardDataValidator @Inject constructor() {
-    val validator = CreditCardValidator()
+    private val validator = CreditCardValidator()
 
     fun validateCreditCardNumber(number: String): ValidationResult {
 
@@ -34,7 +34,7 @@ class CreditCardDataValidator @Inject constructor() {
     }
 
     fun validateExpiry(expiryDate: LocalDate): ValidationResult {
-        return if (expiryDate.isAfter(LocalDate.now())) {
+        return if (!expiryDate.isBefore(LocalDate.now())) {
             ValidationResult(success = true)
         } else {
             ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_expiry_validation_error)
