@@ -50,7 +50,6 @@ import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.save
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import java.util.Locale
 import javax.inject.Inject
 
 /**
@@ -90,14 +89,11 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     private var viewState: CreditCardDataEntryViewState? = null
 
-    private lateinit var suggestedCountry: Locale
-
     private var waitTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AdyenIntegration.integration?.adyenIntegrationComponent?.inject(this)
-        suggestedCountry = CountryDetectorUtil.getBestGuessAtCurrentCountry(requireContext())
         Timber.d("Created")
     }
 
