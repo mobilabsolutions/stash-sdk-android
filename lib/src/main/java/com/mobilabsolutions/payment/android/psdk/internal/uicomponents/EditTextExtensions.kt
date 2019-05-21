@@ -39,6 +39,3 @@ fun EditText.focusObserver(onFocusChanged: (Boolean) -> Unit) {
 fun EditText.getContentOnFocusLost(contentOnFocusLost: (String) -> Unit) {
     this.focusObserver { if (!it) contentOnFocusLost.invoke(this.getContentsAsString()) }
 }
-
-
-

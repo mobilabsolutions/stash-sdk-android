@@ -58,16 +58,17 @@ import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
-import io.reactivex.rxkotlin.Observables.combineLatest as combineLatest1
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
-    private val COUNTRY_REQUEST_CODE = 1
+    companion object {
+        private const val COUNTRY_REQUEST_CODE = 1
+    }
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
@@ -82,8 +83,6 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     lateinit var uiCustomizationManager: UiCustomizationManager
 
     lateinit var customizationPreference: CustomizationPreference
-
-    lateinit var selectedCountryCode: String
 
     private val disposables = CompositeDisposable()
 
@@ -248,7 +247,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 dataMap[BillingData.FIRST_NAME] = it.firstName
                 dataMap[BillingData.LAST_NAME] = it.lastName
                 dataMap[BillingData.COUNTRY] = countryText.getContentsAsString()
-                dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.ccNumber
+                dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_DATE] = expirationDateTextView.getContentsAsString()
                 uiComponentHandler.dataSubject.onNext(dataMap)
@@ -290,7 +289,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         var success = true
         success = validateName(state.firstName).success && success
         success = validateName(state.lastName).success && success
-        success = validateCardNumber(state.ccNumber).success && success
+        success = validateCardNumber(state.cardNumber).success && success
         success = validateExpirationDate(state.expirationDate).success && success
         success = validateCVV(state.cvv).success && success
         success = validateCountry(state.country).success && success
@@ -441,7 +440,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     data class CreditCardDataEntryViewState(
         val firstName: String = "",
         val lastName: String = "",
-        val ccNumber: String = "",
+        val cardNumber: String = "",
         val expirationDate: LocalDate? = null,
         val cvv: String = "",
         val country: String = "Germany"
