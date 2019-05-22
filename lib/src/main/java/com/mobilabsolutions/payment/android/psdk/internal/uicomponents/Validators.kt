@@ -18,18 +18,18 @@ class CreditCardDataValidator @Inject constructor() {
     private val validator = CreditCardValidator()
 
     fun validateCreditCardNumber(number: String): ValidationResult {
-
-        return if (validator.isValid(number)) {
-            ValidationResult(success = true)
-        } else {
-            ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_number_validation_error)
+        return when {
+            number.isEmpty() -> ValidationResult(false, R.string.validation_error_empty)
+            validator.isValid(number) -> ValidationResult(success = true)
+            else -> ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_number_validation_error)
         }
     }
+
     fun validateCvv(cvv: String): ValidationResult {
-        return if (cvv.length == 3 || cvv.length == 4) {
-            ValidationResult(success = true)
-        } else {
-            ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_cvv_validation_error)
+        return when {
+            cvv.length in 3..4 -> ValidationResult(success = true)
+            cvv.isEmpty() -> ValidationResult(false, R.string.validation_error_empty)
+            else -> ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_cvv_validation_error)
         }
     }
 
@@ -45,6 +45,9 @@ class CreditCardDataValidator @Inject constructor() {
 @IntegrationScope
 class SepaDataValidator @Inject constructor() {
     fun validateIban(iban: String): ValidationResult {
+        if (iban.isBlank()) {
+            return ValidationResult(false, R.string.validation_error_empty)
+        }
         try {
             Iban.valueOf(iban)
         } catch (exception: Exception) {
@@ -58,10 +61,10 @@ class SepaDataValidator @Inject constructor() {
 class PersonalDataValidator @Inject constructor() {
     fun validateName(name: String): ValidationResult {
         if (name.isEmpty()) {
-            return ValidationResult(false, R.string.validation_error_empty_name)
+            return ValidationResult(false, R.string.validation_error_empty)
         }
         if (name.fold(false) { acc, char -> acc || char.isDigit() }) {
-            return ValidationResult(false, R.string.validation_error_empty_name)
+            return ValidationResult(false, R.string.validation_error_invalid_characters)
         }
         return ValidationResult(true)
     }

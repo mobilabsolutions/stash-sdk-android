@@ -7,6 +7,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
@@ -225,9 +226,9 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(firstNameEditText, errorSepaFirstName)
+                startTimer(firstNameEditText, errorSepaFirstName, validationResult)
             } else {
-                showError(firstNameEditText, errorSepaFirstName)
+                showError(firstNameEditText, errorSepaFirstName, validationResult)
             }
         } else {
             stopTimer()
@@ -241,9 +242,9 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(lastNameEditText, errorSepaLastName)
+                startTimer(lastNameEditText, errorSepaLastName, validationResult)
             } else {
-                showError(lastNameEditText, errorSepaLastName)
+                showError(lastNameEditText, errorSepaLastName, validationResult)
             }
         } else {
             stopTimer()
@@ -261,9 +262,9 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(ibanNumberEditText, errorIban)
+                startTimer(ibanNumberEditText, errorIban, validationResult)
             } else {
-                showError(ibanNumberEditText, errorIban)
+                showError(ibanNumberEditText, errorIban, validationResult)
             }
         } else {
             stopTimer()
@@ -293,24 +294,25 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         }
     }
 
-    private fun startTimer(sourceView: View, errorView: View) {
+    private fun startTimer(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
         waitTimer = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 // Do Nothing
             }
 
             override fun onFinish() {
-                showError(sourceView, errorView)
+                showError(sourceView, errorView, validationResult)
             }
         }.start()
     }
 
-    private fun showError(sourceView: View, errorView: View) {
+    private fun showError(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
+        errorView.setText(validationResult.errorMessageResourceId)
         errorView.visibility = View.VISIBLE
         sourceView.setBackgroundResource(R.drawable.edit_text_frame_error)
     }
 
-    private fun hideError(sourceView: View, errorView: View) {
+    private fun hideError(sourceView: View, errorView: TextView) {
         sourceView.setBackgroundResource(R.drawable.edit_text_frame)
         errorView.visibility = View.GONE
     }

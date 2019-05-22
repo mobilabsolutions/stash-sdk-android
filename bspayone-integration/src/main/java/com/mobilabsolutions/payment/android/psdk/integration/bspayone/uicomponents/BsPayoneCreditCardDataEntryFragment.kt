@@ -304,9 +304,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(firstNameEditText, errorCreditCardFirstName)
+                startTimer(firstNameEditText, errorCreditCardFirstName, validationResult)
             } else {
-                showError(firstNameEditText, errorCreditCardFirstName)
+                showError(firstNameEditText, errorCreditCardFirstName, validationResult)
             }
         } else {
             stopTimer()
@@ -320,9 +320,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(lastNameEditText, errorCreditCardLastName)
+                startTimer(lastNameEditText, errorCreditCardLastName, validationResult)
             } else {
-                showError(lastNameEditText, errorCreditCardLastName)
+                showError(lastNameEditText, errorCreditCardLastName, validationResult)
             }
         } else {
             stopTimer()
@@ -340,9 +340,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(creditCardNumberEditText, errorCreditCardNumber)
+                startTimer(creditCardNumberEditText, errorCreditCardNumber, validationResult)
             } else {
-                showError(creditCardNumberEditText, errorCreditCardNumber)
+                showError(creditCardNumberEditText, errorCreditCardNumber, validationResult)
             }
         } else {
             stopTimer()
@@ -364,9 +364,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(cvvEditText, errorCreditCardCVV)
+                startTimer(cvvEditText, errorCreditCardCVV, validationResult)
             } else {
-                showError(cvvEditText, errorCreditCardCVV)
+                showError(cvvEditText, errorCreditCardCVV, validationResult)
             }
         } else {
             stopTimer()
@@ -398,24 +398,25 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         return ValidationResult(success = false)
     }
 
-    private fun startTimer(sourceView: View, errorView: View) {
+    private fun startTimer(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
         waitTimer = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 // Do Nothing
             }
 
             override fun onFinish() {
-                showError(sourceView, errorView)
+                showError(sourceView, errorView, validationResult)
             }
         }.start()
     }
 
-    private fun showError(sourceView: View, errorView: View) {
+    private fun showError(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
+        errorView.setText(validationResult.errorMessageResourceId)
         errorView.visibility = View.VISIBLE
         sourceView.setBackgroundResource(R.drawable.edit_text_frame_error)
     }
 
-    private fun hideError(sourceView: View, errorView: View) {
+    private fun hideError(sourceView: View, errorView: TextView) {
         sourceView.setBackgroundResource(R.drawable.edit_text_frame)
         errorView.visibility = View.GONE
     }

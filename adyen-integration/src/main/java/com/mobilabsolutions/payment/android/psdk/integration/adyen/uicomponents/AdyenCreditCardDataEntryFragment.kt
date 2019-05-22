@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
@@ -21,7 +22,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getConten
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-import com.mobilabsolutions.payment.android.util.CountryDetectorUtil
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -266,9 +266,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(firstNameEditText, errorCreditCardFirstName)
+                startTimer(firstNameEditText, errorCreditCardFirstName, validationResult)
             } else {
-                showError(firstNameEditText, errorCreditCardFirstName)
+                showError(firstNameEditText, errorCreditCardFirstName, validationResult)
             }
         } else {
             stopTimer()
@@ -282,9 +282,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(lastNameEditText, errorCreditCardLastName)
+                startTimer(lastNameEditText, errorCreditCardLastName, validationResult)
             } else {
-                showError(lastNameEditText, errorCreditCardLastName)
+                showError(lastNameEditText, errorCreditCardLastName, validationResult)
             }
         } else {
             stopTimer()
@@ -302,9 +302,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(creditCardNumberEditText, errorCreditCardNumber)
+                startTimer(creditCardNumberEditText, errorCreditCardNumber, validationResult)
             } else {
-                showError(creditCardNumberEditText, errorCreditCardNumber)
+                showError(creditCardNumberEditText, errorCreditCardNumber, validationResult)
             }
         } else {
             stopTimer()
@@ -322,9 +322,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             if (isDelayed) {
                 stopTimer()
-                startTimer(cvvEditText, errorCreditCardCVV)
+                startTimer(cvvEditText, errorCreditCardCVV, validationResult)
             } else {
-                showError(cvvEditText, errorCreditCardCVV)
+                showError(cvvEditText, errorCreditCardCVV, validationResult)
             }
         } else {
             stopTimer()
@@ -356,24 +356,25 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         return ValidationResult(success = false)
     }
 
-    private fun startTimer(sourceView: View, errorView: View) {
+    private fun startTimer(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
         waitTimer = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 // Do Nothing
             }
 
             override fun onFinish() {
-                showError(sourceView, errorView)
+                showError(sourceView, errorView, validationResult)
             }
         }.start()
     }
 
-    private fun showError(sourceView: View, errorView: View) {
+    private fun showError(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
+        errorView.setText(validationResult.errorMessageResourceId)
         errorView.visibility = View.VISIBLE
         sourceView.setBackgroundResource(R.drawable.edit_text_frame_error)
     }
 
-    private fun hideError(sourceView: View, errorView: View) {
+    private fun hideError(sourceView: View, errorView: TextView) {
         sourceView.setBackgroundResource(R.drawable.edit_text_frame)
         errorView.visibility = View.GONE
     }
