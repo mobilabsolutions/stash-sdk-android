@@ -40,43 +40,66 @@ read me will be updated to reflect changes once the integration modules are impl
 
 
 
-To use the SDK, you need to initialize it with some configuration data. Among the data that needs to be provided are the public key as well as the backend endpoint that should be used by the SDK.
+To use the SDK, you need to initialize it with some configuration data. Among the data that needs to be provided are the publishable key as well as the backend endpoint that should be used by the SDK.
 
-To connect the SDK to a given payment service provider (PSP), you need to pass the IntegrationCompanion object to the SDK
+To connect the SDK to a given payment service provider (PSP), you need to pass the IntegrationCompanion object to the SDK. If you want to use several PSP integrations you need to provide information which integration will use which payment method
 
-Kotlin
+Kotlin - Single Integration
 
 ```kotlin
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
-import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
-import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 
 val  configuration = PaymentSdkConfiguration(
         publicKey = "YourApiKey",
         endpoint = "https://payment-dev.mblb.net/api/",
-        integrations = setOf(BsPayoneIntegration, BraintreeIntegration),
+        integration = AdyenIntegration,
         testMode = true
 )
 PaymentSdk.initalize(this, configuration)
 ```
 
-Java
+Java - Single Integration
 
 ```java
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
-import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
-import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration;
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration;
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 
-Set<IntegrationCompanion> integrations = new HashSet<>();
-integrations.add(BraintreeIntegration.Companion);
-integrations.add(BsPayoneIntegration.Companion);
-
-PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder("YourPublicKey")
+PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+        .setPublishableKey("YourPublishableKey")
         .setEndpoint("https://payment-dev.mblb.net/api/")
-        .setIntegrations(integrations)
+        .setIntegration(AdyenIntegration.Companion)
+        .setTestMode(true)
+        .build();
+
+PaymentSdk.initalize(context, configuration);
+``` 
+Kotlin - Multiple Integrations
+
+```kotlin
+
+val  configuration = PaymentSdkConfiguration(
+        publicKey = "YourApiKey",
+        endpoint = "https://payment-dev.mblb.net/api/",
+        integrationList = listOf(
+        AdyenIntegration to PaymentMethodType.CC,
+        BsPayoneIntegration to PaymentMethodType.SEPA,
+        BraintreeIntegration to PaymentMethodType.PAYPAL
+        )
+        testMode = true
+)
+PaymentSdk.initalize(this, configuration)
+```
+
+Java - Multiple Integrations
+
+```java
+
+List<IntegrationToPaymentMapping> integrationList = new LinkedList<>();
+        integrationList.add(new IntegrationToPaymentMapping(BraintreeIntegration.Companion, PaymentMethodType.PAYPAL));
+        integrationList.add(new IntegrationToPaymentMapping(AdyenIntegration.Companion, PaymentMethodType.CC));
+        integrationList.add(new IntegrationToPaymentMapping(BsPayoneIntegration.Companion, PaymentMethodType.SEPA));
+        
+PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+        .setPublishableKey("YourPublishableKey")
+        .setEndpoint("https://payment-dev.mblb.net/api/")
+        .setIntegrations(integrationList)
         .setTestMode(true)
         .build();
 

@@ -17,7 +17,7 @@ class PaymentSdkInitializer @Inject constructor() : AppInitializer {
         val paymentSdkConfiguration = PaymentSdkConfiguration(
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = BuildConfig.mobilabBackendUrl,
-                integrationMap = listOf(
+                integrationList = listOf(
                     BsPayoneIntegration to PaymentMethodType.CC,
                     BsPayoneIntegration to PaymentMethodType.SEPA,
                     BraintreeIntegration to PaymentMethodType.PAYPAL

@@ -17,8 +17,5 @@ class KotlinSketch {
     fun usingUi() {
         val idempotencyKey = UUID.randomUUID()
         registrationManager.registerPaymentMethodUsingUi(activity, PaymentMethodType.CC, idempotencyKey)
-
-
-
     }
 }

@@ -28,7 +28,6 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA)
 
-
         override fun create(enabledPaymentMethodTypeSet: Set<PaymentMethodType>): IntegrationInitialization {
             return object : IntegrationInitialization {
                 override val enabledPaymentMethodTypes = enabledPaymentMethodTypeSet

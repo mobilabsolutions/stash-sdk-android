@@ -3,7 +3,6 @@ package com.mobilabsolutions.payment.android.psdk.internal.psphandler
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
 
 /**
@@ -23,7 +22,7 @@ interface Integration {
 
 interface IntegrationCompanion {
 
-    val supportedPaymentMethodTypes : Set<PaymentMethodType>
+    val supportedPaymentMethodTypes: Set<PaymentMethodType>
 
     fun create(enabledPaymentMethodTypeSet: Set<PaymentMethodType>): IntegrationInitialization
 }

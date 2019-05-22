@@ -24,7 +24,7 @@ class PaymentSampleApplication : DaggerApplication() {
         val configuration = PaymentSdkConfiguration(
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = "https://payment-dev.mblb.net/api/",
-                integrationMap = listOf(
+                integrationList = listOf(
                     BsPayoneIntegration to PaymentMethodType.CC,
                     AdyenIntegration to PaymentMethodType.SEPA,
                     BraintreeIntegration to PaymentMethodType.PAYPAL),

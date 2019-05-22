@@ -11,7 +11,7 @@ data class PaymentSdkConfiguration(
     val publicKey: String,
     val endpoint: String? = null,
     val integration: IntegrationCompanion? = null,
-    val integrationMap: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null,
+    val integrationList: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null,
     val customizationPreference: CustomizationPreference? = null,
     val testMode: Boolean = false,
     val sslFactory: SSLSocketFactory? = null,
@@ -47,17 +47,12 @@ data class PaymentSdkConfiguration(
             this.integrations = integrations.map {
                 it.integration to it.paymentMethodType
             }.flatMap { pair ->
-                pair.second.toList().map { pair.first to it  }
+                pair.second.toList().map { pair.first to it }
             }
             return this
         }
 
-//        fun setIntegrations(integrations: List<Pair<IntegrationCompanion, PaymentMethodType>>): Builder {
-//            this.integrations = integrations
-//            return this
-//        }
-
-        fun setCustomization(customizationPreference: CustomizationPreference?) : Builder {
+        fun setCustomization(customizationPreference: CustomizationPreference?): Builder {
             this.customizationPreference = customizationPreference
             return this
         }
@@ -92,4 +87,4 @@ data class PaymentSdkConfiguration(
     }
 }
 
-class IntegrationToPaymentMapping(val integration : IntegrationCompanion, vararg val paymentMethodType: PaymentMethodType)
+class IntegrationToPaymentMapping(val integration: IntegrationCompanion, vararg val paymentMethodType: PaymentMethodType)

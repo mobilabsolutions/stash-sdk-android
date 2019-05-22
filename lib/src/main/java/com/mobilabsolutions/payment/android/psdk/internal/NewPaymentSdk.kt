@@ -43,7 +43,6 @@ class NewPaymentSdk(
     init {
         val backendUrl = url ?: MOBILAB_BE_URL
 
-
         val processedPaymentMethodTypes: MutableSet<PaymentMethodType> = mutableSetOf()
         integrationMap.forEach { (integration, paymentMethodTypeSet) ->
             processedPaymentMethodTypes.forEach {
@@ -64,7 +63,6 @@ class NewPaymentSdk(
         integrationInitializationMap.forEach { (initialization, _) ->
             initialization.initialize(daggerGraph)
         }
-
 
         daggerGraph.inject(this)
     }
@@ -87,26 +85,24 @@ class NewPaymentSdk(
 
                 val integrationInitializationMap =
                     when {
-                        integration == null && integrationMap == null -> {
+                        integration == null && integrationList == null -> {
                             throw ConfigurationException("No integrations provided")
                         }
-                        integration != null && integrationMap != null -> {
+                        integration != null && integrationList != null -> {
                             throw ConfigurationException("Both integration and integration map were supplied," +
                                 " provide only one or the other")
                         }
                         integration != null -> {
                             mapOf(integration to integration.supportedPaymentMethodTypes)
                         }
-                        integrationMap != null -> {
-                            integrationMap.toList().groupBy {
+                        integrationList != null -> {
+                            integrationList.toList().groupBy {
                                 it.first
                             }.map {
                                 Pair(it.key, it.value.map { pair -> pair.second }.toSet())
                             }.toMap()
-
                         }
                         else -> throw RuntimeException("This should never happen")
-
                     }
 
                 Timber.plant(Timber.DebugTree())
@@ -123,7 +119,6 @@ class NewPaymentSdk(
                     .build())
             }
         }
-
 
         fun configureUi(customizationPreference: CustomizationPreference) {
             assertInitialized()
@@ -167,8 +162,5 @@ class NewPaymentSdk(
         fun reset() {
             initialized = false
         }
-
     }
-
-
 }

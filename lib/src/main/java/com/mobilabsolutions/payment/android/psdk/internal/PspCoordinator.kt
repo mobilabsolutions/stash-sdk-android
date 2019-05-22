@@ -27,12 +27,12 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
-        private val mobilabApiV2: MobilabApiV2,
-        private val exceptionMapper: ExceptionMapper,
-        private val integrations: Map<@JvmSuppressWildcards Integration, @JvmSuppressWildcards Set<@JvmSuppressWildcards PaymentMethodType>>,
-        private val uiRequestHandler: UiRequestHandler,
-        private val context: Context,
-        private val idempotencyManager: IdempotencyManager
+    private val mobilabApiV2: MobilabApiV2,
+    private val exceptionMapper: ExceptionMapper,
+    private val integrations: Map<@JvmSuppressWildcards Integration, @JvmSuppressWildcards Set<@JvmSuppressWildcards PaymentMethodType>>,
+    private val uiRequestHandler: UiRequestHandler,
+    private val context: Context,
+    private val idempotencyManager: IdempotencyManager
 ) {
 
     fun handleRegisterCreditCard(
@@ -101,16 +101,16 @@ class PspCoordinator @Inject constructor(
 
     @SuppressLint("NewApi")
     fun handleRegisterSepa(
-            sepaData: SepaData,
-            billingData: BillingData,
-            additionalUIData: Map<String, String> = emptyMap(),
-            chosenIntegration: Integration,
-            idempotencyKey: String): Single<PaymentMethodAlias> {
+        sepaData: SepaData,
+        billingData: BillingData,
+        additionalUIData: Map<String, String> = emptyMap(),
+        chosenIntegration: Integration,
+        idempotencyKey: String
+    ): Single<PaymentMethodAlias> {
 
             billingData.country = additionalUIData.getOrNull(BillingData.COUNTRY)
             billingData.firstName = additionalUIData.getOrNull(SepaData.FIRST_NAME)
             billingData.lastName = additionalUIData.getOrNull(SepaData.LAST_NAME)
-
 
         // TODO validate
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.SEPA) {

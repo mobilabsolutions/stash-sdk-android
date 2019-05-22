@@ -40,7 +40,6 @@ class BsPayoneIntegration private constructor(
             return object : IntegrationInitialization {
                 override val enabledPaymentMethodTypes = enabledPaymentMethodTypeSet
 
-
                 override fun initializedOrNull(): Integration? {
                     return integration
                 }
