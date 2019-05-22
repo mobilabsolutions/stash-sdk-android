@@ -49,7 +49,7 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
                     onSuccess = {
                         braintreeHandler.resultSubject.onNext(
                                 Triple(
-                                        paymentMethodNonce.description
+                                        paymentMethodNonce.email
                                                 ?: paymentMethodNonce.typeLabel ?: "",
                                         paymentMethodNonce.nonce
                                                 ?: throw RuntimeException("Nonce was null in created method"),
