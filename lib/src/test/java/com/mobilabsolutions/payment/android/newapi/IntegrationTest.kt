@@ -52,7 +52,7 @@ class IntegrationTest {
         val paymentSdkConfiguration = PaymentSdkConfiguration(
                 publicKey = "123",
                 endpoint = "fakeUrl",
-                integrations = setOf(BsPayoneIntegration, AdyenIntegration)
+                integrationMap = setOf(BsPayoneIntegration, AdyenIntegration)
         )
         PaymentSdk.initalize(application, paymentSdkConfiguration)
     }

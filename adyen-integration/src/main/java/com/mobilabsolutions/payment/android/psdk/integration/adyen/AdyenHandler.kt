@@ -139,7 +139,7 @@ class AdyenHandler @Inject constructor(
                     // a payment
                     mobilabApiV2.updateAlias(creditCardRegistrationRequest.aliasId, AliasUpdateRequest(
                             extra = AliasExtra(
-                                    paymentMethod = PaymentMethodType.CC.name,
+                                    paymentMethod = PaymentMethodType.CREDIT_CARD.name,
                                     payload = paymentInitiationResult.completeFields!!.payload,
                                     personalData = creditCardRegistrationRequest.billingData
 

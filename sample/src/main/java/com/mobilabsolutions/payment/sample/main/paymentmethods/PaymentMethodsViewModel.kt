@@ -62,7 +62,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
 
     private fun onRegisterPaymentSuccess(paymentMethodAlias: PaymentMethodAlias) {
         val type = when (paymentMethodAlias.paymentMethodType) {
-            PaymentMethodType.CC -> "Credit Card"
+            PaymentMethodType.CREDIT_CARD -> "Credit Card"
             PaymentMethodType.SEPA -> "SEPA"
             PaymentMethodType.PAYPAL -> "PayPal"
         }

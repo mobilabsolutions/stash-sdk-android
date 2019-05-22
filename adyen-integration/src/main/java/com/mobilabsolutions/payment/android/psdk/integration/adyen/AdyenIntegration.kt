@@ -26,8 +26,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
     companion object : IntegrationCompanion {
         var integration: AdyenIntegration? = null
 
-        override fun create(): IntegrationInitialization {
+        override fun create(enabledPaymentMethodTypeSet: Set<PaymentMethodType>): IntegrationInitialization {
             return object : IntegrationInitialization {
+                override val enabledPaymentMethodTypes = enabledPaymentMethodTypeSet
+
                 override fun initializedOrNull(): Integration? {
                     return integration
                 }
@@ -58,7 +60,7 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
     val creditCardUIDefinition = PaymentMethodDefinition(
             methodId = "Adyen-CC",
             pspIdentifier = identifier,
-            paymentMethodType = PaymentMethodType.CC
+            paymentMethodType = PaymentMethodType.CREDIT_CARD
     )
 
     val sepaUIDefinition = PaymentMethodDefinition(
@@ -94,9 +96,9 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         return listOf(creditCardUIDefinition, sepaUIDefinition)
     }
 
-    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {
-        return when (paymentMethodDefinition.paymentMethodType) {
-            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
+    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {
+        return when (paymentMethodType) {
+            PaymentMethodType.CREDIT_CARD -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity)
             PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
         }

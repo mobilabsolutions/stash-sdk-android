@@ -22,7 +22,7 @@ class PaymentSampleApplication : DaggerApplication() {
         val configuration = PaymentSdkConfiguration(
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = "https://payment-dev.mblb.net/api/",
-                integrations = setOf(AdyenIntegration, BraintreeIntegration),
+                integrationMap = setOf(AdyenIntegration, BraintreeIntegration),
                 testMode = true
         )
         PaymentSdk.initalize(this, configuration)

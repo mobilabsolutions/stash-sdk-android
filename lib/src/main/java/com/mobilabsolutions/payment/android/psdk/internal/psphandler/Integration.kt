@@ -20,7 +20,7 @@ interface Integration {
 
     fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition>
 
-    fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>>
+    fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>>
 
     fun supportsPaymentMethods(methodType: PaymentMethodType): Boolean {
         return getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == methodType }.isNotEmpty()
@@ -29,5 +29,5 @@ interface Integration {
 
 interface IntegrationCompanion {
 
-    fun create(): IntegrationInitialization
+    fun create(enabledPaymentMethodTypeSet: Set<PaymentMethodType>): IntegrationInitialization
 }
