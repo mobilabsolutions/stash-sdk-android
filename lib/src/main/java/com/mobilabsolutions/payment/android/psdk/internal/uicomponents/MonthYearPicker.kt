@@ -62,7 +62,7 @@ class MonthYearPicker(
                 (selectorWheelPaintField.get(monthNumberPicker) as Paint).color = color
                 (selectorWheelPaintField.get(yearNumberPicker) as Paint).color = color
 
-                var count = monthNumberPicker.getChildCount()
+                var count = monthNumberPicker.childCount
                 for (i in 0 until count) {
                     val child = monthNumberPicker.getChildAt(i)
                     if (child is EditText)
@@ -70,7 +70,7 @@ class MonthYearPicker(
                 }
                 monthNumberPicker.invalidate()
 
-                count = yearNumberPicker.getChildCount()
+                count = yearNumberPicker.childCount
                 for (i in 0 until count) {
                     val child = yearNumberPicker.getChildAt(i)
                     if (child is EditText)

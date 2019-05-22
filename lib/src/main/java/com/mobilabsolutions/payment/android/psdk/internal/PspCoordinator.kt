@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
@@ -54,6 +55,7 @@ class PspCoordinator @Inject constructor(
         )
     }
 
+    @SuppressLint("NewApi")
     fun handleRegisterCreditCard(
         creditCardData: CreditCardData,
         billingData: BillingData = BillingData(),
@@ -61,6 +63,10 @@ class PspCoordinator @Inject constructor(
         chosenPsp: PspIdentifier,
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
+
+        billingData.country = additionalUIData.getOrNull(BillingData.COUNTRY)
+        billingData.firstName = additionalUIData.getOrNull(BillingData.FIRST_NAME)
+        billingData.lastName = additionalUIData.getOrNull(BillingData.LAST_NAME)
 
         val chosenIntegration = integrations.first { it.identifier == chosenPsp }
 
@@ -89,10 +95,13 @@ class PspCoordinator @Inject constructor(
         return handleRegisterSepa(sepaData, billingData, additionalUIData, integrations.filter { it.supportsPaymentMethods(PaymentMethodType.SEPA) }.first().identifier, idempotencyKey)
     }
 
+    @SuppressLint("NewApi")
     fun handleRegisterSepa(sepaData: SepaData, billingData: BillingData, additionalUIData: Map<String, String> = emptyMap(), chosenPsp: PspIdentifier, idempotencyKey: String): Single<PaymentMethodAlias> {
-        if (additionalUIData.containsKey(BillingData.COUNTRY)) {
-            billingData.country = additionalUIData.getValue(BillingData.COUNTRY)
-        }
+
+            billingData.country = additionalUIData.getOrNull(BillingData.COUNTRY)
+            billingData.firstName = additionalUIData.getOrNull(SepaData.FIRST_NAME)
+            billingData.lastName = additionalUIData.getOrNull(SepaData.LAST_NAME)
+
         val chosenIntegration = integrations.filter { it.identifier == chosenPsp }.first()
 
         // TODO validate
@@ -224,5 +233,13 @@ class PspCoordinator @Inject constructor(
                 else -> Single.error(RuntimeException("Unknown exception ${it.message}"))
             }
         }
+    }
+}
+
+private inline fun <reified KEY, reified VALUE> Map<KEY, VALUE>.getOrNull(key: String): VALUE? {
+    return if (!containsKey(key as KEY)) {
+        null
+    } else {
+        get(key) as VALUE
     }
 }

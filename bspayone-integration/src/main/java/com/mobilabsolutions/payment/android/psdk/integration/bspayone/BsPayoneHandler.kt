@@ -11,9 +11,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
-import com.mobilabsolutions.payment.android.psdk.model.BillingData
-import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-import com.mobilabsolutions.payment.android.psdk.model.SepaData
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -31,11 +30,12 @@ class BsPayoneHandler @Inject constructor(
     val mockResponse = false
 
     fun registerCreditCard(
-        aliasId: String,
-        bsPayoneRegistrationRequest: BsPayoneRegistrationRequest,
-        creditCardData: CreditCardData
-    ):
-            Single<String> {
+        creditCardRegistrationRequest: CreditCardRegistrationRequest,
+        bsPayoneRegistrationRequest: BsPayoneRegistrationRequest
+    ): Single<String> {
+
+        val aliasId = creditCardRegistrationRequest.aliasId
+        val creditCardData = creditCardRegistrationRequest.creditCardData
 
         val baseRequest =
                 bsPayoneRegistrationRequest.let {
@@ -77,7 +77,7 @@ class BsPayoneHandler @Inject constructor(
                     is BsPayoneVerificationSuccessResponse -> {
                         mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
                                 it.cardAlias,
-                                AliasExtra(paymentMethod = PaymentMethodType.CC.name)
+                                AliasExtra(paymentMethod = PaymentMethodType.CC.name, personalData = creditCardRegistrationRequest.billingData)
                         )).blockingAwait()
                         aliasId
                     }
@@ -90,10 +90,11 @@ class BsPayoneHandler @Inject constructor(
     }
 
     fun registerSepa(
-        aliasId: String,
-        sepaData: SepaData,
-        billingData: BillingData
+        sepaRegistrationRequest: SepaRegistrationRequest
     ): Single<String> {
+        val aliasId = sepaRegistrationRequest.aliasId
+        val sepaData = sepaRegistrationRequest.sepaData
+        val billingData = sepaRegistrationRequest.billingData
 
         val sepaConfig = SepaConfig(
                 iban = sepaData.iban,
@@ -108,7 +109,7 @@ class BsPayoneHandler @Inject constructor(
         return mobilabApiV2.updateAlias(
                 aliasId,
                 AliasUpdateRequest(
-                        extra = AliasExtra(sepaConfig = sepaConfig, paymentMethod = PaymentMethodType.SEPA.name)
+                        extra = AliasExtra(sepaConfig = sepaConfig, paymentMethod = PaymentMethodType.SEPA.name, personalData = billingData)
                 )
         ).andThen(Single.just(aliasId))
     }

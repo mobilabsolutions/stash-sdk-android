@@ -118,7 +118,7 @@ val billingData = BillingData(
 )
 
 
-val registrationManager = PaymentSdk.getRegistrationManager();
+val registrationManager = PaymentSdk.getRegistrationManager()
 registrationManager.registerCreditCard(creditCardData, billingData)
         .subscribeBy(
                 onSuccess = {paymentAlias ->
@@ -174,7 +174,7 @@ val billingData = BillingData(
     city = "Cologne"
 )
 
-val registrationManager = PaymentSdk.getRegistrationManager();
+val registrationManager = PaymentSdk.getRegistrationManager()
 registrationManager.registerSepa(sepaData, billingData)
         .subscribeBy(
                 onSuccess = {
@@ -184,7 +184,7 @@ registrationManager.registerSepa(sepaData, billingData)
                     // Handle error
                 }
 
-        );
+        )
 ```
 
 Java
@@ -222,7 +222,7 @@ Kotlin
 
 ```kotlin
 
-val registrationManager = PaymentSdk.getRegistrationManager();
+val registrationManager = PaymentSdk.getRegistrationManager()
 registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CREDITCARD)
         .subscribeBy(
                 onSuccess = {
@@ -232,7 +232,7 @@ registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CRED
                     // Handle error
                 }
 
-        );
+        )
 
 ```
 Java 
@@ -303,7 +303,7 @@ All calls provided by Payment SDK are idempotent. To use idempotency simply prov
 Kotlin
 ```kotlin
 val registrationIdempotencyKey = UUID.randomUUID()
-val registrationManager = PaymentSdk.getRegistrationManager();
+val registrationManager = PaymentSdk.getRegistrationManager()
 registrationManager.registerPaymentMehodUsingUi(activity, idempotencyKey = registrationIdempotencyKey)
         .subscribeBy(
                 onSuccess = {
@@ -313,7 +313,7 @@ registrationManager.registerPaymentMehodUsingUi(activity, idempotencyKey = regis
                     // Handle error
                 }
 
-        );
+        )
 ```
 
 Java

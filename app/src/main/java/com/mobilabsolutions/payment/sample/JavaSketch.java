@@ -7,6 +7,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration;
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager;
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration;
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration;
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration;
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 import com.mobilabsolutions.payment.android.psdk.model.BillingData;
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
@@ -31,7 +32,14 @@ public class JavaSketch {
         BillingData builtBillingData = new BillingData.Builder().build();
         Application context = null;
 
-        PaymentSdk.initalize(BuildConfig.newBsApiKey, BuildConfig.mobilabBackendUrl, context, BsPayoneIntegration.Companion);
+        Set<IntegrationCompanion> integrations = new HashSet<>();
+        integrations.add(BsPayoneIntegration.Companion);
+
+        PaymentSdkConfiguration paymentSdkConfiguration = new PaymentSdkConfiguration.Builder(BuildConfig.newBsApiKey)
+                .setEndpoint(BuildConfig.mobilabBackendUrl)
+                .setIntegrations(integrations)
+                .build();
+        PaymentSdk.initalize(context, paymentSdkConfiguration);
         RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 
         CreditCardData creditCardData = CreditCardData.create(
@@ -50,13 +58,13 @@ public class JavaSketch {
                             //Handle error
                         }
                 );
-        Set<IntegrationCompanion> integrations = new HashSet<>();
-        integrations.add(BraintreeIntegration.Companion);
-        integrations.add(BsPayoneIntegration.Companion);
+        Set<IntegrationCompanion> integrations2 = new HashSet<>();
+        integrations2.add(BraintreeIntegration.Companion);
+        integrations2.add(BsPayoneIntegration.Companion);
 
         PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder("YourPublicKey")
                 .setEndpoint("https://payment-dev.mblb.net/api/")
-                .setIntegrations(integrations)
+                .setIntegrations(integrations2)
                 .setTestMode(true)
                 .build();
 

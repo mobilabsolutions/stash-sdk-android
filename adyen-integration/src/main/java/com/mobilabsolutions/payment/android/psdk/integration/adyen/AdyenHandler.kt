@@ -23,8 +23,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUp
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.model.BillingData
-import com.mobilabsolutions.payment.android.psdk.model.SepaData
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -41,6 +40,7 @@ class AdyenHandler @Inject constructor(
     private val mobilabApiV2: MobilabApiV2,
     val application: Application
 ) {
+    val PAYMENT_SESSION = "paymentSession"
 
     fun registerCreditCard(
         creditCardRegistrationRequest: CreditCardRegistrationRequest,
@@ -61,8 +61,8 @@ class AdyenHandler @Inject constructor(
             val creditCardData = creditCardRegistrationRequest.creditCardData
 
             // Payment session received from the SDK backend
-            val paymentSessionString = additionalData.extraData["paymentSession"]
-                    ?: throw RuntimeException("Missing payment session")
+            val paymentSessionString = additionalData.extraData[PAYMENT_SESSION]
+                    ?: throw OtherException("Missing payment session")
 
             // Here we start accesing the flow that CheckoutController.handlePaymentSessionResponse(...) would follow
             val paymentSession = PaymentSessionImpl.decode(paymentSessionString)
@@ -73,7 +73,7 @@ class AdyenHandler @Inject constructor(
             val paymentSessionEntity = PaymentSessionEntity()
             paymentSessionEntity.uuid = paymentSessionUuid
             paymentSessionEntity.paymentSession = paymentSession
-            paymentSessionEntity.generationTime = paymentSession.getGenerationTime()
+            paymentSessionEntity.generationTime = paymentSession.generationTime
 
             PaymentRepository.getInstance(application).insertPaymentSessionEntity(paymentSessionEntity)
 
@@ -140,7 +140,8 @@ class AdyenHandler @Inject constructor(
                     mobilabApiV2.updateAlias(creditCardRegistrationRequest.aliasId, AliasUpdateRequest(
                             extra = AliasExtra(
                                     paymentMethod = PaymentMethodType.CC.name,
-                                    payload = paymentInitiationResult.completeFields!!.payload
+                                    payload = paymentInitiationResult.completeFields!!.payload,
+                                    personalData = creditCardRegistrationRequest.billingData
 
                             )
                     )).subscribeOn(Schedulers.io()).blockingAwait()
@@ -168,10 +169,11 @@ class AdyenHandler @Inject constructor(
     }
 
     fun registerSepa(
-        aliasId: String,
-        sepaData: SepaData,
-        billingData: BillingData
+        sepaRegistrationRequest: SepaRegistrationRequest
     ): Single<String> {
+        val sepaData = sepaRegistrationRequest.sepaData
+        val aliasId = sepaRegistrationRequest.aliasId
+        val billingData = sepaRegistrationRequest.billingData
 
         val sepaConfig = SepaConfig(
                 iban = sepaData.iban,
@@ -186,7 +188,10 @@ class AdyenHandler @Inject constructor(
         return mobilabApiV2.updateAlias(
                 aliasId,
                 AliasUpdateRequest(
-                        extra = AliasExtra(sepaConfig = sepaConfig, paymentMethod = PaymentMethodType.SEPA.name)
+                        extra = AliasExtra(sepaConfig = sepaConfig,
+                                paymentMethod = PaymentMethodType.SEPA.name,
+                                personalData = sepaRegistrationRequest.billingData
+                        )
                 )
         ).andThen(Single.just(aliasId))
     }

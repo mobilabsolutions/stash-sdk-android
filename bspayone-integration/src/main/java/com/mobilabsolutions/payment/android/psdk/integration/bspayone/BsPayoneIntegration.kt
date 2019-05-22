@@ -75,16 +75,13 @@ class BsPayoneIntegration private constructor(
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
                 bsPayoneHandler.registerCreditCard(
-                        registrationRequest.standardizedData.aliasId,
-                        BsPayoneRegistrationRequest.fromMap(additionalData.extraData),
-                        standardizedData.creditCardData
+                        standardizedData,
+                        BsPayoneRegistrationRequest.fromMap(additionalData.extraData)
                 )
             }
             is SepaRegistrationRequest -> {
                 bsPayoneHandler.registerSepa(
-                        registrationRequest.standardizedData.aliasId,
-                        standardizedData.sepaData,
-                        standardizedData.billingData
+                        standardizedData
                 )
             }
             else -> {
