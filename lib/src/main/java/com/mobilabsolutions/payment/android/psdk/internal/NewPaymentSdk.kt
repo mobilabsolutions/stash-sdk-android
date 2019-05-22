@@ -96,6 +96,9 @@ class NewPaymentSdk(
                             mapOf(integration to integration.supportedPaymentMethodTypes)
                         }
                         integrationList != null -> {
+                            if (integrationList.isEmpty()) {
+                                throw ConfigurationException("Integration list was provided, but it was empty")
+                            }
                             integrationList.toList().groupBy {
                                 it.first
                             }.map {
