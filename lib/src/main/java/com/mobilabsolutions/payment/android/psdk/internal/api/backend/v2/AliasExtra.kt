@@ -1,6 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2
 
 import com.google.gson.annotations.SerializedName
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
 
 data class AliasExtra(
     @SerializedName("ccConfig")
@@ -8,6 +9,7 @@ data class AliasExtra(
     val sepaConfig: SepaConfig? = null,
     val paymentMethod: String,
     val payPalConfig: PayPalConfig? = null,
+    val personalData: BillingData? = null,
     val payload: String? = null
 
 )

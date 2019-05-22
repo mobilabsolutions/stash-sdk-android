@@ -81,9 +81,7 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
             }
             is SepaRegistrationRequest -> {
                 adyenHandler.registerSepa(
-                        registrationRequest.standardizedData.aliasId,
-                        standardizedData.sepaData,
-                        standardizedData.billingData
+                        standardizedData
                 )
             }
             else -> {
