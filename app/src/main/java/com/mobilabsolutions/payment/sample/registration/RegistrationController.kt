@@ -44,7 +44,7 @@ class RegistrationController @Inject constructor() : Controller() {
         } else {
             ""
         }
-        return registrationManager.registerPaymentMethodUsingUi(activity, specificPaymentMethodType = PaymentMethodType.CREDIT_CARD)
+        return registrationManager.registerPaymentMethodUsingUi(activity, specificPaymentMethodType = PaymentMethodType.CC)
 //        return registrationManager.registerCreditCard(
 //                CreditCardData(number = creditCardNumber,
 //                        expiryDate = exipryDate,

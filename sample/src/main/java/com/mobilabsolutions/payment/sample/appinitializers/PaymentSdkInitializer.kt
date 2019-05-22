@@ -1,6 +1,7 @@
 package com.mobilabsolutions.payment.sample.appinitializers
 
 import android.app.Application
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
@@ -16,7 +17,11 @@ class PaymentSdkInitializer @Inject constructor() : AppInitializer {
         val paymentSdkConfiguration = PaymentSdkConfiguration(
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = BuildConfig.mobilabBackendUrl,
-                integrationMap = setOf(BsPayoneIntegration, BraintreeIntegration),
+                integrationMap = listOf(
+                    BsPayoneIntegration to PaymentMethodType.CC,
+                    BsPayoneIntegration to PaymentMethodType.SEPA,
+                    BraintreeIntegration to PaymentMethodType.PAYPAL
+                ),
                 testMode = true
         )
         PaymentSdk.initalize(

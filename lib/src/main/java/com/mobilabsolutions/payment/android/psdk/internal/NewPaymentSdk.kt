@@ -9,26 +9,26 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
+import io.github.inflationx.calligraphy3.CalligraphyConfig
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor
+import io.github.inflationx.viewpump.ViewPump
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
-import io.github.inflationx.calligraphy3.CalligraphyConfig
-import io.github.inflationx.calligraphy3.CalligraphyInterceptor
-import io.github.inflationx.viewpump.ViewPump
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class NewPaymentSdk(
-        publicKey: String,
-        url: String?,
-        applicationContext: Application,
-        integration: IntegrationInitialization?,
-        integrationMap: Map<IntegrationInitialization, PaymentMethodType>?,
-        testMode: Boolean,
-        sslSocketFactory: SSLSocketFactory?,
-        x509TrustManager: X509TrustManager?
+    publicKey: String,
+    url: String?,
+    applicationContext: Application,
+    integrationMap: Map<IntegrationCompanion, Set<PaymentMethodType>>,
+    testMode: Boolean,
+    sslSocketFactory: SSLSocketFactory?,
+    x509TrustManager: X509TrustManager?
 ) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
@@ -36,64 +36,35 @@ class NewPaymentSdk(
     lateinit var newRegistrationManager: NewRegistrationManager
 
     @Inject
-    lateinit var uiCustomizationManager: UiCustomizationManager
+    internal lateinit var uiCustomizationManager: UiCustomizationManager
 
     val daggerGraph: PaymentSdkComponent
-
-    var paymentMethodSet: Set<PaymentMethodType> = emptySet()
 
     init {
         val backendUrl = url ?: MOBILAB_BE_URL
 
-        val resolvedIntegrationList = when {
-            integration == null && integrationMap == null -> {
-                throw ConfigurationException("No integrations provided")
-            }
-            integration != null && integrationMap != null -> {
-                throw ConfigurationException("Both integration and integration map were supplied," +
-                        " provide only one or the other")
-            }
-            integration != null -> {
-                integration.enabledPaymentMethodTypes.map { integration to it }.toMap()
-            }
-            integrationMap != null -> {
-                val processedPaymentMethodTypes: MutableSet<PaymentMethodType> = mutableSetOf()
-                val processedIntegrations : MutableSet<IntegrationInitialization> = mutableSetOf()
-                integrationMap.forEach { (integration, paymentMethodType) ->
-                    if (processedPaymentMethodTypes.contains(paymentMethodType)) {
-                        throw ConfigurationException("Integration handling for ${paymentMethodType.name} payment method type already registered!")
-                    } else {
-                        if (!processedIntegrations.contains(integration))
-                        processedPaymentMethodTypes.add(paymentMethodType)
-                    }
+
+        val processedPaymentMethodTypes: MutableSet<PaymentMethodType> = mutableSetOf()
+        integrationMap.forEach { (integration, paymentMethodTypeSet) ->
+            processedPaymentMethodTypes.forEach {
+                if (paymentMethodTypeSet.contains(it)) {
+                    throw ConfigurationException("Integration handling for ${it.name} payment method type already registered!")
                 }
-                integrationMap
             }
-            else -> throw RuntimeException("This shouldn't be possible")
+            processedPaymentMethodTypes.addAll(paymentMethodTypeSet)
         }
+
+        val integrationInitializationMap = integrationMap.mapKeys { it.key.create(it.value) }
 
         daggerGraph = DaggerPaymentSdkComponent.builder()
-                .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-                .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, resolvedIntegrationList, testMode))
-                .build()
+            .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
+            .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationInitializationMap, testMode))
+            .build()
 
-        integrationMap?.map {
-            val initialized = it.key.initialize(daggerGraph)
-            val supportedMethods =
-                    initialized.getSupportedPaymentMethodDefinitions()
-                            .map { integration -> integration.paymentMethodType }
-            supportedMethods.forEach { paymentMethodType ->
-                if (paymentMethodSet.contains(paymentMethodType)) {
-                    throw RuntimeException(
-                            "You are trying to add integrationMap that handle same payment methods. " +
-                                    "This is not supported at this moment. " +
-                                    "Encountered when processing ${initialized.identifier} payment method $paymentMethodType")
-                } else {
-                    paymentMethodSet += paymentMethodType
-                }
-            }
-            initialized
+        integrationInitializationMap.forEach { (initialization, _) ->
+            initialization.initialize(daggerGraph)
         }
+
 
         daggerGraph.inject(this)
     }
@@ -114,23 +85,45 @@ class NewPaymentSdk(
                     throw ConfigurationException("Already initialized")
                 }
 
-                val integrationInitialization = integration?.create(PaymentMethodType.values().toSet())
-                val integrationInitializationMap = integrationMap?.mapKeys { it.key.create(setOf(it.value)) }
+                val integrationInitializationMap =
+                    when {
+                        integration == null && integrationMap == null -> {
+                            throw ConfigurationException("No integrations provided")
+                        }
+                        integration != null && integrationMap != null -> {
+                            throw ConfigurationException("Both integration and integration map were supplied," +
+                                " provide only one or the other")
+                        }
+                        integration != null -> {
+                            mapOf(integration to integration.supportedPaymentMethodTypes)
+                        }
+                        integrationMap != null -> {
+                            integrationMap.toList().groupBy {
+                                it.first
+                            }.map {
+                                Pair(it.key, it.value.map { pair -> pair.second }.toSet())
+                            }.toMap()
+
+                        }
+                        else -> throw RuntimeException("This should never happen")
+
+                    }
 
                 Timber.plant(Timber.DebugTree())
                 AndroidThreeTen.init(applicationContext)
-                instance = NewPaymentSdk(publicKey, endpoint, applicationContext, integrationInitialization, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
+                instance = NewPaymentSdk(publicKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
 
                 initialized = true
 
                 ViewPump.init(ViewPump.builder()
-                        .addInterceptor(CalligraphyInterceptor(
-                                CalligraphyConfig.Builder()
-                                        .setDefaultFontPath("fonts/Lato-Regular.ttf")
-                                        .build()))
-                        .build())
+                    .addInterceptor(CalligraphyInterceptor(
+                        CalligraphyConfig.Builder()
+                            .setDefaultFontPath("fonts/Lato-Regular.ttf")
+                            .build()))
+                    .build())
             }
         }
+
 
         fun configureUi(customizationPreference: CustomizationPreference) {
             assertInitialized()
@@ -150,7 +143,7 @@ class NewPaymentSdk(
         private fun assertInitialized() {
             if (instance == null) {
                 throw RuntimeException(
-                        "Payment SDK is not initialized, make sure you called initialize method before using"
+                    "Payment SDK is not initialized, make sure you called initialize method before using"
                 )
             }
         }
@@ -174,5 +167,8 @@ class NewPaymentSdk(
         fun reset() {
             initialized = false
         }
+
     }
+
+
 }

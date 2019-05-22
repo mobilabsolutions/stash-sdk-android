@@ -32,7 +32,7 @@ class UiRequestHandler @Inject constructor() {
     class UserCancelled : RuntimeException("User cancelled")
 
     @Inject
-    lateinit var integrations: Set<@JvmSuppressWildcards Integration>
+    lateinit var integrations: Map<@JvmSuppressWildcards Integration, @JvmSuppressWildcards Set<@JvmSuppressWildcards PaymentMethodType>>
 
     @Inject
     lateinit var applicationContext: Context
@@ -88,8 +88,10 @@ class UiRequestHandler @Inject constructor() {
         processing.set(false)
     }
 
-    internal fun availablePaymentMethods(): List<PaymentMethodDefinition> {
-        return integrations.flatMap { it.getSupportedPaymentMethodDefinitions() }
+    internal fun availablePaymentMethods(): List<PaymentMethodType> {
+        return integrations.values.flatMap {
+            it.toList()
+        }
     }
 
     /**

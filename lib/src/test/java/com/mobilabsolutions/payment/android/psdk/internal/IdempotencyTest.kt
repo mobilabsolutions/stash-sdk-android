@@ -26,7 +26,7 @@ class IdempotencyTest {
         val gson: Gson = GsonBuilder()
             .registerTypeHierarchyAdapter(Throwable::class.java, ThrowableSerializer())
             .create()
-        val one: String = gson.toJson(IdempotencyData(System.currentTimeMillis(), PaymentMethodType.CREDIT_CARD, null, TemporaryException("Temporary Exception")))
+        val one: String = gson.toJson(IdempotencyData(System.currentTimeMillis(), PaymentMethodType.CC, null, TemporaryException("Temporary Exception")))
         const val KEY_1 = "36ac6a9c-2089-4e92-9ff9-111111111111"
         const val VALUE_1: String = "{\"timestamp\":1557152076418,\"paymentMethodType\":\"CC\",\"paymentMethodAlias\":{\"alias\":\"AliasOne\",\"paymentMethodType\":\"CC\"}}"
         const val KEY_2 = "36ac6a9c-2089-4e92-9ff9-222222222222"
@@ -56,8 +56,8 @@ class IdempotencyTest {
         val idempotencyKey = "36ac6a9c-2089-4e92-9ff9-245e89dace06"
         val observer = TestObserver<PaymentMethodAlias>()
 
-        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CREDIT_CARD) {
-            Single.just(PaymentMethodAlias("AnAlias", PaymentMethodType.CREDIT_CARD))
+        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
+            Single.just(PaymentMethodAlias("AnAlias", PaymentMethodType.CC))
         }.subscribe(observer)
 
         observer
@@ -69,7 +69,7 @@ class IdempotencyTest {
         val idempotencyKey = "36ac6a9c-2089-4e92-9ff9-245e89dace06"
         val observer = TestObserver<PaymentMethodAlias>()
 
-        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CREDIT_CARD) {
+        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
             Single.error(TemporaryException("Temporary Exception"))
         }.subscribe(observer)
 
@@ -81,8 +81,8 @@ class IdempotencyTest {
     fun testRegistrationSuccessWithIdempotency() {
         val observer = TestObserver<PaymentMethodAlias>()
 
-        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(KEY_1, PaymentMethodType.CREDIT_CARD) {
-            Single.just(PaymentMethodAlias("AliasTwo", PaymentMethodType.CREDIT_CARD))
+        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(KEY_1, PaymentMethodType.CC) {
+            Single.just(PaymentMethodAlias("AliasTwo", PaymentMethodType.CC))
         }.subscribe(observer)
 
         observer
@@ -96,8 +96,8 @@ class IdempotencyTest {
     fun testRegistrationFailureWithIdempotency() {
         val observer = TestObserver<PaymentMethodAlias>()
 
-        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(KEY_2, PaymentMethodType.CREDIT_CARD) {
-            Single.just(PaymentMethodAlias("AliasTwo", PaymentMethodType.CREDIT_CARD))
+        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(KEY_2, PaymentMethodType.CC) {
+            Single.just(PaymentMethodAlias("AliasTwo", PaymentMethodType.CC))
         }.subscribe(observer)
 
         observer
@@ -109,7 +109,7 @@ class IdempotencyTest {
         val observer = TestObserver<PaymentMethodAlias>()
 
         IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(KEY_1, PaymentMethodType.SEPA) {
-            Single.just(PaymentMethodAlias("AliasTwo", PaymentMethodType.CREDIT_CARD))
+            Single.just(PaymentMethodAlias("AliasTwo", PaymentMethodType.CC))
         }.subscribe(observer)
 
         observer

@@ -40,7 +40,7 @@ open class PaymentSdkModule(
     private val publicKey: String,
     private val mobilabUrl: String,
     private val applicationContext: Application,
-    private val integrationInitializers: Map<IntegrationInitialization, PaymentMethodType>,
+    private val integrationInitializers: Map<IntegrationInitialization, Set<PaymentMethodType>>,
     private val testMode: Boolean
 ) {
     val MOBILAB_TIMEOUT = 60L
@@ -228,7 +228,7 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    fun providePspIntegrationsRegistered(): Map<Integration, PaymentMethodType> {
+    fun providePspIntegrationsRegistered(): Map<Integration, Set<PaymentMethodType>> {
         return integrationInitializers.filter { it.key.initializedOrNull() != null }
             .mapKeys { it.key.initializedOrNull() as Integration }
     }

@@ -38,9 +38,14 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
 
         var integration: BraintreeIntegration? = null
 
+
+        override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.PAYPAL)
+
         override fun create(enabledPaymentMethodTypeSet: Set<PaymentMethodType>): IntegrationInitialization {
             return object : IntegrationInitialization {
+
                 override val enabledPaymentMethodTypes = enabledPaymentMethodTypeSet
+
                 override fun initializedOrNull(): Integration? {
                     return integration
                 }
@@ -85,10 +90,6 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         ).subscribeOn(Schedulers.io()).andThen(
             Single.just(registrationRequest.standardizedData.aliasId)
         )
-    }
-
-    override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
-        return listOf(PaymentMethodDefinition("Braintree-Paypal", identifier, PaymentMethodType.PAYPAL))
     }
 
     override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {

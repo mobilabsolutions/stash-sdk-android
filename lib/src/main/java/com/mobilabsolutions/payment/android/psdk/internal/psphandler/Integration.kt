@@ -18,16 +18,12 @@ interface Integration {
 
     fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String>
 
-    fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition>
-
     fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>>
-
-    fun supportsPaymentMethods(methodType: PaymentMethodType): Boolean {
-        return getSupportedPaymentMethodDefinitions().filter { it.paymentMethodType == methodType }.isNotEmpty()
-    }
 }
 
 interface IntegrationCompanion {
+
+    val supportedPaymentMethodTypes : Set<PaymentMethodType>
 
     fun create(enabledPaymentMethodTypeSet: Set<PaymentMethodType>): IntegrationInitialization
 }

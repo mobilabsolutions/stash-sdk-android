@@ -52,7 +52,7 @@ class PaymentMethodChoiceFragment : Fragment() {
             explanationTextView.applyTextCustomization(customizationPreference)
         }
 
-        uiRequestHandler.availablePaymentMethods().forEach { Timber.d("Method: ${it.paymentMethodType.name}") }
+        uiRequestHandler.availablePaymentMethods().forEach { Timber.d("Method: ${it.name}") }
 
         paymentMethodRecyclerView.layoutManager = LinearLayoutManager(context)
         paymentMethodRecyclerView.adapter = paymentMethodAdapter
@@ -81,7 +81,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     }
 
     class PaymentMethodAdapter(
-        val availablePaymentMethods: List<PaymentMethodDefinition>,
+        val availablePaymentMethods: List<PaymentMethodType>,
         val paymentMethodSubject: ReplaySubject<PaymentMethodType>,
         val customizationPreference: CustomizationPreference
     ) : RecyclerView.Adapter<PaymentMethodViewHolder>() {
@@ -95,23 +95,23 @@ class PaymentMethodChoiceFragment : Fragment() {
         }
 
         override fun onBindViewHolder(holder: PaymentMethodViewHolder, position: Int) {
-            val paymentMethodDefinition = availablePaymentMethods[position]
+            val paymentMethodType = availablePaymentMethods[position]
             holder.paymentMethodName.setText(
-                    when (paymentMethodDefinition.paymentMethodType) {
-                        PaymentMethodType.CREDIT_CARD -> R.string.payment_chooser_credit_card
+                    when (paymentMethodType) {
+                        PaymentMethodType.CC -> R.string.payment_chooser_credit_card
                         PaymentMethodType.SEPA -> R.string.payment_chooser_sepa
                         PaymentMethodType.PAYPAL -> R.string.payment_chooser_paypal
                     }
             )
             holder.paymentMethodIcon.setImageResource(
-                    when (paymentMethodDefinition.paymentMethodType) {
-                        PaymentMethodType.CREDIT_CARD -> R.drawable.ic_credit
+                    when (paymentMethodType) {
+                        PaymentMethodType.CC -> R.drawable.ic_credit
                         PaymentMethodType.SEPA -> R.drawable.ic_sepa_symbol
                         PaymentMethodType.PAYPAL -> R.drawable.ic_paypal_grey
                     }
             )
             holder.rootView.setOnClickListener {
-                paymentMethodSubject.onNext(paymentMethodDefinition.paymentMethodType)
+                paymentMethodSubject.onNext(paymentMethodType)
             }
             CustomizationExtensions {
                 holder.paymentMethodName.applyTextCustomization(customizationPreference)

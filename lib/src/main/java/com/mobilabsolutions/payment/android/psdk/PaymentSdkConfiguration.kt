@@ -11,7 +11,7 @@ data class PaymentSdkConfiguration(
     val publicKey: String,
     val endpoint: String? = null,
     val integration: IntegrationCompanion? = null,
-    val integrationMap: Map<IntegrationCompanion, PaymentMethodType>? = null,
+    val integrationMap: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null,
     val customizationPreference: CustomizationPreference? = null,
     val testMode: Boolean = false,
     val sslFactory: SSLSocketFactory? = null,
@@ -19,14 +19,14 @@ data class PaymentSdkConfiguration(
 
 ) {
     class Builder() {
-        var publishableKey: String = ""
-        var endpoint: String? = null
-        var integration: IntegrationCompanion? = null
-        var integrations: Map<IntegrationCompanion, PaymentMethodType>? = null
-        var customizationPreference: CustomizationPreference? = null
-        var testMode: Boolean = false
-        var sslFactory: SSLSocketFactory? = null
-        var x509TrustManager: X509TrustManager? = null
+        private var publishableKey: String = ""
+        private var endpoint: String? = null
+        private var integration: IntegrationCompanion? = null
+        private var integrations: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null
+        private var customizationPreference: CustomizationPreference? = null
+        private var testMode: Boolean = false
+        private var sslFactory: SSLSocketFactory? = null
+        private var x509TrustManager: X509TrustManager? = null
 
         fun setPublishableKey(publishableKey: String): Builder {
             this.publishableKey = publishableKey
@@ -43,10 +43,19 @@ data class PaymentSdkConfiguration(
             return this
         }
 
-        fun setIntegrations(integrations: Map<IntegrationCompanion, PaymentMethodType>): Builder {
-            this.integrations = integrations
+        fun setIntegrations(integrations: List<IntegrationToPaymentMapping>): Builder {
+            this.integrations = integrations.map {
+                it.integration to it.paymentMethodType
+            }.flatMap { pair ->
+                pair.second.toList().map { pair.first to it  }
+            }
             return this
         }
+
+//        fun setIntegrations(integrations: List<Pair<IntegrationCompanion, PaymentMethodType>>): Builder {
+//            this.integrations = integrations
+//            return this
+//        }
 
         fun setCustomization(customizationPreference: CustomizationPreference?) : Builder {
             this.customizationPreference = customizationPreference
@@ -82,3 +91,5 @@ data class PaymentSdkConfiguration(
         }
     }
 }
+
+class IntegrationToPaymentMapping(val integration : IntegrationCompanion, vararg val paymentMethodType: PaymentMethodType)

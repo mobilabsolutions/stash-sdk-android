@@ -2,6 +2,8 @@ package com.mobilabsolutions.payment.sample;
 
 import android.app.Application;
 
+import com.mobilabsolutions.payment.android.psdk.IntegrationToPaymentMapping;
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType;
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk;
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration;
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager;
@@ -14,6 +16,8 @@ import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
 import org.threeten.bp.LocalDate;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -34,9 +38,10 @@ public class JavaSketch {
         Set<IntegrationCompanion> integrations = new HashSet<>();
         integrations.add(BsPayoneIntegration.Companion);
 
-        PaymentSdkConfiguration paymentSdkConfiguration = new PaymentSdkConfiguration.Builder(BuildConfig.newBsApiKey)
+        PaymentSdkConfiguration paymentSdkConfiguration = new PaymentSdkConfiguration.Builder()
+                .setPublishableKey(BuildConfig.newBsApiKey)
                 .setEndpoint(BuildConfig.mobilabBackendUrl)
-                .setIntegrations(integrations)
+                .setIntegration(BsPayoneIntegration.Companion)
                 .build();
         PaymentSdk.initalize(context, paymentSdkConfiguration);
         RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
@@ -57,11 +62,12 @@ public class JavaSketch {
                             //Handle error
                         }
                 );
-        Set<IntegrationCompanion> integrations2 = new HashSet<>();
-        integrations2.add(BraintreeIntegration.Companion);
-        integrations2.add(BsPayoneIntegration.Companion);
+        List<IntegrationToPaymentMapping> integrations2 = new LinkedList<>();
+        integrations2.add(new IntegrationToPaymentMapping(BraintreeIntegration.Companion, PaymentMethodType.PAYPAL));
+        integrations2.add(new IntegrationToPaymentMapping(BsPayoneIntegration.Companion, PaymentMethodType.SEPA));
 
-        PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder("YourPublicKey")
+        PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+                .setPublishableKey("YourPublicKey")
                 .setEndpoint("https://payment-dev.mblb.net/api/")
                 .setIntegrations(integrations2)
                 .setTestMode(true)
