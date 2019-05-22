@@ -38,6 +38,10 @@ public final class PaymentSdk {
         NewPaymentSdk.Companion.initialize(applicationContext, paymentSdkConfiguration);
     }
 
+    public static void configureUi(CustomizationPreference customizationPreference) {
+
+    }
+
 
     /**
      * Retrieve the instance of registration manager used to register various payment methods

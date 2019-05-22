@@ -24,16 +24,16 @@ class NewRegistrationManager @Inject constructor(
             ?: UUID.randomUUID()).toString())
     }
 
-    override fun registerSepa(sepaData: SepaData, billingData: BillingData, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
+    override fun registerSepaAccount(sepaData: SepaData, billingData: BillingData, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
         return pspCoordinator.handleRegisterSepa(sepaData = sepaData, billingData = billingData, idempotencyKey = (idempotencyKey
             ?: UUID.randomUUID()).toString())
     }
 
-    override fun getAvailablePaymentMethods(): Set<PaymentMethodType> {
+    override fun getAvailablePaymentMethodsTypes(): Set<PaymentMethodType> {
         return pspCoordinator.getAvailablePaymentMethods()
     }
 
-    override fun registerPaymentMehodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
+    override fun registerPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
         return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, (idempotencyKey
             ?: UUID.randomUUID()).toString())
     }

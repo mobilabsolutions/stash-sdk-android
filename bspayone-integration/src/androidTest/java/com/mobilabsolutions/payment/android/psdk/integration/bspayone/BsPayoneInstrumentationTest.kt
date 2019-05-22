@@ -113,7 +113,7 @@ class BsPayoneRegistrationInstrumentationTest {
     fun testBSSepaRegistration() {
         val latch = CountDownLatch(1)
 
-        val registrationDisposable = registrationManager.registerSepa(
+        val registrationDisposable = registrationManager.registerSepaAccount(
                 validSepaData, validBillingData)
                 .subscribeOn(Schedulers.io())
                 .subscribe(

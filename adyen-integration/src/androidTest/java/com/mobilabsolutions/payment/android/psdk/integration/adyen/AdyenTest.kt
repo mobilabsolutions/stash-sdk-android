@@ -170,7 +170,7 @@ class AdyenTest {
     fun testSepaRegistration() {
         setUp()
         val latch = CountDownLatch(1)
-        registrationManager.registerSepa(validSepaData)
+        registrationManager.registerSepaAccount(validSepaData)
                 .subscribeBy(
                 onSuccess = {
                     assertTrue(it.alias.isNotEmpty())

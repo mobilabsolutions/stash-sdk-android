@@ -7,7 +7,6 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration;
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager;
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration;
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration;
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration;
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 import com.mobilabsolutions.payment.android.psdk.model.BillingData;
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
@@ -70,7 +69,7 @@ public class JavaSketch {
 
         PaymentSdk.initalize(context, configuration);
 
-        registrationManager.registerPaymentMehodUsingUi(null, null, null);
+        registrationManager.registerPaymentMethodUsingUi(null, null, null);
 
 //        UiDetailType uiDetailType = UiDetailType.NAME
 

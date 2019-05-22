@@ -10,33 +10,55 @@ import javax.net.ssl.X509TrustManager
 data class PaymentSdkConfiguration(
     val publicKey: String,
     val endpoint: String? = null,
-    val integrations: Set<IntegrationCompanion> = emptySet(),
+    val integration : IntegrationCompanion? = null,
+    val integrations: Map<IntegrationCompanion, PaymentMethodType>? = null,
+    val customizationPreference: CustomizationPreference? = null,
     val testMode: Boolean = false,
     val sslFactory: SSLSocketFactory? = null,
     val x509TrustManager: X509TrustManager? = null
 
 ) {
-    class Builder(val publicKey: String) {
-        var configuration = PaymentSdkConfiguration(publicKey)
+    class Builder() {
+        val publishableKey: String,
+        val endpoint: String? = null,
+        val integration : IntegrationCompanion? = null,
+        val integrations: Map<IntegrationCompanion, PaymentMethodType>? = null,
+        val customizationPreference: CustomizationPreference? = null,
+        val testMode: Boolean = false,
+        val sslFactory: SSLSocketFactory? = null,
+        val x509TrustManager: X509TrustManager? = null
+
+        fun setPublishableKey(publishableKey : String){
+
+            return this
+        }
+
         fun setEndpoint(endpoint: String): Builder {
-            configuration = configuration.copy(endpoint = endpoint)
+
             return this
         }
-        fun setIntegrations(integrations: Set<IntegrationCompanion>): Builder {
-            configuration = configuration.copy(integrations = integrations)
+        fun setIntegration(integration: IntegrationCompanion): Builder {
+
             return this
         }
+        fun setIntegrations(integrations: Map<IntegrationCompanion, PaymentMethodType>): Builder {
+
+            return this
+        }
+
+        fun setCustomization
+
         fun setTestMode(testMode: Boolean): Builder {
-            configuration = configuration.copy(testMode = testMode)
+
             return this
         }
         fun setSslSocketFactory(sslSocketFactory: SSLSocketFactory): Builder {
-            configuration = configuration.copy(sslFactory = sslSocketFactory)
+
             return this
         }
 
         fun setX509TrustManager(x509TrustManager: X509TrustManager): Builder {
-            configuration = configuration.copy(x509TrustManager = x509TrustManager)
+
             return this
         }
 

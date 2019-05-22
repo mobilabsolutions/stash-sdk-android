@@ -132,7 +132,7 @@
 //    fun testBSSepaRegistration() {
 //        val latch = CountDownLatch(1)
 //
-//        val registrationDisposable = registrationManager.registerSepa(
+//        val registrationDisposable = registrationManager.registerSepaAccount(
 //                validSepaData)
 //                .subscribeOn(Schedulers.io())
 //                .subscribe(
