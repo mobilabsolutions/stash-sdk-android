@@ -46,12 +46,14 @@ public class JavaSketch {
         PaymentSdk.initalize(context, paymentSdkConfiguration);
         RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 
-        CreditCardData creditCardData = CreditCardData.create(
-                "123",
-                LocalDate.of(2011, 11, 1),
-                "123",
-                "Bla"
-        );
+        CreditCardData creditCardData = new CreditCardData.Builder()
+                .setNumber("123123123123")
+                .setCvv("123")
+                .setBillingData(new BillingData.Builder().setFirstName("Holder").setLastName("Holderman").build())
+                .setExpiryMonth(11)
+                .setExpiryYear(2020)
+                .build();
+
 
         Disposable disposable = registrationManager.registerCreditCard(creditCardData, BillingData.empty(), UUID.randomUUID())
                 .subscribe(

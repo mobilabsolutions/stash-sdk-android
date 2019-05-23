@@ -13,7 +13,7 @@ data class SepaData(
 
 ) {
     companion object {
-        internal val IBAN = "IBAN"
+        val IBAN = "IBAN"
     }
 
     @Transient
@@ -50,12 +50,11 @@ data class SepaData(
         }
 
         fun build(): SepaData {
-            SepaData(
+            return SepaData(
                 bic,
                 iban!!,
                 billingData
             )
         }
-
     }
 }

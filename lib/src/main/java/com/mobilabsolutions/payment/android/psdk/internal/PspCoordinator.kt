@@ -62,9 +62,9 @@ class PspCoordinator @Inject constructor(
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
 
-        billingData.country = additionalUIData.getOrNull(BillingData.COUNTRY)
-        billingData.firstName = additionalUIData.getOrNull(BillingData.FIRST_NAME)
-        billingData.lastName = additionalUIData.getOrNull(BillingData.LAST_NAME)
+        billingData.country = additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_COUNTRY)
+        billingData.firstName = additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_FIRST_NAME)
+        billingData.lastName = additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_LAST_NAME)
 
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
             chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
@@ -108,9 +108,9 @@ class PspCoordinator @Inject constructor(
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
 
-            billingData.country = additionalUIData.getOrNull(BillingData.COUNTRY)
-            billingData.firstName = additionalUIData.getOrNull(SepaData.FIRST_NAME)
-            billingData.lastName = additionalUIData.getOrNull(SepaData.LAST_NAME)
+            billingData.country = additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_COUNTRY)
+            billingData.firstName = additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_FIRST_NAME)
+            billingData.lastName = additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_LAST_NAME)
 
         // TODO validate
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.SEPA) {

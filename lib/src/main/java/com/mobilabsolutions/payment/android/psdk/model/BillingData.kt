@@ -28,9 +28,9 @@ data class BillingData(
         @JvmStatic
         fun empty() = BillingData()
 
-        internal const val FIRST_NAME = "FIRST_NAME"
-        internal const val LAST_NAME = "LAST_NAME"
-        internal const val COUNTRY = "COUNTRY"
+        const val ADDITIONAL_DATA_FIRST_NAME = "ADDITIONAL_DATA_FIRST_NAME"
+        const val ADDITIONAL_DATA_LAST_NAME = "ADDITIONAL_DATA_LAST_NAME"
+        const val ADDITIONAL_DATA_COUNTRY = "ADDITIONAL_DATA_COUNTRY"
     }
 
     class Builder {

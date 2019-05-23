@@ -148,10 +148,10 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         saveButton.setOnClickListener {
             viewState?.let {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
-                dataMap[SepaData.FIRST_NAME] = it.firstName
-                dataMap[SepaData.LAST_NAME] = it.lastName
+                dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
+                dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[SepaData.IBAN] = it.iban
-                dataMap[BillingData.COUNTRY] = it.country
+                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = it.country
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }
         }
