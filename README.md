@@ -356,9 +356,10 @@ val requestUUID = UUID.randomUUID()
 val registrationManager = PaymentSdk.getRegistrationManager()
 registrationManager.registerSepa(sepaData, requestUUID)
         .subscribeBy(
-                onSuccess = {
+                onSuccess = { paymentAlias ->
                     // Handle showing credit card payment method in UI, i.e.:
-                    showCreditCardMask(aliasInfo.creditCardMask)
+                    val aliasInfo = paymentAlias.extraAliasInfo as SepaExtraInfo
+                    showSepaMask(aliasInfo.creditCardMask)
                 },
                 onError = {
                     // Handle error

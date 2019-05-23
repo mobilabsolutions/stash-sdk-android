@@ -89,7 +89,7 @@ class KotlinSketch {
                     sendAliasToBackend(paymentAlias.alias)
                     // Handle showing credit card payment method in UI, i.e.:
                     val extraAliasInfo = paymentAlias.extraAliasInfo as ExtraAliasInfo.SepaExtraInfo
-                    showCreditCardMask(extraAliasInfo.maskedIban)
+                    showSepaMask(extraAliasInfo.maskedIban)
                 },
                 onError = {
                     // Handle exceptions
