@@ -186,7 +186,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(), customizationPreference = customizationPreference) {
-                val selectedExpiry = LocalDate.of(it.second, it.first, 1)
+                val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
+                val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
+                val selectedExpiry = LocalDate.of(it.second, it.first, lastDay)
                 expDateSubject.onNext(selectedExpiry)
                 val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
                 expirationDateTextView.text = expDate

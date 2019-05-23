@@ -20,7 +20,7 @@ import io.reactivex.Single;
 //    }
 //
 //    @Override
-//    public Single<String> registerSepa(SepaData sepaData, BillingData billingData) {
+//    public Single<String> registerSepaAccount(SepaData sepaData, BillingData billingData) {
 //        return Single.just("1234-SEPA");
 //    }
 //

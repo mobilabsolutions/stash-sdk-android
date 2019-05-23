@@ -25,17 +25,14 @@ import io.reactivex.Observable;
  */
 public final class PaymentSdk {
 
-    /**
-     * Used to initializa the SDK by providing public key
-     *
-     * @param publicKey
-     * @param applicationContext context of the application
-     * @param integration        PSP integration
-     */
 
 
     public static void initalize(Application applicationContext, PaymentSdkConfiguration paymentSdkConfiguration) {
         NewPaymentSdk.Companion.initialize(applicationContext, paymentSdkConfiguration);
+    }
+
+    public static void configureUi(CustomizationPreference customizationPreference) {
+        NewPaymentSdk.Companion.configureUi(customizationPreference);
     }
 
 

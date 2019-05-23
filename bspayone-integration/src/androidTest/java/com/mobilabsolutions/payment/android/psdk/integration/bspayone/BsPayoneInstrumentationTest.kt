@@ -3,6 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 import android.app.Application
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
@@ -65,11 +66,12 @@ class BsPayoneRegistrationInstrumentationTest {
     fun setUp() {
         val context = InstrumentationRegistry.getContext().applicationContext as Application
 
-        val integration = BsPayoneIntegration.create()
+        val methods = setOf(PaymentMethodType.SEPA, PaymentMethodType.CC)
+        val integration = BsPayoneIntegration.create(methods)
 
         val graph = DaggerBsPayoneTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
-                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, listOf(integration), true))
+                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
                 .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
                 .build()
 
@@ -113,7 +115,7 @@ class BsPayoneRegistrationInstrumentationTest {
     fun testBSSepaRegistration() {
         val latch = CountDownLatch(1)
 
-        val registrationDisposable = registrationManager.registerSepa(
+        val registrationDisposable = registrationManager.registerSepaAccount(
                 validSepaData, validBillingData)
                 .subscribeOn(Schedulers.io())
                 .subscribe(

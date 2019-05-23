@@ -24,13 +24,13 @@ interface RegistrationManager {
      * @param sepaData sepa card information
      * @return string representing payment aliasId
      */
-    fun registerSepa(sepaData: SepaData, billingData: BillingData = BillingData(), idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
+    fun registerSepaAccount(sepaData: SepaData, billingData: BillingData = BillingData(), idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
 
     /**
      * Returns a list of supported payment methods
      * @return list of supported payment methods
      */
-    fun getAvailablePaymentMethods(): Set<PaymentMethodType>
+    fun getAvailablePaymentMethodsTypes(): Set<PaymentMethodType>
 
     /**
      * Let payment SDK handle data using built-in UI components
@@ -39,7 +39,7 @@ interface RegistrationManager {
      * @param specificPaymentMethodType skip payment method chooser and immediately show specific type entry UI
      * @returnstring string representing aliasId
      */
-    fun registerPaymentMehodUsingUi(activity: Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
+    fun registerPaymentMethodUsingUi(activity: Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
 }
 
 data class PaymentMethodAlias(val alias: String, val paymentMethodType: PaymentMethodType)

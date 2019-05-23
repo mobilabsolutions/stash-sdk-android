@@ -13,6 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -44,12 +45,12 @@ class AdyenTest {
 
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext() as Application
-
-        val integration = AdyenIntegration.create()
+        val methods = setOf(PaymentMethodType.SEPA, PaymentMethodType.CC)
+        val integration = AdyenIntegration.create(methods)
 
         val graph = DaggerAdyenTestPaymentSdkComponent.builder()
                 .sslSupportModule(SslSupportModule(null, null))
-                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, listOf(integration), true))
+                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
                 .adyenModule(AdyenModule())
                 .build()
 
@@ -170,7 +171,7 @@ class AdyenTest {
     fun testSepaRegistration() {
         setUp()
         val latch = CountDownLatch(1)
-        registrationManager.registerSepa(validSepaData)
+        registrationManager.registerSepaAccount(validSepaData)
                 .subscribeBy(
                 onSuccess = {
                     assertTrue(it.alias.isNotEmpty())
