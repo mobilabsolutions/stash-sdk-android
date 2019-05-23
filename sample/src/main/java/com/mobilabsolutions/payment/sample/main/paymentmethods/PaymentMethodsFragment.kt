@@ -5,8 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.lifecycle.Observer
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
@@ -48,6 +50,14 @@ class PaymentMethodsFragment : BaseFragment() {
                 }
                 dialog.setNegativeButton("No") { view, _ -> view.dismiss() }
                 dialog.show()
+            }
+        })
+
+        viewModel.error.observe(viewLifecycleOwner, Observer<Throwable> { throwable ->
+            this.view?.let {
+                SnackBarExtensions {
+                    throwable.getErrorSnackBar(it).show()
+                }
             }
         })
         binding.paymentMethodsRv.setController(controller)
