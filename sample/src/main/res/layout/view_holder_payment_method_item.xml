@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@{paymentMethod.alias}"
+                android:text="@{paymentMethod.description}"
                 android:textAppearance="@style/itemDescription"
                 android:textIsSelectable="true"
                 app:layout_constraintBottom_toBottomOf="parent"

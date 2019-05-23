@@ -25,8 +25,8 @@ object PaymentSdkBuildConfigs {
     val minSdk = 21
     val targetSdk = 28
     val buildtoolsVersion = "28.0.3"
-    val vapianoVersionCode = "1"
-    val vapianoVersionName = "1.2.0"
+    val sdkVersionCode = "1"
+    val sdkVersionName = "1.2.0"
 }
 
 object DemoRelease {

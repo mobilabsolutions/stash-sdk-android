@@ -3,8 +3,12 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import com.mobilabsolutions.payment.android.psdk.CreditCardExtraInfo
+import com.mobilabsolutions.payment.android.psdk.CreditCardType
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.PaypalExtraInfo
+import com.mobilabsolutions.payment.android.psdk.SepaExtraInfo
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
@@ -80,7 +84,16 @@ class PspCoordinator @Inject constructor(
                             val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
 
                             pspAliasSingle.map { alias ->
-                                PaymentMethodAlias(alias, PaymentMethodType.CC)
+                                val cardType = CreditCardType.resolveCreditCardType(standardizedData.creditCardData.number)
+                                val lastDigits = standardizedData.creditCardData.number.takeLast(4)
+                                val creditCardExtraInfo = CreditCardExtraInfo(
+                                    creditCardType = cardType,
+                                    creditCardMask = "${cardType.name}-$lastDigits",
+                                    expiryMonth = standardizedData.creditCardData.expiryMonth,
+                                    expiryYear = standardizedData.creditCardData.expiryYear
+
+                                )
+                                PaymentMethodAlias(alias, PaymentMethodType.CC, creditCardExtraInfo = creditCardExtraInfo)
                             }
                         }
             }
@@ -125,7 +138,7 @@ class PspCoordinator @Inject constructor(
 
                             chosenIntegration.handleRegistrationRequest(registrationRequest)
                                     .map {
-                                        PaymentMethodAlias(it, PaymentMethodType.SEPA)
+                                        PaymentMethodAlias(it, PaymentMethodType.SEPA, sepaExtraInfo = SepaExtraInfo(standardizedData.sepaData.iban))
                                     }
                         }
             }
@@ -208,6 +221,8 @@ class PspCoordinator @Inject constructor(
             it.value.contains(PaymentMethodType.PAYPAL)
         }.keys.first()
 
+        var email = ""
+
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.PAYPAL) {
             chosenIntegration.getPreparationData(PaymentMethodType.PAYPAL).flatMap { preparationData ->
                 mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
@@ -219,13 +234,14 @@ class PspCoordinator @Inject constructor(
                                     AdditionalRegistrationData(aliasResponse.pspExtra),
                                     requestId)
                                     .flatMap {
+                                        email = it[BillingData.ADDITIONAL_DATA_EMAIL] ?: ""
                                         val additionalData = AdditionalRegistrationData(it)
                                         val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
                                         val registrationRequest = RegistrationRequest(standardizedData, additionalData)
                                         chosenIntegration.handleRegistrationRequest(registrationRequest)
                                     }
                         }.map {
-                            PaymentMethodAlias(it, PaymentMethodType.PAYPAL)
+                            PaymentMethodAlias(it, PaymentMethodType.PAYPAL, paypalExtraInfo = PaypalExtraInfo(email = email))
                         }
             }
         }

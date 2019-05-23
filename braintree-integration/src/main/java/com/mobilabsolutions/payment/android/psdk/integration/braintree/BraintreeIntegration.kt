@@ -12,6 +12,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalR
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -22,7 +23,6 @@ import javax.inject.Inject
 class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
     override val identifier = "BRAINTREE"
 
-    val DESCRIPTION = "DESCRIPTION"
     val NONCE = "NONCE"
     val DEVICE_FINGERPRINT = "DEVICE_FINGERPRINT"
 
@@ -94,7 +94,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMap {
             Single.just(
                     mapOf(
-                            DESCRIPTION to it.first,
+                            BillingData.ADDITIONAL_DATA_EMAIL to it.first,
                             NONCE to it.second,
                             DEVICE_FINGERPRINT to it.third
 

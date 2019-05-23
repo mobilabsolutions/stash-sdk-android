@@ -66,7 +66,12 @@ class PaymentMethodsViewModel @AssistedInject constructor(
             PaymentMethodType.SEPA -> "SEPA"
             PaymentMethodType.PAYPAL -> "PayPal"
         }
-        val paymentMethod = PaymentMethod(alias = paymentMethodAlias.alias, _type = type)
+        val description = when (paymentMethodAlias.paymentMethodType) {
+            PaymentMethodType.CC -> paymentMethodAlias.creditCardExtraInfo?.creditCardMask
+            PaymentMethodType.SEPA -> paymentMethodAlias.sepaExtraInfo?.iban
+            PaymentMethodType.PAYPAL -> paymentMethodAlias.paypalExtraInfo?.email
+        } ?: ""
+        val paymentMethod = PaymentMethod(alias = paymentMethodAlias.alias, _type = type, description = description)
         scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(paymentMethod))
     }
 
