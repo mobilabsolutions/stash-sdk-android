@@ -83,7 +83,7 @@ class RegistrationController @Inject constructor() : Controller() {
 //        return registrationManager.registerSepaAccount(
 //                SepaData(
 //                        bic = bic,
-//                        iban = iban,
+//                        maskedIban = maskedIban,
 //                        holder = holderName
 //                ),
 //                BillingData(

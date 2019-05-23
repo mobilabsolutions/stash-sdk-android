@@ -3,6 +3,7 @@ package com.mobilabsolutions.payment.sample.main.paymentmethods
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
@@ -66,11 +67,11 @@ class PaymentMethodsViewModel @AssistedInject constructor(
             PaymentMethodType.SEPA -> "SEPA"
             PaymentMethodType.PAYPAL -> "PayPal"
         }
-        val description = when (paymentMethodAlias.paymentMethodType) {
-            PaymentMethodType.CC -> paymentMethodAlias.creditCardExtraInfo?.creditCardMask
-            PaymentMethodType.SEPA -> paymentMethodAlias.sepaExtraInfo?.iban
-            PaymentMethodType.PAYPAL -> paymentMethodAlias.paypalExtraInfo?.email
-        } ?: ""
+        val description = when (val aliasInfo = paymentMethodAlias.extraAliasInfo) {
+            is ExtraAliasInfo.CreditCardExtraInfo -> aliasInfo.creditCardMask
+            is ExtraAliasInfo.SepaExtraInfo -> aliasInfo.maskedIban
+            is ExtraAliasInfo.PaypalExtraInfo -> aliasInfo.email
+        }
         val paymentMethod = PaymentMethod(alias = paymentMethodAlias.alias, _type = type, description = description)
         scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(paymentMethod))
     }

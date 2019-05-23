@@ -1,11 +1,9 @@
 package com.mobilabsolutions.payment.android.psdk
 
 import android.app.Activity
-import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.Single
-import org.threeten.bp.LocalDate
 import java.util.UUID
 
 /**
@@ -18,14 +16,14 @@ interface RegistrationManager {
      * @param creditCardData credit card information
      * @return string representing payment aliasId
      */
-    fun registerCreditCard(creditCardData: CreditCardData, billingData: BillingData = BillingData(), idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
+    fun registerCreditCard(creditCardData: CreditCardData, idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
 
     /**
      * Register a sepa debit account so you can use payment aliasId for future payments
      * @param sepaData sepa card information
      * @return string representing payment aliasId
      */
-    fun registerSepaAccount(sepaData: SepaData, billingData: BillingData = BillingData(), idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
+    fun registerSepaAccount(sepaData: SepaData, idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
 
     /**
      * Returns a list of supported payment methods
@@ -43,34 +41,59 @@ interface RegistrationManager {
     fun registerPaymentMethodUsingUi(activity: Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
 }
 
-
 data class PaymentMethodAlias(
     val alias: String,
     val paymentMethodType: PaymentMethodType,
-    val creditCardExtraInfo: CreditCardExtraInfo? = null,
-    val sepaExtraInfo: SepaExtraInfo? = null,
-    val paypalExtraInfo: PaypalExtraInfo? = null
-)
+    val extraAliasInfo: ExtraAliasInfo
+) {
+    fun getJavaExtraInfo(): ExtraAliasInfo.JavaExtraInfo {
+        extraAliasInfo.apply {
+            return when (this) {
+                is ExtraAliasInfo.CreditCardExtraInfo -> ExtraAliasInfo.JavaExtraInfo(creditCardExtraInfo = this)
+                is ExtraAliasInfo.SepaExtraInfo -> ExtraAliasInfo.JavaExtraInfo(sepaExtraInfo = this)
+                is ExtraAliasInfo.PaypalExtraInfo -> ExtraAliasInfo.JavaExtraInfo(paypalExtraInfo = this)
+            }
+        }
+    }
+}
 
+    sealed class ExtraAliasInfo {
 
-    data class CreditCardExtraInfo(
-        val creditCardMask: String,
-        val expiryMonth: Int,
-        val expiryYear: Int,
-        val creditCardType: CreditCardType
-    )
+        data class CreditCardExtraInfo(
+            val creditCardMask: String,
+            val expiryMonth: Int,
+            val expiryYear: Int,
+            val creditCardType: CreditCardType
+        ) : ExtraAliasInfo()
 
-    data class SepaExtraInfo(
-        val iban: String
-    )
+        data class SepaExtraInfo(
+            val maskedIban: String
+        ) : ExtraAliasInfo()
 
-    data class PaypalExtraInfo(
-        val email: String
-    )
+        data class PaypalExtraInfo(
+            val email: String
+        ) : ExtraAliasInfo()
 
+        data class JavaExtraInfo(
+            val creditCardExtraInfo: CreditCardExtraInfo? = null,
+            val sepaExtraInfo: SepaExtraInfo? = null,
+            val paypalExtraInfo: PaypalExtraInfo? = null
+        )
+    }
 
+enum class CreditCardType {
+    JCB,
+    AMEX,
+    DINERS,
+    VISA,
+    MASTER_CARD,
+    DISCOVER,
+    UNIONPAY,
+    MAESTRO,
+    UNKNOWN;
+}
 
-enum class CreditCardType(val regex: Regex) {
+enum class CreditCardTypeWithRegex(val regex: Regex) {
     JCB(Regex("^(?:2131|1800|35[0-9]{3})[0-9]{3,}$")),
     AMEX(Regex("^3[47][0-9]{1,13}$")),
     DINERS(Regex("^3(?:0[0-5]|[68][0-9])[0-9]{2,}$")),
@@ -84,26 +107,21 @@ enum class CreditCardType(val regex: Regex) {
     MAESTRO(Regex("^6[0-9]{1,18}$")),
     UNKNOWN(Regex(""));
 
-
     companion object {
         fun resolveCreditCardType(creditCardNumber: String): CreditCardType {
             return when {
-                AMEX.regex.matches(creditCardNumber) -> AMEX
-                DINERS.regex.matches(creditCardNumber) -> DINERS
-                VISA.regex.matches(creditCardNumber) -> VISA
-                MAESTRO_13.regex.matches(creditCardNumber) -> MAESTRO_13
-                MAESTRO_15.regex.matches(creditCardNumber) -> MAESTRO_15
-                MASTER_CARD.regex.matches(creditCardNumber) -> MASTER_CARD
-                DISCOVER.regex.matches(creditCardNumber) -> DISCOVER
-                UNIONPAY_16.regex.matches(creditCardNumber) -> UNIONPAY_16
-                UNIONPAY_19.regex.matches(creditCardNumber) -> UNIONPAY_19
-                MAESTRO.regex.matches(creditCardNumber) -> MAESTRO
-                else -> UNKNOWN
+                AMEX.regex.matches(creditCardNumber) -> CreditCardType.AMEX
+                DINERS.regex.matches(creditCardNumber) -> CreditCardType.DINERS
+                VISA.regex.matches(creditCardNumber) -> CreditCardType.VISA
+                MAESTRO_13.regex.matches(creditCardNumber) -> CreditCardType.MAESTRO
+                MAESTRO_15.regex.matches(creditCardNumber) -> CreditCardType.MAESTRO
+                MASTER_CARD.regex.matches(creditCardNumber) -> CreditCardType.MASTER_CARD
+                DISCOVER.regex.matches(creditCardNumber) -> CreditCardType.DISCOVER
+                UNIONPAY_16.regex.matches(creditCardNumber) -> CreditCardType.UNIONPAY
+                UNIONPAY_19.regex.matches(creditCardNumber) -> CreditCardType.UNIONPAY
+                MAESTRO.regex.matches(creditCardNumber) -> CreditCardType.MAESTRO
+                else -> CreditCardType.UNKNOWN
             }
         }
     }
-
-
 }
-
-

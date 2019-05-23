@@ -43,7 +43,7 @@
 //    )
 //    private var validSepaData: SepaData = SepaData(
 //            bic = "PBNKDEFF",
-//            iban = "DE63123456791212121212",
+//            maskedIban = "DE63123456791212121212",
 //            holder = "Holder Holderman"
 //    )
 //    private var validBillingData: BillingData = BillingData(

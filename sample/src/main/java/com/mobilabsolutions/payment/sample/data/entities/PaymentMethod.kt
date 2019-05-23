@@ -19,7 +19,7 @@ data class PaymentMethod(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
     @ColumnInfo(name = "alias") val alias: String = "",
     @ColumnInfo(name = "type") val _type: String = "Credit Card",
-    @ColumnInfo(name = "description") val description : String = "Description"
+    @ColumnInfo(name = "description") val description: String = "Description"
 ) : SampleEntity {
 
     @delegate:Ignore

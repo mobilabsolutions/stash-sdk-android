@@ -1,7 +1,9 @@
 package com.mobilabsolutions.payment.sample;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 
+import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo;
 import com.mobilabsolutions.payment.android.psdk.IntegrationToPaymentMapping;
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType;
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk;
@@ -30,8 +32,33 @@ import io.reactivex.disposables.Disposable;
  */
 public class JavaSketch {
 
+    void showCreditCardMask(String mask) {
+
+    }
+
+    void showSepaMask(String mask) {
+
+    }
+
+    void showPayPalEmail(String email) {
+
+    }
+
+    void sendAliasToBackend(String alias) {
+
+    }
+
+    void handleException(Throwable exception) {
+
+    }
+
+    void handleUnknownException(Throwable exception) {
+
+    }
+
+    @SuppressLint("CheckResult")
     public void bla() {
-        BillingData billingData = new BillingData.Builder().setEmail("test@test.test").build();
+//        BillingData billingData = new BillingData.Builder().setEmail("test@test.test").build();
         BillingData builtBillingData = new BillingData.Builder().build();
         Application context = null;
 
@@ -46,22 +73,44 @@ public class JavaSketch {
         PaymentSdk.initalize(context, paymentSdkConfiguration);
         RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 
+        BillingData billingData = new BillingData.Builder()
+                .setFirstName("Max")
+                .setLastName("Mustermann")
+                .build();
+
         CreditCardData creditCardData = new CreditCardData.Builder()
                 .setNumber("123123123123")
                 .setCvv("123")
-                .setBillingData(new BillingData.Builder().setFirstName("Holder").setLastName("Holderman").build())
+                .setBillingData(billingData)
                 .setExpiryMonth(11)
                 .setExpiryYear(2020)
                 .build();
 
 
-        Disposable disposable = registrationManager.registerCreditCard(creditCardData, BillingData.empty(), UUID.randomUUID())
+        registrationManager.registerCreditCard(creditCardData, UUID.randomUUID())
                 .subscribe(
-                        alias -> {
-                            //Handle alias
+                        paymentMethodAlias -> {
+                            sendAliasToBackend(paymentMethodAlias.getAlias());
+                            switch (paymentMethodAlias.getPaymentMethodType()) {
+                                case CC:
+                                    ExtraAliasInfo.CreditCardExtraInfo creditCardAliasInfo = paymentMethodAlias.getJavaExtraInfo().getCreditCardExtraInfo();
+                                    showCreditCardMask(creditCardAliasInfo.getCreditCardMask());
+                                    break;
+                                case SEPA:
+                                    ExtraAliasInfo.SepaExtraInfo sepaAliasInfo = paymentMethodAlias.getJavaExtraInfo().getSepaExtraInfo();
+                                    //Handle showing SEPA payment method in UI i.e.:
+                                    showSepaMask(sepaAliasInfo.getMaskedIban());
+                                    break;
+                                case PAYPAL:
+                                    ExtraAliasInfo.PaypalExtraInfo paypalExtraInfo = paymentMethodAlias.getJavaExtraInfo().getPaypalExtraInfo();
+                                    //Handle showing PayPal payment method in UI i.e.:
+                                    showPayPalEmail(paypalExtraInfo.getEmail());
+
+                            }
                         },
-                        error -> {
+                        exception -> {
                             //Handle error
+                            handleException(exception);
                         }
                 );
         List<IntegrationToPaymentMapping> integrations2 = new LinkedList<>();
