@@ -25,6 +25,7 @@ android {
 
         versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, PaymentSdkBuildConfigs.sdkVersionCode).toInt()
         versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, PaymentSdkBuildConfigs.sdkVersionName)
+        println("Version code $versionCode versionName $versionName")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
     }
