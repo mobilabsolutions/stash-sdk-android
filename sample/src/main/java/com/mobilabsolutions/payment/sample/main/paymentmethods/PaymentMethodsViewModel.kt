@@ -1,8 +1,11 @@
 package com.mobilabsolutions.payment.sample.main.paymentmethods
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
@@ -31,6 +34,12 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     private val deletePaymentMethod: DeletePaymentMethod,
     private val addPaymentMethod: AddPaymentMethod
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
+
+    private val _error = MutableLiveData<Throwable>()
+
+    val error: LiveData<Throwable>
+        get() = _error
+
     @AssistedInject.Factory
     interface Factory {
         fun create(initialStateMethods: PaymentMethodsViewState): PaymentMethodsViewModel
@@ -45,27 +54,34 @@ class PaymentMethodsViewModel @AssistedInject constructor(
 
     init {
         updateUser.observe()
-                .subscribeOn(schedulers.io)
-                .doOnNext {
-                    scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
-                }
-                .execute {
-                    copy(user = it() ?: User.EMPTY_USER)
-                }
+            .subscribeOn(schedulers.io)
+            .doOnNext {
+                scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
+            }
+            .execute {
+                copy(user = it() ?: User.EMPTY_USER)
+            }
 
         updatePaymentMethods.observe()
-                .subscribeOn(schedulers.io)
-                .execute {
-                    copy(paymentMethods = it() ?: emptyList())
-                }
+            .subscribeOn(schedulers.io)
+            .execute {
+                copy(paymentMethods = it() ?: emptyList())
+            }
         updateUser.setParams(Unit)
         updatePaymentMethods.setParams(Unit)
+//        loadPaymentMethods.observe()
+//            .subscribeOn(schedulers.io)
+//            .execute {
+//                copy(paymentMethods = it() ?: emptyList())
+//            }
+//
+//        loadPaymentMethods.setParams(Unit)
     }
 
     fun onAddBtnClicked() {
-        disposables += PaymentSdk.getRegistrationManager().registerPaymentMehodUsingUi()
-                .subscribeOn(schedulers.io)
-                .subscribe(this::onRegisterPaymentSuccess, this::onError)
+        disposables += PaymentSdk.getRegistrationManager().registerPaymentMethodUsingUi()
+            .subscribeOn(schedulers.io)
+            .subscribe(this::onRegisterPaymentSuccess, this::onError)
     }
 
     fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
@@ -79,12 +95,18 @@ class PaymentMethodsViewModel @AssistedInject constructor(
             PaymentMethodType.PAYPAL -> "PayPal"
         }
         withState {
-            val paymentMethod = PaymentMethod(userId = it.user.userId, aliasId = paymentMethodAlias.alias, _type = type)
+            val description = when (val aliasInfo = paymentMethodAlias.extraAliasInfo) {
+                is ExtraAliasInfo.CreditCardExtraInfo -> aliasInfo.creditCardMask
+                is ExtraAliasInfo.SepaExtraInfo -> aliasInfo.maskedIban
+                is ExtraAliasInfo.PaypalExtraInfo -> aliasInfo.email
+            }
+            val paymentMethod = PaymentMethod(alias = paymentMethodAlias.alias, _type = type, description = description)
             scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, paymentMethod = paymentMethod))
         }
     }
 
     private fun onError(throwable: Throwable) {
+        _error.value = throwable
         Timber.e(throwable)
     }
 }

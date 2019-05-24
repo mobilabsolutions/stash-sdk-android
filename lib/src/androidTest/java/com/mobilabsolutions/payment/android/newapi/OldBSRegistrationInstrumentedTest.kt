@@ -43,7 +43,7 @@
 //    )
 //    private var validSepaData: SepaData = SepaData(
 //            bic = "PBNKDEFF",
-//            iban = "DE63123456791212121212",
+//            maskedIban = "DE63123456791212121212",
 //            holder = "Holder Holderman"
 //    )
 //    private var validBillingData: BillingData = BillingData(
@@ -117,7 +117,7 @@
 //    fun testBSSepaRegistration() {
 //        val latch = CountDownLatch(1)
 //
-//        val registrationDisposable = registrationManager.registerSepa(
+//        val registrationDisposable = registrationManager.registerSepaAccount(
 //                validSepaData)
 //                .subscribeOn(Schedulers.io())
 //                .subscribe(
@@ -166,7 +166,7 @@
 // //                        onError = { error ->
 // //                            Timber.d("Removing aliasId reported an error")
 // //
-// //                            Assert.assertTrue(error is UnknownBackendException)
+// //                            Assert.assertTrue(error is OtherException)
 // //                            Assert.assertEquals(error.message, "Payment method is inactive")
 // ////                            if (error is HttpException) {
 // ////                                if (error.code() != 400) {
@@ -197,7 +197,7 @@
 // //
 // //        val latch = CountDownLatch(1)
 // //
-// //        val registrationDisposable = registrationManager.registerSepa(
+// //        val registrationDisposable = registrationManager.registerSepaAccount(
 // //                validSepaData
 // //        )
 // //                .subscribeOn(Schedulers.io())
@@ -213,7 +213,7 @@
 // //                        onError = { error ->
 // //                            Timber.d("Removing aliasId reported an error")
 // //
-// //                            Assert.assertTrue(error is UnknownBackendException)
+// //                            Assert.assertTrue(error is OtherException)
 // //                            Assert.assertEquals(error.message, "Payment method is inactive")
 // //
 // //                            latch.countDown()

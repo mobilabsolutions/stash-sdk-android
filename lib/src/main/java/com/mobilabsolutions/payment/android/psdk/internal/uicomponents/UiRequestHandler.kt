@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -31,7 +32,7 @@ class UiRequestHandler @Inject constructor() {
     class UserCancelled : RuntimeException("User cancelled")
 
     @Inject
-    lateinit var integrations: Set<@JvmSuppressWildcards Integration>
+    lateinit var integrations: Map<@JvmSuppressWildcards Integration, @JvmSuppressWildcards Set<@JvmSuppressWildcards PaymentMethodType>>
 
     @Inject
     lateinit var applicationContext: Context
@@ -61,6 +62,7 @@ class UiRequestHandler @Inject constructor() {
         errorSubject.onError(RuntimeException())
         errorSubject = PublishSubject.create()
         processing.set(false)
+        chooserUsed = false
     }
 
     fun entryCancelled() {
@@ -86,8 +88,10 @@ class UiRequestHandler @Inject constructor() {
         processing.set(false)
     }
 
-    internal fun availablePaymentMethods(): List<PaymentMethodDefinition> {
-        return integrations.flatMap { it.getSupportedPaymentMethodDefinitions() }
+    internal fun availablePaymentMethods(): List<PaymentMethodType> {
+        return integrations.values.flatMap {
+            it.toList()
+        }
     }
 
     /**
@@ -111,12 +115,12 @@ class UiRequestHandler @Inject constructor() {
             if (activity != null) {
                 startedNewTask = false
                 val launchHostIntent =
-                    Intent(activity, RegistrationProccessHostActivity::class.java)
+                    Intent(activity, RegistrationProcessHostActivity::class.java)
                 activity.startActivity(launchHostIntent)
             } else {
                 startedNewTask = true
                 val launchHostIntent =
-                    Intent(applicationContext, RegistrationProccessHostActivity::class.java)
+                    Intent(applicationContext, RegistrationProcessHostActivity::class.java)
                 launchHostIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
                 applicationContext.startActivity(launchHostIntent)
             }
@@ -127,31 +131,36 @@ class UiRequestHandler @Inject constructor() {
     fun handleCreditCardMethodEntryRequest(
         activity: Activity?,
         integration: Integration,
-        definition: PaymentMethodDefinition,
+        paymentMethodType: PaymentMethodType,
         requestId: Int
     ): Single<Pair<CreditCardData, Map<String, String>>> {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
         return hostActivitySingle.flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(
-                RegistrationProccessHostActivity.CurrentState.ENTRY
+            (hostActivity as RegistrationProcessHostActivity).setState(
+                RegistrationProcessHostActivity.CurrentState.ENTRY
             )
-            integration.handlePaymentMethodEntryRequest(hostActivity, definition)
+            integration.handlePaymentMethodEntryRequest(hostActivity, paymentMethodType, AdditionalRegistrationData())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .doFinally {
                     flowCompleted(hostActivity)
                 }.ambWith(errorSubject.firstOrError())
         }.map {
+
+            val localDate = LocalDate.parse(
+                it.getValue(CreditCardData.EXPIRY_DATE) + "/01",
+                DateTimeFormatter.ofPattern("MM/yy/dd")
+            )
             val validCreditCardData = CreditCardData(
                 it.getValue(CreditCardData.CREDIT_CARD_NUMBER),
-                LocalDate.parse(
-                    it.getValue(CreditCardData.EXPIRY_DATE) + "/01",
-                    DateTimeFormatter.ofPattern("MM/yy/dd")
-                ),
+                localDate.monthValue,
+                localDate.year,
                 it.getValue(CreditCardData.CVV),
-                it.getValue(BillingData.FIRST_NAME) + " " + it.getValue(BillingData.LAST_NAME)
+                BillingData(
+                    firstName = BillingData.ADDITIONAL_DATA_FIRST_NAME,
+                    lastName = it.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME))
             )
-            val additionalDataMap: Map<String, String> = emptyMap()
+            val additionalDataMap: Map<String, String> = it
 
             Pair(validCreditCardData, additionalDataMap)
         }
@@ -160,17 +169,16 @@ class UiRequestHandler @Inject constructor() {
     fun handleSepaMethodEntryRequest(
         activity: Activity?,
         integration: Integration,
-        definition: PaymentMethodDefinition,
+        paymentMethodType: PaymentMethodType,
         requestId: Int
     ): Single<Pair<SepaData, Map<String, String>>> {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
-        var validSepaData = SepaData("PBNKDEFF", "DE42721622981375897982", "Holder Holderman")
         return hostActivitySingle.flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(
-                RegistrationProccessHostActivity.CurrentState.ENTRY
+            (hostActivity as RegistrationProcessHostActivity).setState(
+                RegistrationProcessHostActivity.CurrentState.ENTRY
             )
-            integration.handlePaymentMethodEntryRequest(hostActivity, definition)
+            integration.handlePaymentMethodEntryRequest(hostActivity, paymentMethodType, AdditionalRegistrationData())
                 .subscribeOn(AndroidSchedulers.mainThread())
                 .doFinally {
                     flowCompleted(hostActivity)
@@ -178,26 +186,31 @@ class UiRequestHandler @Inject constructor() {
         }.map {
             val sepaData = SepaData(
                 iban = it.getValue(SepaData.IBAN),
-                holder = it.getValue(SepaData.FIRST_NAME) + " " + it.getValue(SepaData.LAST_NAME)
+                billingData = BillingData(
+                    firstName = it.getValue(BillingData.ADDITIONAL_DATA_FIRST_NAME),
+                    lastName = it.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME)
+                )
             )
-            Pair(sepaData, mapOf(BillingData.COUNTRY to it.getValue(BillingData.COUNTRY)))
+
+            Pair(sepaData, it)
         }
     }
 
     fun handlePaypalMethodEntryRequest(
         activity: Activity?,
         integration: Integration,
-        definition: PaymentMethodDefinition,
+        additionalRegistrationData: AdditionalRegistrationData,
         requestId: Int
     ): Single<Map<String, String>> {
         checkFlow(requestId)
         return launchHostActivity(activity).flatMap { hostActivity ->
-            (hostActivity as RegistrationProccessHostActivity).setState(
-                RegistrationProccessHostActivity.CurrentState.ENTRY
+            (hostActivity as RegistrationProcessHostActivity).setState(
+                RegistrationProcessHostActivity.CurrentState.ENTRY
             )
             integration.handlePaymentMethodEntryRequest(
                 hostActivity,
-                PaymentMethodDefinition("", "BRAINTREE", PaymentMethodType.PAYPAL)
+                PaymentMethodType.PAYPAL,
+                additionalRegistrationData
             )
                 .doFinally {
                     flowCompleted(hostActivity)
@@ -213,8 +226,8 @@ class UiRequestHandler @Inject constructor() {
         chooserUsed = true
         return launchHostActivity(activity).flatMap { hostActivity ->
             val supportFragmentManager = hostActivity.supportFragmentManager
-            (hostActivity as RegistrationProccessHostActivity).setState(
-                RegistrationProccessHostActivity.CurrentState.CHOOSER
+            (hostActivity as RegistrationProcessHostActivity).setState(
+                RegistrationProcessHostActivity.CurrentState.CHOOSER
             )
             paymentMethodTypeSubject = ReplaySubject.create()
             val paymentMethodChoiceFragment = PaymentMethodChoiceFragment()

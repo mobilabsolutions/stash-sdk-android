@@ -1,7 +1,6 @@
 package com.mobilabsolutions.payment.sample.payment
 
 import com.mobilabsolutions.commonsv3.mvp.controller.Controller
-import com.mobilabsolutions.payment.android.psdk.PaymentManager
 import com.mobilabsolutions.payment.sample.state.PaymentMethodState
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
@@ -13,9 +12,6 @@ import javax.inject.Singleton
  */
 @Singleton
 class PaymentController @Inject constructor() : Controller() {
-
-    @Inject
-    lateinit var paymentManager: PaymentManager
 
     @Inject
     lateinit var paymentMethodStateSubject: BehaviorSubject<PaymentMethodState>

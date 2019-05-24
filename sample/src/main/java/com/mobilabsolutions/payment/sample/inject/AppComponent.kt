@@ -4,6 +4,7 @@ import com.mobilabsolutions.payment.sample.SampleApplication
 import com.mobilabsolutions.payment.sample.data.DataModule
 import com.mobilabsolutions.payment.sample.main.MainBuilder
 import com.mobilabsolutions.payment.sample.network.NetworkModule
+import com.mobilabsolutions.payment.sample.payments.PaymentBuilder
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule
@@ -19,7 +20,8 @@ import javax.inject.Singleton
     AppAssistedModule::class,
     DataModule::class,
     NetworkModule::class,
-    MainBuilder::class
+    MainBuilder::class,
+    PaymentBuilder::class
 ])
 interface AppComponent : AndroidInjector<SampleApplication> {
     @Component.Factory

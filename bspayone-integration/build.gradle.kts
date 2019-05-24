@@ -5,7 +5,7 @@ plugins {
     kotlin("android.extensions")
 }
 
-val stripePublicKey = propOrDefWithTravis(PaymentSdkRelease.stripePublicKey, "")
+val templatePublicKey = propOrDefWithTravis(PaymentSdkRelease.templatePublicKey, "")
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
@@ -25,7 +25,7 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "stripe_public_key", "\""+stripePublicKey+"\"")
+            resValue("string", "template_public_key", "\""+templatePublicKey+"\"")
         }
         getByName("release") {
             isMinifyEnabled = false
@@ -37,6 +37,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
+}
+
+kapt {
+    correctErrorTypes = true
+    useBuildCache = true
 }
 
 dependencies {
@@ -62,6 +67,7 @@ dependencies {
     testImplementation(Libs.mockwebserver)
     testImplementation(Libs.PowerMock.module)
     testImplementation(Libs.PowerMock.api)
+    testImplementation(Libs.AndroidX.Test.core)
     kaptTest(Libs.Dagger.compiler)
 
     androidTestImplementation(project(Modules.paymentSdk))
@@ -70,6 +76,7 @@ dependencies {
     androidTestImplementation(Libs.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
+    androidTestImplementation(Libs.AndroidX.Test.core)
     kaptAndroidTest(Libs.Dagger.compiler)
 
 }

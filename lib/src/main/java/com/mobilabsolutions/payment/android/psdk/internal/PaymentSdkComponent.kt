@@ -3,10 +3,9 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.app.Application
 import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodChoiceFragment
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.RegistrationProccessHostActivity
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.RegistrationProcessHostActivity
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,13 +21,12 @@ import javax.inject.Singleton
 interface PaymentSdkComponent {
     fun inject(paymentSdk: NewPaymentSdk)
 
-    fun inject(registrationProccessHostActivity: RegistrationProccessHostActivity)
+    fun inject(registrationProcessHostActivity: RegistrationProcessHostActivity)
 
     fun inject(paymentMethodChoiceFragment: PaymentMethodChoiceFragment)
 
     fun provideApplication(): Application
 
-    fun provideMobilabApi(): MobilabApi
     fun provideMobilabApiV2(): MobilabApiV2
 
     fun providesContext(): Context

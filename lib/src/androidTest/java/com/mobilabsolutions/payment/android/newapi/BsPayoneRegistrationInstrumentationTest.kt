@@ -42,7 +42,7 @@
 //
 //    private var validSepaData: SepaData = SepaData(
 //            bic = "PBNKDEFF",
-//            iban = "DE63123456791212121212",
+//            maskedIban = "DE63123456791212121212",
 //            holder = "Holder Holderman"
 //    )
 //
@@ -132,7 +132,7 @@
 //    fun testBSSepaRegistration() {
 //        val latch = CountDownLatch(1)
 //
-//        val registrationDisposable = registrationManager.registerSepa(
+//        val registrationDisposable = registrationManager.registerSepaAccount(
 //                validSepaData)
 //                .subscribeOn(Schedulers.io())
 //                .subscribe(

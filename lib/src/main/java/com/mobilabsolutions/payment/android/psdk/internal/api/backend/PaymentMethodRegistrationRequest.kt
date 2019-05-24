@@ -12,7 +12,7 @@ class PaymentMethodRegistrationRequest {
         set(value) {
             field = value
             billingData = if (value != null) {
-                val billingData = BillingData.fromName(value.holder)
+                val billingData = BillingData.Builder().setFirstName("Test").build()
                 billingData.email = "test@test.test"
                 billingData.address1 = "Test"
                 billingData.city = "Test"

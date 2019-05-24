@@ -6,5 +6,6 @@
 /build
 /javadoc/
 /javadocPublic/
+/adyen-integration/build
 play-account.json
 release.keystore.key

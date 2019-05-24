@@ -1,16 +1,18 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
-// //import com.tspoon.traceur.Traceur
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.PaymentManager
+import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
-import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
+import io.github.inflationx.calligraphy3.CalligraphyConfig
+import io.github.inflationx.calligraphy3.CalligraphyInterceptor
+import io.github.inflationx.viewpump.ViewPump
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
@@ -23,51 +25,43 @@ class NewPaymentSdk(
     publicKey: String,
     url: String?,
     applicationContext: Application,
-    integrationList: List<IntegrationInitialization>,
+    integrationMap: Map<IntegrationCompanion, Set<PaymentMethodType>>,
     testMode: Boolean,
     sslSocketFactory: SSLSocketFactory?,
     x509TrustManager: X509TrustManager?
 ) {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
-    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
 
     @Inject
     lateinit var newRegistrationManager: NewRegistrationManager
 
     @Inject
-    lateinit var newPaymentManager: NewPaymentManager
-
-    @Inject
-    lateinit var uiCustomizationManager: UiCustomizationManager
+    internal lateinit var uiCustomizationManager: UiCustomizationManager
 
     val daggerGraph: PaymentSdkComponent
-
-    var paymentMethodSet: Set<PaymentMethodType> = emptySet()
-
-    private constructor(publicKey: String, url: String?, applicationContext: Application) : this(publicKey, url, applicationContext, emptyList(), true, null, null)
 
     init {
         val backendUrl = url ?: MOBILAB_BE_URL
 
-        daggerGraph = DaggerPaymentSdkComponent.builder()
-                .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-                .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationList, true))
-                .build()
-
-        integrationList.map {
-            val initialized = it.initialize(daggerGraph)
-            val supportedMethods = initialized.getSupportedPaymentMethodDefinitions().map { it.paymentMethodType }
-            supportedMethods.forEach { paymentMethodType ->
-                if (paymentMethodSet.contains(paymentMethodType)) {
-                    throw RuntimeException(
-                            "You are trying to add integrations that handle same payment methods. " +
-                                    "This is not supported at this moment. " +
-                                    "Encountered when processing ${initialized.identifier} payment method $paymentMethodType")
-                } else {
-                    paymentMethodSet += paymentMethodType
+        val processedPaymentMethodTypes: MutableSet<PaymentMethodType> = mutableSetOf()
+        integrationMap.forEach { (integration, paymentMethodTypeSet) ->
+            processedPaymentMethodTypes.forEach {
+                if (paymentMethodTypeSet.contains(it)) {
+                    throw ConfigurationException("Integration handling for ${it.name} payment method type already registered!")
                 }
             }
-            initialized
+            processedPaymentMethodTypes.addAll(paymentMethodTypeSet)
+        }
+
+        val integrationInitializationMap = integrationMap.mapKeys { it.key.create(it.value) }
+
+        daggerGraph = DaggerPaymentSdkComponent.builder()
+            .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
+            .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationInitializationMap, testMode))
+            .build()
+
+        integrationInitializationMap.forEach { (initialization, _) ->
+            initialization.initialize(daggerGraph)
         }
 
         daggerGraph.inject(this)
@@ -79,60 +73,75 @@ class NewPaymentSdk(
 
         private var initialized = false
 
-        internal var testComponent: PaymentSdkComponent? = null
-
-//        @Synchronized
-//        fun initialize(publicKey: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode : Boolean) {
-//            initialize(publicKey, applicationContext, integrationList, null, null)
-//        }
+        private var testComponent: PaymentSdkComponent? = null
 
         @Synchronized
         fun initialize(applicationContext: Application, configuration: PaymentSdkConfiguration) {
-            val integrationInitializations = configuration.integrations.map { it.create() }.toList()
-            initialize(configuration.publicKey, configuration.endpoint, applicationContext, integrationInitializations, configuration.testMode, configuration.sslFactory, configuration.x509TrustManager)
+            configuration.apply {
+
+                if (initialized) {
+                    throw ConfigurationException("Already initialized")
+                }
+
+                val integrationInitializationMap =
+                    when {
+                        integration == null && integrationList == null -> {
+                            throw ConfigurationException("No integrations provided")
+                        }
+                        integration != null && integrationList != null -> {
+                            throw ConfigurationException("Both integration and integration map were supplied," +
+                                " provide only one or the other")
+                        }
+                        integration != null -> {
+                            mapOf(integration to integration.supportedPaymentMethodTypes)
+                        }
+                        integrationList != null -> {
+                            if (integrationList.isEmpty()) {
+                                throw ConfigurationException("Integration list was provided, but it was empty")
+                            }
+                            integrationList.toList().groupBy {
+                                it.first
+                            }.map {
+                                Pair(it.key, it.value.map { pair -> pair.second }.toSet())
+                            }.toMap()
+                        }
+                        else -> throw RuntimeException("This should never happen")
+                    }
+
+                Timber.plant(Timber.DebugTree())
+                AndroidThreeTen.init(applicationContext)
+                instance = NewPaymentSdk(publicKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
+
+                initialized = true
+
+                ViewPump.init(ViewPump.builder()
+                    .addInterceptor(CalligraphyInterceptor(
+                        CalligraphyConfig.Builder()
+                            .setDefaultFontPath("fonts/Lato-Regular.ttf")
+                            .build()))
+                    .build())
+            }
         }
 
-        @Synchronized
-        fun initialize(publicKey: String?, url: String?, applicationContext: Application?, integrationList: List<IntegrationInitialization>, testMode: Boolean = false, sslSocketFactory: SSLSocketFactory?, x509TrustManager: X509TrustManager?) {
-            if (publicKey == null) {
-                throw InvalidPublicKeyException("Public key not supplied")
-            }
-
-            if (applicationContext == null) {
-                throw InvalidApplicationContextException("Application context not supplied")
-            }
-
-            if (initialized) {
-                Timber.w("Already initialized")
-                return
-            }
-
-            Timber.plant(Timber.DebugTree())
-            AndroidThreeTen.init(applicationContext)
-            NewPaymentSdk.instance = NewPaymentSdk(publicKey, url, applicationContext, integrationList, testMode, sslSocketFactory, x509TrustManager)
-
-            NewPaymentSdk.initialized = true
+        fun configureUi(customizationPreference: CustomizationPreference) {
+            assertInitialized()
+            instance!!.uiCustomizationManager.setCustomizationPreferences(customizationPreference)
         }
 
         fun getRegistrationManager(): RegistrationManager {
             assertInitialized()
-            return NewPaymentSdk.instance!!.newRegistrationManager
-        }
-
-        fun getPaymentManager(): PaymentManager {
-            assertInitialized()
-            return NewPaymentSdk.instance!!.newPaymentManager
+            return instance!!.newRegistrationManager
         }
 
         fun getUiCustomizationManager(): UiCustomizationManager {
             assertInitialized()
-            return NewPaymentSdk.instance!!.uiCustomizationManager
+            return instance!!.uiCustomizationManager
         }
 
         private fun assertInitialized() {
             if (instance == null) {
                 throw RuntimeException(
-                        "Payment SDK is not initialized, make sure you called initialize method before using"
+                    "Payment SDK is not initialized, make sure you called initialize method before using"
                 )
             }
         }

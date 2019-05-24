@@ -15,7 +15,7 @@ This repository contains multiple modules:
 * `app` - Sample application using the payment SDK
 * `*-integration` - Various PSP integration modules (Implementation in progress)
 
-A normal use case for a third party developer would be to include `lib` and a specific integration module, i.e. `stripe-integration`
+A normal use case for a third party developer would be to include `lib` and a specific integration module, i.e. `template-integration`
 
 The follwoing integration and usage steps are pre-modularization and as such expect only `lib` module to be included in the project. This
 read me will be updated to reflect changes once the integration modules are implemented completely.
@@ -40,43 +40,66 @@ read me will be updated to reflect changes once the integration modules are impl
 
 
 
-To use the SDK, you need to initialize it with some configuration data. Among the data that needs to be provided are the public key as well as the backend endpoint that should be used by the SDK.
+To use the SDK, you need to initialize it with some configuration data. Among the data that needs to be provided are the publishable key as well as the backend endpoint that should be used by the SDK.
 
-To connect the SDK to a given payment service provider (PSP), you need to pass the IntegrationCompanion object to the SDK
+To connect the SDK to a given payment service provider (PSP), you need to pass the IntegrationCompanion object to the SDK. If you want to use several PSP integrations you need to provide information which integration will use which payment method
 
-Kotlin
+###### Kotlin - Single Integration
 
 ```kotlin
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
-import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
-import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 
 val  configuration = PaymentSdkConfiguration(
         publicKey = "YourApiKey",
         endpoint = "https://payment-dev.mblb.net/api/",
-        integrations = setOf(BsPayoneIntegration, BraintreeIntegration),
+        integration = AdyenIntegration,
         testMode = true
 )
 PaymentSdk.initalize(this, configuration)
 ```
 
-Java
+###### Java - Single Integration
 
 ```java
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
-import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
-import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration;
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration;
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
 
-Set<IntegrationCompanion> integrations = new HashSet<>();
-integrations.add(BraintreeIntegration.Companion);
-integrations.add(BsPayoneIntegration.Companion);
-
-PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder("YourPublicKey")
+PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+        .setPublishableKey("YourPublishableKey")
         .setEndpoint("https://payment-dev.mblb.net/api/")
-        .setIntegrations(integrations)
+        .setIntegration(AdyenIntegration.Companion)
+        .setTestMode(true)
+        .build();
+
+PaymentSdk.initalize(context, configuration);
+``` 
+###### Kotlin - Multiple Integrations
+
+```kotlin
+
+val  configuration = PaymentSdkConfiguration(
+        publicKey = "YourApiKey",
+        endpoint = "https://payment-dev.mblb.net/api/",
+        integrationList = listOf(
+        AdyenIntegration to PaymentMethodType.CC,
+        BsPayoneIntegration to PaymentMethodType.SEPA,
+        BraintreeIntegration to PaymentMethodType.PAYPAL
+        )
+        testMode = true
+)
+PaymentSdk.initalize(this, configuration)
+```
+
+###### Java - Multiple Integrations
+
+```java
+
+List<IntegrationToPaymentMapping> integrationList = new LinkedList<>();
+        integrationList.add(new IntegrationToPaymentMapping(BraintreeIntegration.Companion, PaymentMethodType.PAYPAL));
+        integrationList.add(new IntegrationToPaymentMapping(AdyenIntegration.Companion, PaymentMethodType.CC));
+        integrationList.add(new IntegrationToPaymentMapping(BsPayoneIntegration.Companion, PaymentMethodType.SEPA));
+        
+PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+        .setPublishableKey("YourPublishableKey")
+        .setEndpoint("https://payment-dev.mblb.net/api/")
+        .setIntegrations(integrationList)
         .setTestMode(true)
         .build();
 
@@ -97,71 +120,225 @@ Or in code, you should supply testMode parameter when creating your `configurati
 
 #### Registering payment method using UI
 
-#### Credit card registration
+### Using the module UI for adding a payment method
 
-o register a credit card, the `registerCreditCard` method of the registration manager is used.
-Provide it with an instance of `CreditCardData`, which upon initialization also validates the credit card data.
+Since the PSP modules know best which data needs to be provided in which situation, it is also possible to offload the UI work for adding a payment method to them.
+By calling `registerPaymentMethodUsingUI` on the registration manager, the user is shown a selection of possible payment methods types and then fields for creating payment methods of the selected type.
 
-The `CreditCardData` is provided with `BillingData`. This `BillingData` contains information about the user that is necessary for registering a credit card. Its fields are all optional and their necessity PSP-dependant.
+You can skip the payment method chosing screen by suppliying which method you want the user to enter immediately. Omitting this will show the payment method chooser
+
+Kotlin 
+
+```kotlin
+
+val registrationManager = PaymentSdk.getRegistrationManager()
+registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CC)
+        .subscribeBy(
+            onSuccess = { paymentAlias ->
+                //Send alias to your backend server for later usage
+                sendAliasToBackend(paymentAlias.alias)
+                when (val aliasInfo = paymentAlias.extraAliasInfo) {
+                    is ExtraAliasInfo.CreditCardExtraInfo -> {
+                        // Handle showing credit card payment method in UI, i.e.:
+                        showCreditCardMask(aliasInfo.creditCardMask)
+                    }
+                    is ExtraAliasInfo.SepaExtraInfo -> {
+                        //Handle showing SEPA payment method in UI i.e.:
+                        showSepaMask(aliasInfo.maskedIban)
+
+                    }
+                    is ExtraAliasInfo.PaypalExtraInfo -> {
+                        //Handle showing PayPal payment method in UI i.e.:
+                        showPayPalEmail(aliasInfo.email)
+                    }
+                }
+            },
+            onError = {
+                //Handle exceptions
+                handleException(it)
+            }
+
+        )
+
+```
+Java 
+
+```java
+
+RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
+registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CC, null) 
+        .subscribe(
+                paymentMethodAlias -> {
+                    sendAliasToBackend(paymentMethodAlias.getAlias());
+                        switch (paymentMethodAlias.getPaymentMethodType()) {
+                            case CC:
+                                ExtraAliasInfo.CreditCardExtraInfo creditCardAliasInfo = 
+                                paymentMethodAlias.getJavaExtraInfo().getCreditCardExtraInfo();
+                                showCreditCardMask(creditCardAliasInfo.getCreditCardMask());
+                                break;
+                            case SEPA:
+                                ExtraAliasInfo.SepaExtraInfo sepaAliasInfo = 
+                                paymentMethodAlias.getJavaExtraInfo().getSepaExtraInfo();
+                                //Handle showing SEPA payment method in UI i.e.:
+                                showSepaMask(sepaAliasInfo.getMaskedIban());
+                                break;
+                            case PAYPAL:
+                                ExtraAliasInfo.PaypalExtraInfo paypalExtraInfo = 
+                                paymentMethodAlias.getJavaExtraInfo().getPaypalExtraInfo();
+                                //Handle showing PayPal payment method in UI i.e.:
+                                showPayPalEmail(paypalExtraInfo.getEmail());
+
+                        }
+                },
+                exception -> {
+                    //Handle error
+                    handleException(exception);
+                }
+        );
+``` 
+
+#### Customizing UI
+
+If you want you can change the color scheme of the screens shown when requesting payment method data from the user. To do this you should provide
+a `CustomizationPreference` object to the customization manager of payment SDK. `CustomizationPreference` expects colors defined as resource ids.
+
+Below is the sample using random colors provided by Android.
 
 Kotlin
 
 ```kotlin
-val creditCardData = CreditCardData(
-    number = "4111111111111111",
-    expiryDate = LocalDate.of(2021,1,1),
-    cvv = "123"
+val textColor: Int = android.R.color.holo_orange_dark
+val backgroundColor: Int = R.color.coral
+val buttonColor: Int = android.R.color.holo_purple
+val buttonTextColor: Int = android.R.color.holo_blue_bright
+val cellBackgroundColor: Int = R.color.unknown_blue
+val mediumEmphasisColor: Int = android.R.color.holo_green_light
+
+val customizationPreference = CustomizationPreference(
+        textColor,
+        backgroundColor,
+        buttonColor,
+        buttonTextColor,
+        cellBackgroundColor,
+        mediumEmphasisColor
 )
-
-val billingData = BillingData(
-    city = "Cologne"
-)
-
-
-val registrationManager = PaymentSdk.getRegistrationManager();
-registrationManager.registerCreditCard(creditCardData, billingData)
-        .subscribeBy(
-                onSuccess = {paymentAlias ->
-                    //Handle returned payment alias
-                },
-                onError = {
-                    //Handle error
-                }              
-               
-        )
+PaymentSdk.getUiCustomizationManager().setCustomizationPreferences(customizationPreference)
 ```
 
 Java
 
 ```java
-CreditCardData creditCardData = new CreditCardData();
-creditCardData.setNumber("4111111111111111");
-creditCardData.setExpiryDate(LocalDate.of(2021,1,1));
-creditCardData.setCvv("123");
+CustomizationPreference customizationPreference = new CustomizationPreference.Builder()
+        .setTextColor(android.R.color.holo_orange_dark)
+        .setBackgroundColor(android.R.color.holo_blue_dark)
+        .setButtonColor(android.R.color.holo_purple)
+        .setButtonTextColor(android.R.color.holo_blue_bright)
+        .setCellBackgroundColor(android.R.color.holo_red_light)
+        .setMediumEmphasisColor(R.color.unknown_blue)
+        .build();
 
+PaymentSdk.getUiCustomizationManager().setCustomizationPreferences(customizationPreference);
+``` 
+
+
+### Registering payment method using your own UI
+
+If you want to build your own UI and still use Payment SDK, you should use `registerCreditCard` or 
+`registerSepa` methods of `RegistrationManager`. 
+
+At the moment PayPal registration without using UI components is not supported.
+
+Keep in mind that if you are using these methods you must provide all expected information for registration. 
+Depending on the PSP used, some PSPs will require i.e. Country code in addition to the standard information sent when registering. 
+Since UI component won't be handling this for you, wou will be more tightly coupled with your chosen PSP integration.
+
+
+#### Credit card registration
+
+To register a credit card, the `registerCreditCard` method of the registration manager is used.
+Provide it with an instance of `CreditCardData`, which upon initialization also validates the credit card data.
+
+The `CreditCardData` also can be expanded with `BillingData`. This `BillingData` contains information about the user that 
+is necessary for registering a credit card. Its fields are all optional and their necessity PSP-dependant.
+
+For java implementation, extra information about the registered payment method can be also retrieved using a convenience 
+method `getJavaExtraInfo()` which returns `JavaExtraInfo` object
+
+###### Kotlin
+
+```kotlin
+val billingData = BillingData(
+            firstName = "Max",
+            lastName = "Mustermann",
+            city = "Cologne"
+        )
+
+val creditCardData = CreditCardData(
+    number = "4111111111111111",
+    expiryMonth = 10,
+    expiryYear = 2021,
+    cvv = "123",
+    billingData = billingData
+)
+
+val requestUUID = UUID.randomUUID()
+
+val registrationManager = PaymentSdk.getRegistrationManager()
+registrationManager.registerCreditCard(creditCardData, requestUUID)
+    .subscribeBy(
+        onSuccess = { paymentAlias ->
+            //Send alias to your backend server for later usage
+            sendAliasToBackend(paymentAlias.alias)
+            aliasInfo = paymentAlias.extraAliasInfo as CreditCardExtraInfo                
+            // Handle showing credit card payment method in UI, i.e.:
+            showCreditCardMask(aliasInfo.creditCardMask)               
+        },
+        onError = {
+            //Handle exceptions
+            handleException(it)
+        }
+
+    )
+```
+
+###### Java
+
+```java
 BillingData billingData = new BillingData.Builder()
-         .setCity("Cologne")
-         .build()
+                .setFirstName("Max")
+                .setLastName("Mustermann")
+                .build();
 
+CreditCardData creditCardData = new CreditCardData.Builder()
+        .setNumber("123123123123")
+        .setCvv("123")
+        .setBillingData(billingData)
+        .setExpiryMonth(11)
+        .setExpiryYear(2020)
+        .build();
 
-RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
-registrationManager.registerCreditCard(creditCardData, billingData)
+UUID requestUUID = UUID.randomUUID()
+
+registrationManager.registerCreditCard(creditCardData, requestUUID)
         .subscribe(
-                paymentAlias -> {
-                    //Handle returned payment alias
+                paymentMethodAlias -> {
+                    //Handle showing credit card payment method in UI, i.e.:
+                    ExtraAliasInfo.CreditCardExtraInfo creditCardAliasInfo = paymentMethodAlias.getJavaExtraInfo().getCreditCardExtraInfo();
+                    showCreditCardMask(creditCardAliasInfo.getCreditCardMask());
+                    }
                 },
-                error -> {
+                exception -> {
                     //Handle error
+                    handleException(exception);
                 }
         );
 ```
-
 
 #### SEPA registration
 
 To register a SEPA account, we can use the `registerSepa` method of the registration manager. Here, as is the case for the credit card data, the billing data is optional and the values that need to be provided are PSP-dependant.
 
-Kotlin 
+###### Kotlin 
 
 ```kotlin
 val sepaData = SepaData(
@@ -174,20 +351,24 @@ val billingData = BillingData(
     city = "Cologne"
 )
 
-val registrationManager = PaymentSdk.getRegistrationManager();
-registrationManager.registerSepa(sepaData, billingData)
+val requestUUID = UUID.randomUUID()
+
+val registrationManager = PaymentSdk.getRegistrationManager()
+registrationManager.registerSepa(sepaData, requestUUID)
         .subscribeBy(
-                onSuccess = {
-                    //Handle returned payment alias
+                onSuccess = { paymentAlias ->
+                    // Handle showing credit card payment method in UI, i.e.:
+                    val aliasInfo = paymentAlias.extraAliasInfo as SepaExtraInfo
+                    showSepaMask(aliasInfo.creditCardMask)
                 },
                 onError = {
                     // Handle error
                 }
 
-        );
+        )
 ```
 
-Java
+###### Java
 
 ```java
 SepaData sepaData = new SepaData();
@@ -199,10 +380,15 @@ BillingData billingData = new BillingData.Builder()
          .build()
 
 RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
-registrationManager.registerSepa(sepaData, billingData)
+
+UUID requestUUID = UUID.randomUUID()
+
+registrationManager.registerSepa(sepaData, requestUUID)
         .subscribe(
                 paymentAlias -> {
-                    // Handle returned payment alias
+                    ExtraAliasInfo.SepaExtraInfo sepaAliasInfo = paymentMethodAlias.getJavaExtraInfo().getSepaExtraInfo();;
+                    //Handle showing SEPA payment method in UI i.e.:
+                    showSepaMask(sepaAliasInfo.getMaskedIban());
                 },
                 error -> {
                     // Handle error
@@ -210,47 +396,6 @@ registrationManager.registerSepa(sepaData, billingData)
 
         );
 ```
-
-### Using the module UI for adding a payment method
-
-Since the PSP modules know best which data needs to be provided in which situation, it is also possible to offload the UI work for adding a payment method to them.
-By calling `registerPaymentMethodUsingUI` on the registration manager, the user is shown a selection of possible payment methods types and then fields for creating payment methods of the selected type.
-
-You can skip the payment method chosing screen by suppliying which method you want the user to enter immediately. Omitting this will show the payment method chooser
-
-Kotlin 
-
-```kotlin
-
-val registrationManager = PaymentSdk.getRegistrationManager();
-registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CREDITCARD)
-        .subscribeBy(
-                onSuccess = {
-                    //Handle returned payment alias
-                },
-                onError = {
-                    // Handle error
-                }
-
-        );
-
-```
-Java 
-
-```java
-
-RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
-registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CREDITCARD, null) 
-        .subscribe(
-                paymentAlias -> {
-                    // Handle returned payment alias
-                },
-                error -> {
-                    // Handle error
-                }
-
-        );
-``` 
 
 ### Idempotency
 All calls provided by Payment SDK are idempotent. To use idempotency simply provide a UUID to with any of the registration methods used.
@@ -260,7 +405,7 @@ All calls provided by Payment SDK are idempotent. To use idempotency simply prov
 Kotlin
 ```kotlin
 val registrationIdempotencyKey = UUID.randomUUID()
-val registrationManager = PaymentSdk.getRegistrationManager();
+val registrationManager = PaymentSdk.getRegistrationManager()
 registrationManager.registerPaymentMehodUsingUi(activity, idempotencyKey = registrationIdempotencyKey)
         .subscribeBy(
                 onSuccess = {
@@ -270,7 +415,7 @@ registrationManager.registerPaymentMehodUsingUi(activity, idempotencyKey = regis
                     // Handle error
                 }
 
-        );
+        )
 ```
 
 Java

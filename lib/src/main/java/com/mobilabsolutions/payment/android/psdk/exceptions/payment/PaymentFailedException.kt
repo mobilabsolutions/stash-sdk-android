@@ -1,16 +1,12 @@
 package com.mobilabsolutions.payment.android.psdk.exceptions.payment
 
-import com.mobilabsolutions.payment.android.psdk.exceptions.ProviderOriginatedException
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PaymentFailedException(
-    override val message: String = "Payment failed",
-    val providerMessage: String = "There was no specific message from payment provider supplied"
-) : ProviderOriginatedException(CODE, message) {
-    companion object {
-        @JvmStatic
-        val CODE = 1234
-    }
-}
+    @Transient override val message: String = "Payment failed",
+    @Transient override val code: Int? = null,
+    @Transient override val originalException: Throwable? = null
+) : BasePaymentException(message, code)

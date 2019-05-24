@@ -103,7 +103,7 @@
 //        CountDownLatch latch = new CountDownLatch(1);
 //
 //        RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
-//        Disposable registrationDisposable = registrationManager.registerSepa(
+//        Disposable registrationDisposable = registrationManager.registerSepaAccount(
 //                validSepaData,
 //                validBillingData
 //        ).subscribeOn(Schedulers.io())

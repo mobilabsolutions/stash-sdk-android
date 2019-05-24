@@ -4,7 +4,6 @@ import android.app.Application
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import com.mobilabsolutions.payment.android.psdk.PaymentManager
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.sample.payment.PaymentFragmentModule
@@ -36,14 +35,8 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun providieRegistrationManager(): RegistrationManager {
+    fun provideRegistrationManager(): RegistrationManager {
         return PaymentSdk.getRegistrationManager()
-    }
-
-    @Singleton
-    @Provides
-    fun providePaymentManager(): PaymentManager {
-        return PaymentSdk.getPaymentManager()
     }
 
     @Singleton

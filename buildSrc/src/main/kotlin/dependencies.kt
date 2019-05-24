@@ -1,10 +1,10 @@
 import org.gradle.api.Project
-import java.util.*
+import java.util.Properties
 
 object PaymentSdkRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
     val travisTag = "TRAVIS_TAG"
-    val stripePublicKey = "STRIPE_PUBLIC_KEY"
+    val templatePublicKey = "TEMPLATE_PUBLIC_KEY"
     val mobilabBackendUrl = "BACKEND_DEVELOPMENT"
     val oldBsTestKey = "BS_TEST_PUBLIC_KEY"
     val oldBsApiUrl = "BS_TEST_API_URL"
@@ -25,8 +25,22 @@ object PaymentSdkBuildConfigs {
     val minSdk = 21
     val targetSdk = 28
     val buildtoolsVersion = "28.0.3"
-    val vapianoVersionCode = "1"
-    val vapianoVersionName = "1.2.0"
+    val sdkVersionCode = getCommitCount()
+    val sdkVersionName = "${getBranch()}-${getCommitHash()}"
+    fun getBranch(): String {
+        return Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD").getOutput()
+    }
+
+    fun getCommitHash() : String {
+        return Runtime.getRuntime().exec("git rev-parse --short HEAD").getOutput()
+    }
+
+    fun getCommitCount() : String {
+        return Runtime.getRuntime().exec("git rev-list --count HEAD").getOutput()
+    }
+
+    private fun Process.getOutput() = inputStream.bufferedReader().readLine().trim()
+
 }
 
 object DemoRelease {
@@ -38,10 +52,10 @@ object DemoRelease {
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
 
 object Modules {
-    val stripeIntegration = ":stripeintegration"
-    val bsOldIntegration = ":bs-old-integration"
+    val templateIntegration = ":template-integration"
     val bsPayoneIntegration = ":bspayone-integration"
     val braintreeIntegration = ":braintree-integration"
+    val adyenIntegration = ":adyen-integration"
     val paymentSdk = ":lib"
 }
 
@@ -52,23 +66,31 @@ object Libs {
 
     val timber = "com.jakewharton.timber:timber:4.7.1"
 
-    val stripe = "com.stripe:stripe-android:6.1.2"
-
     val junit = "junit:junit:4.12"
 
     val mockitoCore = "org.mockito:mockito-core:2.27.0"
 
     val simpleframework = "org.simpleframework:simple-xml:2.7.1"
 
-    val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.1.1"
+    val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.0"
 
     val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.14.1"
 
     val iban4j = "org.iban4j:iban4j:3.2.1"
 
     val braintree = "com.braintreepayments.api:braintree:3.0.0"
+    val braintreeDropIn = "com.braintreepayments.api:drop-in:4.1.1"
+
+    val adyenCheckoutBase = "com.adyen.checkout:base:2.4.3"
+    val adyenUi = "com.adyen.checkout:ui:2.4.3"
+    val adyenCore = "com.adyen.checkout:core:2.4.3"
+    val adyenCardCore = "com.adyen.checkout:core-card:2.4.3"
+
 
     val mvrx = "com.airbnb.android:mvrx:1.0.0"
+
+    val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
+    val viewPump = "io.github.inflationx:viewpump:1.0.0"
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha05"
@@ -77,15 +99,16 @@ object Libs {
     }
 
     object Kotlin {
-        private const val version = "1.3.30"
+        private const val version = "1.3.31"
         val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
         val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
+        val test = "org.jetbrains.kotlin:kotlin-test-junit:$version"
     }
 
     object Coroutines {
-        private const val version = "1.2.0"
+        private const val version = "1.2.1"
         val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         val rx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$version"
         val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
@@ -173,7 +196,7 @@ object Libs {
     }
 
     object PowerMock {
-        private const val version = "2.0.0"
+        private const val version = "2.0.2"
         val module = "org.powermock:powermock-module-junit4:$version"
         val api = "org.powermock:powermock-api-mockito2:$version"
     }
@@ -185,7 +208,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.4.1"
+        private const val version = "3.4.2"
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"

@@ -16,6 +16,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreePayPalActivity
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
@@ -38,13 +39,14 @@ class PayPalIntentRegistrationTest {
         override fun beforeActivityLaunched() {
             super.beforeActivityLaunched()
             val context = InstrumentationRegistry.getInstrumentation().context
-            val initialization = BraintreeIntegration.create()
+            val methods = setOf(PaymentMethodType.PAYPAL)
+            val initialization = BraintreeIntegration.create(methods)
             val component = DaggerTestPayPalRegistrationComponent.builder()
                     .paymentSdkModule(PaymentSdkModule(
                             MOBILAB_TEST_PUBLISHABLE_KEY,
                             MOBILAB_BACKEND_URL,
                             context.applicationContext as Application,
-                            listOf(initialization),
+                            mapOf(initialization to methods),
                             true))
                     .build()
             initialization.initialize(component)
@@ -62,7 +64,7 @@ class PayPalIntentRegistrationTest {
         coordinates[2] = Point(796, 1520)
         coordinates[3] = Point(796, 929)
 
-        if (!uiDevice.isScreenOn()) {
+        if (!uiDevice.isScreenOn) {
             uiDevice.wakeUp()
             uiDevice.swipe(coordinates, 10)
         }

@@ -14,7 +14,7 @@ import androidx.room.PrimaryKey
 data class Product(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
     @ColumnInfo val name: String? = null,
-    @ColumnInfo val image: Int = 0,
+    @ColumnInfo val image: String? = null,
     @ColumnInfo val description: String? = null,
     @ColumnInfo val price: Int = 0
 ) : SampleEntity {

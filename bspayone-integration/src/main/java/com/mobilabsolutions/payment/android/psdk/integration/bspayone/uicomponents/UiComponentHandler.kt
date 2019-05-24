@@ -18,7 +18,7 @@ class UiComponentHandler @Inject constructor() {
 
     fun handleSepaDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
         dataSubject = PublishSubject.create()
-        val sepaDataEntryFragment = SepaDataEntryFragment()
+        val sepaDataEntryFragment = BsPayoneSepaDataEntryFragment()
         Timber.d("Current thread: ${Thread.currentThread().name}")
         activity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, sepaDataEntryFragment).commitNow()
         return dataSubject.doFinally {
@@ -28,7 +28,7 @@ class UiComponentHandler @Inject constructor() {
 
     fun handleCreditCardDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
         dataSubject = PublishSubject.create()
-        val creditCardDataEntryFragment = CreditCardDataEntryFragment()
+        val creditCardDataEntryFragment = BsPayoneCreditCardDataEntryFragment()
         activity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, creditCardDataEntryFragment).commitNow()
         return dataSubject.doFinally {
             activity.supportFragmentManager.beginTransaction().remove(creditCardDataEntryFragment).commitNow()
