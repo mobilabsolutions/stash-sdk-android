@@ -258,7 +258,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
         return sepaDataValidator.validateIban(iban)
     }
 
-
     private fun startTimer(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
         waitTimer = object : CountDownTimer(3000, 1000) {
             override fun onTick(millisUntilFinished: Long) {

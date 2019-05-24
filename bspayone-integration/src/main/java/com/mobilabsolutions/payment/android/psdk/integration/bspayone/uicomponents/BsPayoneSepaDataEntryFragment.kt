@@ -46,7 +46,7 @@ import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenCellLay
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenMainLayout
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenTitle
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 /**
