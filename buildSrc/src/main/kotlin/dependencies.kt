@@ -25,8 +25,22 @@ object PaymentSdkBuildConfigs {
     val minSdk = 21
     val targetSdk = 28
     val buildtoolsVersion = "28.0.3"
-    val sdkVersionCode = "1"
-    val sdkVersionName = "1.2.0"
+    val sdkVersionCode = getCommitCount()
+    val sdkVersionName = "${getBranch()}-${getCommitHash()}"
+    fun getBranch(): String {
+        return Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD").getOutput()
+    }
+
+    fun getCommitHash() : String {
+        return Runtime.getRuntime().exec("git rev-parse --short HEAD").getOutput()
+    }
+
+    fun getCommitCount() : String {
+        return Runtime.getRuntime().exec("git rev-list --count HEAD").getOutput()
+    }
+
+    private fun Process.getOutput() = inputStream.bufferedReader().readLine().trim()
+
 }
 
 object DemoRelease {

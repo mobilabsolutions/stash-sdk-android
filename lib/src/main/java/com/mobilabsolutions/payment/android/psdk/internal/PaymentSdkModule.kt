@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
@@ -122,16 +123,17 @@ open class PaymentSdkModule(
     ): OkHttpClient {
 
         val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
             .addInterceptor { chain ->
                 val requestBuilder = chain.request().newBuilder()
                     .addHeader("Publishable-Key", publicKey)
+                    .addHeader("User-Agent", "Android-${BuildConfig.VERSION_CODE}-${BuildConfig.VERSION_NAME}")
                 if (testMode) {
                     requestBuilder.addHeader("PSP-Test-Mode", "true")
                 }
                 val request = requestBuilder.build()
                 chain.proceed(request)
             }
+            .addInterceptor(httpLoggingInterceptor)
             .connectTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
             .readTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
             .writeTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
@@ -148,7 +150,7 @@ open class PaymentSdkModule(
     @Provides
     @Named("isLogging")
     fun provideLoggingFlag(): Boolean {
-        return true // Todo set based on build configuration
+        return BuildConfig.DEBUG
     }
 
     @Provides
