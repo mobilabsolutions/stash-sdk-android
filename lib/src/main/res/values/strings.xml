@@ -4,8 +4,8 @@
 
     // Error
     <string name="general_error">Error</string>
-    <string name="validation_error_empty_name">Please enter your name</string>
-    <string name="validation_error_invalid_characters">Please enter a valid name</string>
+    <string name="validation_error_empty">Required field.</string>
+    <string name="validation_error_invalid_characters">Invalid Entry.</string>
     <string name="validation_error_missing_country">Please select country</string>
 
     // --- Payment chooser screen ----
@@ -36,7 +36,6 @@
     <string name="credit_card_data_expiry_hint">MM/YY</string>
     <string name="credit_card_data_cvv">CVV/CVC</string>
 
-
     // Errors
     <string name="credit_card_data_number_validation_error">Please enter a correct credit card number.</string>
     <string name="credit_card_data_cvv_validation_error">Invalid CVC/CVV</string>
@@ -50,6 +49,5 @@
     <string name="month_year_picker_month_label">Month</string>
     <string name="month_year_picker_year_label">Year</string>
     <string name="month_year_picker_ok_button_label">OK</string>
-
 
 </resources>

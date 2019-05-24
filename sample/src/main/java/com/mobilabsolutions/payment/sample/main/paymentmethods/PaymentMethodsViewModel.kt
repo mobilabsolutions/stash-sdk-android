@@ -1,5 +1,7 @@
 package com.mobilabsolutions.payment.sample.main.paymentmethods
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -29,6 +31,12 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     private val deletePaymentMethod: DeletePaymentMethod,
     private val addPaymentMethod: AddPaymentMethod
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
+
+    private val _error = MutableLiveData<Throwable>()
+
+    val error: LiveData<Throwable>
+        get() = _error
+
     @AssistedInject.Factory
     interface Factory {
         fun create(initialStateMethods: PaymentMethodsViewState): PaymentMethodsViewModel
@@ -43,10 +51,10 @@ class PaymentMethodsViewModel @AssistedInject constructor(
 
     init {
         loadPaymentMethods.observe()
-                .subscribeOn(schedulers.io)
-                .execute {
-                    copy(paymentMethods = it() ?: emptyList())
-                }
+            .subscribeOn(schedulers.io)
+            .execute {
+                copy(paymentMethods = it() ?: emptyList())
+            }
 
         loadPaymentMethods.setParams(Unit)
     }
@@ -77,6 +85,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     private fun onError(throwable: Throwable) {
+        _error.value = throwable
         Timber.e(throwable)
     }
 }

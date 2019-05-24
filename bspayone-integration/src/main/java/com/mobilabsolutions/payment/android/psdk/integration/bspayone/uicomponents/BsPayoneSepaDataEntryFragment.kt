@@ -3,12 +3,12 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicompone
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
@@ -19,7 +19,9 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Country
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import com.mobilabsolutions.payment.android.util.CountryDetectorUtil
@@ -31,6 +33,8 @@ import kotlinx.android.synthetic.main.sepa_data_entry_fragment.back
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryTitleTextView
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorIban
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorSepaFirstName
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorSepaLastName
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameEditText
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameTitleTextView
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.ibanNumberEditText
@@ -50,7 +54,9 @@ import javax.inject.Inject
  */
 class BsPayoneSepaDataEntryFragment : Fragment() {
 
-    private val COUNTRY_REQUEST_CODE = 1
+    companion object {
+        private const val COUNTRY_REQUEST_CODE = 1
+    }
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
@@ -67,14 +73,23 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     lateinit var uiCustomizationManager: UiCustomizationManager
 
     private val disposables = CompositeDisposable()
-    private val firstNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
-    private val lastNameSubject: BehaviorSubject<String> = BehaviorSubject.create()
-    private val ibanSubject: BehaviorSubject<String> = BehaviorSubject.create()
+
+    private val firstNameLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val firstNameTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
+
+    private val lastNameLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val lastNameTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
+
+    private val ibanLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val ibanTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
+
     private val countrySubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     private var viewState: SepaDataEntryViewState? = null
 
     private lateinit var suggestedCountry: Locale
+
+    private var waitTimer: CountDownTimer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,41 +123,66 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
 
             firstNameEditText.showKeyboardAndFocus()
         }
+
         disposables += Observables.combineLatest(
-                firstNameSubject,
-                lastNameSubject,
-                ibanSubject,
-                countrySubject,
-                ::SepaDataEntryViewState)
-                .subscribe(this::onViewStateNext)
+            firstNameTextChangedSubject,
+            lastNameTextChangedSubject,
+            ibanTextChangedSubject,
+            countrySubject,
+            ::SepaDataEntryViewState)
+            .subscribe(this::onViewStateNext)
 
-        disposables += firstNameSubject
-                .doOnNext {
-                    validateFirstName(it)
-                }
-                .subscribe()
+        disposables += firstNameLostFocusSubject
+            .doOnNext {
+                validateFirstNameAndUpdateUI(it, false)
+            }
+            .subscribe()
 
-        disposables += lastNameSubject
-                .doOnNext {
-                    validateLastName(it)
-                }
-                .subscribe()
+        disposables += firstNameTextChangedSubject
+            .doOnNext {
+                validateFirstNameAndUpdateUI(it, true)
+            }
+            .subscribe()
 
-        disposables += ibanSubject
-                .doOnNext {
-                    validateIban(it)
-                }
-                .subscribe()
+        disposables += lastNameLostFocusSubject
+            .doOnNext {
+                validateLastNameAndUpdateUI(it, false)
+            }
+            .subscribe()
 
-        firstNameEditText.getContentOnFocusLost { firstNameSubject.onNext(it.trim()) }
-        lastNameEditText.getContentOnFocusLost { lastNameSubject.onNext(it.trim()) }
-        ibanNumberEditText.getContentOnFocusLost { ibanSubject.onNext(it.trim()) }
+        disposables += lastNameTextChangedSubject
+            .doOnNext {
+                validateLastNameAndUpdateUI(it, true)
+            }
+            .subscribe()
+
+        disposables += ibanLostFocusSubject
+            .doOnNext {
+                validateIbanAndUpdateUI(it, false)
+            }
+            .subscribe()
+
+        disposables += ibanTextChangedSubject
+            .doOnNext {
+                validateIbanAndUpdateUI(it, true)
+            }
+            .subscribe()
+
+        firstNameEditText.getContentOnFocusLost { firstNameLostFocusSubject.onNext(it.trim()) }
+        firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
+
+        lastNameEditText.getContentOnFocusLost { lastNameLostFocusSubject.onNext(it.trim()) }
+        lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
+
+        ibanNumberEditText.getContentOnFocusLost { ibanLostFocusSubject.onNext(it.trim()) }
+        ibanNumberEditText.observeText { ibanTextChangedSubject.onNext(it.trim()) }
+
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
-                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
-                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
         }
 
         saveButton.setOnClickListener {
@@ -171,75 +211,74 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     private fun onViewStateNext(state: SepaDataEntryViewState) {
         this.viewState = state
         var success = true
-        success = validateFirstName(state.firstName) && success
-        success = validateLastName(state.lastName) && success
-        success = validateIban(state.iban) && success
-        success = validateCountry(state.country) && success
+        success = validateName(state.firstName).success && success
+        success = validateName(state.lastName).success && success
+        success = validateIban(state.iban).success && success
+        success = validateCountry(state.country).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
             saveButton.applyCustomization(customizationPreference)
         }
     }
 
-    private fun EditText.customError(message: String) {
-        if (this.error == null) {
-            this.setError(message, ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
-            CustomizationExtensions {
-                this@customError.applyEditTextCustomization(customizationPreference)
+    private fun validateFirstNameAndUpdateUI(name: String, isDelayed: Boolean): Boolean {
+        val validationResult = validateName(name)
+        if (!validationResult.success) {
+            if (isDelayed) {
+                stopTimer()
+                startTimer(firstNameEditText, errorSepaFirstName, validationResult)
+            } else {
+                showError(firstNameEditText, errorSepaFirstName, validationResult)
             }
-        }
-    }
-
-    private fun EditText.clearError() {
-        this.error = null
-        CustomizationExtensions {
-            this@clearError.applyEditTextCustomization(customizationPreference)
-        }
-    }
-
-    private fun validateFirstName(name: String): Boolean {
-        val validationResult = personalDataValidator.validateName(name)
-        if (!validationResult.success) {
-            firstNameEditText.customError(getString(validationResult.errorMessageResourceId))
         } else {
-            firstNameEditText.clearError()
+            stopTimer()
+            hideError(firstNameEditText, errorSepaFirstName)
         }
         return validationResult.success
     }
 
-    private fun validateLastName(name: String): Boolean {
-        val validationResult = personalDataValidator.validateName(name)
+    private fun validateLastNameAndUpdateUI(name: String, isDelayed: Boolean): Boolean {
+        val validationResult = validateName(name)
         if (!validationResult.success) {
-            lastNameEditText.customError(getString(validationResult.errorMessageResourceId))
-        } else {
-            lastNameEditText.clearError()
-        }
-        return validationResult.success
-    }
-
-    private fun validateIban(iban: String): Boolean {
-        val validationResult = sepaDataValidator.validateIban(iban)
-        if (!validationResult.success) {
-            ibanNumberEditText.setBackgroundResource(R.drawable.edit_text_frame_error)
-            errorIban.visibility = View.VISIBLE
-        } else {
-            ibanNumberEditText.setBackgroundResource(R.drawable.edit_text_frame)
-            errorIban.visibility = View.GONE
-        }
-        return validationResult.success
-    }
-
-    private fun validateCountry(country: String): Boolean {
-        return if (country.isNotEmpty()) {
-            countryText.error = null
-            CustomizationExtensions {
-                countryText.applyFakeEditTextCustomization(customizationPreference)
+            if (isDelayed) {
+                stopTimer()
+                startTimer(lastNameEditText, errorSepaLastName, validationResult)
+            } else {
+                showError(lastNameEditText, errorSepaLastName, validationResult)
             }
-            true
         } else {
-            countryText.setError(getString(R.string.validation_error_missing_country), ContextCompat.getDrawable(requireContext(), R.drawable.empty_drawable))
-            false
+            stopTimer()
+            hideError(lastNameEditText, errorSepaLastName)
         }
+        return validationResult.success
+    }
+
+    private fun validateName(name: String): ValidationResult {
+        return personalDataValidator.validateName(name)
+    }
+
+    private fun validateIbanAndUpdateUI(iban: String, isDelayed: Boolean): Boolean {
+        val validationResult = validateIban(iban)
+        if (!validationResult.success) {
+            if (isDelayed) {
+                stopTimer()
+                startTimer(ibanNumberEditText, errorIban, validationResult)
+            } else {
+                showError(ibanNumberEditText, errorIban, validationResult)
+            }
+        } else {
+            stopTimer()
+            hideError(ibanNumberEditText, errorIban)
+        }
+        return validationResult.success
+    }
+
+    private fun validateIban(iban: String): ValidationResult {
+        return sepaDataValidator.validateIban(iban)
+    }
+
+    private fun validateCountry(country: String): ValidationResult {
+        return ValidationResult(success = country.isNotEmpty())
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -253,6 +292,34 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         } catch (ex: Exception) {
             Toast.makeText(activity, ex.toString(), Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun startTimer(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
+        waitTimer = object : CountDownTimer(3000, 1000) {
+            override fun onTick(millisUntilFinished: Long) {
+                // Do Nothing
+            }
+
+            override fun onFinish() {
+                showError(sourceView, errorView, validationResult)
+            }
+        }.start()
+    }
+
+    private fun showError(sourceView: View, errorView: TextView, validationResult: ValidationResult) {
+        errorView.setText(validationResult.errorMessageResourceId)
+        errorView.visibility = View.VISIBLE
+        sourceView.setBackgroundResource(R.drawable.edit_text_frame_error)
+    }
+
+    private fun hideError(sourceView: View, errorView: TextView) {
+        sourceView.setBackgroundResource(R.drawable.edit_text_frame)
+        errorView.visibility = View.GONE
+    }
+
+    private fun stopTimer() {
+        waitTimer?.cancel()
+        waitTimer = null
     }
 
     data class SepaDataEntryViewState(
