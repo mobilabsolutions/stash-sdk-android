@@ -3,13 +3,12 @@ package com.mobilabsolutions.payment.sample
 import com.facebook.stetho.Stetho
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.commonsv3_dagger.mvp.presenter.DaggerPresenterManager
+import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
-import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
-import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
@@ -25,7 +24,7 @@ class PaymentSampleApplication : DaggerApplication() {
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = "https://payment-dev.mblb.net/api/",
                 integrationList = listOf(
-                    BsPayoneIntegration to PaymentMethodType.CC,
+                    AdyenIntegration to PaymentMethodType.CC,
                     AdyenIntegration to PaymentMethodType.SEPA,
                     BraintreeIntegration to PaymentMethodType.PAYPAL),
                 testMode = true
@@ -33,12 +32,12 @@ class PaymentSampleApplication : DaggerApplication() {
         PaymentSdk.initalize(this, configuration)
 //        PaymentSdk.initalize(BuildConfig.newBsApiKey, "https://payment-dev.mblb.net/api/", this, setOf(BsPayoneIntegration, BraintreeIntegration), true)
 
-        val textColor: Int = android.R.color.holo_orange_dark
-        val backgroundColor: Int = R.color.coral
-        val buttonColor: Int = android.R.color.holo_purple
-        val buttonTextColor: Int = android.R.color.holo_blue_bright
-        val cellBackgroundColor: Int = R.color.lochmara
-        val mediumEmphasisColor: Int = android.R.color.holo_green_light
+        val textColor: Int = R.color.textColor
+        val backgroundColor: Int = R.color.backgroundColor
+        val buttonColor: Int = R.color.buttonColor
+        val buttonTextColor: Int = R.color.buttonTextColor
+        val cellBackgroundColor: Int = R.color.cellBackgroundColor
+        val mediumEmphasisColor: Int = R.color.mediumEmphasisColor
 
         val customizationPreference = CustomizationPreference(
                 textColor,

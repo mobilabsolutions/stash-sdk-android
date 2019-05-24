@@ -3,4 +3,10 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <color name="textColor">#1D1D1D</color>
+    <color name="backgroundColor">#FDCE92</color>
+    <color name="buttonColor">#C97900</color>
+    <color name="buttonTextColor">#000000</color>
+    <color name="cellBackgroundColor">#76CDFD</color>
+    <color name="mediumEmphasisColor">#0074A2</color>
 </resources>
