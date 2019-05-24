@@ -23,8 +23,8 @@ android {
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
 
 
-        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, PaymentSdkBuildConfigs.vapianoVersionCode).toInt()
-        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, PaymentSdkBuildConfigs.vapianoVersionName)
+        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, PaymentSdkBuildConfigs.sdkVersionCode).toInt()
+        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, PaymentSdkBuildConfigs.sdkVersionName)
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
     }

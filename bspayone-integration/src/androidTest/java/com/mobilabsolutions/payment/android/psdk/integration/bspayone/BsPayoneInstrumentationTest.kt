@@ -10,7 +10,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
-import com.mobilabsolutions.payment.android.psdk.model.PaymentData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import dagger.Component
 import io.reactivex.rxkotlin.subscribeBy
@@ -19,7 +18,6 @@ import org.junit.Assert
 import org.junit.Assert.fail
 import org.junit.Ignore
 import org.junit.Test
-import org.threeten.bp.LocalDate
 import timber.log.Timber
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
@@ -34,33 +32,27 @@ class BsPayoneRegistrationInstrumentationTest {
     @Inject
     lateinit var registrationManager: NewRegistrationManager
 
+    private var validBillingData: BillingData = BillingData(
+        city = "Cologne",
+        email = "holder@email.test",
+        address1 = "Street 1",
+        country = "Germany",
+        firstName = "Holder",
+        lastName = "Holderman"
+    )
+
     private var validSepaData: SepaData = SepaData(
-            bic = "PBNKDEFF",
-            iban = "DE63123456791212121212",
-            holder = "Holder Holderman"
+        bic = "PBNKDEFF",
+        iban = "DE63123456791212121212",
+        billingData = validBillingData
     )
 
     val validCreditCardData = CreditCardData(
-            "4111111111111111",
-            LocalDate.of(2021, 11, 1),
-            "123",
-            "Holder Holderman"
-    )
-
-    private var paymentData: PaymentData = PaymentData(
-            amount = 100,
-            currency = "EUR",
-            customerId = "1",
-            reason = "Test payment"
-    )
-
-    private var validBillingData: BillingData = BillingData(
-            city = "Cologne",
-            email = "holder@email.test",
-            address1 = "Street 1",
-            country = "Germany",
-            firstName = "Holder",
-            lastName = "Holderman"
+        "4111111111111111",
+        10,
+        2020,
+        "123",
+        validBillingData
     )
 
     fun setUp() {
@@ -70,10 +62,10 @@ class BsPayoneRegistrationInstrumentationTest {
         val integration = BsPayoneIntegration.create(methods)
 
         val graph = DaggerBsPayoneTestPaymentSdkComponent.builder()
-                .sslSupportModule(SslSupportModule(null, null))
-                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
-                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
-                .build()
+            .sslSupportModule(SslSupportModule(null, null))
+            .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
+            .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
+            .build()
 
         integration.initialize(graph)
 
@@ -89,21 +81,21 @@ class BsPayoneRegistrationInstrumentationTest {
         val latch = CountDownLatch(1)
 
         val registrationDisposable = registrationManager.registerCreditCard(
-                validCreditCardData
+            validCreditCardData
         )
-                .subscribeOn(Schedulers.io())
-                .subscribeBy(
-                        onSuccess = { paymentAlias ->
-                            Assert.assertNotNull(paymentAlias)
-                            println("Payment aliasId: $paymentAlias")
-                            latch.countDown()
-                        },
-                        onError = {
-                            Timber.e(it, "Failed")
-                            fail(it.message)
-                            latch.countDown()
-                        }
-                )
+            .subscribeOn(Schedulers.io())
+            .subscribeBy(
+                onSuccess = { paymentAlias ->
+                    Assert.assertNotNull(paymentAlias)
+                    println("Payment aliasId: $paymentAlias")
+                    latch.countDown()
+                },
+                onError = {
+                    Timber.e(it, "Failed")
+                    fail(it.message)
+                    latch.countDown()
+                }
+            )
 
         latch.await()
 
@@ -116,21 +108,21 @@ class BsPayoneRegistrationInstrumentationTest {
         val latch = CountDownLatch(1)
 
         val registrationDisposable = registrationManager.registerSepaAccount(
-                validSepaData, validBillingData)
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                        { paymentAlias ->
-                            Assert.assertNotNull(paymentAlias)
-                            println("Payment aliasId: $paymentAlias")
-                            latch.countDown()
-                        }
-
-                ) { error ->
-
-                    Assert.fail(error.message)
-
+            validSepaData)
+            .subscribeOn(Schedulers.io())
+            .subscribe(
+                { paymentAlias ->
+                    Assert.assertNotNull(paymentAlias)
+                    println("Payment aliasId: $paymentAlias")
                     latch.countDown()
                 }
+
+            ) { error ->
+
+                Assert.fail(error.message)
+
+                latch.countDown()
+            }
 
         try {
             latch.await()
@@ -140,6 +132,7 @@ class BsPayoneRegistrationInstrumentationTest {
 
         registrationDisposable.dispose()
     }
+
     @Ignore("Not implemented on backend yet")
     @Test
     fun registerCreditCardFailure() {
@@ -147,21 +140,22 @@ class BsPayoneRegistrationInstrumentationTest {
         val latch = CountDownLatch(1)
 
         val validCreditCardData = CreditCardData(
-                "4111111111111111",
-                LocalDate.of(2021, 1, 1),
-                "123",
-                "Holder Holderman"
+            "4111111111111111",
+            1,
+            2021,
+            "123",
+            validBillingData
         )
 
         registrationManager.registerCreditCard(validCreditCardData).subscribeBy(
-                onSuccess = { alias ->
-                    System.out.print("Test")
-                    latch.countDown()
-                },
-                onError = {
-                    latch.countDown()
-                    it.printStackTrace()
-                }
+            onSuccess = { alias ->
+                System.out.print("Test")
+                latch.countDown()
+            },
+            onError = {
+                latch.countDown()
+                it.printStackTrace()
+            }
         )
 
         latch.await()

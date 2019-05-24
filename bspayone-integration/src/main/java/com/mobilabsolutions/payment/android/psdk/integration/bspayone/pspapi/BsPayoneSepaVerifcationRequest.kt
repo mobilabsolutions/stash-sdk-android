@@ -10,7 +10,7 @@ data class BsPayoneSepaVerifcationRequest(
     val baseRequest: BsPayoneBaseRequest,
     @SerializedName("aid")
     val accountId: String,
-    @SerializedName("iban")
+    @SerializedName("maskedIban")
     val iban: String
 
 ) : BsPayoneBaseRequest(baseRequest) {
@@ -19,7 +19,7 @@ data class BsPayoneSepaVerifcationRequest(
         map.putAll(
                 mapOf(
                         "aid" to accountId,
-                        "iban" to iban
+                        "maskedIban" to iban
 
                 )
         )

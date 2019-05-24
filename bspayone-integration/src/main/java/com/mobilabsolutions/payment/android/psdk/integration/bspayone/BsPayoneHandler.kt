@@ -13,7 +13,9 @@ import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUp
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
+import com.mobilabsolutions.payment.android.util.withLastDayOfMonth
 import io.reactivex.Single
+import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 /**
@@ -57,7 +59,7 @@ class BsPayoneHandler @Inject constructor(
                             it.accountId,
                             creditCardData.number,
                             "V",
-                            creditCardData.expiryDate,
+                            LocalDate.of(creditCardData.expiryYear, creditCardData.expiryMonth, 1).withLastDayOfMonth(),
                             creditCardData.cvv,
                             "yes"
 

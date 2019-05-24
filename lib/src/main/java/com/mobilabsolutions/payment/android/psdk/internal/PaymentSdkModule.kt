@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
@@ -183,7 +184,19 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    fun provideDefaultGson(): Gson = Gson()
+    fun provideDefaultGson(): Gson {
+        val extraInfoTypeAdapterFactory = RuntimeTypeAdapterFactory
+            .of(ExtraAliasInfo::class.java, "extraType")
+            .registerSubtype(ExtraAliasInfo.CreditCardExtraInfo::class.java, "CC")
+            .registerSubtype(ExtraAliasInfo.SepaExtraInfo::class.java, "SEPA")
+            .registerSubtype(ExtraAliasInfo.PaypalExtraInfo::class.java, "PAYPAL")
+
+        val gson = GsonBuilder()
+            .registerTypeAdapterFactory(extraInfoTypeAdapterFactory)
+            .registerTypeHierarchyAdapter(Throwable::class.java, ThrowableSerializer())
+            .create()
+        return gson
+    }
 
     @Provides
     @Singleton

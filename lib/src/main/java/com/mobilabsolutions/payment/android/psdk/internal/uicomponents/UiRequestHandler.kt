@@ -146,14 +146,19 @@ class UiRequestHandler @Inject constructor() {
                     flowCompleted(hostActivity)
                 }.ambWith(errorSubject.firstOrError())
         }.map {
+
+            val localDate = LocalDate.parse(
+                it.getValue(CreditCardData.EXPIRY_DATE) + "/01",
+                DateTimeFormatter.ofPattern("MM/yy/dd")
+            )
             val validCreditCardData = CreditCardData(
                 it.getValue(CreditCardData.CREDIT_CARD_NUMBER),
-                LocalDate.parse(
-                    it.getValue(CreditCardData.EXPIRY_DATE) + "/01",
-                    DateTimeFormatter.ofPattern("MM/yy/dd")
-                ),
+                localDate.monthValue,
+                localDate.year,
                 it.getValue(CreditCardData.CVV),
-                it.getValue(BillingData.FIRST_NAME) + " " + it.getValue(BillingData.LAST_NAME)
+                BillingData(
+                    firstName = BillingData.ADDITIONAL_DATA_FIRST_NAME,
+                    lastName = it.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME))
             )
             val additionalDataMap: Map<String, String> = it
 
@@ -181,7 +186,10 @@ class UiRequestHandler @Inject constructor() {
         }.map {
             val sepaData = SepaData(
                 iban = it.getValue(SepaData.IBAN),
-                holder = it.getValue(SepaData.FIRST_NAME) + " " + it.getValue(SepaData.LAST_NAME)
+                billingData = BillingData(
+                    firstName = it.getValue(BillingData.ADDITIONAL_DATA_FIRST_NAME),
+                    lastName = it.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME)
+                )
             )
 
             Pair(sepaData, it)
