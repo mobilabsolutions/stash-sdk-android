@@ -2,6 +2,8 @@ package com.mobilabsolutions.payment.sample
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.widget.EditText
+import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
@@ -46,6 +48,10 @@ class KotlinSketch {
 
     @SuppressLint("CheckResult")
     fun readmeSketch() {
+        val editText: EditText
+        CustomizationExtensions {
+        }
+
         val billingData = BillingData(
             firstName = "Max",
             lastName = "Mustermann",
