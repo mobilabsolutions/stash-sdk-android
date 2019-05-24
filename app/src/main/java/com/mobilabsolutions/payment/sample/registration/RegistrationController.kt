@@ -44,7 +44,7 @@ class RegistrationController @Inject constructor() : Controller() {
         } else {
             ""
         }
-        return registrationManager.registerPaymentMehodUsingUi(activity, specificPaymentMethodType = PaymentMethodType.CC)
+        return registrationManager.registerPaymentMethodUsingUi(activity, specificPaymentMethodType = PaymentMethodType.CC)
 //        return registrationManager.registerCreditCard(
 //                CreditCardData(number = creditCardNumber,
 //                        expiryDate = exipryDate,
@@ -79,11 +79,11 @@ class RegistrationController @Inject constructor() : Controller() {
         } else {
             ""
         }
-        return registrationManager.registerPaymentMehodUsingUi(activity, specificPaymentMethodType = PaymentMethodType.SEPA)
-//        return registrationManager.registerSepa(
+        return registrationManager.registerPaymentMethodUsingUi(activity, specificPaymentMethodType = PaymentMethodType.SEPA)
+//        return registrationManager.registerSepaAccount(
 //                SepaData(
 //                        bic = bic,
-//                        iban = iban,
+//                        maskedIban = maskedIban,
 //                        holder = holderName
 //                ),
 //                BillingData(
@@ -100,7 +100,7 @@ class RegistrationController @Inject constructor() : Controller() {
     }
 
     fun registerPayPal(activity: Activity? = null, billingAgreement: String = "Placeholder"): Single<PaymentMethodAlias> {
-        return registrationManager.registerPaymentMehodUsingUi(activity = activity, specificPaymentMethodType = PaymentMethodType.PAYPAL)
+        return registrationManager.registerPaymentMethodUsingUi(activity = activity, specificPaymentMethodType = PaymentMethodType.PAYPAL)
                 .doOnSuccess {
                     Timber.d("Nonce ${it.alias}")
                     paymentMethodStateSubject.apply {
@@ -112,7 +112,7 @@ class RegistrationController @Inject constructor() : Controller() {
     }
 
     fun registerPaymentMethod(activity: Activity? = null): Single<PaymentMethodAlias> {
-        return registrationManager.registerPaymentMehodUsingUi(activity = activity)
+        return registrationManager.registerPaymentMethodUsingUi(activity = activity)
                 .doOnSuccess {
                     Timber.d("Nonce ${it.alias}")
                     paymentMethodStateSubject.apply {

@@ -43,7 +43,7 @@ class IdempotencyManager @Inject constructor(
             return if (idempotencyData.paymentMethodType != paymentMethodType) {
                 Single.error(IdempotencyKeyInUseException())
             } else when {
-                idempotencyData.paymentMethodAlias != null -> Single.just(PaymentMethodAlias(idempotencyData.paymentMethodAlias.alias, paymentMethodType))
+                idempotencyData.paymentMethodAlias != null -> Single.just(idempotencyData.paymentMethodAlias)
                 else -> Single.error(idempotencyData.error)
             }
         } ?: run {

@@ -8,7 +8,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalR
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import io.reactivex.Single
 
 /**
@@ -21,8 +20,13 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
     companion object : IntegrationCompanion {
         var integration: TemplateIntegration? = null
 
-        override fun create(): IntegrationInitialization {
+        override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA, PaymentMethodType.PAYPAL)
+
+        override fun create(enabledPaymentMethodTypeSet: Set<PaymentMethodType>): IntegrationInitialization {
             return object : IntegrationInitialization {
+
+                override val enabledPaymentMethodTypes = enabledPaymentMethodTypeSet
+
                 override fun initializedOrNull(): Integration? {
                     return integration
                 }
@@ -58,11 +62,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun getSupportedPaymentMethodDefinitions(): List<PaymentMethodDefinition> {
-        return emptyList()
-    }
-
-    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodDefinition: PaymentMethodDefinition, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {
+    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

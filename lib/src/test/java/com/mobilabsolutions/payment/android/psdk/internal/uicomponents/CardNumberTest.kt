@@ -1,6 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher.CardType
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher.CardTypeWithIcon
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher.GroupingPattern
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -194,9 +194,9 @@ class CardNumberTest {
     //endregion
 
     //region Matching Tests
-    private fun checkPattern(testString: String): CardType? {
-        for (matchingPattern in CardType.values()) {
-            if (testString.matches(matchingPattern.regex)) {
+    private fun checkPattern(testString: String): CardTypeWithIcon? {
+        for (matchingPattern in CardTypeWithIcon.values()) {
+            if (testString.matches(matchingPattern.cardTypeWithRegex.regex)) {
                 return matchingPattern
             }
         }
@@ -226,7 +226,7 @@ class CardNumberTest {
         val testCard = "1800000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.JCB
+                CardTypeWithIcon.JCB
         )
     }
 
@@ -235,7 +235,7 @@ class CardNumberTest {
         val testCard = "340000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.AMEX
+                CardTypeWithIcon.AMEX
         )
     }
 
@@ -244,7 +244,7 @@ class CardNumberTest {
         val testCard = "36000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.DINERS
+                CardTypeWithIcon.DINERS
         )
     }
 
@@ -253,7 +253,7 @@ class CardNumberTest {
         val testCard = "4111111111111111"
         assertEquals(
                 checkPattern(testCard),
-                CardType.VISA
+                CardTypeWithIcon.VISA
         )
     }
 
@@ -262,7 +262,7 @@ class CardNumberTest {
         val testCard = "5011000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.MAESTRO_13
+                CardTypeWithIcon.MAESTRO_13
         )
     }
 
@@ -271,7 +271,7 @@ class CardNumberTest {
         val testCard = "560000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.MAESTRO_15
+                CardTypeWithIcon.MAESTRO_15
         )
     }
 
@@ -280,7 +280,7 @@ class CardNumberTest {
         val testCard = "6111000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.MAESTRO
+                CardTypeWithIcon.MAESTRO
         )
     }
 
@@ -289,7 +289,7 @@ class CardNumberTest {
         val testCard = "5111000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.MASTER_CARD
+                CardTypeWithIcon.MASTER_CARD
         )
     }
 
@@ -298,7 +298,7 @@ class CardNumberTest {
         val testCard = "6011000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.DISCOVER
+                CardTypeWithIcon.DISCOVER
         )
     }
 
@@ -307,7 +307,7 @@ class CardNumberTest {
         val testCard = "6200000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.UNIONPAY_16
+                CardTypeWithIcon.UNIONPAY_16
         )
     }
 
@@ -316,7 +316,7 @@ class CardNumberTest {
         val testCard = "6200000000000000000"
         assertEquals(
                 checkPattern(testCard),
-                CardType.UNIONPAY_19
+                CardTypeWithIcon.UNIONPAY_19
         )
     }
     //endregion

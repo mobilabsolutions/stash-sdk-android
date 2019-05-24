@@ -4,6 +4,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import androidx.annotation.DrawableRes
 import com.mobilabsolutions.payment.android.R
+import com.mobilabsolutions.payment.android.psdk.CreditCardTypeWithRegex
 
 class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
 
@@ -35,14 +36,14 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
 
     private fun identify(editable: Editable) {
         val currentString = editable.toString().replace("\\D".toRegex(), "")
-        for (matchingPattern in CardType.values()) {
-            if (currentString.matches(matchingPattern.regex)) {
+        for (matchingPattern in CardTypeWithIcon.values()) {
+            if (currentString.matches(matchingPattern.cardTypeWithRegex.regex)) {
                 groupingPattern = (when (matchingPattern) {
-                    CardType.AMEX -> GroupingPattern.AMEX.pattern
-                    CardType.DINERS -> GroupingPattern.DINERS.pattern
-                    CardType.MAESTRO_13 -> GroupingPattern.MAESTRO_13.pattern
-                    CardType.MAESTRO_15 -> GroupingPattern.MAESTRO_15.pattern
-                    CardType.UNIONPAY_19 -> GroupingPattern.UNIONPAY_19.pattern
+                    CardTypeWithIcon.AMEX -> GroupingPattern.AMEX.pattern
+                    CardTypeWithIcon.DINERS -> GroupingPattern.DINERS.pattern
+                    CardTypeWithIcon.MAESTRO_13 -> GroupingPattern.MAESTRO_13.pattern
+                    CardTypeWithIcon.MAESTRO_15 -> GroupingPattern.MAESTRO_15.pattern
+                    CardTypeWithIcon.UNIONPAY_19 -> GroupingPattern.UNIONPAY_19.pattern
                     else -> GroupingPattern.VISA_MASTER.pattern
                 })
                 cardIconChanged(matchingPattern.resource)
@@ -93,31 +94,31 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
         UNIONPAY_19("(\\d{6})(\\d{0,13})") // 6-13
     }
 
-    enum class CardType(val regex: Regex, @DrawableRes val resource: Int) {
+    enum class CardTypeWithIcon(val cardTypeWithRegex: CreditCardTypeWithRegex, @DrawableRes val resource: Int) {
 
-        JCB(Regex("^(?:2131|1800|35[0-9]{3})[0-9]{3,}$"), R.drawable.ic_card_jcb),
+        JCB(CreditCardTypeWithRegex.JCB, R.drawable.ic_card_jcb),
 
-        AMEX(Regex("^3[47][0-9]{1,13}$"), R.drawable.ic_card_amex),
+        AMEX(CreditCardTypeWithRegex.AMEX, R.drawable.ic_card_amex),
 
-        DINERS(Regex("^3(?:0[0-5]|[68][0-9])[0-9]{2,}$"), R.drawable.ic_card_diners_club),
+        DINERS(CreditCardTypeWithRegex.DINERS, R.drawable.ic_card_diners_club),
 
-        VISA(Regex("^4[0-9]{2,12}(?:[0-9]{3})?$"), R.drawable.ic_card_visa),
+        VISA(CreditCardTypeWithRegex.VISA, R.drawable.ic_card_visa),
 
-        MAESTRO_13(Regex("^50[0-9]{1,11}$"), R.drawable.ic_card_maestro),
+        MAESTRO_13(CreditCardTypeWithRegex.MAESTRO_13, R.drawable.ic_card_maestro),
 
-        MAESTRO_15(Regex("^5[68][0-9]{1,13}$"), R.drawable.ic_card_maestro),
+        MAESTRO_15(CreditCardTypeWithRegex.MAESTRO_15, R.drawable.ic_card_maestro),
 
-        MASTER_CARD(Regex("^5[1-5][0-9]{1,14}$"), R.drawable.ic_card_master),
+        MASTER_CARD(CreditCardTypeWithRegex.MASTER_CARD, R.drawable.ic_card_master),
 
         // Conflicts with MASTER_CARD, need a way (number range) to distinguish. Also, applicable only for US Cards
         // DINERS_US(Regex("^5[45][0-9]{1,14}$"), R.drawable.ic_card_diners_club),
 
-        DISCOVER(Regex("^6(?:011|5[0-9]{2})[0-9]{3,}$"), R.drawable.ic_card_discover),
+        DISCOVER(CreditCardTypeWithRegex.DISCOVER, R.drawable.ic_card_discover),
 
-        UNIONPAY_16(Regex("^62[0-9]{1,14}$"), R.drawable.ic_card_union_pay),
+        UNIONPAY_16(CreditCardTypeWithRegex.UNIONPAY_16, R.drawable.ic_card_union_pay),
 
-        UNIONPAY_19(Regex("^62[0-9]{15,17}$"), R.drawable.ic_card_union_pay),
+        UNIONPAY_19(CreditCardTypeWithRegex.UNIONPAY_19, R.drawable.ic_card_union_pay),
 
-        MAESTRO(Regex("^6[0-9]{1,18}$"), R.drawable.ic_card_maestro)
+        MAESTRO(CreditCardTypeWithRegex.MAESTRO, R.drawable.ic_card_maestro)
     }
 }

@@ -17,6 +17,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataV
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
+import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
@@ -172,8 +173,8 @@ class AdyenSepaDataEntryFragment : Fragment() {
         saveButton.setOnClickListener {
             viewState?.let {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
-                dataMap[SepaData.FIRST_NAME] = it.firstName
-                dataMap[SepaData.LAST_NAME] = it.lastName
+                dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
+                dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[SepaData.IBAN] = it.iban
                 uiComponentHandler.dataSubject.onNext(dataMap)
             }

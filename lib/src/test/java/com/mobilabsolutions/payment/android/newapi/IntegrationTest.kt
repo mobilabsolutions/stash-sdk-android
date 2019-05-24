@@ -2,8 +2,10 @@ package com.mobilabsolutions.payment.android.newapi
 
 import android.app.Application
 import android.content.SharedPreferences
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
@@ -48,11 +50,35 @@ class IntegrationTest {
 
     @Test
     fun testMultipleIntegrations() {
-        expectedException.expect(RuntimeException::class.java)
+        expectedException.expect(ConfigurationException::class.java)
         val paymentSdkConfiguration = PaymentSdkConfiguration(
                 publicKey = "123",
-                endpoint = "fakeUrl",
-                integrations = setOf(BsPayoneIntegration, AdyenIntegration)
+                endpoint = "https://fakeUrl",
+                integrationList = listOf(
+                    BsPayoneIntegration to PaymentMethodType.SEPA,
+                    AdyenIntegration to PaymentMethodType.SEPA
+                )
+        )
+        PaymentSdk.initalize(application, paymentSdkConfiguration)
+    }
+
+    @Test
+    fun testEmptyIntegrationListProvided() {
+        expectedException.expect(ConfigurationException::class.java)
+        val paymentSdkConfiguration = PaymentSdkConfiguration(
+            publicKey = "123",
+            endpoint = "https://fakeUrl",
+            integrationList = listOf()
+        )
+        PaymentSdk.initalize(application, paymentSdkConfiguration)
+    }
+
+    @Test
+    fun testNoIntegrationProvided() {
+        expectedException.expect(ConfigurationException::class.java)
+        val paymentSdkConfiguration = PaymentSdkConfiguration(
+            publicKey = "123",
+            endpoint = "https://fakeUrl"
         )
         PaymentSdk.initalize(application, paymentSdkConfiguration)
     }

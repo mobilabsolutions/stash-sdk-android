@@ -123,7 +123,7 @@
 //    fun testHCSepaRegistration() {
 //        val latch = CountDownLatch(1)
 //
-//        val registrationDisposable = registrationManager.registerSepa(
+//        val registrationDisposable = registrationManager.registerSepaAccount(
 //                validSepaData
 //        ).subscribeOn(Schedulers.io())
 //                .subscribe { paymentAlias ->
@@ -156,7 +156,7 @@
 //        expectedException.expectMessage("Only German SEPA accounts are supported with Hypercharge provider")
 //
 //        val nonGermanSepaData = SepaData("PBNKDEFF", "GR4495706023542089375902674", "Holder Holderman")
-//        val registrationDisposable = registrationManager.registerSepa(
+//        val registrationDisposable = registrationManager.registerSepaAccount(
 //                nonGermanSepaData
 //        ).subscribeOn(Schedulers.io())
 //                .subscribe(
@@ -227,7 +227,7 @@
 //        val latch = CountDownLatch(1)
 //
 //
-//        val registrationDisposable = registrationManager.registerSepa(
+//        val registrationDisposable = registrationManager.registerSepaAccount(
 //                validSepaData
 //        )
 //                .subscribeOn(Schedulers.io())

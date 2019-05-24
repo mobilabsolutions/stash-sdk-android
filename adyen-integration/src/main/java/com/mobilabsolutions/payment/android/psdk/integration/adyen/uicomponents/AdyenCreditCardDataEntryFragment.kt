@@ -221,8 +221,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         saveButton.setOnClickListener {
             viewState?.let {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
-                dataMap[BillingData.FIRST_NAME] = it.firstName
-                dataMap[BillingData.LAST_NAME] = it.lastName
+                dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
+                dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_DATE] = expirationDateTextView.getContentsAsString()

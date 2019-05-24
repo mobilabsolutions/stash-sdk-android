@@ -10,6 +10,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.UiDevice
 import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreePayPalActivity
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.R
@@ -36,13 +37,14 @@ class PayPalRegistrationTest {
         override fun beforeActivityLaunched() {
             super.beforeActivityLaunched()
             val context = InstrumentationRegistry.getInstrumentation().context
-            val initialization = BraintreeIntegration.create()
+            val methods = setOf(PaymentMethodType.PAYPAL)
+            val initialization = BraintreeIntegration.create(methods)
             val component = DaggerTestPayPalRegistrationComponent.builder()
                     .paymentSdkModule(PaymentSdkModule(
                             MOBILAB_TEST_PUBLISHABLE_KEY,
                             MOBILAB_BACKEND_URL,
                             context.applicationContext as Application,
-                            listOf(initialization), true))
+                            mapOf(initialization to methods), true))
                     .build()
             initialization.initialize(component)
         }

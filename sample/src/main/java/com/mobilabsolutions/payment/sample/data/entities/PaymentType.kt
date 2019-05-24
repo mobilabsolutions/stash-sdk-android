@@ -10,15 +10,6 @@ enum class PaymentType(val sdkValue: String) {
     PAYPAL("PayPal");
 
     companion object {
-        fun fromVapianoValue(value: String): PaymentType? = values().firstOrNull { it.sdkValue == value }
-    }
-}
-
-enum class CreditCardType(val sdkValue: String) {
-    VISA("VISA"),
-    MASTER_CARD("MASTERCARD");
-
-    companion object {
-        fun fromVapianoValue(value: String): CreditCardType? = CreditCardType.values().firstOrNull { it.sdkValue.equals(value, ignoreCase = true) }
+        fun fromStringValue(value: String): PaymentType? = values().firstOrNull { it.sdkValue == value }
     }
 }

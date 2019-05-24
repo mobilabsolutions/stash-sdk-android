@@ -104,12 +104,12 @@ class AdyenHandler @Inject constructor(
             val publicKey = paymentSession.publicKey!!
             val card = Card.Builder()
                     .setNumber(creditCardData.number)
-                    .setExpiryDate(creditCardData.expiryDate.monthValue, creditCardData.expiryDate.year)
+                    .setExpiryDate(creditCardData.expiryMonth, creditCardData.expiryYear)
                     .setSecurityCode(creditCardData.cvv)
                     .build()
             val encryptedCard = Cards.ENCRYPTOR.encryptFields(card, paymentSession.generationTime, publicKey).call()
             val creditCardDetails = CardDetails.Builder()
-                    .setHolderName(creditCardData.holder)
+                    .setHolderName(creditCardData.billingData?.fullName())
                     .setEncryptedCardNumber(encryptedCard.encryptedNumber)
                     .setEncryptedExpiryMonth(encryptedCard.encryptedExpiryMonth)
                     .setEncryptedExpiryYear(encryptedCard.encryptedExpiryYear)
@@ -178,7 +178,7 @@ class AdyenHandler @Inject constructor(
         val sepaConfig = SepaConfig(
                 iban = sepaData.iban,
                 bic = sepaData.bic,
-                name = sepaData.holder,
+                name = sepaData.billingData?.fullName(),
                 lastname = billingData.lastName,
                 street = billingData.address1,
                 zip = billingData.zip,
