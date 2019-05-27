@@ -85,7 +85,7 @@ class PaymentPresenter : CommonPresenter<PaymentView>() {
                                         is UnknownError -> ui.render(PaymentViewState.ErrorState(it.message))
                                         is PaymentFailedException -> ui.render(PaymentViewState.ErrorState("Payment failed!"))
                                         is TemporaryException -> ui.render(PaymentViewState.ErrorState(it.message))
-                                        else -> ui.render(PaymentViewState.ErrorState("Unexpected exception! ${it.message}"))
+                                        else -> ui.render(PaymentViewState.ErrorState("Unexpected throwable! ${it.message}"))
                                     }
                                 }
                                 ui.render(PaymentViewState.ErrorState(it.message!!))

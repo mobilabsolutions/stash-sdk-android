@@ -23,6 +23,9 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryCh
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions.getErrorSnackBar
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
@@ -35,6 +38,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.back
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.bsPayoneCreditCardEntrySwipeRefresh
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryTitleTextView
 import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardNumberEditText
@@ -250,7 +254,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_DATE] = expirationDateTextView.getContentsAsString()
-                uiComponentHandler.dataSubject.onNext(dataMap)
+                uiComponentHandler.submitData(dataMap)
             }
         }
 
@@ -264,6 +268,23 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 expirationDateTextView.text = expDate
             }
             monthYearPicker.show()
+        }
+        bsPayoneCreditCardEntrySwipeRefresh.isEnabled = false
+        disposables += uiComponentHandler.getResultObservable().subscribe {
+            when (it) {
+                is UiRequestHandler.DataEntryResult.Success -> {
+                    bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = false
+                }
+                is UiRequestHandler.DataEntryResult.Processing -> {
+                    bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = true
+                }
+                is UiRequestHandler.DataEntryResult.Failure -> {
+                    SnackBarExtensions {
+                        bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = false
+                        it.throwable.getErrorSnackBar(bsPayoneCreditCardEntrySwipeRefresh).show()
+                    }
+                }
+            }
         }
 
         back.setOnClickListener {

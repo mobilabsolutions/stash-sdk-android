@@ -122,7 +122,7 @@ class AdyenTest {
         val latch = CountDownLatch(1)
         registrationManager.registerCreditCard(invalidVisaCreditCardData).subscribeBy(
             onSuccess = {
-                Assert.fail("Expected validation exception")
+                Assert.fail("Expected validation throwable")
                 latch.countDown()
             },
             onError = {

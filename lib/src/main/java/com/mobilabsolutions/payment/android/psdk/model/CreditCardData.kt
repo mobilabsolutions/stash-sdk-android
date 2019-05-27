@@ -4,7 +4,7 @@ package com.mobilabsolutions.payment.android.psdk.model
  * This class models data needed to register a credit card as a payment method
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
-class CreditCardData(
+data class CreditCardData(
     val number: String,
     val expiryMonth: Int,
     val expiryYear: Int,

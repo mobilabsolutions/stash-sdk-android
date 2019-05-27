@@ -15,6 +15,7 @@ import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
@@ -24,6 +25,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.adyenSepaEntrySwipeRefresh
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.back
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryTitleTextView
@@ -41,7 +43,6 @@ import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenC
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenMainLayout
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenTitle
 import timber.log.Timber
-import java.lang.RuntimeException
 import javax.inject.Inject
 
 /**
@@ -178,7 +179,24 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[SepaData.IBAN] = it.iban
-                uiComponentHandler.dataSubject.onNext(dataMap)
+                uiComponentHandler.submitData(dataMap)
+            }
+        }
+
+        disposables += uiComponentHandler.getResultObservable().subscribe {
+            when (it) {
+                is UiRequestHandler.DataEntryResult.Success -> {
+                    adyenSepaEntrySwipeRefresh.isRefreshing = false
+                }
+                is UiRequestHandler.DataEntryResult.Processing -> {
+                    adyenSepaEntrySwipeRefresh.isRefreshing = true
+                }
+                is UiRequestHandler.DataEntryResult.Failure -> {
+                    SnackBarExtensions {
+                        adyenSepaEntrySwipeRefresh.isRefreshing = false
+                        it.throwable.getErrorSnackBar(adyenSepaEntrySwipeRefresh).show()
+                    }
+                }
             }
         }
 

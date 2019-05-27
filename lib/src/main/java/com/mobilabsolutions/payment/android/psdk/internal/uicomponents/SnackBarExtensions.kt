@@ -17,7 +17,7 @@ object SnackBarExtensions {
 
     operator fun invoke(body: SnackBarExtensions.() -> Unit): Unit = body.invoke(this)
 
-    val TOP_MARGIN = 76.px
+    val TOP_MARGIN = 0.px
     val WIDTH = 64.px
 
     fun Throwable.getErrorSnackBar(view: View): Snackbar {
