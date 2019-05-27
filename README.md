@@ -200,7 +200,7 @@ registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CC, 
 #### Customizing UI
 
 If you want you can change the color scheme of the screens shown when requesting payment method data from the user. To do this you should provide
-a `CustomizationPreference` object to the customization manager of payment SDK. `CustomizationPreference` expects colors defined as resource ids.
+a `PaymentUIConfiguration` object to the customization manager of payment SDK. `PaymentUIConfiguration` expects colors defined as resource ids.
 
 Below is the sample using random colors provided by Android.
 
@@ -214,7 +214,7 @@ val buttonTextColor: Int = android.R.color.holo_blue_bright
 val cellBackgroundColor: Int = R.color.unknown_blue
 val mediumEmphasisColor: Int = android.R.color.holo_green_light
 
-val customizationPreference = CustomizationPreference(
+val paymentUIConfiguration = PaymentUIConfiguration(
         textColor,
         backgroundColor,
         buttonColor,
@@ -222,13 +222,13 @@ val customizationPreference = CustomizationPreference(
         cellBackgroundColor,
         mediumEmphasisColor
 )
-PaymentSdk.getUiCustomizationManager().setCustomizationPreferences(customizationPreference)
+PaymentSdk.getUiCustomizationManager().setPaymentUIConfigurations(paymentUIConfiguration)
 ```
 
 Java
 
 ```java
-CustomizationPreference customizationPreference = new CustomizationPreference.Builder()
+PaymentUIConfiguration paymentUIConfiguration = new PaymentUIConfiguration.Builder()
         .setTextColor(android.R.color.holo_orange_dark)
         .setBackgroundColor(android.R.color.holo_blue_dark)
         .setButtonColor(android.R.color.holo_purple)
@@ -237,7 +237,7 @@ CustomizationPreference customizationPreference = new CustomizationPreference.Bu
         .setMediumEmphasisColor(R.color.unknown_blue)
         .build();
 
-PaymentSdk.getUiCustomizationManager().setCustomizationPreferences(customizationPreference);
+PaymentSdk.getUiCustomizationManager().setPaymentUIConfigurations(paymentUIConfiguration);
 ``` 
 
 

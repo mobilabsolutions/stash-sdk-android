@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import io.reactivex.subjects.ReplaySubject
@@ -30,7 +30,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    lateinit var customizationPreference: CustomizationPreference
+    lateinit var paymentUIConfiguration: PaymentUIConfiguration
 
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
 
@@ -40,16 +40,16 @@ class PaymentMethodChoiceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        customizationPreference = uiCustomizationManager.getCustomizationPreferences()
+        paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
         paymentMethodAdapter = PaymentMethodAdapter(
                 uiRequestHandler.availablePaymentMethods(),
                 uiRequestHandler.paymentMethodTypeSubject,
-                customizationPreference
+                paymentUIConfiguration
         )
         CustomizationExtensions {
-            paymentMethodChooserRootLayout.applyBackgroundCustomization(customizationPreference)
-            titleTextView.applyTextCustomization(customizationPreference)
-            explanationTextView.applyTextCustomization(customizationPreference)
+            paymentMethodChooserRootLayout.applyBackgroundCustomization(paymentUIConfiguration)
+            titleTextView.applyTextCustomization(paymentUIConfiguration)
+            explanationTextView.applyTextCustomization(paymentUIConfiguration)
         }
 
         uiRequestHandler.availablePaymentMethods().forEach { Timber.d("Method: ${it.name}") }
@@ -83,7 +83,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     class PaymentMethodAdapter(
         val availablePaymentMethods: List<PaymentMethodType>,
         val paymentMethodSubject: ReplaySubject<PaymentMethodType>,
-        val customizationPreference: CustomizationPreference
+        val paymentUIConfiguration: PaymentUIConfiguration
     ) : RecyclerView.Adapter<PaymentMethodViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaymentMethodViewHolder {
             val holder = PaymentMethodViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.payment_method_entry, parent, false))
@@ -114,8 +114,8 @@ class PaymentMethodChoiceFragment : Fragment() {
                 paymentMethodSubject.onNext(paymentMethodType)
             }
             CustomizationExtensions {
-                holder.paymentMethodName.applyTextCustomization(customizationPreference)
-                holder.rootView.applyCellBackgroundCustomization(customizationPreference)
+                holder.paymentMethodName.applyTextCustomization(paymentUIConfiguration)
+                holder.rootView.applyCellBackgroundCustomization(paymentUIConfiguration)
             }
         }
     }

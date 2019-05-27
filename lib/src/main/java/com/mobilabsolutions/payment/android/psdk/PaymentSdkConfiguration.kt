@@ -12,7 +12,7 @@ data class PaymentSdkConfiguration(
     val endpoint: String? = null,
     val integration: IntegrationCompanion? = null,
     val integrationList: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null,
-    val customizationPreference: CustomizationPreference? = null,
+    val paymentUIConfiguration: PaymentUIConfiguration? = null,
     val testMode: Boolean = false,
     val sslFactory: SSLSocketFactory? = null,
     val x509TrustManager: X509TrustManager? = null
@@ -23,7 +23,7 @@ data class PaymentSdkConfiguration(
         private var endpoint: String? = null
         private var integration: IntegrationCompanion? = null
         private var integrations: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null
-        private var customizationPreference: CustomizationPreference? = null
+        private var paymentUIConfiguration: PaymentUIConfiguration? = null
         private var testMode: Boolean = false
         private var sslFactory: SSLSocketFactory? = null
         private var x509TrustManager: X509TrustManager? = null
@@ -52,8 +52,8 @@ data class PaymentSdkConfiguration(
             return this
         }
 
-        fun setCustomization(customizationPreference: CustomizationPreference?): Builder {
-            this.customizationPreference = customizationPreference
+        fun setCustomization(paymentUIConfiguration: PaymentUIConfiguration?): Builder {
+            this.paymentUIConfiguration = paymentUIConfiguration
             return this
         }
 
@@ -78,7 +78,7 @@ data class PaymentSdkConfiguration(
                 endpoint,
                 integration,
                 integrations,
-                customizationPreference,
+                paymentUIConfiguration,
                 testMode,
                 sslFactory,
                 x509TrustManager
