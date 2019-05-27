@@ -3,7 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
@@ -123,9 +123,9 @@ class NewPaymentSdk(
             }
         }
 
-        fun configureUi(customizationPreference: CustomizationPreference) {
+        fun configureUi(paymentUIConfiguration: PaymentUIConfiguration) {
             assertInitialized()
-            instance!!.uiCustomizationManager.setCustomizationPreferences(customizationPreference)
+            instance!!.uiCustomizationManager.setCustomizationPreferences(paymentUIConfiguration)
         }
 
         fun getRegistrationManager(): RegistrationManager {

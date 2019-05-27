@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
-import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
@@ -69,7 +69,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    private lateinit var customizationPreference: CustomizationPreference
+    private lateinit var paymentUIConfiguration: PaymentUIConfiguration
 
     private val disposables = CompositeDisposable()
 
@@ -174,26 +174,26 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        customizationPreference = uiCustomizationManager.getCustomizationPreferences()
+        paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
         CustomizationExtensions {
 
-            creditCardScreenTitle.applyTextCustomization(customizationPreference)
-            firstNameTitleTextView.applyTextCustomization(customizationPreference)
-            lastNameTitleTextView.applyTextCustomization(customizationPreference)
-            creditCardNumberTitleTextView.applyTextCustomization(customizationPreference)
-            expirationDateTitleTextView.applyTextCustomization(customizationPreference)
-            countryTitleTextView.applyTextCustomization(customizationPreference)
-            cvvTitleTextView.applyTextCustomization(customizationPreference)
+            creditCardScreenTitle.applyTextCustomization(paymentUIConfiguration)
+            firstNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            lastNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            creditCardNumberTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            expirationDateTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            countryTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            cvvTitleTextView.applyTextCustomization(paymentUIConfiguration)
 
-            firstNameEditText.applyEditTextCustomization(customizationPreference)
-            lastNameEditText.applyEditTextCustomization(customizationPreference)
-            creditCardNumberEditText.applyEditTextCustomization(customizationPreference)
-            cvvEditText.applyEditTextCustomization(customizationPreference)
-            expirationDateTextView.applyFakeEditTextCustomization(customizationPreference)
-            countryText.applyFakeEditTextCustomization(customizationPreference)
-            creditCardScreenMainLayout.applyBackgroundCustomization(customizationPreference)
-            creditCardScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+            firstNameEditText.applyEditTextCustomization(paymentUIConfiguration)
+            lastNameEditText.applyEditTextCustomization(paymentUIConfiguration)
+            creditCardNumberEditText.applyEditTextCustomization(paymentUIConfiguration)
+            cvvEditText.applyEditTextCustomization(paymentUIConfiguration)
+            expirationDateTextView.applyFakeEditTextCustomization(paymentUIConfiguration)
+            countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
+            creditCardScreenMainLayout.applyBackgroundCustomization(paymentUIConfiguration)
+            creditCardScreenCellLayout.applyCellBackgroundCustomization(paymentUIConfiguration)
 
             firstNameEditText.showKeyboardAndFocus()
         }
@@ -231,7 +231,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         }
 
         expirationDateTextView.setOnClickListener {
-            val monthYearPicker = MonthYearPicker(requireContext(), customizationPreference = customizationPreference) {
+            val monthYearPicker = MonthYearPicker(requireContext(), paymentUIConfiguration = paymentUIConfiguration) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
                 val selectedExpiry = LocalDate.of(it.second, it.first, lastDay)
@@ -257,7 +257,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         success = validateCVV(state.cvv).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
-            saveButton.applyCustomization(customizationPreference)
+            saveButton.applyCustomization(paymentUIConfiguration)
         }
     }
 
@@ -343,7 +343,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             // Do Nothing
         } else {
             CustomizationExtensions {
-                countryText.applyFakeEditTextCustomization(customizationPreference)
+                countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
             }
         }
         return validationResult.success

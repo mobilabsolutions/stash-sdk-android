@@ -2,18 +2,7 @@ package com.mobilabsolutions.payment.android.psdk;
 
 import android.app.Application;
 
-import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization;
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.X509TrustManager;
-
-import io.reactivex.Observable;
 
 /**
  * This is a main interface to Payment SDK.
@@ -31,8 +20,8 @@ public final class PaymentSdk {
         NewPaymentSdk.Companion.initialize(applicationContext, paymentSdkConfiguration);
     }
 
-    public static void configureUi(CustomizationPreference customizationPreference) {
-        NewPaymentSdk.Companion.configureUi(customizationPreference);
+    public static void configureUi(PaymentUIConfiguration paymentUIConfiguration) {
+        NewPaymentSdk.Companion.configureUi(paymentUIConfiguration);
     }
 
 

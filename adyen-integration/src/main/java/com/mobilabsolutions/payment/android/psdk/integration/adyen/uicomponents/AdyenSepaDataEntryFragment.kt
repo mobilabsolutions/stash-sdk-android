@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
-import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
@@ -50,7 +50,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
-    lateinit var customizationPreference: CustomizationPreference
+    lateinit var paymentUIConfiguration: PaymentUIConfiguration
 
     @Inject
     lateinit var sepaDataValidator: SepaDataValidator
@@ -94,22 +94,22 @@ class AdyenSepaDataEntryFragment : Fragment() {
         countryText.visibility = View.GONE
         countryTitleTextView.visibility = View.GONE
 
-        customizationPreference = uiCustomizationManager.getCustomizationPreferences()
+        paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
         CustomizationExtensions {
-            ibanTitleTextView.applyTextCustomization(customizationPreference)
-            firstNameTitleTextView.applyTextCustomization(customizationPreference)
-            lastNameTitleTextView.applyTextCustomization(customizationPreference)
-            sepaScreenTitle.applyTextCustomization(customizationPreference)
-            countryTitleTextView.applyTextCustomization(customizationPreference)
+            ibanTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            firstNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            lastNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            sepaScreenTitle.applyTextCustomization(paymentUIConfiguration)
+            countryTitleTextView.applyTextCustomization(paymentUIConfiguration)
 
-            firstNameEditText.applyEditTextCustomization(customizationPreference)
-            lastNameEditText.applyEditTextCustomization(customizationPreference)
-            countryText.applyFakeEditTextCustomization(customizationPreference)
-            ibanNumberEditText.applyEditTextCustomization(customizationPreference)
-            saveButton.applyCustomization(customizationPreference)
-            sepaScreenMainLayout.applyBackgroundCustomization(customizationPreference)
-            sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+            firstNameEditText.applyEditTextCustomization(paymentUIConfiguration)
+            lastNameEditText.applyEditTextCustomization(paymentUIConfiguration)
+            countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
+            ibanNumberEditText.applyEditTextCustomization(paymentUIConfiguration)
+            saveButton.applyCustomization(paymentUIConfiguration)
+            sepaScreenMainLayout.applyBackgroundCustomization(paymentUIConfiguration)
+            sepaScreenCellLayout.applyCellBackgroundCustomization(paymentUIConfiguration)
 
             firstNameEditText.showKeyboardAndFocus()
         }
@@ -198,7 +198,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
         success = validateIban(state.iban).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
-            saveButton.applyCustomization(customizationPreference)
+            saveButton.applyCustomization(paymentUIConfiguration)
         }
     }
 

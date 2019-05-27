@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import com.mobilabsolutions.payment.android.R
-import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import kotlinx.android.synthetic.main.month_year_picker.monthNumberPicker
 import kotlinx.android.synthetic.main.month_year_picker.monthYearPickerRoot
 import kotlinx.android.synthetic.main.month_year_picker.okButton
@@ -27,7 +27,7 @@ class MonthYearPicker(
     themeResId: Int = R.style.MonthYearPickerStyle,
     cancellable: Boolean = true,
     onCancelListener: DialogInterface.OnCancelListener? = null,
-    val customizationPreference: CustomizationPreference? = null,
+    val paymentUIConfiguration: PaymentUIConfiguration? = null,
     val onDatePickedListener: (Pair<Int, Int>) -> Unit
 ) : Dialog(context, themeResId) {
 
@@ -47,7 +47,7 @@ class MonthYearPicker(
 
         yearNumberPicker.wrapSelectorWheel = false
 
-        customizationPreference?.apply {
+        paymentUIConfiguration?.apply {
             monthYearPickerRoot.background = context.getDrawable(backgroundColor)
             CustomizationExtensions {
                 okButton.applyCustomization(this@apply)
@@ -58,7 +58,7 @@ class MonthYearPicker(
                 val selectorWheelPaintField = NumberPicker::class.java
                         .getDeclaredField("mSelectorWheelPaint")
                 selectorWheelPaintField.isAccessible = true
-                val color = ContextCompat.getColor(context, customizationPreference.textColor)
+                val color = ContextCompat.getColor(context, paymentUIConfiguration.textColor)
                 (selectorWheelPaintField.get(monthNumberPicker) as Paint).color = color
                 (selectorWheelPaintField.get(yearNumberPicker) as Paint).color = color
 
