@@ -14,6 +14,7 @@ import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegrat
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
@@ -40,6 +41,7 @@ import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenC
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenMainLayout
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenTitle
 import timber.log.Timber
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 /**
@@ -274,6 +276,9 @@ class AdyenSepaDataEntryFragment : Fragment() {
         errorView.setText(validationResult.errorMessageResourceId)
         errorView.visibility = View.VISIBLE
         sourceView.setBackgroundResource(R.drawable.edit_text_frame_error)
+        SnackBarExtensions {
+            RuntimeException("TEST test test").getErrorSnackBar(sourceView).show()
+        }
     }
 
     private fun hideError(sourceView: View, errorView: TextView) {
