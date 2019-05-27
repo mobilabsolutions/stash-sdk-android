@@ -269,7 +269,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             }
             monthYearPicker.show()
         }
+
         bsPayoneCreditCardEntrySwipeRefresh.isEnabled = false
+        
         disposables += uiComponentHandler.getResultObservable().subscribe {
             when (it) {
                 is UiRequestHandler.DataEntryResult.Success -> {

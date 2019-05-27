@@ -25,6 +25,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.adyenCreditCardEntrySwipeRefreshLayout
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.adyenSepaEntrySwipeRefresh
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.back
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryText
@@ -182,6 +183,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 uiComponentHandler.submitData(dataMap)
             }
         }
+        adyenCreditCardEntrySwipeRefreshLayout.isEnabled = false
 
         disposables += uiComponentHandler.getResultObservable().subscribe {
             when (it) {

@@ -229,8 +229,6 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             }
         }
 
-        adyenCreditCardEntrySwipeRefreshLayout.isEnabled = false
-
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(), paymentUIConfiguration = paymentUIConfiguration) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
@@ -246,6 +244,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         back.setOnClickListener {
             requireActivity().onBackPressed()
         }
+        adyenCreditCardEntrySwipeRefreshLayout.isEnabled = false
 
         disposables += uiComponentHandler.getResultObservable().subscribe {
             when (it) {
