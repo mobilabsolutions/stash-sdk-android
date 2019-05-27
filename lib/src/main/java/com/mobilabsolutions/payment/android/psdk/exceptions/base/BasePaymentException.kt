@@ -5,7 +5,7 @@ package com.mobilabsolutions.payment.android.psdk.exceptions.base
  */
 abstract class BasePaymentException(
     override val message: String = NO_PROVIDER_MESSAGE,
-    open val errorTitle : String?,
+    open val errorTitle: String?,
     open val code: Int? = null,
     open val originalException: Throwable? = null
 ) : RuntimeException(message) {

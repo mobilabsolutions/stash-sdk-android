@@ -271,7 +271,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         }
 
         bsPayoneCreditCardEntrySwipeRefresh.isEnabled = false
-        
+
         disposables += uiComponentHandler.getResultObservable().subscribe {
             when (it) {
                 is UiRequestHandler.DataEntryResult.Success -> {
