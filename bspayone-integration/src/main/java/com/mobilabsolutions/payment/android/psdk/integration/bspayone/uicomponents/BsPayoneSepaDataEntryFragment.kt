@@ -11,7 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
-import com.mobilabsolutions.payment.android.psdk.CustomizationPreference
+import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
@@ -61,7 +61,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
-    lateinit var customizationPreference: CustomizationPreference
+    lateinit var paymentUIConfiguration: PaymentUIConfiguration
 
     @Inject
     lateinit var sepaDataValidator: SepaDataValidator
@@ -104,22 +104,22 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        customizationPreference = uiCustomizationManager.getCustomizationPreferences()
+        paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
         CustomizationExtensions {
-            ibanTitleTextView.applyTextCustomization(customizationPreference)
-            firstNameTitleTextView.applyTextCustomization(customizationPreference)
-            lastNameTitleTextView.applyTextCustomization(customizationPreference)
-            sepaScreenTitle.applyTextCustomization(customizationPreference)
-            countryTitleTextView.applyTextCustomization(customizationPreference)
+            ibanTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            firstNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            lastNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            sepaScreenTitle.applyTextCustomization(paymentUIConfiguration)
+            countryTitleTextView.applyTextCustomization(paymentUIConfiguration)
 
-            firstNameEditText.applyEditTextCustomization(customizationPreference)
-            lastNameEditText.applyEditTextCustomization(customizationPreference)
-            countryText.applyFakeEditTextCustomization(customizationPreference)
-            ibanNumberEditText.applyEditTextCustomization(customizationPreference)
-            saveButton.applyCustomization(customizationPreference)
-            sepaScreenMainLayout.applyBackgroundCustomization(customizationPreference)
-            sepaScreenCellLayout.applyCellBackgroundCustomization(customizationPreference)
+            firstNameEditText.applyEditTextCustomization(paymentUIConfiguration)
+            lastNameEditText.applyEditTextCustomization(paymentUIConfiguration)
+            countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
+            ibanNumberEditText.applyEditTextCustomization(paymentUIConfiguration)
+            saveButton.applyCustomization(paymentUIConfiguration)
+            sepaScreenMainLayout.applyBackgroundCustomization(paymentUIConfiguration)
+            sepaScreenCellLayout.applyCellBackgroundCustomization(paymentUIConfiguration)
 
             firstNameEditText.showKeyboardAndFocus()
         }
@@ -217,7 +217,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         success = validateCountry(state.country).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
-            saveButton.applyCustomization(customizationPreference)
+            saveButton.applyCustomization(paymentUIConfiguration)
         }
     }
 

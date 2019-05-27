@@ -28,7 +28,7 @@ import javax.inject.Inject
  * A class representing a UI customization preferences. Default values are provided,
  * or you can use the Builder supplied
  */
-data class CustomizationPreference(
+data class PaymentUIConfiguration(
     @ColorRes val textColor: Int = R.color.gable_green,
     @ColorRes val backgroundColor: Int = R.color.black_haze,
     @ColorRes val buttonColor: Int = R.color.lochmara,
@@ -38,7 +38,7 @@ data class CustomizationPreference(
 
 ) {
     class Builder {
-        private var preference = CustomizationPreference()
+        private var preference = PaymentUIConfiguration()
         fun setTextColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(textColor = resourceId)
             return this
@@ -69,7 +69,7 @@ data class CustomizationPreference(
             return this
         }
 
-        fun build(): CustomizationPreference = preference
+        fun build(): PaymentUIConfiguration = preference
     }
 }
 
@@ -78,7 +78,7 @@ data class CustomizationPreference(
  * colors for specific elements
  */
 class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sharedPreferences: SharedPreferences) {
-    private lateinit var customizationPreference: CustomizationPreference
+    private lateinit var paymentUIConfiguration: PaymentUIConfiguration
 
     companion object {
         val CUSTOMIZATION_KEY = "Customization"
@@ -88,26 +88,26 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
         loadPreference()
     }
 
-    fun setCustomizationPreferences(customizationPreference: CustomizationPreference) {
-        this.customizationPreference = customizationPreference
+    fun setCustomizationPreferences(paymentUIConfiguration: PaymentUIConfiguration) {
+        this.paymentUIConfiguration = paymentUIConfiguration
         storePreference()
     }
 
-    fun getCustomizationPreferences(): CustomizationPreference {
-        return customizationPreference
+    fun getCustomizationPreferences(): PaymentUIConfiguration {
+        return paymentUIConfiguration
     }
 
     private fun storePreference() {
-        val preferenceJson = gson.toJson(customizationPreference)
+        val preferenceJson = gson.toJson(paymentUIConfiguration)
         sharedPreferences.edit().putString(CUSTOMIZATION_KEY, preferenceJson).commit()
     }
 
     private fun loadPreference() {
         val customizationJson = sharedPreferences.getString(CUSTOMIZATION_KEY, "")!!
         if (customizationJson.isEmpty()) {
-            customizationPreference = CustomizationPreference()
+            paymentUIConfiguration = PaymentUIConfiguration()
         } else {
-            customizationPreference = gson.fromJson(customizationJson, CustomizationPreference::class.java)
+            paymentUIConfiguration = gson.fromJson(customizationJson, PaymentUIConfiguration::class.java)
         }
     }
 }
@@ -127,56 +127,56 @@ object CustomizationExtensions {
         }
     }
 
-    fun EditText.applyEditTextCustomization(customizationPreference: CustomizationPreference) {
-        applyOnTextView(customizationPreference)
+    fun EditText.applyEditTextCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+        applyOnTextView(paymentUIConfiguration)
     }
 
-    fun TextView.applyFakeEditTextCustomization(customizationPreference: CustomizationPreference) {
-        applyOnTextView(customizationPreference)
+    fun TextView.applyFakeEditTextCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+        applyOnTextView(paymentUIConfiguration)
     }
 
-    private fun TextView.applyOnTextView(customizationPreference: CustomizationPreference) {
+    private fun TextView.applyOnTextView(paymentUIConfiguration: PaymentUIConfiguration) {
         if (error == null) {
             val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.edit_text_selector)
             val textFieldDrawableContainerState = (backgroundDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
             val textFieldDrawableStates = textFieldDrawableContainerState.children.filter { it != null }.map { it as GradientDrawable }
-            textFieldDrawableStates[0].setStroke(1.px, CustomizationUtil.darken(ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor)))
-            textFieldDrawableStates[1].setStroke(1.px, ContextCompat.getColor(context, customizationPreference.mediumEmphasisColor))
+            textFieldDrawableStates[0].setStroke(1.px, CustomizationUtil.darken(ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor)))
+            textFieldDrawableStates[1].setStroke(1.px, ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor))
             background = backgroundDrawable
         } else {
             background = resources.getDrawable(R.drawable.edit_text_frame_error)
         }
-        this.applyTextCustomization(customizationPreference)
+        this.applyTextCustomization(paymentUIConfiguration)
     }
 
-    fun TextView.applyTextCustomization(customizationPreference: CustomizationPreference) {
-        setTextColor(ContextCompat.getColor(context, customizationPreference.textColor))
+    fun TextView.applyTextCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+        setTextColor(ContextCompat.getColor(context, paymentUIConfiguration.textColor))
     }
 
-    fun Button.applyCustomization(customizationPreference: CustomizationPreference) {
+    fun Button.applyCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
         if (isEnabled) {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector)
             val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
             val states = buttonBackgroundDrawableContainterStates.children.filter { it != null }.map { it as GradientDrawable }
-            states[0].setColor(CustomizationUtil.lighten(ContextCompat.getColor(context, customizationPreference.buttonColor)))
-            states[1].setColor(ContextCompat.getColor(context, customizationPreference.buttonColor))
+            states[0].setColor(CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonColor)))
+            states[1].setColor(ContextCompat.getColor(context, paymentUIConfiguration.buttonColor))
             background = buttonColorDrawable
         } else {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector_disabled)
             background = buttonColorDrawable
         }
-        setTextColor(CustomizationUtil.lighten(ContextCompat.getColor(context, customizationPreference.buttonTextColor)))
+        setTextColor(CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonTextColor)))
     }
 
-    fun View.applyBackgroundCustomization(customizationPreference: CustomizationPreference) {
+    fun View.applyBackgroundCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
         val backgroundColorDrawable = background as ColorDrawable
-        backgroundColorDrawable.color = ContextCompat.getColor(context, customizationPreference.backgroundColor)
+        backgroundColorDrawable.color = ContextCompat.getColor(context, paymentUIConfiguration.backgroundColor)
         background = backgroundColorDrawable
     }
 
-    fun View.applyCellBackgroundCustomization(customizationPreference: CustomizationPreference) {
+    fun View.applyCellBackgroundCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
         val backgroundColorDrawable = background as GradientDrawable
-        backgroundColorDrawable.setColor(ContextCompat.getColor(context, customizationPreference.cellBackgroundColor))
+        backgroundColorDrawable.setColor(ContextCompat.getColor(context, paymentUIConfiguration.cellBackgroundColor))
         background = backgroundColorDrawable
     }
 
