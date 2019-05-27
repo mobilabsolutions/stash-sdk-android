@@ -69,7 +69,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
         resultObservable: Observable<UiRequestHandler.DataEntryResult>
-    ): Single<Map<String, String>> {
+    ): Observable<AdditionalRegistrationData> {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

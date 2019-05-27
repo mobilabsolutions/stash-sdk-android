@@ -8,6 +8,7 @@ import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
@@ -254,6 +255,7 @@ class PspCoordinator @Inject constructor(
         return onErrorResumeNext {
             when (it) {
                 is HttpException -> Single.error(exceptionMapper.mapError(it))
+                is BasePaymentException -> Single.error(it)
                 else -> Single.error(RuntimeException("Unknown throwable ${it.message}"))
             }
         }

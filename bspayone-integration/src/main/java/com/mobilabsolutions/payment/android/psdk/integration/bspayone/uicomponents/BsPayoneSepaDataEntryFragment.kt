@@ -20,7 +20,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryCh
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions.getErrorSnackBar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
@@ -202,7 +201,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
 
         countryText.text = suggestedCountry.displayCountry
 
-        adyenCreditCardEntrySwipeRefreshLayout.isEnabled = false
+        bsPayoneSepaEntrySwipeRefresh.isEnabled = false
 
         disposables += uiComponentHandler.getResultObservable().subscribe {
             when (it) {
