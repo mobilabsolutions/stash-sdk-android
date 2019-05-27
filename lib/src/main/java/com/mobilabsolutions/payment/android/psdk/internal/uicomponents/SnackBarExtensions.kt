@@ -8,6 +8,7 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.R
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
 import com.mobilabsolutions.payment.android.psdk.px
 import kotlinx.android.synthetic.main.snackbar_layout.view.close
 import kotlinx.android.synthetic.main.snackbar_layout.view.snackbar_text
@@ -28,8 +29,12 @@ object SnackBarExtensions {
         snackBarView.setPadding(0, 0, 0, 0)
         val snackView = LayoutInflater.from(view.context).inflate(R.layout.snackbar_layout, snackBarView, false)
 
-        // TODO: Biju: Find a better way
-        snackView.snackbar_title.text = this.javaClass.simpleName.replace("Exception", " Error")
+        if (this is BasePaymentException && this.errorTitle != null) {
+            snackView.snackbar_title.text = this.errorTitle
+        } else {
+            // TODO: Biju: Find a better way
+            snackView.snackbar_title.text = this.javaClass.simpleName.replace("Exception", " Error")
+        }
         snackView.snackbar_text.text = this.message
         snackView.close.setOnClickListener {
             snackBar.view.visibility = View.GONE // We do this to prevent dismissal animation

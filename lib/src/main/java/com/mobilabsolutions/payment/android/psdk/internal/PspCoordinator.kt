@@ -70,7 +70,6 @@ class PspCoordinator @Inject constructor(
             chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
                 mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
                     .subscribeOn(Schedulers.io())
-                    .processErrors()
                     .flatMap {
 
                         val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
@@ -91,7 +90,7 @@ class PspCoordinator @Inject constructor(
                             )
                             PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
                         }
-                    }
+                    }.processErrors()
             }
         }
     }
@@ -141,7 +140,7 @@ class PspCoordinator @Inject constructor(
                                 PaymentMethodAlias(it, PaymentMethodType.SEPA, extraAliasInfo = ExtraAliasInfo.SepaExtraInfo(maskedIban))
                             }
                     }
-            }
+            }.processErrors()
         }
     }
 
