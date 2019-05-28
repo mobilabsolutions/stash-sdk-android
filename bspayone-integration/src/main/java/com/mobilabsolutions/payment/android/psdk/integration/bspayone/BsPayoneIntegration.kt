@@ -12,7 +12,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
+import io.reactivex.Observable
 import io.reactivex.Single
 import javax.inject.Inject
 
@@ -94,22 +95,15 @@ class BsPayoneIntegration private constructor(
         }
     }
 
-    val creditCardUIDefinition = PaymentMethodDefinition(
-            methodId = "BsP-CC-1234",
-            pspIdentifier = identifier,
-            paymentMethodType = PaymentMethodType.CC
-    )
-
-    val sepaUIDefinition = PaymentMethodDefinition(
-            methodId = "BsP-SEPA-1234",
-            pspIdentifier = identifier,
-            paymentMethodType = PaymentMethodType.SEPA
-    )
-
-    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {
+    override fun handlePaymentMethodEntryRequest(
+        activity: AppCompatActivity,
+        paymentMethodType: PaymentMethodType,
+        additionalRegistrationData: AdditionalRegistrationData,
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+    ): Observable<AdditionalRegistrationData> {
         return when (paymentMethodType) {
-            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity)
-            PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity)
+            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)
             PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
         }
     }

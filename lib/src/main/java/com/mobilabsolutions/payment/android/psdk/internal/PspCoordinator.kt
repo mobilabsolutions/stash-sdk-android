@@ -8,6 +8,7 @@ import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
@@ -23,6 +24,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import java.util.Random
+import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -39,7 +41,7 @@ class PspCoordinator @Inject constructor(
 
     fun handleRegisterCreditCard(
         creditCardData: CreditCardData,
-        additionalUIData: Map<String, String> = emptyMap(),
+        additionalUIData: AdditionalRegistrationData = AdditionalRegistrationData(),
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
         return handleRegisterCreditCard(
@@ -56,24 +58,23 @@ class PspCoordinator @Inject constructor(
     @SuppressLint("NewApi")
     fun handleRegisterCreditCard(
         creditCardData: CreditCardData,
-        additionalUIData: Map<String, String>,
+        additionalUIData: AdditionalRegistrationData,
         chosenIntegration: Integration,
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
         val billingData = creditCardData.billingData ?: BillingData()
-        additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_COUNTRY)?.let { billingData.country = it }
-        additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_FIRST_NAME)?.let { billingData.firstName = it }
-        additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_LAST_NAME)?.let { billingData.lastName = it }
+        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_COUNTRY)?.let { billingData.country = it }
+        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_FIRST_NAME)?.let { billingData.firstName = it }
+        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_LAST_NAME)?.let { billingData.lastName = it }
 
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
             chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
                 mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
                     .subscribeOn(Schedulers.io())
-                    .processErrors()
                     .flatMap {
 
                         val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
-                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
+                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
                         val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                         val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -90,12 +91,17 @@ class PspCoordinator @Inject constructor(
                             )
                             PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
                         }
-                    }
+                    }.processErrors()
             }
         }
     }
 
-    fun handleRegisterSepa(sepaData: SepaData, additionalUIData: Map<String, String> = emptyMap(), idempotencyKey: String): Single<PaymentMethodAlias> {
+    fun handleRegisterSepa(
+        sepaData: SepaData,
+        additionalUIData: AdditionalRegistrationData = AdditionalRegistrationData(),
+        idempotencyKey: String
+    ): Single<PaymentMethodAlias> {
+
         return handleRegisterSepa(
             sepaData,
             additionalUIData,
@@ -109,14 +115,14 @@ class PspCoordinator @Inject constructor(
     @SuppressLint("NewApi")
     fun handleRegisterSepa(
         sepaData: SepaData,
-        additionalUIData: Map<String, String> = emptyMap(),
+        additionalUIData: AdditionalRegistrationData,
         chosenIntegration: Integration,
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
         val billingData = sepaData.billingData ?: BillingData()
-        additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_COUNTRY)?.let { billingData.country = it }
-        additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_FIRST_NAME)?.let { billingData.firstName = it }
-        additionalUIData.getOrNull(BillingData.ADDITIONAL_DATA_LAST_NAME)?.let { billingData.lastName = it }
+        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_COUNTRY)?.let { billingData.country = it }
+        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_FIRST_NAME)?.let { billingData.firstName = it }
+        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_LAST_NAME)?.let { billingData.lastName = it }
 
         // TODO validate
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.SEPA) {
@@ -126,7 +132,7 @@ class PspCoordinator @Inject constructor(
                     .flatMap {
 
                         val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
-                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData)
+                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
                         val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                         chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -135,7 +141,7 @@ class PspCoordinator @Inject constructor(
                                 PaymentMethodAlias(it, PaymentMethodType.SEPA, extraAliasInfo = ExtraAliasInfo.SepaExtraInfo(maskedIban))
                             }
                     }
-            }
+            }.processErrors()
         }
     }
 
@@ -144,24 +150,28 @@ class PspCoordinator @Inject constructor(
     //
 
     fun registerCreditCardUsingUIComponent(activity: Activity?, chosenIntegration: Integration, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        return uiRequestHandler.handleCreditCardMethodEntryRequest(
-            activity,
-            chosenIntegration,
-            PaymentMethodType.CC,
-            requestId
-        ).flatMap { (creditCardData, additionalUIData) ->
-            handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
+        return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
+            uiRequestHandler.handleCreditCardMethodEntryRequest(
+                activity,
+                chosenIntegration,
+                PaymentMethodType.CC,
+                requestId
+            ) { (creditCardData, additionalUIData) ->
+                handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
+            }
         }
     }
 
     fun registerSepaUsingUIComponent(activity: Activity?, chosenIntegration: Integration, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        return uiRequestHandler.handleSepaMethodEntryRequest(
-            activity,
-            chosenIntegration,
-            PaymentMethodType.SEPA,
-            requestId
-        ).flatMap { (sepaData, additionalUIData) ->
-            handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
+        return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.SEPA) {
+            uiRequestHandler.handleSepaMethodEntryRequest(
+                activity,
+                chosenIntegration,
+                PaymentMethodType.SEPA,
+                requestId
+            ) { (sepaData, additionalUIData) ->
+                handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
+            }
         }
     }
 
@@ -228,8 +238,8 @@ class PspCoordinator @Inject constructor(
                             AdditionalRegistrationData(aliasResponse.pspExtra),
                             requestId)
                             .flatMap {
-                                email = it[BillingData.ADDITIONAL_DATA_EMAIL] ?: ""
-                                val additionalData = AdditionalRegistrationData(it)
+                                email = it.extraData[BillingData.ADDITIONAL_DATA_EMAIL] ?: ""
+                                val additionalData = it
                                 val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
                                 val registrationRequest = RegistrationRequest(standardizedData, additionalData)
                                 chosenIntegration.handleRegistrationRequest(registrationRequest)
@@ -245,7 +255,8 @@ class PspCoordinator @Inject constructor(
         return onErrorResumeNext {
             when (it) {
                 is HttpException -> Single.error(exceptionMapper.mapError(it))
-                else -> Single.error(RuntimeException("Unknown exception ${it.message}"))
+                is BasePaymentException -> Single.error(it)
+                else -> Single.error(RuntimeException("Unknown throwable ${it.message}"))
             }
         }
     }

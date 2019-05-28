@@ -135,7 +135,7 @@ class AdyenHandler @Inject constructor(
                 PaymentInitiationResponse.Type.COMPLETE -> {
                     // We call the SDK backend to deliver the payload, also because Adyen will not report
                     // if the credit card number or cvv/cvc was invalid, we rely on backend to return that
-                    // information in the exchange call, as they will get an exception when trying to execute
+                    // information in the exchange call, as they will get an throwable when trying to execute
                     // a payment
                     mobilabApiV2.updateAlias(creditCardRegistrationRequest.aliasId, AliasUpdateRequest(
                             extra = AliasExtra(

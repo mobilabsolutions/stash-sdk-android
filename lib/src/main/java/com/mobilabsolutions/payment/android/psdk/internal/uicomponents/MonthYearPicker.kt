@@ -78,7 +78,7 @@ class MonthYearPicker(
                 }
                 yearNumberPicker.invalidate()
             } catch (e: Exception) {
-                // Just ignore applying customizations if any exception happens
+                // Just ignore applying customizations if any throwable happens
             }
         }
 
