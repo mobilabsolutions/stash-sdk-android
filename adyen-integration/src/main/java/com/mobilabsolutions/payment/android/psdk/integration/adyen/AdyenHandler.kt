@@ -14,12 +14,14 @@ import com.adyen.checkout.core.internal.persistence.PaymentRepository
 import com.adyen.checkout.core.internal.persistence.PaymentSessionEntity
 import com.adyen.checkout.core.model.CardDetails
 import com.adyen.checkout.ui.internal.card.CardCheckoutMethodFactory
+import com.mobilabsolutions.payment.android.psdk.CreditCardTypeWithRegex
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.CreditCardConfig
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
@@ -62,7 +64,7 @@ class AdyenHandler @Inject constructor(
 
             // Payment session received from the SDK backend
             val paymentSessionString = additionalData.extraData[PAYMENT_SESSION]
-                    ?: throw OtherException("Missing payment session")
+                ?: throw OtherException("Missing payment session")
 
             // Here we start accesing the flow that CheckoutController.handlePaymentSessionResponse(...) would follow
             val paymentSession = PaymentSessionImpl.decode(paymentSessionString)
@@ -103,29 +105,29 @@ class AdyenHandler @Inject constructor(
             // Now we need to use Adyens Client Side Encryption to encrypt our credit card data
             val publicKey = paymentSession.publicKey!!
             val card = Card.Builder()
-                    .setNumber(creditCardData.number)
-                    .setExpiryDate(creditCardData.expiryMonth, creditCardData.expiryYear)
-                    .setSecurityCode(creditCardData.cvv)
-                    .build()
+                .setNumber(creditCardData.number)
+                .setExpiryDate(creditCardData.expiryMonth, creditCardData.expiryYear)
+                .setSecurityCode(creditCardData.cvv)
+                .build()
             val encryptedCard = Cards.ENCRYPTOR.encryptFields(card, paymentSession.generationTime, publicKey).call()
             val creditCardDetails = CardDetails.Builder()
-                    .setHolderName(creditCardData.billingData?.fullName())
-                    .setEncryptedCardNumber(encryptedCard.encryptedNumber)
-                    .setEncryptedExpiryMonth(encryptedCard.encryptedExpiryMonth)
-                    .setEncryptedExpiryYear(encryptedCard.encryptedExpiryYear)
-                    .setEncryptedSecurityCode(encryptedCard.encryptedSecurityCode)
-                    .build()
+                .setHolderName(creditCardData.billingData?.fullName())
+                .setEncryptedCardNumber(encryptedCard.encryptedNumber)
+                .setEncryptedExpiryMonth(encryptedCard.encryptedExpiryMonth)
+                .setEncryptedExpiryYear(encryptedCard.encryptedExpiryYear)
+                .setEncryptedSecurityCode(encryptedCard.encryptedSecurityCode)
+                .build()
             // Now we have prepared everything we need to perform PaymentController.startPayment(...)
             // Since this is again tied to lifecycle, we will skip using observers and execute network call
             // directly
             val paymentInitiation = PaymentInitiation.Builder(
-                    paymentSession.paymentData, resolvedPaymentMethod.paymentMethodData)
-                    .setPaymentMethodDetails(creditCardDetails)
-                    .build()
+                paymentSession.paymentData, resolvedPaymentMethod.paymentMethodData)
+                .setPaymentMethodDetails(creditCardDetails)
+                .build()
             // Prepare the call
             val paymentInitiationCallable = CheckoutApi
-                    .getInstance(application.applicationContext as Application)
-                    .initiatePayment(paymentSession, paymentInitiation)
+                .getInstance(application.applicationContext as Application)
+                .initiatePayment(paymentSession, paymentInitiation)
             // Execute the call. If everything wasfine we will get "COMPLETED" type
             val paymentInitiationResult = Single.fromCallable {
                 paymentInitiationCallable.call()
@@ -137,24 +139,34 @@ class AdyenHandler @Inject constructor(
                     // if the credit card number or cvv/cvc was invalid, we rely on backend to return that
                     // information in the exchange call, as they will get an throwable when trying to execute
                     // a payment
+                    val creditCardType = CreditCardTypeWithRegex.resolveCreditCardType(creditCardData.number)
+                    val creditCardTypeName = creditCardType.name
                     mobilabApiV2.updateAlias(creditCardRegistrationRequest.aliasId, AliasUpdateRequest(
-                            extra = AliasExtra(
-                                    paymentMethod = PaymentMethodType.CC.name,
-                                    payload = paymentInitiationResult.completeFields!!.payload,
-                                    personalData = creditCardRegistrationRequest.billingData
+                        extra = AliasExtra(
+                            creditCardConfig = CreditCardConfig(
+                                ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
+                                ccMask = creditCardTypeName + "-" + creditCardData.number.takeLast(4),
+                                ccType = creditCardTypeName,
+                                ccHolderName = creditCardData.billingData?.fullName()
+                            ),
+                            paymentMethod = PaymentMethodType.CC.name,
+                            payload = paymentInitiationResult.completeFields!!.payload,
+                            personalData = creditCardRegistrationRequest.billingData
 
-                            )
+                        )
                     )).subscribeOn(Schedulers.io()).blockingAwait()
                     it.onSuccess(creditCardRegistrationRequest.aliasId)
                 }
                 PaymentInitiationResponse.Type.ERROR -> {
                     it.onError(OtherException(
-                            message = paymentInitiationResult.errorFields?.errorMessage ?: "Unknown Adyen error"
+                        message = paymentInitiationResult.errorFields?.errorMessage
+                            ?: "Unknown Adyen error"
                     ))
                 }
                 PaymentInitiationResponse.Type.VALIDATION -> {
                     it.onError(ValidationException(
-                            message = paymentInitiationResult.errorFields?.errorMessage ?: "Unknown Adyen validation error"
+                        message = paymentInitiationResult.errorFields?.errorMessage
+                            ?: "Unknown Adyen validation error"
                     ))
                 }
                 else -> {
@@ -176,23 +188,23 @@ class AdyenHandler @Inject constructor(
         val billingData = sepaRegistrationRequest.billingData
 
         val sepaConfig = SepaConfig(
-                iban = sepaData.iban,
-                bic = sepaData.bic,
-                name = sepaData.billingData?.fullName(),
-                lastname = billingData.lastName,
-                street = billingData.address1,
-                zip = billingData.zip,
-                city = billingData.city,
-                country = billingData.country
+            iban = sepaData.iban,
+            bic = sepaData.bic,
+            name = sepaData.billingData?.fullName(),
+            lastname = billingData.lastName,
+            street = billingData.address1,
+            zip = billingData.zip,
+            city = billingData.city,
+            country = billingData.country
         )
         return mobilabApiV2.updateAlias(
-                aliasId,
-                AliasUpdateRequest(
-                        extra = AliasExtra(sepaConfig = sepaConfig,
-                                paymentMethod = PaymentMethodType.SEPA.name,
-                                personalData = sepaRegistrationRequest.billingData
-                        )
+            aliasId,
+            AliasUpdateRequest(
+                extra = AliasExtra(sepaConfig = sepaConfig,
+                    paymentMethod = PaymentMethodType.SEPA.name,
+                    personalData = sepaRegistrationRequest.billingData
                 )
+            )
         ).andThen(Single.just(aliasId))
     }
 
@@ -202,9 +214,9 @@ class AdyenHandler @Inject constructor(
             try {
                 val parameters = PaymentSetupParametersImpl(application)
                 val result = mapOf(
-                        "token" to parameters.sdkToken,
-                        "channel" to "Android",
-                        "returnUrl" to "app://" // We're not supporting 3ds at the moment, so return URL is never used
+                    "token" to parameters.sdkToken,
+                    "channel" to "Android",
+                    "returnUrl" to "app://" // We're not supporting 3ds at the moment, so return URL is never used
                 )
                 it.onSuccess(result)
             } catch (exception: CheckoutException) {
@@ -216,15 +228,15 @@ class AdyenHandler @Inject constructor(
 
     private fun paymentReferenceImplStringConstructor(): Constructor<PaymentReferenceImpl> {
         return PaymentReferenceImpl::class.java.declaredConstructors
-                .filter {
-                    it.parameterTypes.contains(String::class.java)
-                }.first() as Constructor<PaymentReferenceImpl>
+            .filter {
+                it.parameterTypes.contains(String::class.java)
+            }.first() as Constructor<PaymentReferenceImpl>
     }
 
     private fun paymentHandlerImplConstructor(): Constructor<PaymentHandlerImpl> {
         return PaymentHandlerImpl::class.java.declaredConstructors
-                .filter {
-                    it.parameterTypes.contains(Application::class.java)
-                }.first() as Constructor<PaymentHandlerImpl>
+            .filter {
+                it.parameterTypes.contains(Application::class.java)
+            }.first() as Constructor<PaymentHandlerImpl>
     }
 }
