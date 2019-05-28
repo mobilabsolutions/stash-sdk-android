@@ -21,8 +21,8 @@ class RemotePaymentMethodDataSource @Inject constructor(
         return retrofitRunner.executeForServerResponse {
             sampleMerchantService.createPaymentMethod(
                 CreatePaymentMethodRequest(
-                    alias = paymentMethod.description,
-                    aliasId = paymentMethod.alias,
+                    alias = paymentMethod.alias,
+                    aliasId = paymentMethod.aliasId,
                     type = paymentMethod._type,
                     userId = userId
                 )

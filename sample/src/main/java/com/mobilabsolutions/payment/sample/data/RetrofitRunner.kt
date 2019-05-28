@@ -41,9 +41,15 @@ class RetrofitRunner @Inject constructor() {
     }
 
     suspend fun <T> executeWithNoResult(request: suspend () -> Response<T>): Result<Unit> {
-        val unitMapper = object : Mapper<T, Unit> {
-            override fun map(from: T) = Unit
+        return try {
+            val response = request()
+            if (response.isSuccessful) {
+                Success(data = Unit)
+            } else {
+                ErrorResult(Exception(response.errorBody()?.string()))
+            }
+        } catch (e: Exception) {
+            ErrorResult(e)
         }
-        return executeForResponse(unitMapper, request)
     }
 }

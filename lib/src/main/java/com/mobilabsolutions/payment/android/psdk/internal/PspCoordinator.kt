@@ -79,7 +79,7 @@ class PspCoordinator @Inject constructor(
 
                         val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
 
-                        pspAliasSingle.map { alias ->
+                        pspAliasSingle.map { aliasId ->
                             val cardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
                             val lastDigits = standardizedData.creditCardData.number.takeLast(4)
                             val creditCardExtraInfo = ExtraAliasInfo.CreditCardExtraInfo(
@@ -89,7 +89,7 @@ class PspCoordinator @Inject constructor(
                                 expiryYear = standardizedData.creditCardData.expiryYear
 
                             )
-                            PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
+                            PaymentMethodAlias(aliasId, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
                         }
                     }.processErrors()
             }
@@ -129,10 +129,10 @@ class PspCoordinator @Inject constructor(
             chosenIntegration.getPreparationData(PaymentMethodType.SEPA).flatMap { preparationData ->
                 mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
                     .subscribeOn(Schedulers.io())
-                    .flatMap {
+                    .flatMap { aliasResponse ->
 
-                        val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
-                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
+                        val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = aliasResponse.aliasId)
+                        val additionalData = AdditionalRegistrationData(aliasResponse.pspExtra + additionalUIData.extraData)
                         val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                         chosenIntegration.handleRegistrationRequest(registrationRequest)

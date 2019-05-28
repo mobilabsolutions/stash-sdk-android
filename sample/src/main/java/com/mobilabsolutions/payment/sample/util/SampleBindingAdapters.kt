@@ -43,9 +43,9 @@ fun imageByProductType(imageView: ImageView, product: Product) {
 @BindingAdapter("paymentImageByType")
 fun paymentImageByType(imageView: ImageView, paymentMethod: PaymentMethod) {
     val resId = when (paymentMethod.type) {
-        PaymentType.CREDIT_CARD -> R.drawable.credit_card
+        PaymentType.CC -> R.drawable.credit_card
         PaymentType.SEPA -> R.drawable.sepa
-        PaymentType.PAYPAL -> R.drawable.paypal
+        PaymentType.PAY_PAL -> R.drawable.paypal
         else -> R.drawable.credit_card
     }
     imageView.setImageResource(resId)

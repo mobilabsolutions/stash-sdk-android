@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "eca7246cc7218bd96ec87df9f8fc3004",
+    "identityHash": "c7cb7cfc30a7a7c6b711eb5837bf7291",
     "entities": [
       {
         "tableName": "product",
@@ -103,7 +103,7 @@
       },
       {
         "tableName": "payment_method",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` TEXT NOT NULL, `paymentMethod_id` TEXT NOT NULL, `alias_id` TEXT NOT NULL, `alias` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT NOT NULL, FOREIGN KEY(`user_id`) REFERENCES `user`(`server_user_id`) ON UPDATE CASCADE ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` TEXT NOT NULL, `paymentMethod_id` TEXT NOT NULL, `alias_id` TEXT NOT NULL, `alias` TEXT NOT NULL, `type` TEXT NOT NULL, FOREIGN KEY(`user_id`) REFERENCES `user`(`server_user_id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -138,12 +138,6 @@
           {
             "fieldPath": "_type",
             "columnName": "type",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "description",
-            "columnName": "description",
             "affinity": "TEXT",
             "notNull": true
           }
@@ -225,7 +219,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"eca7246cc7218bd96ec87df9f8fc3004\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"c7cb7cfc30a7a7c6b711eb5837bf7291\")"
     ]
   }
 }
