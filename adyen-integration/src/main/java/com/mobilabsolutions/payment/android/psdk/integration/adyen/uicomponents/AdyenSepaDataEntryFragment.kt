@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
@@ -14,6 +15,8 @@ import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegrat
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
@@ -23,6 +26,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.adyenSepaEntrySwipeRefresh
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.back
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryTitleTextView
@@ -77,6 +81,8 @@ class AdyenSepaDataEntryFragment : Fragment() {
     private var viewState: SepaDataEntryViewState? = null
 
     private var waitTimer: CountDownTimer? = null
+
+    private var currentSnackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -176,7 +182,29 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[SepaData.IBAN] = it.iban
-                uiComponentHandler.dataSubject.onNext(dataMap)
+                uiComponentHandler.submitData(dataMap)
+            }
+        }
+        adyenSepaEntrySwipeRefresh.isEnabled = false
+
+        disposables += uiComponentHandler.getResultObservable().subscribe {
+            when (it) {
+                is UiRequestHandler.DataEntryResult.Success -> {
+                    adyenSepaEntrySwipeRefresh.isRefreshing = false
+                }
+                is UiRequestHandler.DataEntryResult.Processing -> {
+                    adyenSepaEntrySwipeRefresh.isRefreshing = true
+                }
+                is UiRequestHandler.DataEntryResult.Failure -> {
+                    SnackBarExtensions {
+                        adyenSepaEntrySwipeRefresh.isRefreshing = false
+                        currentSnackbar?.let { snackbar ->
+                            snackbar.dismissWithoutAnimating()
+                        }
+                        currentSnackbar = it.throwable.getErrorSnackBar(adyenSepaEntrySwipeRefresh)
+                        currentSnackbar?.show()
+                    }
+                }
             }
         }
 

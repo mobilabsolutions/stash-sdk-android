@@ -8,6 +8,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalR
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
+import io.reactivex.Observable
 import io.reactivex.Single
 
 /**
@@ -62,7 +64,12 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {
+    override fun handlePaymentMethodEntryRequest(
+        activity: AppCompatActivity,
+        paymentMethodType: PaymentMethodType,
+        additionalRegistrationData: AdditionalRegistrationData,
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+    ): Observable<AdditionalRegistrationData> {
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

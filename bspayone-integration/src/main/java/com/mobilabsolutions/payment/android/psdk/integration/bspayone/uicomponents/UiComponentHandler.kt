@@ -3,9 +3,10 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicompone
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
-import io.reactivex.Single
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -14,24 +15,43 @@ import javax.inject.Inject
 @IntegrationScope
 class UiComponentHandler @Inject constructor() {
 
-    var dataSubject: PublishSubject<Map<String, String>> = PublishSubject.create()
+    private var dataSubject: PublishSubject<AdditionalRegistrationData> = PublishSubject.create()
 
-    fun handleSepaDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
+    private var resultObservable: Observable<UiRequestHandler.DataEntryResult>? = null
+
+    fun submitData(data: Map<String, String>) {
+        dataSubject.onNext(AdditionalRegistrationData(data))
+    }
+
+    fun getResultObservable(): Observable<UiRequestHandler.DataEntryResult> {
+        return resultObservable!!
+    }
+
+    fun handleSepaDataEntryRequest(activity: AppCompatActivity, resultObservable: Observable<UiRequestHandler.DataEntryResult>): Observable<AdditionalRegistrationData> {
         dataSubject = PublishSubject.create()
         val sepaDataEntryFragment = BsPayoneSepaDataEntryFragment()
-        Timber.d("Current thread: ${Thread.currentThread().name}")
+        this.resultObservable = resultObservable.doOnNext {
+            if (it is UiRequestHandler.DataEntryResult.Success) {
+                activity.supportFragmentManager.beginTransaction().remove(sepaDataEntryFragment).commitNow()
+            }
+        }
         activity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, sepaDataEntryFragment).commitNow()
         return dataSubject.doFinally {
             activity.supportFragmentManager.beginTransaction().remove(sepaDataEntryFragment).commitNow()
-        }.firstOrError()
+        }
     }
 
-    fun handleCreditCardDataEntryRequest(activity: AppCompatActivity): Single<Map<String, String>> {
+    fun handleCreditCardDataEntryRequest(activity: AppCompatActivity, resultObservable: Observable<UiRequestHandler.DataEntryResult>): Observable<AdditionalRegistrationData> {
         dataSubject = PublishSubject.create()
         val creditCardDataEntryFragment = BsPayoneCreditCardDataEntryFragment()
+        this.resultObservable = resultObservable.doOnNext {
+            if (it is UiRequestHandler.DataEntryResult.Success) {
+                activity.supportFragmentManager.beginTransaction().remove(creditCardDataEntryFragment).commitNow()
+            }
+        }
         activity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, creditCardDataEntryFragment).commitNow()
         return dataSubject.doFinally {
             activity.supportFragmentManager.beginTransaction().remove(creditCardDataEntryFragment).commitNow()
-        }.firstOrError()
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
@@ -16,6 +17,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumbe
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
@@ -26,6 +29,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.adyenCreditCardEntrySwipeRefreshLayout
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.back
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryTitleTextView
@@ -90,6 +94,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private var viewState: CreditCardDataEntryViewState? = null
 
     private var waitTimer: CountDownTimer? = null
+
+    private var currentSnackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -210,10 +216,6 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         cvvEditText.getContentOnFocusLost { ccvLostFocusSubject.onNext(it.trim()) }
         cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
 
-        countryText.setOnClickListener {
-            Timber.d("Country selector")
-        }
-
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
             creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
         })
@@ -226,7 +228,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_DATE] = expirationDateTextView.getContentsAsString()
-                uiComponentHandler.dataSubject.onNext(dataMap)
+                uiComponentHandler.submitData(dataMap)
             }
         }
 
@@ -244,6 +246,28 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
         back.setOnClickListener {
             requireActivity().onBackPressed()
+        }
+        adyenCreditCardEntrySwipeRefreshLayout.isEnabled = false
+
+        disposables += uiComponentHandler.getResultObservable().subscribe {
+            when (it) {
+                is UiRequestHandler.DataEntryResult.Success -> {
+                    adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
+                }
+                is UiRequestHandler.DataEntryResult.Processing -> {
+                    adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = true
+                }
+                is UiRequestHandler.DataEntryResult.Failure -> {
+                    SnackBarExtensions {
+                        adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
+                        currentSnackbar?.let { snackbar ->
+                            snackbar.dismissWithoutAnimating()
+                        }
+                        currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout)
+                        currentSnackbar?.show()
+                    }
+                }
+            }
         }
     }
 

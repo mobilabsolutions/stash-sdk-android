@@ -12,7 +12,9 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalR
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
@@ -62,8 +64,8 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
 
     init {
         braintreeIntegrationComponent = DaggerBraintreeIntegrationComponent.builder()
-                .paymentSdkComponent(paymentSdkComponent)
-                .build()
+            .paymentSdkComponent(paymentSdkComponent)
+            .build()
         braintreeIntegrationComponent.inject(this)
     }
 
@@ -73,32 +75,38 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
 
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
         return mobilabApiV2.updateAlias(
-                registrationRequest.standardizedData.aliasId,
-                AliasUpdateRequest(
-                        extra = AliasExtra(
-                                payPalConfig = PayPalConfig(
-                                        nonce = registrationRequest.additionalData.extraData[NONCE]!!,
-                                        deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]!!
-                                ),
+            registrationRequest.standardizedData.aliasId,
+            AliasUpdateRequest(
+                extra = AliasExtra(
+                    payPalConfig = PayPalConfig(
+                        nonce = registrationRequest.additionalData.extraData[NONCE]!!,
+                        deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]!!
+                    ),
 //                                paymentMethod = PaymentMethodType.PAYPAL.name
-                                paymentMethod = "PAY_PAL"
+                    paymentMethod = "PAY_PAL"
 
-                        )
                 )
+            )
         ).subscribeOn(Schedulers.io()).andThen(
             Single.just(registrationRequest.standardizedData.aliasId)
         )
     }
 
-    override fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>> {
-        return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMap {
-            Single.just(
+    override fun handlePaymentMethodEntryRequest(
+        activity: AppCompatActivity,
+        paymentMethodType: PaymentMethodType,
+        additionalRegistrationData: AdditionalRegistrationData,
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+    ): Observable<AdditionalRegistrationData> {
+        return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMapObservable {
+            Observable.just(
+                AdditionalRegistrationData(
                     mapOf(
-                            BillingData.ADDITIONAL_DATA_EMAIL to it.first,
-                            NONCE to it.second,
-                            DEVICE_FINGERPRINT to it.third
-
+                        BillingData.ADDITIONAL_DATA_EMAIL to it.first,
+                        NONCE to it.second,
+                        DEVICE_FINGERPRINT to it.third
                     )
+                )
             )
         }
     }

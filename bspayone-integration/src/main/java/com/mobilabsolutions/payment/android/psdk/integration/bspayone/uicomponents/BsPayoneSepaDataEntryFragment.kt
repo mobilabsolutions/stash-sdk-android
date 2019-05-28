@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
@@ -19,6 +20,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Country
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
@@ -30,6 +33,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.back
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.bsPayoneSepaEntrySwipeRefresh
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryText
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryTitleTextView
 import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorIban
@@ -90,6 +94,8 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     private lateinit var suggestedCountry: Locale
 
     private var waitTimer: CountDownTimer? = null
+
+    private var currentSnackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -192,11 +198,34 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[SepaData.IBAN] = it.iban
                 dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = it.country
-                uiComponentHandler.dataSubject.onNext(dataMap)
+                uiComponentHandler.submitData(dataMap)
             }
         }
 
         countryText.text = suggestedCountry.displayCountry
+
+        bsPayoneSepaEntrySwipeRefresh.isEnabled = false
+
+        disposables += uiComponentHandler.getResultObservable().subscribe {
+            when (it) {
+                is UiRequestHandler.DataEntryResult.Success -> {
+                    bsPayoneSepaEntrySwipeRefresh.isRefreshing = false
+                }
+                is UiRequestHandler.DataEntryResult.Processing -> {
+                    bsPayoneSepaEntrySwipeRefresh.isRefreshing = true
+                }
+                is UiRequestHandler.DataEntryResult.Failure -> {
+                    SnackBarExtensions {
+                        bsPayoneSepaEntrySwipeRefresh.isRefreshing = false
+                        currentSnackbar?.let { snackbar ->
+                            snackbar.dismissWithoutAnimating()
+                        }
+                        currentSnackbar = it.throwable.getErrorSnackBar(sepaScreenMainLayout)
+                        currentSnackbar?.show()
+                    }
+                }
+            }
+        }
 
         back.setOnClickListener {
             requireActivity().onBackPressed()

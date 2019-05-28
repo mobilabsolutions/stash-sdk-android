@@ -3,6 +3,8 @@ package com.mobilabsolutions.payment.android.psdk.internal.psphandler
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
+import io.reactivex.Observable
 import io.reactivex.Single
 
 /**
@@ -17,7 +19,12 @@ interface Integration {
 
     fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String>
 
-    fun handlePaymentMethodEntryRequest(activity: AppCompatActivity, paymentMethodType: PaymentMethodType, additionalRegistrationData: AdditionalRegistrationData): Single<Map<String, String>>
+    fun handlePaymentMethodEntryRequest(
+        activity: AppCompatActivity,
+        paymentMethodType: PaymentMethodType,
+        additionalRegistrationData: AdditionalRegistrationData,
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+    ): Observable<AdditionalRegistrationData>
 }
 
 interface IntegrationCompanion {
