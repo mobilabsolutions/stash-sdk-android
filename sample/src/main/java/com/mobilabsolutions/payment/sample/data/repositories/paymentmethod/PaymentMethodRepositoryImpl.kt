@@ -33,14 +33,14 @@ class PaymentMethodRepositoryImpl @Inject constructor(
     override suspend fun addPaymentMethod(userId: String, paymentMethod: PaymentMethod) = coroutineScope {
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.addPaymentMethod(userId, paymentMethod) }
         when (val result = remoteJob.await()) {
-            is Success -> localPaymentMethodStore.savePaymentMethod(paymentMethod, result.data.paymentMethodId)
+            is Success -> localPaymentMethodStore.savePaymentMethod(paymentMethod.copy(userId = userId), result.data.paymentMethodId)
             is ErrorResult -> Timber.e(result.exception)
         }
         Unit
     }
 
     override suspend fun deletePaymentMethod(paymentMethod: PaymentMethod) = coroutineScope {
-        val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.deletePaymentMethod(paymentMethod.aliasId) }
+        val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.deletePaymentMethod(paymentMethod.paymentMethodId) }
         when (val result = remoteJob.await()) {
             is Success -> localPaymentMethodStore.deletePaymentMethod(paymentMethod)
             is ErrorResult -> Timber.e(result.exception)

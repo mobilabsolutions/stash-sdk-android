@@ -23,7 +23,7 @@ class LocalPaymentMethodStore @Inject constructor(
 
     suspend fun savePaymentMethod(paymentMethod: PaymentMethod, paymentMethodId: String) = transactionRunner {
         val id = paymentMethodDao.entityBypaymentMethodId(paymentMethodId)?.id ?: 0L
-        entityInserter.insertOrUpdate(paymentMethodDao, paymentMethod.copy(id = id))
+        entityInserter.insertOrUpdate(paymentMethodDao, paymentMethod.copy(id = id, paymentMethodId = paymentMethodId))
     }
 
     suspend fun savePaymentMethodList(userId: String, paymentMethodList: List<PaymentMethod>) = transactionRunner {

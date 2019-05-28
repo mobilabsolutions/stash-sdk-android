@@ -49,8 +49,9 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     private fun mergeUser(local: User, remote: User): User {
+        Timber.d("XXX Local - ${local.userId} & Remote - ${remote.userId}")
         return local.copy(
-                userId = remote.userId
+            userId = remote.userId
         )
     }
 }

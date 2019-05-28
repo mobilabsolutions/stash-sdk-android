@@ -20,12 +20,12 @@ class RemotePaymentMethodDataSource @Inject constructor(
     suspend fun addPaymentMethod(userId: String, paymentMethod: PaymentMethod): Result<CreatePaymentMethodResponse> {
         return retrofitRunner.executeForServerResponse {
             sampleMerchantService.createPaymentMethod(
-                    CreatePaymentMethodRequest(
-                            aliasId = paymentMethod.aliasId,
-                            alias = paymentMethod.alias,
-                            type = paymentMethod._type,
-                            userId = userId
-                    )
+                CreatePaymentMethodRequest(
+                    alias = paymentMethod.description,
+                    aliasId = paymentMethod.alias,
+                    type = paymentMethod._type,
+                    userId = userId
+                )
             ).execute()
         }
     }

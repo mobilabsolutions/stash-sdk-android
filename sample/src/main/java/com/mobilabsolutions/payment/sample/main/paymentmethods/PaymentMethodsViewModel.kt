@@ -30,9 +30,9 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     @Assisted initialStateMethods: PaymentMethodsViewState,
     updateUser: UpdateUser,
     updatePaymentMethods: UpdatePaymentMethods,
-    private val schedulers: AppRxSchedulers,
     private val deletePaymentMethod: DeletePaymentMethod,
-    private val addPaymentMethod: AddPaymentMethod
+    private val addPaymentMethod: AddPaymentMethod,
+    private val schedulers: AppRxSchedulers
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
 
     private val _error = MutableLiveData<Throwable>()
@@ -69,13 +69,6 @@ class PaymentMethodsViewModel @AssistedInject constructor(
             }
         updateUser.setParams(Unit)
         updatePaymentMethods.setParams(Unit)
-//        loadPaymentMethods.observe()
-//            .subscribeOn(schedulers.io)
-//            .execute {
-//                copy(paymentMethods = it() ?: emptyList())
-//            }
-//
-//        loadPaymentMethods.setParams(Unit)
     }
 
     fun onAddBtnClicked() {
@@ -90,9 +83,9 @@ class PaymentMethodsViewModel @AssistedInject constructor(
 
     private fun onRegisterPaymentSuccess(paymentMethodAlias: PaymentMethodAlias) {
         val type = when (paymentMethodAlias.paymentMethodType) {
-            PaymentMethodType.CC -> "Credit Card"
+            PaymentMethodType.CC -> "CC"
             PaymentMethodType.SEPA -> "SEPA"
-            PaymentMethodType.PAYPAL -> "PayPal"
+            PaymentMethodType.PAYPAL -> "PAY_PAL"
         }
         withState {
             val description = when (val aliasInfo = paymentMethodAlias.extraAliasInfo) {
@@ -100,7 +93,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
                 is ExtraAliasInfo.SepaExtraInfo -> aliasInfo.maskedIban
                 is ExtraAliasInfo.PaypalExtraInfo -> aliasInfo.email
             }
-            val paymentMethod = PaymentMethod(alias = paymentMethodAlias.alias, _type = type, description = description)
+            val paymentMethod = PaymentMethod(aliasId = paymentMethodAlias.alias, _type = type, description = description)
             scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, paymentMethod = paymentMethod))
         }
     }

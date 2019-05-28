@@ -32,7 +32,7 @@ data class PaymentMethod(
     @ColumnInfo(name = "paymentMethod_id") val paymentMethodId: String = "",
     @ColumnInfo(name = "alias_id") val aliasId: String = "",
     @ColumnInfo(name = "alias") val alias: String = "",
-    @ColumnInfo(name = "type") val _type: String = "Credit Card",
+    @ColumnInfo(name = "type") val _type: String = "CC",
     @ColumnInfo(name = "description") val description: String = "Description"
 ) : SampleEntity {
 
