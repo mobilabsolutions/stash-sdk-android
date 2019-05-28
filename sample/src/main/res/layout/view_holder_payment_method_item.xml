@@ -50,7 +50,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="@{paymentMethod._type}"
+                android:text="@{paymentMethod.type.displayName}"
                 android:textAppearance="@style/itemTitle"
                 app:layout_constraintBottom_toTopOf="@+id/payment_alias"
                 app:layout_constraintStart_toEndOf="@id/payment_type_icon"
