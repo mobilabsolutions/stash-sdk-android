@@ -295,9 +295,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
         errorView.setText(validationResult.errorMessageResourceId)
         errorView.visibility = View.VISIBLE
         sourceView.setBackgroundResource(R.drawable.edit_text_frame_error)
-        SnackBarExtensions {
-            RuntimeException("TEST test test").getErrorSnackBar(sourceView).show()
-        }
     }
 
     private fun hideError(sourceView: View, errorView: TextView) {
