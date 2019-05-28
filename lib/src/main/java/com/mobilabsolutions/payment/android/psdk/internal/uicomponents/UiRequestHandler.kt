@@ -20,7 +20,6 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import timber.log.Timber
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -295,7 +294,6 @@ class UiRequestHandler @Inject constructor() {
 private fun <T> Observable<T>.filterNotSuccess(): Observable<T> {
     return materialize()
         .filter {
-            Timber.d("Notification: C${it.isOnComplete} E${it.isOnError} N${it.isOnNext}")
             !it.isOnError && !it.isOnComplete
         }
         .map { it.value }
