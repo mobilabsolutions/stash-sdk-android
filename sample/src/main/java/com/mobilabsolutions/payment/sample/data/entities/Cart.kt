@@ -10,19 +10,19 @@ import androidx.room.PrimaryKey
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
 @Entity(
-        tableName = "cart",
-        indices = [
-            Index(value = ["product_id"], unique = true)
-        ],
-        foreignKeys = [
-            ForeignKey(
-                    entity = Product::class,
-                    parentColumns = arrayOf("id"),
-                    childColumns = arrayOf("product_id"),
-                    onUpdate = ForeignKey.CASCADE,
-                    onDelete = ForeignKey.CASCADE
-            )
-        ]
+    tableName = "cart",
+    indices = [
+        Index(value = ["product_id"], unique = true)
+    ],
+    foreignKeys = [
+        ForeignKey(
+            entity = Product::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("product_id"),
+            onUpdate = ForeignKey.CASCADE,
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class Cart(
     @PrimaryKey(autoGenerate = true) @ColumnInfo override val id: Long = 0,

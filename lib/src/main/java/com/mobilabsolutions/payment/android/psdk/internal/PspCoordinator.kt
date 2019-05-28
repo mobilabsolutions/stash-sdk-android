@@ -79,7 +79,7 @@ class PspCoordinator @Inject constructor(
 
                         val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest)
 
-                        pspAliasSingle.map { aliasId ->
+                        pspAliasSingle.map { alias ->
                             val cardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
                             val lastDigits = standardizedData.creditCardData.number.takeLast(4)
                             val creditCardExtraInfo = ExtraAliasInfo.CreditCardExtraInfo(
@@ -89,7 +89,7 @@ class PspCoordinator @Inject constructor(
                                 expiryYear = standardizedData.creditCardData.expiryYear
 
                             )
-                            PaymentMethodAlias(aliasId, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
+                            PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
                         }
                     }.processErrors()
             }

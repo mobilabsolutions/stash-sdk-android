@@ -10,5 +10,5 @@ interface PaymentMethodRepository {
     fun observePaymentMethods(): Observable<List<PaymentMethod>>
     suspend fun updatePaymentMethods(userId: String)
     suspend fun deletePaymentMethod(paymentMethod: PaymentMethod)
-    suspend fun addPaymentMethod(userId: String, paymentMethod: PaymentMethod)
+    suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod)
 }

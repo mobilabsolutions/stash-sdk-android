@@ -93,8 +93,8 @@ class PaymentMethodsViewModel @AssistedInject constructor(
                 is ExtraAliasInfo.SepaExtraInfo -> aliasInfo.maskedIban
                 is ExtraAliasInfo.PaypalExtraInfo -> aliasInfo.email
             }
-            val paymentMethod = PaymentMethod( alias = alias, aliasId = paymentMethodAlias.alias, _type = type)
-            scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, paymentMethod = paymentMethod))
+            val paymentMethod = PaymentMethod(alias = alias, _type = type)
+            scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, aliasId = paymentMethodAlias.alias, paymentMethod = paymentMethod))
         }
     }
 

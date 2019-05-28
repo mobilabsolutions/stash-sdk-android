@@ -30,8 +30,8 @@ class PaymentMethodRepositoryImpl @Inject constructor(
         Unit
     }
 
-    override suspend fun addPaymentMethod(userId: String, paymentMethod: PaymentMethod) = coroutineScope {
-        val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.addPaymentMethod(userId, paymentMethod) }
+    override suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod) = coroutineScope {
+        val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.addPaymentMethod(userId, aliasId, paymentMethod) }
         when (val result = remoteJob.await()) {
             is Success -> localPaymentMethodStore.savePaymentMethod(paymentMethod.copy(userId = userId), result.data.paymentMethodId)
             is ErrorResult -> Timber.e(result.exception)

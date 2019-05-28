@@ -9,10 +9,10 @@ import androidx.room.PrimaryKey
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
 @Entity(
-        tableName = "user",
-        indices = [
-            Index(value = ["server_user_id"], unique = true)
-        ]
+    tableName = "user",
+    indices = [
+        Index(value = ["server_user_id"], unique = true)
+    ]
 )
 data class User(
     @PrimaryKey(autoGenerate = true) @ColumnInfo override val id: Long = 0,
