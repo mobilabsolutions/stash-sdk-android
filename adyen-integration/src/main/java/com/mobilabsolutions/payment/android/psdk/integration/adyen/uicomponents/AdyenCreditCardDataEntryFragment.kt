@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
@@ -93,6 +94,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private var viewState: CreditCardDataEntryViewState? = null
 
     private var waitTimer: CountDownTimer? = null
+
+    private var currentSnackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -257,7 +260,11 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
                         adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
-                        it.throwable.getErrorSnackBar(creditCardScreenMainLayout).show()
+                        currentSnackbar?.let { snackbar ->
+                            snackbar.dismissWithoutAnimating()
+                        }
+                        currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout)
+                        currentSnackbar?.show()
                     }
                 }
             }

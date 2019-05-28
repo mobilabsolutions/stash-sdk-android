@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
@@ -80,6 +81,8 @@ class AdyenSepaDataEntryFragment : Fragment() {
     private var viewState: SepaDataEntryViewState? = null
 
     private var waitTimer: CountDownTimer? = null
+
+    private var currentSnackbar: Snackbar? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -195,7 +198,11 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
                         adyenSepaEntrySwipeRefresh.isRefreshing = false
-                        it.throwable.getErrorSnackBar(adyenSepaEntrySwipeRefresh).show()
+                        currentSnackbar?.let { snackbar ->
+                            snackbar.dismissWithoutAnimating()
+                        }
+                        currentSnackbar = it.throwable.getErrorSnackBar(adyenSepaEntrySwipeRefresh)
+                        currentSnackbar?.show()
                     }
                 }
             }

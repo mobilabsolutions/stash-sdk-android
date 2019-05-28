@@ -75,4 +75,9 @@ object SnackBarExtensions {
 
         return snackBar
     }
+
+    fun Snackbar.dismissWithoutAnimating() {
+        view.visibility = View.INVISIBLE
+        dismiss()
+    }
 }
