@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
+import com.mobilabsolutions.payment.android.psdk.CreditCardTypeWithRegex
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneApi
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneBaseRequest
@@ -36,8 +37,14 @@ class BsPayoneHandler @Inject constructor(
         bsPayoneRegistrationRequest: BsPayoneRegistrationRequest
     ): Single<String> {
 
+        val STORE_CARD_DATA = "yes"
+        val ENCODING = "utf-8"
+
         val aliasId = creditCardRegistrationRequest.aliasId
         val creditCardData = creditCardRegistrationRequest.creditCardData
+        val creditCardType: String = enumValues<BsPayoneCardType>().filter {
+            it.cardTypeWithRegex.regex.matches(creditCardRegistrationRequest.creditCardData.number)
+        }.firstOrNull()?.bsPayoneType ?: throw RuntimeException("Unknown credit card type")
 
         val baseRequest =
                 bsPayoneRegistrationRequest.let {
@@ -49,7 +56,7 @@ class BsPayoneHandler @Inject constructor(
                             it.request,
                             it.responseType,
                             it.hash,
-                            "utf-8"
+                            ENCODING
                     )
                 }
         val request =
@@ -58,10 +65,10 @@ class BsPayoneHandler @Inject constructor(
                             baseRequest,
                             it.accountId,
                             creditCardData.number,
-                            "V",
+                            creditCardType,
                             LocalDate.of(creditCardData.expiryYear, creditCardData.expiryMonth, 1).withLastDayOfMonth(),
                             creditCardData.cvv,
-                            "yes"
+                            STORE_CARD_DATA
 
                     )
                 }
@@ -116,7 +123,31 @@ class BsPayoneHandler @Inject constructor(
         ).andThen(Single.just(aliasId))
     }
 
-//    fun handlePayPalRedirectRequest(redirectUrl : String) : Single<PayPalRedirectHandler.RedirectResult> {
-//        return payPalRedirectHandler.handlePayPalRedirect(redirectUrl)
-//    }
+    enum class BsPayoneCardType(val cardTypeWithRegex: CreditCardTypeWithRegex, val bsPayoneType: String) {
+
+        JCB(CreditCardTypeWithRegex.JCB, "J"),
+
+        AMEX(CreditCardTypeWithRegex.AMEX, "A"),
+
+        DINERS(CreditCardTypeWithRegex.DINERS, "D"),
+
+        VISA(CreditCardTypeWithRegex.VISA, "V"),
+
+        MAESTRO_13(CreditCardTypeWithRegex.MAESTRO_13, "O"),
+
+        MAESTRO_15(CreditCardTypeWithRegex.MAESTRO_15, "O"),
+
+        MASTER_CARD(CreditCardTypeWithRegex.MASTER_CARD, "M"),
+
+        // Conflicts with MASTER_CARD, need a way (number range) to distinguish. Also, applicable only for US Cards
+        // DINERS_US(Regex("^5[45][0-9]{1,14}$"), R.drawable.ic_card_diners_club),
+
+        DISCOVER(CreditCardTypeWithRegex.DISCOVER, "D"),
+
+        UNIONPAY_16(CreditCardTypeWithRegex.UNIONPAY_16, "P"),
+
+        UNIONPAY_19(CreditCardTypeWithRegex.UNIONPAY_19, "P"),
+
+        MAESTRO(CreditCardTypeWithRegex.MAESTRO, "O")
+    }
 }
