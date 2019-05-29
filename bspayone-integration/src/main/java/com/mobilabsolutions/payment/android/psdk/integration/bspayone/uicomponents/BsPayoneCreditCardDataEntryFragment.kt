@@ -14,7 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
-import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
@@ -25,11 +25,9 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions.getErrorSnackBar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -87,7 +85,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    lateinit var paymentUIConfiguration: PaymentUIConfiguration
+    lateinit var paymentUIConfiguration: PaymentUiConfiguration
 
     private val disposables = CompositeDisposable()
 
@@ -115,10 +113,15 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
     private var currentSnackbar: Snackbar? = null
 
+    private var selectedExpiryDate: LocalDate? = null
+
+    private lateinit var selectedCountry: Country
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
         suggestedCountry = CountryDetectorUtil.getBestGuessAtCurrentCountry(requireContext())
+        selectedCountry = Country(suggestedCountry.displayName, suggestedCountry.country, suggestedCountry.isO3Country)
         Timber.d("Created")
     }
 
@@ -253,10 +256,11 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
-                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = countryText.getContentsAsString()
+                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = selectedCountry.alpha2Code
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
-                dataMap[CreditCardData.EXPIRY_DATE] = expirationDateTextView.getContentsAsString()
+                dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue ?: throw RuntimeException("Month was null")).toString()
+                dataMap[CreditCardData.EXPIRY_YEAR] = (selectedExpiryDate?.year ?: throw RuntimeException("Year was null")).toString()
                 uiComponentHandler.submitData(dataMap)
             }
         }
@@ -266,6 +270,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
                 val selectedExpiry = LocalDate.of(it.second, it.first, lastDay)
+                selectedExpiryDate = selectedExpiry
                 expirationDateSubject.onNext(selectedExpiry)
                 val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
                 expirationDateTextView.text = expDate
@@ -306,6 +311,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         try {
             if (requestCode == COUNTRY_REQUEST_CODE && resultCode == RESULT_OK) {
                 data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
+                    selectedCountry = it
                     countryText.text = it.displayName
                 }
             }
@@ -412,7 +418,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     private fun validateExpirationDateAndUpdateUI(expiryDate: LocalDate?): Boolean {
         val validationResult = validateExpirationDate(expiryDate)
         if (!validationResult.success) {
-            // Do Nothing
+            // Do nothing
         } else {
             CustomizationExtensions {
                 countryText.applyFakeEditTextCustomization(paymentUIConfiguration)

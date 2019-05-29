@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import io.reactivex.subjects.ReplaySubject
@@ -30,7 +30,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    lateinit var paymentUIConfiguration: PaymentUIConfiguration
+    lateinit var paymentUIConfiguration: PaymentUiConfiguration
 
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
 
@@ -83,7 +83,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     class PaymentMethodAdapter(
         val availablePaymentMethods: List<PaymentMethodType>,
         val paymentMethodSubject: ReplaySubject<PaymentMethodType>,
-        val paymentUIConfiguration: PaymentUIConfiguration
+        val paymentUIConfiguration: PaymentUiConfiguration
     ) : RecyclerView.Adapter<PaymentMethodViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaymentMethodViewHolder {
             val holder = PaymentMethodViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.payment_method_entry, parent, false))

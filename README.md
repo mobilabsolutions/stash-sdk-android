@@ -199,8 +199,9 @@ registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CC, 
 
 #### Customizing UI
 
-If you want you can change the color scheme of the screens shown when requesting payment method data from the user. To do this you should provide
-a `PaymentUIConfiguration` object to the customization manager of payment SDK. `PaymentUIConfiguration` expects colors defined as resource ids.
+If you want you can change the color scheme of the screens shown when requesting payment method data from the user. 
+To do this you should either provide a `PaymentUiConfiguration` object when configuring the SDK, or user `configureUi` method of the `PaymentSDK` after it has been initialized. 
+`PaymentUiConfiguration` expects colors defined as resource ids.
 
 Below is the sample using random colors provided by Android.
 
@@ -214,7 +215,7 @@ val buttonTextColor: Int = android.R.color.holo_blue_bright
 val cellBackgroundColor: Int = R.color.unknown_blue
 val mediumEmphasisColor: Int = android.R.color.holo_green_light
 
-val paymentUIConfiguration = PaymentUIConfiguration(
+val paymentUiConfiguration = PaymentUiConfiguration(
         textColor,
         backgroundColor,
         buttonColor,
@@ -222,13 +223,20 @@ val paymentUIConfiguration = PaymentUIConfiguration(
         cellBackgroundColor,
         mediumEmphasisColor
 )
-PaymentSdk.getUiCustomizationManager().setPaymentUIConfigurations(paymentUIConfiguration)
+val  configuration = PaymentSdkConfiguration(
+        publicKey = "YourApiKey",
+        endpoint = "https://payment-dev.mblb.net/api/",
+        integration = AdyenIntegration,
+        testMode = true,
+        paymentUiConfiguration = paymentUiConfiguration
+)
+PaymentSdk.initalize(this, configuration)
 ```
 
 Java
 
 ```java
-PaymentUIConfiguration paymentUIConfiguration = new PaymentUIConfiguration.Builder()
+PaymentUiConfiguration paymentUiConfiguration = new PaymentUiConfiguration.Builder()
         .setTextColor(android.R.color.holo_orange_dark)
         .setBackgroundColor(android.R.color.holo_blue_dark)
         .setButtonColor(android.R.color.holo_purple)
@@ -237,7 +245,14 @@ PaymentUIConfiguration paymentUIConfiguration = new PaymentUIConfiguration.Build
         .setMediumEmphasisColor(R.color.unknown_blue)
         .build();
 
-PaymentSdk.getUiCustomizationManager().setPaymentUIConfigurations(paymentUIConfiguration);
+PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+        .setPublishableKey("YourPublishableKey")
+        .setEndpoint("https://payment-dev.mblb.net/api/")
+        .setIntegration(AdyenIntegration.Companion)
+        .setTestMode(true)
+        .setPaymentUiConfiguration(paymentUiConfiguration)
+        .build();
+
 ``` 
 
 

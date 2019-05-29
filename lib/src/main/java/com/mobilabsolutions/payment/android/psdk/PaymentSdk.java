@@ -20,7 +20,7 @@ public final class PaymentSdk {
         NewPaymentSdk.Companion.initialize(applicationContext, paymentSdkConfiguration);
     }
 
-    public static void configureUi(PaymentUIConfiguration paymentUIConfiguration) {
+    public static void configureUi(PaymentUiConfiguration paymentUIConfiguration) {
         NewPaymentSdk.Companion.configureUi(paymentUIConfiguration);
     }
 

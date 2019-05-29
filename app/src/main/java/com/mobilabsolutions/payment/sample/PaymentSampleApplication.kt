@@ -3,7 +3,7 @@ package com.mobilabsolutions.payment.sample
 import com.facebook.stetho.Stetho
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.commonsv3_dagger.mvp.presenter.DaggerPresenterManager
-import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
@@ -39,7 +39,7 @@ class PaymentSampleApplication : DaggerApplication() {
         val cellBackgroundColor: Int = R.color.cellBackgroundColor
         val mediumEmphasisColor: Int = R.color.mediumEmphasisColor
 
-        val customizationPreference = PaymentUIConfiguration(
+        val customizationPreference = PaymentUiConfiguration(
                 textColor,
                 backgroundColor,
                 buttonColor,

@@ -38,6 +38,9 @@ class BsPayoneHandler @Inject constructor(
         bsPayoneRegistrationRequest: BsPayoneRegistrationRequest
     ): Single<String> {
 
+        val STORE_CARD_DATA = "yes"
+        val ENCODING = "utf-8"
+
         val aliasId = creditCardRegistrationRequest.aliasId
         val creditCardData = creditCardRegistrationRequest.creditCardData
         val creditCardType = CreditCardTypeWithRegex.resolveCreditCardType(creditCardData.number)
@@ -53,7 +56,7 @@ class BsPayoneHandler @Inject constructor(
                             it.request,
                             it.responseType,
                             it.hash,
-                            "utf-8"
+                            ENCODING
                     )
                 }
         val request =
@@ -62,10 +65,10 @@ class BsPayoneHandler @Inject constructor(
                             baseRequest,
                             it.accountId,
                             creditCardData.number,
-                            "V",
+                            creditCardTypeName,
                             LocalDate.of(creditCardData.expiryYear, creditCardData.expiryMonth, 1).withLastDayOfMonth(),
                             creditCardData.cvv,
-                            "yes"
+                            STORE_CARD_DATA
 
                     )
                 }
@@ -138,7 +141,28 @@ class BsPayoneHandler @Inject constructor(
         ).andThen(Single.just(aliasId))
     }
 
-//    fun handlePayPalRedirectRequest(redirectUrl : String) : Single<PayPalRedirectHandler.RedirectResult> {
-//        return payPalRedirectHandler.handlePayPalRedirect(redirectUrl)
-//    }
+    enum class BsPayoneCardType(val cardTypeWithRegex: CreditCardTypeWithRegex, val bsPayoneType: String) {
+
+        JCB(CreditCardTypeWithRegex.JCB, "J"),
+
+        AMEX(CreditCardTypeWithRegex.AMEX, "A"),
+
+        DINERS(CreditCardTypeWithRegex.DINERS, "D"),
+
+        VISA(CreditCardTypeWithRegex.VISA, "V"),
+
+        MAESTRO_13(CreditCardTypeWithRegex.MAESTRO_13, "O"),
+
+        MAESTRO_15(CreditCardTypeWithRegex.MAESTRO_15, "O"),
+
+        MASTER_CARD(CreditCardTypeWithRegex.MASTER_CARD, "M"),
+
+        DISCOVER(CreditCardTypeWithRegex.DISCOVER, "D"),
+
+        UNIONPAY_16(CreditCardTypeWithRegex.UNIONPAY_16, "P"),
+
+        UNIONPAY_19(CreditCardTypeWithRegex.UNIONPAY_19, "P"),
+
+        MAESTRO(CreditCardTypeWithRegex.MAESTRO, "O")
+    }
 }
