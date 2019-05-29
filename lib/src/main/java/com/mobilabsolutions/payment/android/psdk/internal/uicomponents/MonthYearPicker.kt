@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import com.mobilabsolutions.payment.android.R
-import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import kotlinx.android.synthetic.main.month_year_picker.monthNumberPicker
 import kotlinx.android.synthetic.main.month_year_picker.monthYearPickerRoot
 import kotlinx.android.synthetic.main.month_year_picker.okButton
@@ -27,7 +27,7 @@ class MonthYearPicker(
     themeResId: Int = R.style.MonthYearPickerStyle,
     cancellable: Boolean = true,
     onCancelListener: DialogInterface.OnCancelListener? = null,
-    val paymentUIConfiguration: PaymentUIConfiguration? = null,
+    val paymentUIConfiguration: PaymentUiConfiguration? = null,
     val onDatePickedListener: (Pair<Int, Int>) -> Unit
 ) : Dialog(context, themeResId) {
 

@@ -14,7 +14,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
-import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
@@ -25,7 +25,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CreditCar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions.getErrorSnackBar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
@@ -86,7 +85,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    lateinit var paymentUIConfiguration: PaymentUIConfiguration
+    lateinit var paymentUIConfiguration: PaymentUiConfiguration
 
     private val disposables = CompositeDisposable()
 

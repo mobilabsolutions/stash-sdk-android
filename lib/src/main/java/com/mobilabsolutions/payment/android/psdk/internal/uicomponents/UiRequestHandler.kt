@@ -253,9 +253,11 @@ class UiRequestHandler @Inject constructor() {
                 additionalRegistrationData,
                 resultSubject
             ).firstOrError()
-//                .doFinally {
-//                    flowCompleted(hostActivity)
-//                }.ambWith(errorSubject.firstOrError())
+                .doFinally {
+                    flowCompleted(hostActivity)
+                }.ambWith(errorSubject.map {
+                    AdditionalRegistrationData()
+                }.firstOrError())
         }
     }
 

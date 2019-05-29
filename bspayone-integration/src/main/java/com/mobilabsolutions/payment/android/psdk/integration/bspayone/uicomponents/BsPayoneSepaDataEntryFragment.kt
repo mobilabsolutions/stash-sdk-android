@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
-import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
@@ -65,7 +65,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
-    lateinit var paymentUIConfiguration: PaymentUIConfiguration
+    lateinit var paymentUIConfiguration: PaymentUiConfiguration
 
     @Inject
     lateinit var sepaDataValidator: SepaDataValidator
