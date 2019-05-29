@@ -91,10 +91,6 @@ dependencies {
         exclude(group = "xpp3", module = "xpp3")
     }
 
-    api("com.mobilabsolutions.payment:payment-protocol:1.1-SNAPSHOT@jar") {
-        isChanging = true
-    }
-
     api(Libs.timber)
 
     api(Libs.RxJava.rxJava)

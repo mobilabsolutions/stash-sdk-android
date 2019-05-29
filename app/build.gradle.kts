@@ -51,6 +51,9 @@ android {
 }
 
 dependencies {
+
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
+
     implementation(project(Modules.paymentSdk)) //Core
     implementation(project(Modules.bsPayoneIntegration))
     implementation(project(Modules.braintreeIntegration))
@@ -83,6 +86,4 @@ dependencies {
     implementation(Libs.Retrofit.gsonConverter)
     implementation(Libs.Retrofit.retrofit_rxjava_adapter)
 
-    implementation("com.mobilabsolutions.android.commons:android-commons-dagger:3.0.2@aar")
-    implementation("com.mobilabsolutions.android.commons:android-commons:3.0.2@aar")
 }
