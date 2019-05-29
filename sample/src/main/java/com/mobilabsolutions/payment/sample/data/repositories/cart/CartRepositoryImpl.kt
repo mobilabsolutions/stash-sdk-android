@@ -33,4 +33,8 @@ class CartRepositoryImpl @Inject constructor(
     private suspend fun removeCart(cartWithProduct: CartWithProduct) {
         localCartStore.removeCart(cartWithProduct)
     }
+
+    override suspend fun emptyCart() {
+        localCartStore.emptyCart()
+    }
 }

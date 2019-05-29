@@ -1,5 +1,7 @@
 package com.mobilabsolutions.payment.sample.payments.selectpayment
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -21,6 +23,11 @@ class SelectPaymentViewModel @AssistedInject constructor(
 ) : BaseViewModel<SelectPaymentViewState>(initialStateMethods) {
 
     private var lastSelectedPaymentMethod: PaymentMethod? = null
+
+    private val _error = MutableLiveData<Throwable>()
+
+    val error: LiveData<Throwable>
+        get() = _error
 
     @AssistedInject.Factory
     interface Factory {

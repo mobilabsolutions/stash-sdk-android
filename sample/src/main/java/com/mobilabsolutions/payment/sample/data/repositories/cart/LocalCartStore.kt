@@ -40,4 +40,8 @@ class LocalCartStore @Inject constructor(
             cartDao.update(cart.copy(quantity = cart.quantity + 1))
         }
     }
+
+    suspend fun emptyCart() {
+        cartDao.clearCart()
+    }
 }

@@ -4,8 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.databinding.FragmentSelectPaymentBinding
@@ -52,7 +55,19 @@ class SelectPaymentFragment : BaseFragment() {
         }
         binding.btnPay.setOnClickListener {
             viewModel.onPayClicked()
+            activity?.apply {
+                setResult(AppCompatActivity.RESULT_OK)
+                finish()
+            }
         }
+
+        viewModel.error.observe(viewLifecycleOwner, Observer<Throwable> { throwable ->
+            this.view?.let {
+                SnackBarExtensions {
+                    throwable.getErrorSnackBar(it).show()
+                }
+            }
+        })
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

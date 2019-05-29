@@ -10,4 +10,5 @@ interface CartRepository {
     fun observeCarts(): Observable<List<CartWithProduct>>
     suspend fun changeCartQuantity(add: Boolean, cartWithProduct: CartWithProduct)
     suspend fun addProductToCart(productId: Long)
+    suspend fun emptyCart()
 }

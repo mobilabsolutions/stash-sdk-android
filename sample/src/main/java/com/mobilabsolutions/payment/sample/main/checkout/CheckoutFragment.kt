@@ -8,10 +8,13 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.google.android.material.snackbar.Snackbar
+import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.databinding.FragmentCheckoutBinding
 import com.mobilabsolutions.payment.sample.payments.PaymentActivity
+import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
 /**
@@ -58,6 +61,15 @@ class CheckoutFragment : BaseFragment() {
             binding.labelTotalAmount.isVisible = !it.showEmptyView
             binding.totalPriceText.isVisible = !it.showEmptyView
             controller.setData(it)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == DaggerAppCompatActivity.RESULT_OK) {
+            view?.let {
+                Snackbar.make(it, R.string.payment_success, Snackbar.LENGTH_LONG).show()
+            }
         }
     }
 }
