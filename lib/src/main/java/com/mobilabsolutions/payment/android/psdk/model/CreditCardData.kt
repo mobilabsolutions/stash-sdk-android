@@ -14,7 +14,8 @@ data class CreditCardData(
     companion object {
 
         val CREDIT_CARD_NUMBER = "CREDIT_CARD_NUMBER"
-        val EXPIRY_DATE = "EXPIRY_DATE"
+        val EXPIRY_MONTH = "EXPIRY_DATE"
+        val EXPIRY_YEAR = "EXPIRY_YEAR"
         val CVV = "CVV"
     }
 
