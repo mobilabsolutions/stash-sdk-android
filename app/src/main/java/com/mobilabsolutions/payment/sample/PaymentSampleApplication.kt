@@ -7,8 +7,8 @@ import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
+import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
-import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import timber.log.Timber
@@ -24,8 +24,8 @@ class PaymentSampleApplication : DaggerApplication() {
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = "https://payment-dev.mblb.net/api/",
                 integrationList = listOf(
-                    BsPayoneIntegration to PaymentMethodType.CC,
-                    BsPayoneIntegration to PaymentMethodType.SEPA,
+                    AdyenIntegration to PaymentMethodType.CC,
+                    AdyenIntegration to PaymentMethodType.SEPA,
                     BraintreeIntegration to PaymentMethodType.PAYPAL),
                 testMode = true
         )

@@ -28,12 +28,6 @@ allprojects {
         google()
         jcenter()
         maven(url = "https://kotlin.bintray.com/kotlinx/")
-        maven(url = "https://nexus.mblb.net/repository/mblb-internal/") {
-            credentials {
-                username = propOrDefWithTravis(PaymentSdkRelease.mobilabNexusUser, "")
-                password = propOrDefWithTravis(PaymentSdkRelease.mobilabNexusPassword, "")
-            }
-        }
     }
 }
 
