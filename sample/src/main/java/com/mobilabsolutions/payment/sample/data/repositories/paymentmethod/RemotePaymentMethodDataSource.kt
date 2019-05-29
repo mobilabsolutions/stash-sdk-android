@@ -5,7 +5,9 @@ import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.data.entities.Result
 import com.mobilabsolutions.payment.sample.data.mappers.PaymentMethodListResponseToEntity
 import com.mobilabsolutions.payment.sample.network.SampleMerchantService
+import com.mobilabsolutions.payment.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.payment.sample.network.request.CreatePaymentMethodRequest
+import com.mobilabsolutions.payment.sample.network.response.AuthorizePaymentResponse
 import com.mobilabsolutions.payment.sample.network.response.CreatePaymentMethodResponse
 import javax.inject.Inject
 
@@ -17,7 +19,7 @@ class RemotePaymentMethodDataSource @Inject constructor(
     private val sampleMerchantService: SampleMerchantService,
     private val paymentMethodListResponseToEntity: PaymentMethodListResponseToEntity
 ) {
-    suspend fun addPaymentMethod(userId: String, aliasId:String, paymentMethod: PaymentMethod): Result<CreatePaymentMethodResponse> {
+    suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod): Result<CreatePaymentMethodResponse> {
         return retrofitRunner.executeForServerResponse {
             sampleMerchantService.createPaymentMethod(
                 CreatePaymentMethodRequest(
@@ -39,6 +41,12 @@ class RemotePaymentMethodDataSource @Inject constructor(
     suspend fun getPaymentMethods(userId: String): Result<List<PaymentMethod>> {
         return retrofitRunner.executeForResponse(paymentMethodListResponseToEntity) {
             sampleMerchantService.getPaymentMethods(userId).execute()
+        }
+    }
+
+    suspend fun authorizePayment(authorizePaymentRequest: AuthorizePaymentRequest): Result<AuthorizePaymentResponse> {
+        return retrofitRunner.executeForServerResponse {
+            sampleMerchantService.authorizePayment(authorizePaymentRequest).execute()
         }
     }
 }

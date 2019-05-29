@@ -19,6 +19,18 @@ class SelectPaymentFragment : BaseFragment() {
     private lateinit var binding: FragmentSelectPaymentBinding
     private lateinit var controller: SelectPaymentEpoxyController
 
+    companion object {
+        const val AMOUNT_CENTS: String = "AMOUNT_CENTS"
+
+        fun newInstance(amount: Int): SelectPaymentFragment {
+            val fragment = SelectPaymentFragment()
+            val args = Bundle()
+            args.putInt(AMOUNT_CENTS, amount)
+            fragment.arguments = args
+            return fragment
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSelectPaymentBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
@@ -30,29 +42,22 @@ class SelectPaymentFragment : BaseFragment() {
 
         controller = SelectPaymentEpoxyController(object : SelectPaymentEpoxyController.Callbacks {
             override fun onSelection(paymentMethod: PaymentMethod) {
-                viewModel.onSelection()
+                viewModel.onPaymentMethodSelected(paymentMethod)
+                binding.btnPay.isEnabled = true
             }
         })
         binding.paymentMethodsRv.setController(controller)
         binding.back.setOnClickListener {
             activity?.onBackPressed()
         }
-    }
-
-    companion object {
-
-        fun newInstance(amount: Int): SelectPaymentFragment {
-            val fragment = SelectPaymentFragment()
-            val args = Bundle()
-            args.putInt("amount", amount)
-            fragment.arguments = args
-            return fragment
+        binding.btnPay.setOnClickListener {
+            viewModel.onPayClicked()
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel.setAmount(arguments?.getInt("amount", 0) ?: 0)
+        viewModel.setAmount(arguments?.getInt(AMOUNT_CENTS, 0) ?: 0)
     }
 
     override fun invalidate() {

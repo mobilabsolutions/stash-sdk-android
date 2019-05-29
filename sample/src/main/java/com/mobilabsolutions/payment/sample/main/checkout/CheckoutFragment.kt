@@ -44,8 +44,7 @@ class CheckoutFragment : BaseFragment() {
             }
         })
         binding.checkoutRv.setController(controller)
-        binding.btnPay.setOnClickListener {
-            viewModel.onPayBtnClicked()
+        binding.btnCheckout.setOnClickListener {
             startActivityForResult(Intent(context, PaymentActivity::class.java)
                 .putExtra(PaymentActivity.PAY_AMOUNT_EXTRA, binding.state?.totalAmount),
                 1)
@@ -55,7 +54,7 @@ class CheckoutFragment : BaseFragment() {
     override fun invalidate() {
         withState(viewModel) {
             binding.state = it
-            binding.btnPay.isVisible = !it.showEmptyView
+            binding.btnCheckout.isVisible = !it.showEmptyView
             binding.labelTotalAmount.isVisible = !it.showEmptyView
             binding.totalPriceText.isVisible = !it.showEmptyView
             controller.setData(it)

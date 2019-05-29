@@ -4,16 +4,24 @@ import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
+import com.mobilabsolutions.payment.sample.core.launchInteractor
+import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
+import com.mobilabsolutions.payment.sample.data.interactors.AuthorizePayment
 import com.mobilabsolutions.payment.sample.data.interactors.UpdatePaymentMethods
+import com.mobilabsolutions.payment.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 
 class SelectPaymentViewModel @AssistedInject constructor(
     @Assisted initialStateMethods: SelectPaymentViewState,
+    schedulers: AppRxSchedulers,
     updatePaymentMethods: UpdatePaymentMethods,
-    schedulers: AppRxSchedulers
+    private val authorizePayment: AuthorizePayment
 ) : BaseViewModel<SelectPaymentViewState>(initialStateMethods) {
+
+    private var lastSelectedPaymentMethod: PaymentMethod? = null
+
     @AssistedInject.Factory
     interface Factory {
         fun create(initialStateMethods: SelectPaymentViewState): SelectPaymentViewModel
@@ -40,7 +48,21 @@ class SelectPaymentViewModel @AssistedInject constructor(
         setState { copy(amount = amount) }
     }
 
-    fun onSelection() {
-        // TODO: Biju: Hit Merchant Backend
+    fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
+        lastSelectedPaymentMethod = paymentMethod
+    }
+
+    fun onPayClicked() {
+        lastSelectedPaymentMethod?.run {
+            withState {
+                val authorizePaymentRequest = AuthorizePaymentRequest(
+                    amount = it.amount,
+                    currency = "EUR",
+                    paymentMethodId = this.paymentMethodId,
+                    reason = "Nothing"
+                )
+                scope.launchInteractor(authorizePayment, AuthorizePayment.ExecuteParams(authorizePaymentRequest = authorizePaymentRequest))
+            }
+        }
     }
 }
