@@ -41,7 +41,7 @@ class LocalCartStore @Inject constructor(
         }
     }
 
-    suspend fun emptyCart() {
+    fun emptyCart() {
         cartDao.clearCart()
     }
 }

@@ -2,10 +2,12 @@ package com.mobilabsolutions.payment.sample.main.checkout
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.navigation.Navigation
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.snackbar.Snackbar
@@ -68,7 +70,10 @@ class CheckoutFragment : BaseFragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 1 && resultCode == DaggerAppCompatActivity.RESULT_OK) {
             view?.let {
-                Snackbar.make(it, R.string.payment_success, Snackbar.LENGTH_LONG).show()
+                // TODO: Navigation.findNavController(it).navigate()
+                Handler().postDelayed({
+                    Snackbar.make(it, R.string.payment_success, Snackbar.LENGTH_LONG).show()
+                }, 1000)
             }
         }
     }
