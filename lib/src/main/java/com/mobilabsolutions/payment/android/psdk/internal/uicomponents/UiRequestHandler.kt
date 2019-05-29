@@ -18,8 +18,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
-import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -160,14 +158,12 @@ class UiRequestHandler @Inject constructor() {
             ).subscribeOn(AndroidSchedulers.mainThread())
                 .flatMap {
 
-                    val localDate = LocalDate.parse(
-                        it.extraData.getValue(CreditCardData.EXPIRY_DATE) + "/01",
-                        DateTimeFormatter.ofPattern("MM/yy/dd")
-                    )
+                    val expiryMonth = it.extraData.getValue((CreditCardData.EXPIRY_MONTH)).toInt()
+                    val expiryYear = it.extraData.getValue(CreditCardData.EXPIRY_YEAR).toInt()
                     val creditCardData = CreditCardData(
                         it.extraData.getValue(CreditCardData.CREDIT_CARD_NUMBER),
-                        localDate.monthValue,
-                        localDate.year,
+                        expiryMonth,
+                        expiryYear,
                         it.extraData.getValue(CreditCardData.CVV),
                         BillingData(
                             firstName = BillingData.ADDITIONAL_DATA_FIRST_NAME,
@@ -257,9 +253,11 @@ class UiRequestHandler @Inject constructor() {
                 additionalRegistrationData,
                 resultSubject
             ).firstOrError()
-//                .doFinally {
-//                    flowCompleted(hostActivity)
-//                }.ambWith(errorSubject.firstOrError())
+                .doFinally {
+                    flowCompleted(hostActivity)
+                }.ambWith(errorSubject.map {
+                    AdditionalRegistrationData()
+                }.firstOrError())
         }
     }
 

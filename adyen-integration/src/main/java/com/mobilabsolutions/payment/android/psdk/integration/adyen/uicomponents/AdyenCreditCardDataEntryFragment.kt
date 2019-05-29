@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
-import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
@@ -21,7 +21,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarE
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentsAsString
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -73,7 +72,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    private lateinit var paymentUIConfiguration: PaymentUIConfiguration
+    private lateinit var paymentUIConfiguration: PaymentUiConfiguration
 
     private val disposables = CompositeDisposable()
 
@@ -96,6 +95,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private var waitTimer: CountDownTimer? = null
 
     private var currentSnackbar: Snackbar? = null
+
+    private var selectedExpiryDate: LocalDate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -227,7 +228,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
-                dataMap[CreditCardData.EXPIRY_DATE] = expirationDateTextView.getContentsAsString()
+                dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue ?: throw RuntimeException("Month was null")).toString()
+                dataMap[CreditCardData.EXPIRY_YEAR] = (selectedExpiryDate?.year ?: throw RuntimeException("Year was null")).toString()
                 uiComponentHandler.submitData(dataMap)
             }
         }
@@ -237,6 +239,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
                 val selectedExpiry = LocalDate.of(it.second, it.first, lastDay)
+                selectedExpiryDate = selectedExpiry
                 expirationDateSubject.onNext(selectedExpiry)
                 val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
                 expirationDateTextView.text = expDate
@@ -364,7 +367,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private fun validateExpirationDateAndUpdateUI(expiryDate: LocalDate?): Boolean {
         val validationResult = validateExpirationDate(expiryDate)
         if (!validationResult.success) {
-            // Do Nothing
+            // Do nothing
         } else {
             CustomizationExtensions {
                 countryText.applyFakeEditTextCustomization(paymentUIConfiguration)

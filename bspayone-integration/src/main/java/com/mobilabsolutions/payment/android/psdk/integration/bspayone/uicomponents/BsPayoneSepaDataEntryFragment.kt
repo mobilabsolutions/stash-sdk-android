@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
-import com.mobilabsolutions.payment.android.psdk.PaymentUIConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
@@ -65,7 +65,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
-    lateinit var paymentUIConfiguration: PaymentUIConfiguration
+    lateinit var paymentUIConfiguration: PaymentUiConfiguration
 
     @Inject
     lateinit var sepaDataValidator: SepaDataValidator
@@ -97,10 +97,13 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
 
     private var currentSnackbar: Snackbar? = null
 
+    private lateinit var selectedCountry: Country
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
         suggestedCountry = CountryDetectorUtil.getBestGuessAtCurrentCountry(requireContext())
+        selectedCountry = Country(suggestedCountry.displayName, suggestedCountry.country, suggestedCountry.isO3Country)
         Timber.d("Created")
     }
 
@@ -197,7 +200,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
                 dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[SepaData.IBAN] = it.iban
-                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = it.country
+                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = selectedCountry.alpha2Code
                 uiComponentHandler.submitData(dataMap)
             }
         }
@@ -315,6 +318,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         try {
             if (requestCode == COUNTRY_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
                 data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
+                    selectedCountry = it
                     countryText.text = it.displayName
                 }
             }

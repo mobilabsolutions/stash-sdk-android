@@ -9,7 +9,7 @@ import java.util.Locale
  *
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
-// data class BillingData(var country: String, val firstName: String, val city: String, val lastName: String, val email: String, val address1: String, val address2: String, val zip: String)
+// data class BillingData(var country: String, val firstName: String, val city: String, val lastName: String, val ccHolderName: String, val address1: String, val address2: String, val zip: String)
 
 data class BillingData(
     var firstName: String? = null,
@@ -77,12 +77,12 @@ data class BillingData(
         fun build() = billingData
     }
 
-    fun fullName(): String? {
+    fun fullName(): String {
         return when {
             firstName != null && lastName != null -> "$firstName $lastName"
             firstName != null -> firstName
             lastName != null -> lastName
             else -> throw ValidationException("First name and last name were not supplied")
-        }
+        }!!
     }
 }

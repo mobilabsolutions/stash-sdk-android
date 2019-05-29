@@ -15,6 +15,7 @@ import com.braintreepayments.api.models.PayPalRequest
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.ReplaySubject
 import timber.log.Timber
@@ -31,7 +32,7 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
     var pointOfNoReturnReached: Boolean = false
 
     override fun onCancel(requestCode: Int) {
-        braintreeHandler.resultSubject.onError(RuntimeException("Braintree canceled"))
+        braintreeHandler.resultSubject.onError(UiRequestHandler.UserCancelled())
         this.finish()
     }
 
@@ -104,7 +105,7 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
     override fun onBackPressed() {
         if (!pointOfNoReturnReached) {
             super.onBackPressed()
-            braintreeHandler.resultSubject.onError(OtherException("User cancelled PayPal registration"))
+            braintreeHandler.resultSubject.onError(UiRequestHandler.UserCancelled())
         }
     }
 }

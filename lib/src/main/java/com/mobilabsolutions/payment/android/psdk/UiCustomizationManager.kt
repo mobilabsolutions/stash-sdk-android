@@ -28,7 +28,7 @@ import javax.inject.Inject
  * A class representing a UI customization preferences. Default values are provided,
  * or you can use the Builder supplied
  */
-data class PaymentUIConfiguration(
+data class PaymentUiConfiguration(
     @ColorRes val textColor: Int = R.color.gable_green,
     @ColorRes val backgroundColor: Int = R.color.black_haze,
     @ColorRes val buttonColor: Int = R.color.lochmara,
@@ -38,7 +38,7 @@ data class PaymentUIConfiguration(
 
 ) {
     class Builder {
-        private var preference = PaymentUIConfiguration()
+        private var preference = PaymentUiConfiguration()
         fun setTextColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(textColor = resourceId)
             return this
@@ -69,7 +69,7 @@ data class PaymentUIConfiguration(
             return this
         }
 
-        fun build(): PaymentUIConfiguration = preference
+        fun build(): PaymentUiConfiguration = preference
     }
 }
 
@@ -78,7 +78,7 @@ data class PaymentUIConfiguration(
  * colors for specific elements
  */
 class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sharedPreferences: SharedPreferences) {
-    private lateinit var paymentUIConfiguration: PaymentUIConfiguration
+    private lateinit var paymentUIConfiguration: PaymentUiConfiguration
 
     companion object {
         val CUSTOMIZATION_KEY = "Customization"
@@ -88,12 +88,12 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
         loadPreference()
     }
 
-    fun setCustomizationPreferences(paymentUIConfiguration: PaymentUIConfiguration) {
+    fun setCustomizationPreferences(paymentUIConfiguration: PaymentUiConfiguration) {
         this.paymentUIConfiguration = paymentUIConfiguration
         storePreference()
     }
 
-    fun getCustomizationPreferences(): PaymentUIConfiguration {
+    fun getCustomizationPreferences(): PaymentUiConfiguration {
         return paymentUIConfiguration
     }
 
@@ -105,9 +105,9 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
     private fun loadPreference() {
         val customizationJson = sharedPreferences.getString(CUSTOMIZATION_KEY, "")!!
         if (customizationJson.isEmpty()) {
-            paymentUIConfiguration = PaymentUIConfiguration()
+            paymentUIConfiguration = PaymentUiConfiguration()
         } else {
-            paymentUIConfiguration = gson.fromJson(customizationJson, PaymentUIConfiguration::class.java)
+            paymentUIConfiguration = gson.fromJson(customizationJson, PaymentUiConfiguration::class.java)
         }
     }
 }
@@ -127,15 +127,15 @@ object CustomizationExtensions {
         }
     }
 
-    fun EditText.applyEditTextCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+    fun EditText.applyEditTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         applyOnTextView(paymentUIConfiguration)
     }
 
-    fun TextView.applyFakeEditTextCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+    fun TextView.applyFakeEditTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         applyOnTextView(paymentUIConfiguration)
     }
 
-    private fun TextView.applyOnTextView(paymentUIConfiguration: PaymentUIConfiguration) {
+    private fun TextView.applyOnTextView(paymentUIConfiguration: PaymentUiConfiguration) {
         if (error == null) {
             val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.edit_text_selector)
             val textFieldDrawableContainerState = (backgroundDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
@@ -149,11 +149,11 @@ object CustomizationExtensions {
         this.applyTextCustomization(paymentUIConfiguration)
     }
 
-    fun TextView.applyTextCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+    fun TextView.applyTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         setTextColor(ContextCompat.getColor(context, paymentUIConfiguration.textColor))
     }
 
-    fun Button.applyCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+    fun Button.applyCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         if (isEnabled) {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector)
             val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
@@ -168,13 +168,13 @@ object CustomizationExtensions {
         setTextColor(CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonTextColor)))
     }
 
-    fun View.applyBackgroundCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+    fun View.applyBackgroundCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         val backgroundColorDrawable = background as ColorDrawable
         backgroundColorDrawable.color = ContextCompat.getColor(context, paymentUIConfiguration.backgroundColor)
         background = backgroundColorDrawable
     }
 
-    fun View.applyCellBackgroundCustomization(paymentUIConfiguration: PaymentUIConfiguration) {
+    fun View.applyCellBackgroundCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         val backgroundColorDrawable = background as GradientDrawable
         backgroundColorDrawable.setColor(ContextCompat.getColor(context, paymentUIConfiguration.cellBackgroundColor))
         background = backgroundColorDrawable

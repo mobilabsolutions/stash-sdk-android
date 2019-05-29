@@ -18,7 +18,7 @@ data class CreditCardConfig(
     val ccExpiry: String,
     val ccMask: String,
     val ccType: String,
-    val email: String
+    val ccHolderName: String?
 )
 
 data class SepaConfig(
