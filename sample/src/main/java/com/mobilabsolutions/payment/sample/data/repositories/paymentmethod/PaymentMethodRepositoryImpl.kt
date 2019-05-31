@@ -6,10 +6,8 @@ import com.mobilabsolutions.payment.sample.data.entities.Success
 import com.mobilabsolutions.payment.sample.data.repositories.cart.LocalCartStore
 import com.mobilabsolutions.payment.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.payment.sample.util.AppCoroutineDispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
