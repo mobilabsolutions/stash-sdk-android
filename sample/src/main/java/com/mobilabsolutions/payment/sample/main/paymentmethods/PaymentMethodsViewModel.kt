@@ -12,9 +12,11 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
 import com.mobilabsolutions.payment.sample.core.launchInteractor
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
+import com.mobilabsolutions.payment.sample.data.entities.User
 import com.mobilabsolutions.payment.sample.data.interactors.AddPaymentMethod
 import com.mobilabsolutions.payment.sample.data.interactors.DeletePaymentMethod
-import com.mobilabsolutions.payment.sample.data.interactors.LoadPaymentMethods
+import com.mobilabsolutions.payment.sample.data.interactors.UpdatePaymentMethods
+import com.mobilabsolutions.payment.sample.data.interactors.UpdateUser
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -26,10 +28,11 @@ import timber.log.Timber
  */
 class PaymentMethodsViewModel @AssistedInject constructor(
     @Assisted initialStateMethods: PaymentMethodsViewState,
-    loadPaymentMethods: LoadPaymentMethods,
-    private val schedulers: AppRxSchedulers,
+    updateUser: UpdateUser,
+    updatePaymentMethods: UpdatePaymentMethods,
     private val deletePaymentMethod: DeletePaymentMethod,
-    private val addPaymentMethod: AddPaymentMethod
+    private val addPaymentMethod: AddPaymentMethod,
+    private val schedulers: AppRxSchedulers
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
 
     private val _error = MutableLiveData<Throwable>()
@@ -50,19 +53,28 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     init {
-        loadPaymentMethods.observe()
+        updateUser.observe()
+            .subscribeOn(schedulers.io)
+            .doOnNext {
+                scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
+            }
+            .execute {
+                copy(user = it() ?: User.EMPTY_USER)
+            }
+
+        updatePaymentMethods.observe()
             .subscribeOn(schedulers.io)
             .execute {
                 copy(paymentMethods = it() ?: emptyList())
             }
-
-        loadPaymentMethods.setParams(Unit)
+        updateUser.setParams(Unit)
+        updatePaymentMethods.setParams(Unit)
     }
 
     fun onAddBtnClicked() {
         disposables += PaymentSdk.getRegistrationManager().registerPaymentMethodUsingUi()
-                .subscribeOn(schedulers.io)
-                .subscribe(this::onRegisterPaymentSuccess, this::onError)
+            .subscribeOn(schedulers.io)
+            .subscribe(this::onRegisterPaymentSuccess, this::onError)
     }
 
     fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
@@ -71,17 +83,19 @@ class PaymentMethodsViewModel @AssistedInject constructor(
 
     private fun onRegisterPaymentSuccess(paymentMethodAlias: PaymentMethodAlias) {
         val type = when (paymentMethodAlias.paymentMethodType) {
-            PaymentMethodType.CC -> "Credit Card"
+            PaymentMethodType.CC -> "CC"
             PaymentMethodType.SEPA -> "SEPA"
-            PaymentMethodType.PAYPAL -> "PayPal"
+            PaymentMethodType.PAYPAL -> "PAY_PAL"
         }
-        val description = when (val aliasInfo = paymentMethodAlias.extraAliasInfo) {
-            is ExtraAliasInfo.CreditCardExtraInfo -> aliasInfo.creditCardMask
-            is ExtraAliasInfo.SepaExtraInfo -> aliasInfo.maskedIban
-            is ExtraAliasInfo.PaypalExtraInfo -> aliasInfo.email
+        withState {
+            val alias = when (val aliasInfo = paymentMethodAlias.extraAliasInfo) {
+                is ExtraAliasInfo.CreditCardExtraInfo -> aliasInfo.creditCardMask
+                is ExtraAliasInfo.SepaExtraInfo -> aliasInfo.maskedIban
+                is ExtraAliasInfo.PaypalExtraInfo -> aliasInfo.email
+            }
+            val paymentMethod = PaymentMethod(alias = alias, _type = type)
+            scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, aliasId = paymentMethodAlias.alias, paymentMethod = paymentMethod))
         }
-        val paymentMethod = PaymentMethod(alias = paymentMethodAlias.alias, _type = type, description = description)
-        scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(paymentMethod))
     }
 
     private fun onError(throwable: Throwable) {

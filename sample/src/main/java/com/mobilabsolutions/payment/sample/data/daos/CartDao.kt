@@ -19,4 +19,7 @@ abstract class CartDao : EntityDao<Cart> {
 
     @Query("SELECT * FROM cart WHERE product_id=:productId")
     abstract fun cartByProductId(productId: Long): Cart?
+
+    @Query("DELETE FROM cart")
+    abstract fun clearCart()
 }

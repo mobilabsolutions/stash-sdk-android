@@ -43,8 +43,8 @@ class BsPayoneHandler @Inject constructor(
 
         val aliasId = creditCardRegistrationRequest.aliasId
         val creditCardData = creditCardRegistrationRequest.creditCardData
-        val creditCardType = CreditCardTypeWithRegex.resolveCreditCardType(creditCardData.number)
-        val creditCardTypeName = creditCardType.name
+        val generalCardType = CreditCardTypeWithRegex.resolveCreditCardType(creditCardData.number)
+        val bsPayoneType = BsPayoneCardType.valueOf(generalCardType.name).bsPayoneType
 
         val baseRequest =
                 bsPayoneRegistrationRequest.let {
@@ -65,7 +65,7 @@ class BsPayoneHandler @Inject constructor(
                             baseRequest,
                             it.accountId,
                             creditCardData.number,
-                            creditCardTypeName,
+                            bsPayoneType,
                             LocalDate.of(creditCardData.expiryYear, creditCardData.expiryMonth, 1).withLastDayOfMonth(),
                             creditCardData.cvv,
                             STORE_CARD_DATA
@@ -81,8 +81,8 @@ class BsPayoneHandler @Inject constructor(
                         paymentMethod = "CC",
                         creditCardConfig = CreditCardConfig(
                             ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
-                            ccMask = creditCardTypeName + "-" + creditCardData.number.takeLast(4),
-                            ccType = creditCardTypeName,
+                            ccMask = bsPayoneType + "-" + creditCardData.number.takeLast(4),
+                            ccType = bsPayoneType,
                             ccHolderName = creditCardData.billingData?.fullName()
                         )
                     )
@@ -99,8 +99,8 @@ class BsPayoneHandler @Inject constructor(
                                     personalData = creditCardRegistrationRequest.billingData,
                                     creditCardConfig = CreditCardConfig(
                                         ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
-                                        ccMask = creditCardTypeName + "-" + creditCardData.number.takeLast(4),
-                                        ccType = creditCardTypeName,
+                                        ccMask = bsPayoneType + "-" + creditCardData.number.takeLast(4),
+                                        ccType = bsPayoneType,
                                         ccHolderName = creditCardData.billingData?.fullName()
                                     )
 

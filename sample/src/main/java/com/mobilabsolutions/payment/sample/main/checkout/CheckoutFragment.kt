@@ -1,13 +1,17 @@
 package com.mobilabsolutions.payment.sample.main.checkout
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.google.android.material.snackbar.Snackbar
+import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.databinding.FragmentCheckoutBinding
@@ -44,8 +48,7 @@ class CheckoutFragment : BaseFragment() {
             }
         })
         binding.checkoutRv.setController(controller)
-        binding.btnPay.setOnClickListener {
-            viewModel.onPayBtnClicked()
+        binding.btnCheckout.setOnClickListener {
             startActivityForResult(Intent(context, PaymentActivity::class.java)
                 .putExtra(PaymentActivity.PAY_AMOUNT_EXTRA, binding.state?.totalAmount),
                 1)
@@ -55,10 +58,22 @@ class CheckoutFragment : BaseFragment() {
     override fun invalidate() {
         withState(viewModel) {
             binding.state = it
-            binding.btnPay.isVisible = !it.showEmptyView
+            binding.btnCheckout.isVisible = !it.showEmptyView
             binding.labelTotalAmount.isVisible = !it.showEmptyView
             binding.totalPriceText.isVisible = !it.showEmptyView
             controller.setData(it)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            view?.let {
+                // TODO: Navigation.findNavController(it).navigate()
+                Handler().postDelayed({
+                    Snackbar.make(it, R.string.payment_success, Snackbar.LENGTH_LONG).show()
+                }, 1000)
+            }
         }
     }
 }

@@ -129,10 +129,10 @@ class PspCoordinator @Inject constructor(
             chosenIntegration.getPreparationData(PaymentMethodType.SEPA).flatMap { preparationData ->
                 mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
                     .subscribeOn(Schedulers.io())
-                    .flatMap {
+                    .flatMap { aliasResponse ->
 
-                        val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = it.aliasId)
-                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
+                        val standardizedData = SepaRegistrationRequest(sepaData = sepaData, billingData = billingData, aliasId = aliasResponse.aliasId)
+                        val additionalData = AdditionalRegistrationData(aliasResponse.pspExtra + additionalUIData.extraData)
                         val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
                         chosenIntegration.handleRegistrationRequest(registrationRequest)

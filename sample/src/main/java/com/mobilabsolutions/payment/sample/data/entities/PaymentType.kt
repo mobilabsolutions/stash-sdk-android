@@ -4,12 +4,12 @@ package com.mobilabsolutions.payment.sample.data.entities
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 
-enum class PaymentType(val sdkValue: String) {
-    CREDIT_CARD("Credit Card"),
+enum class PaymentType(val displayName: String) {
+    CC("Credit Card"),
     SEPA("SEPA"),
-    PAYPAL("PayPal");
+    PAY_PAL("PayPal");
 
     companion object {
-        fun fromStringValue(value: String): PaymentType? = values().firstOrNull { it.sdkValue == value }
+        fun fromStringValue(value: String): PaymentType? = values().firstOrNull { it.name == value }
     }
 }

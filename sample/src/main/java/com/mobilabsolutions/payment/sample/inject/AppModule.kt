@@ -10,6 +10,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.rx2.asCoroutineDispatcher
+import java.io.File
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -38,4 +40,9 @@ class AppModule {
             computation = schedulers.computation.asCoroutineDispatcher(),
             main = Dispatchers.Main
     )
+
+    @Provides
+    @Singleton
+    @Named("cache")
+    fun provideCacheDir(application: SampleApplication): File = application.cacheDir
 }

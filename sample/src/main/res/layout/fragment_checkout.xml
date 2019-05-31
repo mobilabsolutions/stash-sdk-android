@@ -50,7 +50,7 @@
             android:textColor="@color/darkBlack"
             android:textSize="18sp"
             android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/btn_pay"
+            app:layout_constraintBottom_toTopOf="@+id/btn_checkout"
             app:layout_constraintStart_toStartOf="parent"
             tools:visibility="visible" />
 
@@ -70,7 +70,7 @@
             tools:visibility="visible" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_pay"
+            android:id="@+id/btn_checkout"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_margin="16dp"

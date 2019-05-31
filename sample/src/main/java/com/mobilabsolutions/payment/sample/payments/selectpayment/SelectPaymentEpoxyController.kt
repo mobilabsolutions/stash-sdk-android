@@ -12,7 +12,7 @@ class SelectPaymentEpoxyController(
     private val callbacks: Callbacks
 ) : TypedEpoxyController<SelectPaymentViewState>() {
 
-    private var lastSelected: View? = null
+    private var lastSelectedView: View? = null
 
     interface Callbacks {
         fun onSelection(paymentMethod: PaymentMethod)
@@ -33,11 +33,11 @@ class SelectPaymentEpoxyController(
 
     private fun updateSelection(view: View) {
         view.isSelected = true
-        if (lastSelected !== view) {
-            lastSelected?.let {
+        if (lastSelectedView !== view) {
+            lastSelectedView?.let {
                 it.isSelected = false
             }
-            lastSelected = view
+            lastSelectedView = view
         }
     }
 }

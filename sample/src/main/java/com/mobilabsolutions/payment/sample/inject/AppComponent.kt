@@ -3,6 +3,7 @@ package com.mobilabsolutions.payment.sample.inject
 import com.mobilabsolutions.payment.sample.SampleApplication
 import com.mobilabsolutions.payment.sample.data.DataModule
 import com.mobilabsolutions.payment.sample.main.MainBuilder
+import com.mobilabsolutions.payment.sample.network.NetworkModule
 import com.mobilabsolutions.payment.sample.payments.PaymentBuilder
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -18,6 +19,7 @@ import javax.inject.Singleton
     AppModule::class,
     AppAssistedModule::class,
     DataModule::class,
+    NetworkModule::class,
     MainBuilder::class,
     PaymentBuilder::class
 ])
