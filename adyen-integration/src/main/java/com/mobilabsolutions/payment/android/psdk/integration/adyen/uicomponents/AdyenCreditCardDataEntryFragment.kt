@@ -20,6 +20,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalD
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getCardNumberStringUnformatted
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -211,15 +212,15 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         lastNameEditText.getContentOnFocusLost { lastNameLostFocusSubject.onNext(it.trim()) }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
-        creditCardNumberEditText.getContentOnFocusLost { cardNumberLostFocusSubject.onNext(it.replace("\\D".toRegex(), "")) }
-        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.replace("\\D".toRegex(), "")) }
-
-        cvvEditText.getContentOnFocusLost { ccvLostFocusSubject.onNext(it.trim()) }
-        cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
+        creditCardNumberEditText.getContentOnFocusLost { cardNumberLostFocusSubject.onNext(it.getCardNumberStringUnformatted().trim()) }
+        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted().trim()) }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
             creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
         })
+
+        cvvEditText.getContentOnFocusLost { ccvLostFocusSubject.onNext(it.trim()) }
+        cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
 
         saveButton.setOnClickListener {
             viewState?.let {
@@ -228,8 +229,10 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
-                dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue ?: throw RuntimeException("Month was null")).toString()
-                dataMap[CreditCardData.EXPIRY_YEAR] = (selectedExpiryDate?.year ?: throw RuntimeException("Year was null")).toString()
+                dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue
+                    ?: throw RuntimeException("Month was null")).toString()
+                dataMap[CreditCardData.EXPIRY_YEAR] = (selectedExpiryDate?.year
+                    ?: throw RuntimeException("Year was null")).toString()
                 uiComponentHandler.submitData(dataMap)
             }
         }

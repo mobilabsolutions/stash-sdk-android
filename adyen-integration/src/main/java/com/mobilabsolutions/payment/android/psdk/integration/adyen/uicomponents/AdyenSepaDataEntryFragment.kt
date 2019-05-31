@@ -13,12 +13,14 @@ import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.R
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.IbanTextWatcher
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataValidator
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getIbanStringUnformatted
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -169,8 +171,10 @@ class AdyenSepaDataEntryFragment : Fragment() {
         lastNameEditText.getContentOnFocusLost { lastNameLostFocusSubject.onNext(it.trim()) }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
-        ibanNumberEditText.getContentOnFocusLost { ibanLostFocusSubject.onNext(it.trim()) }
-        ibanNumberEditText.observeText { ibanTextChangedSubject.onNext(it.trim()) }
+        ibanNumberEditText.getContentOnFocusLost { ibanLostFocusSubject.onNext(it.getIbanStringUnformatted().trim()) }
+        ibanNumberEditText.observeText { ibanTextChangedSubject.onNext(it.getIbanStringUnformatted().trim()) }
+
+        ibanNumberEditText.addTextChangedListener(IbanTextWatcher())
 
         countryText.setOnClickListener {
             Timber.d("Country selector")

@@ -35,7 +35,7 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
     }
 
     private fun identify(editable: Editable) {
-        val currentString = editable.toString().replace("\\D".toRegex(), "")
+        val currentString = editable.toString().getCardNumberStringUnformatted()
         for (matchingPattern in CardTypeWithIcon.values()) {
             if (currentString.matches(matchingPattern.cardTypeWithRegex.regex)) {
                 groupingPattern = (when (matchingPattern) {
@@ -56,7 +56,7 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
         val currentString = editable.toString()
 
         // Remove old grouping & apply new grouping, this covers any editing in between
-        var processedString = editable.toString().replace("\\D".toRegex(), "")
+        var processedString = editable.toString().getCardNumberStringUnformatted()
 
         Regex(groupingPattern).find(processedString)?.let {
             processedString = it.destructured.toList().joinToString(separator = delimiter).trim()
