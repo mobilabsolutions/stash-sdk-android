@@ -41,9 +41,7 @@ class UserRepositoryImpl @Inject constructor(
         val remoteJob = async(dispatchers.io) { remoteUserDataSource.createUser() }
         val localUser = localJob.await()
         when (val result = remoteJob.await()) {
-            is Success -> {
-                localUserStore.saveUser(mergeUser(local = localUser, remote = result.data))
-            }
+            is Success -> localUserStore.saveUser(mergeUser(local = localUser, remote = result.data))
             is ErrorResult -> Timber.e(result.exception)
         }
     }

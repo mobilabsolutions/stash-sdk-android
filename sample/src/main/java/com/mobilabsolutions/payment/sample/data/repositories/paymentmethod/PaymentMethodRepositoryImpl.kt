@@ -6,8 +6,10 @@ import com.mobilabsolutions.payment.sample.data.entities.Success
 import com.mobilabsolutions.payment.sample.data.repositories.cart.LocalCartStore
 import com.mobilabsolutions.payment.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.payment.sample.util.AppCoroutineDispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -53,9 +55,10 @@ class PaymentMethodRepositoryImpl @Inject constructor(
     }
 
     override suspend fun authorizePayment(authorizePaymentRequest: AuthorizePaymentRequest) = coroutineScope {
+        val localJob = async(dispatchers.io) { localCartStore.emptyCart() }
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.authorizePayment(authorizePaymentRequest) }
         when (val result = remoteJob.await()) {
-            is Success -> localCartStore.emptyCart()
+            is Success -> localJob.await()
             is ErrorResult -> Timber.e(result.exception) // TODO: Biju: Show Toast/SnackBar
         }
         Unit

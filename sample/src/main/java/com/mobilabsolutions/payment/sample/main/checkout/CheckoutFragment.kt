@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.sample.main.checkout
 
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -15,7 +16,6 @@ import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.payment.sample.databinding.FragmentCheckoutBinding
 import com.mobilabsolutions.payment.sample.payments.PaymentActivity
-import dagger.android.support.DaggerAppCompatActivity
 import javax.inject.Inject
 
 /**
@@ -67,7 +67,7 @@ class CheckoutFragment : BaseFragment() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == DaggerAppCompatActivity.RESULT_OK) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
             view?.let {
                 // TODO: Navigation.findNavController(it).navigate()
                 Handler().postDelayed({
