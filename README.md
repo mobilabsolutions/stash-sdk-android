@@ -21,7 +21,7 @@ This repository contains multiple modules:
 
 **Gradle**
 
-`implementation ("com.mobilabsolutions.payment:lib:0.9.5")`
+`implementation 'com.mobilabsolutions.payment:lib:0.9.5')`
 
 **Gradle Kotlin DSL**
 
@@ -450,7 +450,7 @@ Demo application is part of the project, and is contained in `sample` module.
 
 ### Feedback
 
-The MobilabPayment iOS SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) to report and issues or give a feedback
+The Android Payment SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) to report and issues or give a feedback
 
 ### License
 
