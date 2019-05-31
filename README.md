@@ -1,48 +1,42 @@
 [![Build Status](https://travis-ci.com/mobilabsolutions/payment-sdk-android-open.svg?token=FD4eibz3gzcfCVXeJm9e&branch=master)](https://travis-ci.com/mobilabsolutions/payment-sdk-android-open)
 # Android Payment SDK
 
-This repository contains code providing Payment SDK API to Android platform
+This repository contains Payment SDK Android client code and a sample application.
 
-To get familiar with the overall Payment SDK project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
-
-To learn more about the Android Payment SDK architecture and flows please visit [Android SDK Wiki](https://github.com/mobilabsolutions/payment-sdk-android-open/wiki)
-
-To set up the build on your machine you need to add certain variables to your `local.properties` file. Since these
-contain private keys and other confidential data, please ask the project PO for access to them.
+### Structure
 
 This repository contains multiple modules:
-* `lib` - Core library module exposing SDK APIs, facilitating high level flows, and handling communication with Payment Backend
-* `app` - Sample application using the payment SDK
-* `*-integration` - Various PSP integration modules (Implementation in progress)
+* `lib` - Core library module exposing SDK APIs, facilitating high level flows, and handling communication with Payment Backend.
+* `sample` - Sample application using the payment SDK.
+* `*-integration` - Various PSP integration modules (Implementation in progress).
 
-A normal use case for a third party developer would be to include `lib` and a specific integration module, i.e. `template-integration`
-
-The follwoing integration and usage steps are pre-modularization and as such expect only `lib` module to be included in the project. This
-read me will be updated to reflect changes once the integration modules are implemented completely.
 
 ## Supported Payment Service Providers - PSP
 
-- BSPayone [Credit Cards / SEPA]
-- Braintree [PayPal]
-- Adyen [Credit Cards / SEPA]
+- BSPayone - Credit Cards / SEPA
+- Braintree - PayPal
+- Adyen - Credit Cards / SEPA
 
 ### Including the SDK in your project
 
 **Gradle**
 
-`implementation com.mobilabsolutions.payment:lib:0.9.5`
+`implementation ("com.mobilabsolutions.payment:lib:0.9.5")`
 
 **Gradle Kotlin DSL**
 
-`implementation("com.mobilabsolutions.payment:lib:0.9.5")`
+`implementation ("com.mobilabsolutions.payment:lib:0.9.5")`
 
 ### Initializing the SDK
 
 
+To use the SDK, you need to initialize it with some configuration data. 
+Among the data that needs to be provided are the publishable key as well 
+as the backend endpoint that should be used by the SDK.
 
-To use the SDK, you need to initialize it with some configuration data. Among the data that needs to be provided are the publishable key as well as the backend endpoint that should be used by the SDK.
-
-To connect the SDK to a given payment service provider (PSP), you need to pass the IntegrationCompanion object to the SDK. If you want to use several PSP integrations you need to provide information which integration will use which payment method
+To connect the SDK to a given payment service provider (PSP), you need to pass the 
+IntegrationCompanion object to the SDK. If you want to use several PSP integrations 
+you need to provide information which integration will use which payment method.
 
 ###### Kotlin - Single Integration
 
@@ -118,9 +112,9 @@ For example:
 
 Or in code, you should supply testMode parameter when creating your `configuration` object, as shown in the previous section
 
-#### Registering payment method using UI
+### Registering payment method using provided UI components
 
-### Using the module UI for adding a payment method
+#### Usage
 
 Since the PSP modules know best which data needs to be provided in which situation, it is also possible to offload the UI work for adding a payment method to them.
 By calling `registerPaymentMethodUsingUI` on the registration manager, the user is shown a selection of possible payment methods types and then fields for creating payment methods of the selected type.
@@ -449,3 +443,21 @@ registrationManager.registerPaymentMehodUsingUi(activity, null, registrationIdem
 
         );
 ``` 
+
+### Demo
+
+Demo application is part of the project, and is contained in `sample` module.
+
+### Feedback
+
+The MobilabPayment iOS SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) to report and issues or give a feedback
+
+### License
+
+The MobilabPayment iOS SDK is open source and available under the TODO license. See the LICENSE file for more info.
+
+### Documentation
+
+To get familiar with the overall Payment SDK project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
+
+To learn more about the Android Payment SDK architecture and flows please visit [Android SDK Wiki](https://github.com/mobilabsolutions/payment-sdk-android-open/wiki)
