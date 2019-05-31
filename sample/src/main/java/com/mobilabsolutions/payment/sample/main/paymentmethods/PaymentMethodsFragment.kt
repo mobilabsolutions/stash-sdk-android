@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
@@ -25,6 +26,7 @@ class PaymentMethodsFragment : BaseFragment() {
     private val viewModel: PaymentMethodsViewModel by fragmentViewModel()
     private lateinit var binding: FragmentPaymentMethodsBinding
     private lateinit var controller: PaymentMethodsEpoxyController
+    private var currentSnackBar: Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPaymentMethodsBinding.inflate(inflater, container, false)
@@ -37,6 +39,11 @@ class PaymentMethodsFragment : BaseFragment() {
 
         controller = PaymentMethodsEpoxyController(object : PaymentMethodsEpoxyController.Callbacks {
             override fun onAddBtnClicked() {
+                currentSnackBar?.let {
+                    if (it.isShown) {
+                        it.dismiss()
+                    }
+                }
                 viewModel.onAddBtnClicked()
             }
 
@@ -56,7 +63,8 @@ class PaymentMethodsFragment : BaseFragment() {
         viewModel.error.observe(viewLifecycleOwner, Observer<Throwable> { throwable ->
             this.view?.let {
                 SnackBarExtensions {
-                    throwable.getErrorSnackBar(it).show()
+                    currentSnackBar = throwable.getErrorSnackBar(it)
+                    currentSnackBar?.show()
                 }
             }
         })
