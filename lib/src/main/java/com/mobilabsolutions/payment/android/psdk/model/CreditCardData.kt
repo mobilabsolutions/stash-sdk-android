@@ -1,7 +1,7 @@
 package com.mobilabsolutions.payment.android.psdk.model
 
 /**
- * This class models data needed to register a credit card as a payment method
+ * This class models data needed to register a credit card as a payment method alias
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
 data class CreditCardData(

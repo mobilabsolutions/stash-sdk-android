@@ -9,7 +9,6 @@ import java.util.Locale
  *
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
-// data class BillingData(var country: String, val firstName: String, val city: String, val lastName: String, val ccHolderName: String, val address1: String, val address2: String, val zip: String)
 
 data class BillingData(
     var firstName: String? = null,

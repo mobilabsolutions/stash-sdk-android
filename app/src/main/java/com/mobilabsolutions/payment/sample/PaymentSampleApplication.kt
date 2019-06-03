@@ -20,18 +20,6 @@ class PaymentSampleApplication : DaggerApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        val configuration = PaymentSdkConfiguration(
-                publicKey = BuildConfig.newBsApiKey,
-                endpoint = "https://payment-dev.mblb.net/api/",
-                integrationList = listOf(
-                    AdyenIntegration to PaymentMethodType.CC,
-                    AdyenIntegration to PaymentMethodType.SEPA,
-                    BraintreeIntegration to PaymentMethodType.PAYPAL),
-                testMode = true
-        )
-        PaymentSdk.initalize(this, configuration)
-//        PaymentSdk.initalize(BuildConfig.newBsApiKey, "https://payment-dev.mblb.net/api/", this, setOf(BsPayoneIntegration, BraintreeIntegration), true)
-
         val textColor: Int = R.color.textColor
         val backgroundColor: Int = R.color.backgroundColor
         val buttonColor: Int = R.color.buttonColor
@@ -40,14 +28,25 @@ class PaymentSampleApplication : DaggerApplication() {
         val mediumEmphasisColor: Int = R.color.mediumEmphasisColor
 
         val customizationPreference = PaymentUiConfiguration(
-                textColor,
-                backgroundColor,
-                buttonColor,
-                buttonTextColor,
-                cellBackgroundColor,
-                mediumEmphasisColor
+            textColor,
+            backgroundColor,
+            buttonColor,
+            buttonTextColor,
+            cellBackgroundColor,
+            mediumEmphasisColor
         )
-        PaymentSdk.getUiCustomizationManager().setCustomizationPreferences(customizationPreference)
+
+        val configuration = PaymentSdkConfiguration(
+                publicKey = BuildConfig.newBsApiKey,
+                endpoint = "https://payment-dev.mblb.net/api/",
+                integrationList = listOf(
+                    AdyenIntegration to PaymentMethodType.CC,
+                    AdyenIntegration to PaymentMethodType.SEPA,
+                    BraintreeIntegration to PaymentMethodType.PAYPAL),
+                testMode = true,
+                paymentUiConfiguration = customizationPreference
+        )
+        PaymentSdk.initalize(this, configuration)
 
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this)
