@@ -150,28 +150,25 @@ class PspCoordinator @Inject constructor(
     //
 
     fun registerCreditCardUsingUIComponent(activity: Activity?, chosenIntegration: Integration, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
-            uiRequestHandler.handleCreditCardMethodEntryRequest(
-                activity,
-                chosenIntegration,
-                PaymentMethodType.CC,
-                requestId
-            ) { (creditCardData, additionalUIData) ->
-                handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
-            }
+        return uiRequestHandler.handleCreditCardMethodEntryRequest(
+            activity,
+            chosenIntegration,
+            PaymentMethodType.CC,
+            requestId
+        ) { (creditCardData, additionalUIData) ->
+            handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
         }
     }
 
     fun registerSepaUsingUIComponent(activity: Activity?, chosenIntegration: Integration, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.SEPA) {
-            uiRequestHandler.handleSepaMethodEntryRequest(
-                activity,
-                chosenIntegration,
-                PaymentMethodType.SEPA,
-                requestId
-            ) { (sepaData, additionalUIData) ->
-                handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
-            }
+
+        return uiRequestHandler.handleSepaMethodEntryRequest(
+            activity,
+            chosenIntegration,
+            PaymentMethodType.SEPA,
+            requestId
+        ) { (sepaData, additionalUIData) ->
+            handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
         }
     }
 
@@ -198,23 +195,25 @@ class PspCoordinator @Inject constructor(
     }
 
     fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: String): Single<PaymentMethodAlias> {
-        val requestId = Random().nextInt(Int.MAX_VALUE)
-        val resolvedPaymentMethodType = if (specificPaymentMethodType != null) {
-            Single.just(specificPaymentMethodType)
-        } else {
-            askUserToChoosePaymentMethod(activity, requestId)
-        }
-        return resolvedPaymentMethodType.flatMap {
-            when (it) {
-                PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity, idempotencyKey, requestId)
-                PaymentMethodType.CC -> registerCreditCardUsingUIComponent(activity, idempotencyKey, requestId)
-                PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity, idempotencyKey, requestId)
-            }
-        }.onErrorResumeNext {
-            if (it is UiRequestHandler.EntryCancelled) {
-                handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, idempotencyKey)
+        return idempotencyManager.checkIdempotencyForPickerAndContinue(idempotencyKey) {
+            val requestId = Random().nextInt(Int.MAX_VALUE)
+            val resolvedPaymentMethodType = if (specificPaymentMethodType != null) {
+                Single.just(specificPaymentMethodType)
             } else {
-                Single.error(it)
+                askUserToChoosePaymentMethod(activity, requestId)
+            }
+            resolvedPaymentMethodType.flatMap {
+                when (it) {
+                    PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity, idempotencyKey, requestId)
+                    PaymentMethodType.CC -> registerCreditCardUsingUIComponent(activity, idempotencyKey, requestId)
+                    PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity, idempotencyKey, requestId)
+                }
+            }.onErrorResumeNext {
+                if (it is UiRequestHandler.EntryCancelled) {
+                    handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, idempotencyKey)
+                } else {
+                    Single.error(it)
+                }
             }
         }
     }
@@ -227,27 +226,25 @@ class PspCoordinator @Inject constructor(
 
         var email = ""
 
-        return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.PAYPAL) {
-            chosenIntegration.getPreparationData(PaymentMethodType.PAYPAL).flatMap { preparationData ->
-                mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
-                    .subscribeOn(Schedulers.io())
-                    .flatMap { aliasResponse ->
-                        uiRequestHandler.handlePaypalMethodEntryRequest(
-                            activity,
-                            chosenIntegration,
-                            AdditionalRegistrationData(aliasResponse.pspExtra),
-                            requestId)
-                            .flatMap {
-                                email = it.extraData[BillingData.ADDITIONAL_DATA_EMAIL] ?: ""
-                                val additionalData = it
-                                val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
-                                val registrationRequest = RegistrationRequest(standardizedData, additionalData)
-                                chosenIntegration.handleRegistrationRequest(registrationRequest)
-                            }
-                    }.map {
-                        PaymentMethodAlias(it, PaymentMethodType.PAYPAL, extraAliasInfo = ExtraAliasInfo.PaypalExtraInfo(email = email))
-                    }
-            }
+        return chosenIntegration.getPreparationData(PaymentMethodType.PAYPAL).flatMap { preparationData ->
+            mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
+                .subscribeOn(Schedulers.io())
+                .flatMap { aliasResponse ->
+                    uiRequestHandler.handlePaypalMethodEntryRequest(
+                        activity,
+                        chosenIntegration,
+                        AdditionalRegistrationData(aliasResponse.pspExtra),
+                        requestId)
+                        .flatMap {
+                            email = it.extraData[BillingData.ADDITIONAL_DATA_EMAIL] ?: ""
+                            val additionalData = it
+                            val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
+                            val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+                            chosenIntegration.handleRegistrationRequest(registrationRequest)
+                        }
+                }.map {
+                    PaymentMethodAlias(it, PaymentMethodType.PAYPAL, extraAliasInfo = ExtraAliasInfo.PaypalExtraInfo(email = email))
+                }
         }
     }
 

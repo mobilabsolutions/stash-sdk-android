@@ -63,6 +63,10 @@ class IdempotencyTest {
             "\"fileName\":\"IdeaTestRunner.java\",\"lineNumber\":47},{\"declaringClass\":\"com.intellij.rt.execution.junit.JUnitStarter\",\"methodName\":\"prepareStreamsAndStart\"," +
             "\"fileName\":\"JUnitStarter.java\",\"lineNumber\":242},{\"declaringClass\":\"com.intellij.rt.execution.junit.JUnitStarter\",\"methodName\":\"main\"," +
             "\"fileName\":\"JUnitStarter.java\",\"lineNumber\":70}],\"suppressedExceptions\":[]}}"
+
+        const val KEY_3 = "36ac6a9c-2089-4e92-9ff9-111111111113"
+        const val VALUE_3: String = "{\"timestamp\":1557152076418,\"paymentMethodAlias\":{\"alias\":\"AliasThree\",\"paymentMethodType\":\"CC\", " +
+            "\"extraAliasInfo\":{\"extraType\":\"CC\", \"creditCardMask\":\"VISA-1234\",\"expiryMonth\":10,\"expiryYear\":2020,\"creditCardType\":\"VISA\"}}}"
     }
 
     internal var application = PowerMockito.mock(Application::class.java)
@@ -79,6 +83,7 @@ class IdempotencyTest {
         PowerMockito.`when`(sharedPrefs.getString(anyString(), nullable(String::class.java))).thenReturn(null)
         PowerMockito.`when`(sharedPrefs.getString(eq(KEY_1), nullable(String::class.java))).thenReturn(VALUE_1)
         PowerMockito.`when`(sharedPrefs.getString(eq(KEY_2), nullable(String::class.java))).thenReturn(VALUE_2)
+        PowerMockito.`when`(sharedPrefs.getString(eq(KEY_3), nullable(String::class.java))).thenReturn(VALUE_3)
         PowerMockito.`when`(mockedEditor.commit()).thenReturn(true)
         PowerMockito.`when`(mockedEditor.putString(anyString(), anyString())).thenReturn(mockedEditor)
     }
@@ -170,5 +175,43 @@ class IdempotencyTest {
 
         observer
             .assertError(IdempotencyKeyInUseException::class.java)
+    }
+
+    @Test
+    fun testIdempotencyErrorWhenUsingUiRegistration() {
+        val observer = TestObserver<PaymentMethodAlias>()
+
+        IdempotencyManager(gson, sharedPrefs).verifyIdempotencyAndContinue(KEY_3, PaymentMethodType.SEPA) {
+            Single.just(PaymentMethodAlias("AliasTwo", PaymentMethodType.CC,
+                ExtraAliasInfo.CreditCardExtraInfo(
+                    "VISA-1234",
+                    10,
+                    2020,
+                    CreditCardType.VISA
+                )))
+        }.subscribe(observer)
+
+        observer
+            .assertError(IdempotencyKeyInUseException::class.java)
+    }
+
+    @Test
+    fun testUiIdempotency() {
+        val observer = TestObserver<PaymentMethodAlias>()
+
+        IdempotencyManager(gson, sharedPrefs).checkIdempotencyForPickerAndContinue(KEY_3) {
+            Single.just(PaymentMethodAlias("SomeOtherAlias", PaymentMethodType.CC,
+                ExtraAliasInfo.CreditCardExtraInfo(
+                    "VISA-1234",
+                    10,
+                    2020,
+                    CreditCardType.VISA
+                )))
+        }.subscribe(observer)
+
+        observer
+            .assertValue {
+                it.alias == "AliasThree"
+            }
     }
 }

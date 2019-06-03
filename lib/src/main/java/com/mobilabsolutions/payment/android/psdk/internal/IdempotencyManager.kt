@@ -26,12 +26,10 @@ class IdempotencyManager @Inject constructor(
             }
     }
 
-    // @SuppressLint("LogNotTimber")
-    private fun Single<PaymentMethodAlias>.persistResult(idempotencyKey: String, paymentMethodType: PaymentMethodType): Single<PaymentMethodAlias> {
+    private fun Single<PaymentMethodAlias>.persistResult(idempotencyKey: String): Single<PaymentMethodAlias> {
         return doOnEvent { result, error ->
-            // Log.d("IdempotencyManager","Saving (Result: $result)\\(Error: $error)")
             sharedPreferences.edit()
-                .putString(idempotencyKey, gson.toJson(IdempotencyData(System.currentTimeMillis(), paymentMethodType, result, error)))
+                .putString(idempotencyKey, gson.toJson(IdempotencyData(System.currentTimeMillis(), result?.paymentMethodType, result, error)))
                 .apply()
         }
     }
@@ -48,7 +46,21 @@ class IdempotencyManager @Inject constructor(
             }
         } ?: run {
             return function()
-                .persistResult(idempotencyKey, paymentMethodType)
+                .persistResult(idempotencyKey)
+        }
+    }
+
+    internal fun checkIdempotencyForPickerAndContinue(idempotencyKey: String, function: () -> Single<PaymentMethodAlias>): Single<PaymentMethodAlias> {
+        val allKeys = sharedPreferences.all
+        return sharedPreferences.getString(idempotencyKey, null)?.let {
+            val idempotencyData = gson.fromJson(it, IdempotencyData::class.java)
+            when {
+                idempotencyData.paymentMethodAlias != null -> Single.just(idempotencyData.paymentMethodAlias)
+                else -> Single.error(idempotencyData.error)
+            }
+        } ?: run {
+            return function()
+                .persistResult(idempotencyKey)
         }
     }
 }
