@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.PspCoordinator
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -18,6 +19,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
+import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -285,6 +287,34 @@ class UiRequestHandler @Inject constructor() {
                     supportFragmentManager.beginTransaction().remove(currentChooserFragment)
                         .commitNow()
                 }.firstOrError()
+        }
+    }
+
+    fun registerCreditCardUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
+        val chosenIntegration = integrations.filter {
+            it.value.contains(PaymentMethodType.CC)
+        }.keys.first()
+        return handleCreditCardMethodEntryRequest(
+            activity,
+            chosenIntegration,
+            PaymentMethodType.CC,
+            requestId
+        ) { (creditCardData, additionalUIData) ->
+            pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
+        }
+    }
+
+    fun registerSepaUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
+        val chosenIntegration = integrations.filter {
+            it.value.contains(PaymentMethodType.SEPA)
+        }.keys.first()
+        return handleSepaMethodEntryRequest(
+            activity,
+            chosenIntegration,
+            PaymentMethodType.SEPA,
+            requestId
+        ) { (sepaData, additionalUIData) ->
+            pspCoordinator.handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
         }
     }
 }
