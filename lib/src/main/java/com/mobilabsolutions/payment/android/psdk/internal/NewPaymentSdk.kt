@@ -120,6 +120,10 @@ class NewPaymentSdk(
                             .setDefaultFontPath("fonts/Lato-Regular.ttf")
                             .build()))
                     .build())
+
+                if (configuration.paymentUiConfiguration != null) {
+                    configureUi(configuration.paymentUiConfiguration)
+                }
             }
         }
 
@@ -131,11 +135,6 @@ class NewPaymentSdk(
         fun getRegistrationManager(): RegistrationManager {
             assertInitialized()
             return instance!!.newRegistrationManager
-        }
-
-        fun getUiCustomizationManager(): UiCustomizationManager {
-            assertInitialized()
-            return instance!!.uiCustomizationManager
         }
 
         private fun assertInitialized() {
