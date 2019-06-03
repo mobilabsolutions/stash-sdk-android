@@ -25,18 +25,40 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
+ *
+ * UiRequestHandler is responsible for handling the UI data entry flow. It facilitates this by creating
+ * a host activity that can then show either a payment method picker fragment, or request a PSP Integration
+ * module to show appropriate payment method data entry fragment.
+ *
+ * If 3rd party developer provided an activity context, then host activitiy created by this handler
+ * will be in the same task as activity which context was provided. Otherwise a new task will be started
+ * for the host activity.
+ *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Singleton
 class UiRequestHandler @Inject constructor() {
-
+    /**
+     * Data entry result is used to signal the current state to the data entry fragment
+     * launched by the appropriate PSP integration module.
+     */
     sealed class DataEntryResult {
         class Success : DataEntryResult()
         class Processing : DataEntryResult()
         class Failure(val throwable: Throwable) : DataEntryResult()
     }
 
+    /**
+     * Exception thrown when user decided to cancel sepcific data entry (i.e. SEPA, Credit Card)
+     */
     class EntryCancelled : RuntimeException()
+
+    /**
+     * Exception thrown when user decided to cancel the whole flow. Happens in two cases:
+     * * A picker was presented, and user backed out of picker screen
+     * * A picker was not presented, but a direct data entry screen (i.e. SEPA, Credit Card) and
+     * user backed out of it
+     */
     class UserCancelled : RuntimeException("User cancelled")
 
     @Inject
@@ -61,10 +83,16 @@ class UiRequestHandler @Inject constructor() {
 
     lateinit var currentChooserFragment: Fragment
 
+    /**
+     * Method that is used by activity to signal that it was created and is then delivered asynchronously through an observable (subject)
+     */
     fun provideHostActivity(activity: AppCompatActivity) {
         hostActivityProvider.onNext(activity)
     }
 
+    /**
+     * Signalling that the user backed out of the picker and state of the handler should be reset
+     */
     fun chooserCancelled() {
         hostActivityProvider = ReplaySubject.create()
         errorSubject.onError(RuntimeException())
@@ -73,6 +101,10 @@ class UiRequestHandler @Inject constructor() {
         chooserUsed = false
     }
 
+    /**
+     * Signalling that user cancelled data entry and that depending on the state, either
+     * a [UserCancelled] or [EntryCancelled] should be thrown
+     */
     fun entryCancelled() {
         hostActivityProvider = ReplaySubject.create()
         if (chooserUsed) {
@@ -84,6 +116,9 @@ class UiRequestHandler @Inject constructor() {
         processing.set(false)
     }
 
+    /**
+     * Signals that flow is completed and activity should be finished
+     */
     private fun flowCompleted(hostActivity: Activity) {
         if (startedNewTask) {
             hostActivity.finishAndRemoveTask()
@@ -118,6 +153,9 @@ class UiRequestHandler @Inject constructor() {
         }
     }
 
+    /**
+     * Launches host activity and returns the activity creation subject as a single
+     */
     private fun launchHostActivity(activity: Activity?): Single<AppCompatActivity> {
         if (!hostActivityProvider.hasValue()) {
             if (activity != null) {
@@ -136,6 +174,11 @@ class UiRequestHandler @Inject constructor() {
         return hostActivityProvider.firstOrError()
     }
 
+    /**
+     * Credit card handling flow. Since the data entry fragments now require that an error is shown
+     * based on response from PSP, we need some special handling to be able to process those
+     * events and still return a Single<PaymentMethodAlias> as is specified by the API
+     */
     fun handleCreditCardMethodEntryRequest(
         activity: Activity?,
         integration: Integration,
@@ -189,6 +232,11 @@ class UiRequestHandler @Inject constructor() {
         }
     }
 
+    /**
+     * Sepa handling flow. Since the data entry fragments now require that an error is shown
+     * based on response from PSP, we need some special handling to be able to process those
+     * events and still return a Single<PaymentMethodAlias> as is specified by the API
+     */
     fun handleSepaMethodEntryRequest(
         activity: Activity?,
         integration: Integration,
@@ -237,6 +285,11 @@ class UiRequestHandler @Inject constructor() {
         }
     }
 
+    /**
+     * Credit card handling flow. Since the data entry fragments now require that an error is shown
+     * based on response from PSP, we need some special handling to be able to process those
+     * events and still return a Single<PaymentMethodAlias> as is specified by the API
+     */
     fun handlePaypalMethodEntryRequest(
         activity: Activity?,
         integration: Integration,
@@ -263,6 +316,9 @@ class UiRequestHandler @Inject constructor() {
         }
     }
 
+    /**
+     * Method picker setup and handling
+     */
     fun askUserToChosePaymentMethod(
         activity: Activity? = null,
         requestId: Int
@@ -290,6 +346,9 @@ class UiRequestHandler @Inject constructor() {
         }
     }
 
+    /**
+     * Entry point for requests for CreditCard UI handling from PSP Coordinator
+     */
     fun registerCreditCardUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.CC)
@@ -304,6 +363,9 @@ class UiRequestHandler @Inject constructor() {
         }
     }
 
+    /**
+     * Entry point for requests for SEPA UI handling from PSP Coordinator
+     */
     fun registerSepaUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.SEPA)
@@ -319,6 +381,10 @@ class UiRequestHandler @Inject constructor() {
     }
 }
 
+/**
+ * Helper extension to remove all failures from the flow, so we can still deliver Single<PaymentMethodAlias>
+ * Achieved by materializeing the event and inspecting if it is error or completion and filtering those out.
+ */
 private fun <T> Observable<T>.filterNotSuccess(): Observable<T> {
     return materialize()
         .filter {
