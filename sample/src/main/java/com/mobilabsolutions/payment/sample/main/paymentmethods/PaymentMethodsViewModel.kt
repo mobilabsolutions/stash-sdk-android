@@ -102,4 +102,8 @@ class PaymentMethodsViewModel @AssistedInject constructor(
         _error.value = throwable
         Timber.e(throwable)
     }
+
+    fun clearError() {
+        _error.value = null
+    }
 }

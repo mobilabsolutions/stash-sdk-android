@@ -39,15 +39,12 @@ class PaymentMethodsFragment : BaseFragment() {
 
         controller = PaymentMethodsEpoxyController(object : PaymentMethodsEpoxyController.Callbacks {
             override fun onAddBtnClicked() {
-                currentSnackBar?.let {
-                    if (it.isShown) {
-                        it.dismiss()
-                    }
-                }
+                clearSnackBar()
                 viewModel.onAddBtnClicked()
             }
 
             override fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
+                clearSnackBar()
                 val dialog = AlertDialog.Builder(requireContext())
                 dialog.setTitle(getString(R.string.delete_payment_method_title))
                 dialog.setMessage(getString(R.string.delete_payment_method_message))
@@ -61,14 +58,21 @@ class PaymentMethodsFragment : BaseFragment() {
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer<Throwable> { throwable ->
-            this.view?.let {
-                SnackBarExtensions {
-                    currentSnackBar = throwable.getErrorSnackBar(it)
-                    currentSnackBar?.show()
+            this.view?.let { view ->
+                throwable?.let {
+                    SnackBarExtensions {
+                        currentSnackBar = it.getErrorSnackBar(view)
+                        currentSnackBar?.show()
+                    }
+                    viewModel.clearError()
                 }
             }
         })
         binding.paymentMethodsRv.setController(controller)
+    }
+
+    private fun clearSnackBar() {
+        currentSnackBar?.dismiss()
     }
 
     override fun invalidate() {
