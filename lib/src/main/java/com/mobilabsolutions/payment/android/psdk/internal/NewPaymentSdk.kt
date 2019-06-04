@@ -72,20 +72,20 @@ class NewPaymentSdk(
             }
             processedPaymentMethodTypes.addAll(paymentMethodTypeSet)
         }
-        //We are creating initialization objects that can be delivered to the main graph
+        // We are creating initialization objects that can be delivered to the main graph
         val integrationInitializationMap = integrationMap.mapKeys { it.key.create(it.value) }
 
-        //We are building modules, by providing configuration and created initialization objects
+        // We are building modules, by providing configuration and created initialization objects
         daggerGraph = DaggerPaymentSdkComponent.builder()
             .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
             .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationInitializationMap, testMode))
             .build()
 
-        //Now the graph is created and can be expanded by each of the initializations
+        // Now the graph is created and can be expanded by each of the initializations
         integrationInitializationMap.forEach { (initialization, _) ->
             initialization.initialize(daggerGraph)
         }
-        //Finally we inject the dependencies
+        // Finally we inject the dependencies
         daggerGraph.inject(this)
     }
 
@@ -139,18 +139,18 @@ class NewPaymentSdk(
                     Timber.plant(Timber.DebugTree())
                 }
                 AndroidThreeTen.init(applicationContext)
-                //Singleton instance creation
+                // Singleton instance creation
                 instance = NewPaymentSdk(publicKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
 
                 initialized = true
-                //Font customization
+                // Font customization
                 ViewPump.init(ViewPump.builder()
                     .addInterceptor(CalligraphyInterceptor(
                         CalligraphyConfig.Builder()
                             .setDefaultFontPath("fonts/Lato-Regular.ttf")
                             .build()))
                     .build())
-                //UI customization
+                // UI customization
                 if (configuration.paymentUiConfiguration != null) {
                     configureUi(configuration.paymentUiConfiguration)
                 }
