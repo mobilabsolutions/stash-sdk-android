@@ -73,7 +73,6 @@ class PaymentMethodsFragment : BaseFragment() {
                             viewModel.clearError()
                         }
                     }
-
                 }
             }
         })
