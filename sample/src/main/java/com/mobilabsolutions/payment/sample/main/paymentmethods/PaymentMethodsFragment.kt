@@ -10,6 +10,7 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
@@ -60,11 +61,19 @@ class PaymentMethodsFragment : BaseFragment() {
         viewModel.error.observe(viewLifecycleOwner, Observer<Throwable> { throwable ->
             this.view?.let { view ->
                 throwable?.let {
-                    SnackBarExtensions {
-                        currentSnackBar = it.getErrorSnackBar(view)
-                        currentSnackBar?.show()
+                    when (throwable) {
+                        is UiRequestHandler.UserCancelled -> {
+                            // Do nothing, user probably know that he cancelled.
+                        }
+                        else -> {
+                            SnackBarExtensions {
+                                currentSnackBar = throwable.getErrorSnackBar(view)
+                                currentSnackBar?.show()
+                            }
+                            viewModel.clearError()
+                        }
                     }
-                    viewModel.clearError()
+
                 }
             }
         })
