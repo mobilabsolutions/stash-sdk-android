@@ -60,7 +60,7 @@ object Modules {
 }
 
 object Libs {
-    val androidGradlePlugin = "com.android.tools.build:gradle:3.4.0"
+    val androidGradlePlugin = "com.android.tools.build:gradle:3.4.1"
 
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
 
@@ -68,7 +68,7 @@ object Libs {
 
     val junit = "junit:junit:4.12"
 
-    val mockitoCore = "org.mockito:mockito-core:2.27.0"
+    val mockitoCore = "org.mockito:mockito-core:2.28.2"
 
     val simpleframework = "org.simpleframework:simple-xml:2.7.1"
 
@@ -87,15 +87,15 @@ object Libs {
     val adyenCardCore = "com.adyen.checkout:core-card:2.4.3"
 
 
-    val mvrx = "com.airbnb.android:mvrx:1.0.0"
+    val mvrx = "com.airbnb.android:mvrx:1.0.1"
 
     val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     val viewPump = "io.github.inflationx:viewpump:1.0.0"
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha05"
-        val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.9"
-        val fabricPlugin = "io.fabric.tools:gradle:1.28.1"
+        val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
+        val fabricPlugin = "io.fabric.tools:gradle:1.29.0"
     }
 
     object Kotlin {
@@ -161,13 +161,13 @@ object Libs {
     }
 
     object RxJava {
-        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.8"
+        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.9"
         val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.3.0"
         val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
 
     object Dagger {
-        private const val version = "2.22.1"
+        private const val version = "2.23.1"
         val dagger = "com.google.dagger:dagger:$version"
         val daggerAndroid = "com.google.dagger:dagger-android:$version"
         val androidSupport = "com.google.dagger:dagger-android-support:$version"
@@ -208,7 +208,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.4.2"
+        private const val version = "3.5.1"
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"
