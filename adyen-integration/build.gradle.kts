@@ -1,6 +1,3 @@
-import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.project
-
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -24,11 +21,11 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "template_public_key", "\""+templatePublicKey+"\"")
+            resValue("string", "template_public_key", "\"" + templatePublicKey + "\"")
         }
         getByName("release") {
             isMinifyEnabled = false
-            resValue("string", "template_public_key", "\""+templatePublicKey+"\"")
+            resValue("string", "template_public_key", "\"" + templatePublicKey + "\"")
         }
     }
 
@@ -40,6 +37,19 @@ android {
     lintOptions {
         isAbortOnError = false
     }
+
+    testOptions {
+        unitTests.apply {
+            isIncludeAndroidResources = true
+            all(KotlinClosure1<Any, Test>({
+                (this as Test).also {
+                    minHeapSize = "64m"
+                    maxHeapSize = "128m"
+                }
+            }, this))
+        }
+    }
+
 
 }
 
@@ -59,6 +69,7 @@ dependencies {
     kapt(Libs.Dagger.compiler)
 
     testImplementation(Libs.junit)
+    testImplementation(Libs.robolectric)
     kaptTest(Libs.Dagger.compiler)
 
     testImplementation(Libs.junit)

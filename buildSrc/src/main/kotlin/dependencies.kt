@@ -13,11 +13,7 @@ object PaymentSdkRelease {
     val newBsApiUrl = "NEW_BS_API_URL"
     val newBsTestKey = "NEW_BS_TEST_PUBLIC_KEY"
     val hyperchargeTestKey = "HC_TEST_PUBLIC_KEY"
-
     val braintreeSandboxToken = "BRAINTREE_SANDBOX_TOKEN"
-
-    val mobilabNexusUser = "MOBILAB_NEXUS_USER"
-    val mobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
 }
 
 object PaymentSdkBuildConfigs {
@@ -25,8 +21,8 @@ object PaymentSdkBuildConfigs {
     val minSdk = 21
     val targetSdk = 28
     val buildtoolsVersion = "28.0.3"
-    val sdkVersionCode = getCommitCount()
-    val sdkVersionName = "${getBranch()}-${getCommitHash()}"
+    val sdkVersionCode = "1"
+    val sdkVersionName = "2.0.0"
     fun getBranch(): String {
         return Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD").getOutput()
     }
@@ -67,7 +63,7 @@ object Libs {
     val timber = "com.jakewharton.timber:timber:4.7.1"
 
     val junit = "junit:junit:4.12"
-
+    val robolectric = "org.robolectric:robolectric:4.3-beta-1"
     val mockitoCore = "org.mockito:mockito-core:2.27.0"
 
     val simpleframework = "org.simpleframework:simple-xml:2.7.1"
