@@ -26,44 +26,76 @@ import javax.inject.Inject
 
 /**
  * A class representing a UI customization preferences. Default values are provided,
- * or you can use the Builder supplied
+ * or you can use the Builder supplied. The values must be reference to the color
+ * defined in application resources.
  */
 data class PaymentUiConfiguration(
+    /**
+     * Text color
+     */
     @ColorRes val textColor: Int = R.color.gable_green,
+    /**
+     * Background color
+     */
     @ColorRes val backgroundColor: Int = R.color.black_haze,
+    /**
+     * Button color
+     */
     @ColorRes val buttonColor: Int = R.color.lochmara,
+    /**
+     * Button text color
+     */
     @ColorRes val buttonTextColor: Int = R.color.white,
+    /**
+     * Background color of box containing entry edit text views
+     */
     @ColorRes val cellBackgroundColor: Int = R.color.white,
+    /**
+     * Color of the text inside edit text fields
+     */
     @ColorRes val mediumEmphasisColor: Int = R.color.cool_gray
 
 ) {
     class Builder {
         private var preference = PaymentUiConfiguration()
+        /**
+         * Text color
+         */
         fun setTextColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(textColor = resourceId)
             return this
         }
-
+        /**
+         * Background color
+         */
         fun setBackgroundColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(backgroundColor = resourceId)
             return this
         }
-
+        /**
+         * Button color
+         */
         fun setButtonColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(buttonColor = resourceId)
             return this
         }
-
+        /**
+         * Button text color
+         */
         fun setButtonTextColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(buttonTextColor = resourceId)
             return this
         }
-
+        /**
+         * Background color of box containing entry edit text views
+         */
         fun setCellBackgroundColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(cellBackgroundColor = resourceId)
             return this
         }
-
+        /**
+         * Color of the text inside edit text fields
+         */
         fun setMediumEmphasisColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(mediumEmphasisColor = resourceId)
             return this
@@ -112,6 +144,10 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
     }
 }
 
+/**
+ * We provide customizations inside an extension object, so we can limit the visibility of extension
+ * functions throughout the project. This way we prevent poisoning the namespace.
+ */
 object CustomizationExtensions {
 
     operator fun invoke(body: CustomizationExtensions.() -> Unit): Unit = body.invoke(this)
@@ -127,14 +163,24 @@ object CustomizationExtensions {
         }
     }
 
+    /**
+     * Apply customizations on any edit text view
+     */
     fun EditText.applyEditTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         applyOnTextView(paymentUIConfiguration)
     }
 
+    /**
+     * Make the text view look like customized edit text. This is useful for fields that
+     * actually open dialogs like expiry date and country selector
+     */
     fun TextView.applyFakeEditTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         applyOnTextView(paymentUIConfiguration)
     }
 
+    /**
+     * Apply text view background customizations
+     */
     private fun TextView.applyOnTextView(paymentUIConfiguration: PaymentUiConfiguration) {
         if (error == null) {
             val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.edit_text_selector)
@@ -149,10 +195,16 @@ object CustomizationExtensions {
         this.applyTextCustomization(paymentUIConfiguration)
     }
 
+    /**
+     * Customize text color
+     */
     fun TextView.applyTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         setTextColor(ContextCompat.getColor(context, paymentUIConfiguration.textColor))
     }
 
+    /**
+     * Apply button customizations
+     */
     fun Button.applyCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         if (isEnabled) {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector)
@@ -168,25 +220,39 @@ object CustomizationExtensions {
         setTextColor(CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonTextColor)))
     }
 
+    /**
+     * Apply background customization on any view that has ColorDrawable background
+     */
     fun View.applyBackgroundCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         val backgroundColorDrawable = background as ColorDrawable
         backgroundColorDrawable.color = ContextCompat.getColor(context, paymentUIConfiguration.backgroundColor)
         background = backgroundColorDrawable
     }
-
+    /**
+     * Apply cell background customization on any view that has ColorDrawable background
+     */
     fun View.applyCellBackgroundCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
         val backgroundColorDrawable = background as GradientDrawable
         backgroundColorDrawable.setColor(ContextCompat.getColor(context, paymentUIConfiguration.cellBackgroundColor))
         background = backgroundColorDrawable
     }
 
+    /**
+     * Request focus for this view and show IME
+     */
     fun View.showKeyboardAndFocus() {
         val inputManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputManager.showSoftInput(this, 0)
     }
 }
 
+/**
+ * Convert pixels to density pixels
+ */
 val Int.dp: Int
     get() = (this / Resources.getSystem().displayMetrics.density).toInt()
+/**
+ * Convert density pixels to pixels
+ */
 val Int.px: Int
     get() = (this * Resources.getSystem().displayMetrics.density).toInt()
