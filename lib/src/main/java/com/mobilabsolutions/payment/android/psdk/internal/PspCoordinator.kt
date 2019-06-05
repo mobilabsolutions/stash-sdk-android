@@ -1,6 +1,5 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.CreditCardTypeWithRegex
@@ -24,10 +23,50 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import java.util.Random
-import java.util.UUID
 import javax.inject.Inject
 
 /**
+ * PspCoordinator class is responsible for coordinating the initial part of the alias registration flow.
+ *
+ * ### Responsibilities
+ *
+ * Coordinator is responsible for:
+ * * Ensuring idiempotency in coordination with [IdempotencyManager]
+ * * Routing UI registration requests to [UiRequestHandler]
+ * * Resolving the data provided in [AdditionalRegistrationData] so that:
+ *     * A successful alias creation request can be executed
+ *     * A well formed RegistrationRequest can be delivered to the specific PSP integration
+ * * Mapping backend exceptions into SDK exceptions
+ * * Constructing a [PaymentMethodAlias] that is returned to 3rd party developer
+ *
+ * ### Processing [AdditionalRegistrationData]
+ *
+ * Since various PSPs have various registration requirements, apart from standardized data,
+ * additional data might be required. This additional data is provided either directly by 3rd party
+ * developer, or by UI component defined in appropriate PSP Integration module.
+ *
+ * In essence AdditionalRegistrationData is a wrapper around a map of string, PspCoordinator
+ * knows which of the keys in that map are releveant for initial alias creation and uses them accordingly
+ * while the rest of the values are passed on to the PSP Integration to be used when communicating
+ * with the PSP
+ *
+ * ### UI Registration request handling
+ *
+ * PSP Coordinator determines if the UI registration request requires if a UI payment method type picker
+ * should be show or not, and if not which screen should be requested. This is then handled by UiRequestHandler
+ * which handles the UI flow.
+ *
+ * ### Idempotency
+ *
+ * PSP coordinator wraps all registration calls inside the Idempotency manager verifyIdempotencyAndContinue method
+ * except for UI handled calls, as we don't yet have chosen payment method type at the moment picker is invoked.
+ *
+ * When handling UI requests, there are only two possible outcomes:
+ *  * Success
+ *  * UserCancelledException
+ *  As user is forced to either enter valid input until success is achieved, or cancell entering the
+ *  data altogether
+ *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
@@ -39,6 +78,11 @@ class PspCoordinator @Inject constructor(
     private val idempotencyManager: IdempotencyManager
 ) {
 
+    /**
+     * This helper handler method is used directly from the API, it resolves the
+     * proper PSP integration (as there can only be 1-1 mapping between PSP Integration and
+     * payment method type (in this case CreditCard) and forwards it to [handleRegisterCreditCard]
+     */
     fun handleRegisterCreditCard(
         creditCardData: CreditCardData,
         additionalUIData: AdditionalRegistrationData = AdditionalRegistrationData(),
@@ -55,7 +99,10 @@ class PspCoordinator @Inject constructor(
         )
     }
 
-    @SuppressLint("NewApi")
+    /**
+     * Handler method that creates the alias by calling the backend endpoint, processes additional data, and upon PSP Integration flow
+     * completion creates the PaymentMethodAlias object that is returned to 3rd party developer.
+     */
     fun handleRegisterCreditCard(
         creditCardData: CreditCardData,
         additionalUIData: AdditionalRegistrationData,
@@ -63,10 +110,11 @@ class PspCoordinator @Inject constructor(
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
         val billingData = creditCardData.billingData ?: BillingData()
-        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_COUNTRY)?.let { billingData.country = it }
-        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_FIRST_NAME)?.let { billingData.firstName = it }
-        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_LAST_NAME)?.let { billingData.lastName = it }
+        additionalUIData.extraData[BillingData.ADDITIONAL_DATA_COUNTRY]?.let { billingData.country = it }
+        additionalUIData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME]?.let { billingData.firstName = it }
+        additionalUIData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME]?.let { billingData.lastName = it }
 
+        // TODO Validate in case data is being sent from custom UI before starting the communication with the backend
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.CC) {
             chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
                 mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
@@ -95,7 +143,11 @@ class PspCoordinator @Inject constructor(
             }
         }
     }
-
+    /**
+     * Helper handler method is used directly from the API, it resolves the
+     * proper PSP integration (as there can only be 1-1 mapping between PSP Integration and
+     * payment method type (in this case Sepa) and forwards it to [handleRegisterSepa]
+     */
     fun handleRegisterSepa(
         sepaData: SepaData,
         additionalUIData: AdditionalRegistrationData = AdditionalRegistrationData(),
@@ -112,7 +164,10 @@ class PspCoordinator @Inject constructor(
             idempotencyKey)
     }
 
-    @SuppressLint("NewApi")
+    /**
+     * Handler method that creates the alias by calling the backend endpoint, processes additional data, and upon PSP Integration flow
+     * completion creates the PaymentMethodAlias object that is returned to 3rd party developer.
+     */
     fun handleRegisterSepa(
         sepaData: SepaData,
         additionalUIData: AdditionalRegistrationData,
@@ -120,11 +175,11 @@ class PspCoordinator @Inject constructor(
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
         val billingData = sepaData.billingData ?: BillingData()
-        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_COUNTRY)?.let { billingData.country = it }
-        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_FIRST_NAME)?.let { billingData.firstName = it }
-        additionalUIData.extraData.getOrNull(BillingData.ADDITIONAL_DATA_LAST_NAME)?.let { billingData.lastName = it }
+        additionalUIData.extraData[BillingData.ADDITIONAL_DATA_COUNTRY]?.let { billingData.country = it }
+        additionalUIData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME]?.let { billingData.firstName = it }
+        additionalUIData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME]?.let { billingData.lastName = it }
 
-        // TODO validate
+        // TODO Validate in case data is being sent from custom UI before starting the communication with the backend
         return idempotencyManager.verifyIdempotencyAndContinue(idempotencyKey, PaymentMethodType.SEPA) {
             chosenIntegration.getPreparationData(PaymentMethodType.SEPA).flatMap { preparationData ->
                 mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
@@ -145,68 +200,31 @@ class PspCoordinator @Inject constructor(
         }
     }
 
-    //
-    // ------- UI Component handling ------------
-    //
-
-    fun registerCreditCardUsingUIComponent(activity: Activity?, chosenIntegration: Integration, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        return uiRequestHandler.handleCreditCardMethodEntryRequest(
-            activity,
-            chosenIntegration,
-            PaymentMethodType.CC,
-            requestId
-        ) { (creditCardData, additionalUIData) ->
-            handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
-        }
-    }
-
-    fun registerSepaUsingUIComponent(activity: Activity?, chosenIntegration: Integration, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-
-        return uiRequestHandler.handleSepaMethodEntryRequest(
-            activity,
-            chosenIntegration,
-            PaymentMethodType.SEPA,
-            requestId
-        ) { (sepaData, additionalUIData) ->
-            handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
-        }
-    }
-
-    fun registerCreditCardUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        val chosenIntegration = integrations.filter {
-            it.value.contains(PaymentMethodType.CC)
-        }.keys.first()
-        return registerCreditCardUsingUIComponent(activity, chosenIntegration, idempotencyKey, requestId)
-    }
-
-    fun registerSepaUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
-        val chosenIntegration = integrations.filter {
-            it.value.contains(PaymentMethodType.SEPA)
-        }.keys.first()
-        return registerSepaUsingUIComponent(activity, chosenIntegration, idempotencyKey, requestId)
-    }
-
+    /**
+     * Returns a set of supported payment methods. This is dependant on configuration of the SDK,
+     * as well as which payment method are supported by which integration.
+     */
     fun getAvailablePaymentMethods(): Set<PaymentMethodType> {
         return integrations.values.flatMap { it }.toSet()
     }
 
-    private fun askUserToChoosePaymentMethod(activity: Activity?, requestId: Int): Single<PaymentMethodType> {
-        return uiRequestHandler.askUserToChosePaymentMethod(activity, requestId)
-    }
-
+    /**
+     * A handler method that checks for UI request idempotency, then if the chooser needs to be shown, and
+     * finally which screen should be shown, based on available integrations and SDK configuration
+     */
     fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: String): Single<PaymentMethodAlias> {
         return idempotencyManager.checkIdempotencyForPickerAndContinue(idempotencyKey) {
             val requestId = Random().nextInt(Int.MAX_VALUE)
             val resolvedPaymentMethodType = if (specificPaymentMethodType != null) {
                 Single.just(specificPaymentMethodType)
             } else {
-                askUserToChoosePaymentMethod(activity, requestId)
+                uiRequestHandler.askUserToChosePaymentMethod(activity, requestId)
             }
             resolvedPaymentMethodType.flatMap {
                 when (it) {
                     PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity, idempotencyKey, requestId)
-                    PaymentMethodType.CC -> registerCreditCardUsingUIComponent(activity, idempotencyKey, requestId)
-                    PaymentMethodType.SEPA -> registerSepaUsingUIComponent(activity, idempotencyKey, requestId)
+                    PaymentMethodType.CC -> uiRequestHandler.registerCreditCardUsingUIComponent(activity, this, requestId)
+                    PaymentMethodType.SEPA -> uiRequestHandler.registerSepaUsingUIComponent(activity, this, requestId)
                 }
             }.onErrorResumeNext {
                 if (it is UiRequestHandler.EntryCancelled) {
@@ -218,6 +236,14 @@ class PspCoordinator @Inject constructor(
         }
     }
 
+    /**
+     * PayPal is different from other payment methods like SEPA and Credit Card, as it only allows registration using
+     * flow external to the SDK. For that reason we don't offer a possiblity of creating a specific 3rd party
+     * UI, but just a request to register using prebuild components.
+     *
+     * This method will similarly to SEPA and Credit Card create the alias by calling the backend endpoint, processes additional data, and upon PayPal flow
+     * completion create the PaymentMethodAlias object that is returned to 3rd party developer.
+     */
     private fun registerPayPalUsingUIComponent(activity: Activity?, idempotencyKey: String, requestId: Int): Single<PaymentMethodAlias> {
 
         val chosenIntegration = integrations.filter {
@@ -256,13 +282,5 @@ class PspCoordinator @Inject constructor(
                 else -> Single.error(RuntimeException("Unknown throwable ${it.message}"))
             }
         }
-    }
-}
-
-private inline fun <reified KEY, reified VALUE> Map<KEY, VALUE>.getOrNull(key: String): VALUE? {
-    return if (!containsKey(key as KEY)) {
-        null
-    } else {
-        get(key) as VALUE
     }
 }
