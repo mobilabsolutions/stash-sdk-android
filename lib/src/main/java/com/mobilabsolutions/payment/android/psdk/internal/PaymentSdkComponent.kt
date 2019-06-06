@@ -10,7 +10,6 @@ import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import javax.inject.Singleton
 
 /**
@@ -31,7 +30,6 @@ interface PaymentSdkComponent {
 
     fun providesContext(): Context
 
-    fun provideXmlConverterFactory(): SimpleXmlConverterFactory
     fun provideRxJava2Converter(): RxJava2CallAdapterFactory
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor
 

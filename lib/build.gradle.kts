@@ -79,17 +79,6 @@ dependencies {
     api(Libs.Retrofit.retrofit)
     api(Libs.Retrofit.retrofit_rxjava_adapter)
     api(Libs.Retrofit.gsonConverter)
-    api(Libs.Retrofit.simplexmlConverter) {
-        exclude(group = "stax", module = "stax-api")
-        exclude(group = "stax", module = "stax")
-        exclude(group = "xpp3", module = "xpp3")
-    }
-
-    api(Libs.simpleframework) {
-        exclude(group = "stax", module = "stax-api")
-        exclude(group = "stax", module = "stax")
-        exclude(group = "xpp3", module = "xpp3")
-    }
 
     api(Libs.timber)
 
@@ -97,13 +86,10 @@ dependencies {
     api(Libs.RxJava.rxAndroid)
     api(Libs.RxJava.rxKotlin)
 
-    implementation(Libs.AndroidX.appcompat)
-    implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.recyclerview)
     implementation(Libs.Google.material)
 
     implementation(Libs.Utils.commonsValidator)
-    implementation(Libs.Utils.yearMonthPicker)
 
 
     implementation(Libs.Dagger.dagger)
@@ -116,7 +102,6 @@ dependencies {
     implementation(Libs.viewPump)
 
     api(Libs.threetenabp)
-    implementation("org.iban4j:iban4j:3.2.1")
     implementation(Libs.iban4j)
 
     testImplementation(project(Modules.bsPayoneIntegration))
