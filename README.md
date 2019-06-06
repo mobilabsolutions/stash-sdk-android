@@ -379,15 +379,17 @@ To register a SEPA account, we can use the `registerSepa` method of the registra
 ###### Kotlin 
 
 ```kotlin
-val sepaData = SepaData(
-    bic = "PBNKDEFF", 
-    iban = "DE63123456791212121212",
-    holderName = "Holder Holderman"
-    )
+
     
 val billingData = BillingData(
     city = "Cologne"
 )
+
+val sepaData = SepaData(
+    bic = "PBNKDEFF", 
+    iban = "DE63123456791212121212",
+    billingData = billingData
+    )
 
 val requestUUID = UUID.randomUUID()
 
@@ -409,13 +411,16 @@ registrationManager.registerSepa(sepaData, requestUUID)
 ###### Java
 
 ```java
-SepaData sepaData = new SepaData();
-sepaData.setBic("PBNKDEFF");
-sepaData.setIban("DE63123456791212121212");
-sepaData.setHolderName("Holder Holderman");
 BillingData billingData = new BillingData.Builder()
          .setCity("Cologne")
          .build()
+
+SepaData sepaData = new SepaData.Builder().
+        .setBic("PBNKDEFF");
+        .setIban("DE63123456791212121212");
+        .setBillingData(billingData);
+        .build()
+
 
 RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
 
