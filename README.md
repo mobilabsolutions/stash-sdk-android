@@ -3,6 +3,19 @@
 
 This repository contains Payment SDK Android client code and a sample application.
 
+### Additional Documentation
+
+To get familiar with the overall Payment SDK project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
+
+To learn more about the Android Payment SDK architecture and flows please visit [Android SDK Wiki](https://github.com/mobilabsolutions/payment-sdk-android-open/wiki)
+
+### Requirements
+
+To build this project you will need to have at least the following:
+- Android Studio 3.4
+- Gradle 5.4.1
+- Android SDK Platform 28 (9.0)
+
 ### Structure
 
 This repository contains multiple modules:
@@ -21,7 +34,7 @@ This repository contains multiple modules:
 
 **Gradle**
 
-`implementation 'com.mobilabsolutions.payment:lib:0.9.5')`
+`implementation 'com.mobilabsolutions.payment:lib:0.9.5'`
 
 **Gradle Kotlin DSL**
 
@@ -30,13 +43,29 @@ This repository contains multiple modules:
 ### Initializing the SDK
 
 
-To use the SDK, you need to initialize it with some configuration data. 
-Among the data that needs to be provided are the publishable key as well 
-as the backend endpoint that should be used by the SDK.
+To use the SDK, you need to initialize with the following configuration data:
+
+* Public key - This is a publishable key provided for your merchant account 
+through the Payment Dashboard
+* Endpoint - The URL of your backend services
+* Integration - If you are using only one integration you can supply it as
+a single paramter
+* Integration List - If you are using multiple integrations you should supply
+them as pairs of Integration -> Payment Method Type
+* UI Configuration - Optional parameter to style the payment method data
+entry UI components
+* testMode - If your app is running in test mode or production, defaults to `false`
+* sslFactory - Optional parameter used to supply custom implementation of `SslFactory`
+for older Android versions
+* x509TrustManager - Optional parameter used to supply custom implementation of `X509TrustManager`
+for older Android versions
 
 To connect the SDK to a given payment service provider (PSP), you need to pass the 
 IntegrationCompanion object to the SDK. If you want to use several PSP integrations 
 you need to provide information which integration will use which payment method.
+
+Public key and endpoint depend on your backend services deployment, you can
+learn more about backend services [here](https://github.com/mobilabsolutions/payment-sdk-backend-open)
 
 ###### Kotlin - Single Integration
 
@@ -48,7 +77,7 @@ val  configuration = PaymentSdkConfiguration(
         integration = AdyenIntegration,
         testMode = true
 )
-PaymentSdk.initalize(this, configuration)
+PaymentSdk.initalize(applicationContext, configuration)
 ```
 
 ###### Java - Single Integration
@@ -62,7 +91,7 @@ PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
         .setTestMode(true)
         .build();
 
-PaymentSdk.initalize(context, configuration);
+PaymentSdk.initalize(applicationContext, configuration);
 ``` 
 ###### Kotlin - Multiple Integrations
 
@@ -78,7 +107,7 @@ val  configuration = PaymentSdkConfiguration(
         )
         testMode = true
 )
-PaymentSdk.initalize(this, configuration)
+PaymentSdk.initalize(applicationContext, configuration)
 ```
 
 ###### Java - Multiple Integrations
@@ -97,7 +126,7 @@ PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
         .setTestMode(true)
         .build();
 
-PaymentSdk.initalize(context, configuration);
+PaymentSdk.initalize(applicationContext, configuration);
 ``` 
 #### Using the SDK in test mode
 
@@ -259,7 +288,7 @@ At the moment PayPal registration without using UI components is not supported.
 
 Keep in mind that if you are using these methods you must provide all expected information for registration. 
 Depending on the PSP used, some PSPs will require i.e. Country code in addition to the standard information sent when registering. 
-Since UI component won't be handling this for you, wou will be more tightly coupled with your chosen PSP integration.
+Since UI component won't be handling this for you, you will be more tightly coupled with your chosen PSP integration.
 
 
 #### Credit card registration
@@ -450,14 +479,9 @@ Demo application is part of the project, and is contained in `sample` module.
 
 ### Feedback
 
-The Android Payment SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) to report and issues or give a feedback
+The Android Payment SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) to report any issues with the SDK, or to provide feedback.
 
 ### License
 
 The MobilabPayment iOS SDK is open source and available under the TODO license. See the LICENSE file for more info.
 
-### Documentation
-
-To get familiar with the overall Payment SDK project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
-
-To learn more about the Android Payment SDK architecture and flows please visit [Android SDK Wiki](https://github.com/mobilabsolutions/payment-sdk-android-open/wiki)
