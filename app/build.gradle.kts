@@ -87,3 +87,11 @@ dependencies {
     implementation(Libs.Retrofit.retrofit_rxjava_adapter)
 
 }
+
+licenseReport {
+    generateHtmlReport = true
+    generateJsonReport = true
+
+    copyHtmlReportToAssets = false
+    copyJsonReportToAssets = false
+}
