@@ -25,22 +25,6 @@ object PaymentSdkBuildConfigs {
     val minSdk = 21
     val targetSdk = 28
     val buildtoolsVersion = "28.0.3"
-    val sdkVersionCode = getCommitCount()
-    val sdkVersionName = "${getBranch()}-${getCommitHash()}"
-    fun getBranch(): String {
-        return Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD").getOutput()
-    }
-
-    fun getCommitHash() : String {
-        return Runtime.getRuntime().exec("git rev-parse --short HEAD").getOutput()
-    }
-
-    fun getCommitCount() : String {
-        return Runtime.getRuntime().exec("git rev-list --count HEAD").getOutput()
-    }
-
-    private fun Process.getOutput() = inputStream.bufferedReader().readLine().trim()
-
 }
 
 object DemoRelease {
@@ -91,6 +75,8 @@ object Libs {
 
     val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     val viewPump = "io.github.inflationx:viewpump:1.0.0"
+
+    val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha05"

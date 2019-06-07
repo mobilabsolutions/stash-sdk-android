@@ -202,3 +202,11 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
     outputDir = "build/dependencyUpdates"
     reportfileName = "report"
 }
+
+licenseReport {
+    generateHtmlReport = true
+    generateJsonReport = true
+
+    copyHtmlReportToAssets = false
+    copyJsonReportToAssets = false
+}
