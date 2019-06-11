@@ -14,13 +14,16 @@ import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
+import org.robolectric.shadows.ShadowLog
 import timber.log.Timber
 import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
@@ -49,6 +52,10 @@ class IntegrationTest {
         val context = ApplicationProvider.getApplicationContext() as Application
         val methods = setOf(PaymentMethodType.SEPA, PaymentMethodType.CC)
         val integration = AdyenIntegration.create(methods)
+
+        RxJavaPlugins.setComputationSchedulerHandler { scheduler -> AndroidSchedulers.mainThread() }
+        RxJavaPlugins.setIoSchedulerHandler { scheduler -> Schedulers.trampoline() }
+        RxJavaPlugins.setNewThreadSchedulerHandler { scheduler -> AndroidSchedulers.mainThread() }
 
         val graph = DaggerAdyenIntegrationTestComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
@@ -98,20 +105,27 @@ class IntegrationTest {
             billingData = BillingData("Holder", "Holdermann"),
             iban = "DE63123456791212121212"
         )
+
+        ShadowLog.stream = System.out
     }
 
     @Test
     fun testVisaRegistration() {
+        val latch = CountDownLatch(1)
         registrationManager.registerCreditCard(validVisaCreditCardData)
             .subscribeBy(
                 onSuccess = {
+                    println("Got result ${it.alias}")
                     Assert.assertTrue(it.alias.isNotEmpty())
+                    latch.countDown()
                 },
                 onError = {
                     Timber.e(it, "Error")
                     Assert.fail(it.message)
+                    latch.countDown()
                 }
             )
+        latch.await()
     }
 
     @Test
@@ -165,7 +179,6 @@ class IntegrationTest {
         latch.await()
     }
 
-    @Ignore("While backend catches up")
     @Test
     fun testSepaRegistration() {
 
