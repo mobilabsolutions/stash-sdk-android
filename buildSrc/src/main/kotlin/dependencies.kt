@@ -50,7 +50,6 @@ object Libs {
 
     val mockitoCore = "org.mockito:mockito-core:2.28.2"
     val robolectric = "org.robolectric:robolectric:4.3-beta-1"
-    val mockitoCore = "org.mockito:mockito-core:2.27.0"
 
     val simpleframework = "org.simpleframework:simple-xml:2.7.1"
 
