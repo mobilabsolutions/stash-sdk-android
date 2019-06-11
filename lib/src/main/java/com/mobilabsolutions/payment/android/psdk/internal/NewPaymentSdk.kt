@@ -19,6 +19,23 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 
 /**
+ * This class is responsible for configuring and initializing the Payment SDK. It is a singleton
+ * that is injected with registration and customization managers after the dagger graph has been created.
+ * Since we are providing the same dagger graph to the integration modules, graph initialization is a three
+ * step process:
+ *  * For each integration supplied by 3rd party developer using [IntegrationCompanion] we create a
+ *  [IntegrationInitialization] object. This object serves as a reference to the concrete integration
+ *  and will become part of the dagger graph to be injected where necessary (i.e. [PspCoordinator]
+ *  * Once the dagger graph is created, it can then be given to all of the integration intializatiors
+ *  so they can expand the graph by providing their own dependencies by calling [IntegrationInitialization.initialize]
+ *  * Now the graph is complete, and a singleton instance of this class can be injected
+ *
+ *  Once injected this class provides Registration Manager to the rest of application and is reachable
+ *  as a static reference.
+ *
+ *  Apart from initialization and configuration responsibilities this class also validates the configuration
+ *  and throws appropriate exceptions in case of invalid configuration.
+ *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class NewPaymentSdk(
@@ -40,6 +57,9 @@ class NewPaymentSdk(
 
     val daggerGraph: PaymentSdkComponent
 
+    /**
+     * Here we are building the dagger graph as described
+     */
     init {
         val backendUrl = url ?: MOBILAB_BE_URL
 
@@ -52,21 +72,26 @@ class NewPaymentSdk(
             }
             processedPaymentMethodTypes.addAll(paymentMethodTypeSet)
         }
-
+        // We are creating initialization objects that can be delivered to the main graph
         val integrationInitializationMap = integrationMap.mapKeys { it.key.create(it.value) }
 
+        // We are building modules, by providing configuration and created initialization objects
         daggerGraph = DaggerPaymentSdkComponent.builder()
             .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
             .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationInitializationMap, testMode))
             .build()
 
+        // Now the graph is created and can be expanded by each of the initializations
         integrationInitializationMap.forEach { (initialization, _) ->
             initialization.initialize(daggerGraph)
         }
-
+        // Finally we inject the dependencies
         daggerGraph.inject(this)
     }
 
+    /**
+     * Companion object holds the singleton instance, and verifies that the configuration is correct
+     */
     companion object {
 
         private var instance: NewPaymentSdk? = null
@@ -75,6 +100,9 @@ class NewPaymentSdk(
 
         private var testComponent: PaymentSdkComponent? = null
 
+        /**
+         * Initalize method verifies the configuration and invokes the creation of the singleton
+         */
         @Synchronized
         fun initialize(applicationContext: Application, configuration: PaymentSdkConfiguration) {
             configuration.apply {
@@ -107,37 +135,47 @@ class NewPaymentSdk(
                         }
                         else -> throw RuntimeException("This should never happen")
                     }
-
-                Timber.plant(Timber.DebugTree())
+                if (BuildConfig.DEBUG) {
+                    Timber.plant(Timber.DebugTree())
+                }
                 AndroidThreeTen.init(applicationContext)
+                // Singleton instance creation
                 instance = NewPaymentSdk(publicKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
 
                 initialized = true
-
+                // Font customization
                 ViewPump.init(ViewPump.builder()
                     .addInterceptor(CalligraphyInterceptor(
                         CalligraphyConfig.Builder()
                             .setDefaultFontPath("fonts/Lato-Regular.ttf")
                             .build()))
                     .build())
+                // UI customization
+                if (configuration.paymentUiConfiguration != null) {
+                    configureUi(configuration.paymentUiConfiguration)
+                }
             }
         }
 
+        /**
+         * Update the UI configurations, effects will be applied only after the screen is recreated
+         */
         fun configureUi(paymentUIConfiguration: PaymentUiConfiguration) {
             assertInitialized()
             instance!!.uiCustomizationManager.setCustomizationPreferences(paymentUIConfiguration)
         }
 
+        /**
+         * Returns the registration manager object
+         */
         fun getRegistrationManager(): RegistrationManager {
             assertInitialized()
             return instance!!.newRegistrationManager
         }
 
-        fun getUiCustomizationManager(): UiCustomizationManager {
-            assertInitialized()
-            return instance!!.uiCustomizationManager
-        }
-
+        /**
+         * Throw an exception if the sdk is not initialized
+         */
         private fun assertInitialized() {
             if (instance == null) {
                 throw RuntimeException(
@@ -146,6 +184,9 @@ class NewPaymentSdk(
             }
         }
 
+        /**
+         * Provide dagger graph to UI components that live in core library
+         */
         internal fun getInjector(): PaymentSdkComponent {
             if (instance != null) {
                 return instance!!.daggerGraph
@@ -158,10 +199,16 @@ class NewPaymentSdk(
             }
         }
 
+        /**
+         * For use in tests
+         */
         internal fun supplyTestComponent(testComponent: PaymentSdkComponent) {
             this.testComponent = testComponent
         }
 
+        /**
+         * For use in testing (TODO Maybe we should remove this)
+         */
         fun reset() {
             initialized = false
         }

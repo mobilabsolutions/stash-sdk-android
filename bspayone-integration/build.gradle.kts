@@ -83,3 +83,11 @@ dependencies {
 repositories {
     mavenCentral()
 }
+
+licenseReport {
+    generateHtmlReport = true
+    generateJsonReport = true
+
+    copyHtmlReportToAssets = false
+    copyJsonReportToAssets = false
+}

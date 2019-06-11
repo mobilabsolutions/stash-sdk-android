@@ -5,7 +5,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 
 data class IdempotencyData(
     val timestamp: Long,
-    val paymentMethodType: PaymentMethodType,
+    val paymentMethodType: PaymentMethodType?,
     val paymentMethodAlias: PaymentMethodAlias?,
     val error: Throwable?
 )

@@ -23,12 +23,9 @@ import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
 import okhttp3.logging.HttpLoggingInterceptor
-import org.simpleframework.xml.convert.AnnotationStrategy
-import org.simpleframework.xml.core.Persister
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -176,13 +173,6 @@ open class PaymentSdkModule(
     @Provides
     @Singleton
     fun providesRxJava2CallAdapter() = RxJava2CallAdapterFactory.create()
-
-    @Provides
-    @Singleton
-    fun provideSimpleXmlConverterFactory() = SimpleXmlConverterFactory.createNonStrict(
-        Persister(AnnotationStrategy()
-        )
-    )
 
     @Provides
     @Singleton

@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.mobilabsolutions.payment.sample.data.repositories.cart.CartModule
 import com.mobilabsolutions.payment.sample.data.repositories.paymentmethod.PaymentMethodModule
 import com.mobilabsolutions.payment.sample.data.repositories.product.ProductModule
+import com.mobilabsolutions.payment.sample.data.repositories.user.UserModule
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -16,7 +17,8 @@ import javax.inject.Singleton
 @Module(includes = [
     ProductModule::class,
     CartModule::class,
-    PaymentMethodModule::class
+    PaymentMethodModule::class,
+    UserModule::class
 ])
 class DataModule {
     @Singleton
@@ -42,4 +44,7 @@ class DataModule {
 
     @Provides
     fun providePaymentMethodDao(db: SampleDatabase) = db.paymentMethodDao()
+
+    @Provides
+    fun provideUserDao(db: SampleDatabase) = db.userDao()
 }

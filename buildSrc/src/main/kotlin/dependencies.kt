@@ -21,22 +21,6 @@ object PaymentSdkBuildConfigs {
     val minSdk = 21
     val targetSdk = 28
     val buildtoolsVersion = "28.0.3"
-    val sdkVersionCode = "1"
-    val sdkVersionName = "2.0.0"
-    fun getBranch(): String {
-        return Runtime.getRuntime().exec("git rev-parse --abbrev-ref HEAD").getOutput()
-    }
-
-    fun getCommitHash() : String {
-        return Runtime.getRuntime().exec("git rev-parse --short HEAD").getOutput()
-    }
-
-    fun getCommitCount() : String {
-        return Runtime.getRuntime().exec("git rev-list --count HEAD").getOutput()
-    }
-
-    private fun Process.getOutput() = inputStream.bufferedReader().readLine().trim()
-
 }
 
 object DemoRelease {
@@ -56,13 +40,15 @@ object Modules {
 }
 
 object Libs {
-    val androidGradlePlugin = "com.android.tools.build:gradle:3.4.0"
+    val androidGradlePlugin = "com.android.tools.build:gradle:3.4.1"
 
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
 
     val timber = "com.jakewharton.timber:timber:4.7.1"
 
     val junit = "junit:junit:4.12"
+
+    val mockitoCore = "org.mockito:mockito-core:2.28.2"
     val robolectric = "org.robolectric:robolectric:4.3-beta-1"
     val mockitoCore = "org.mockito:mockito-core:2.27.0"
 
@@ -83,15 +69,17 @@ object Libs {
     val adyenCardCore = "com.adyen.checkout:core-card:2.4.3"
 
 
-    val mvrx = "com.airbnb.android:mvrx:1.0.0"
+    val mvrx = "com.airbnb.android:mvrx:1.0.1"
 
     val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     val viewPump = "io.github.inflationx:viewpump:1.0.0"
 
+    val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
+
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha05"
-        val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.9.9"
-        val fabricPlugin = "io.fabric.tools:gradle:1.28.1"
+        val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
+        val fabricPlugin = "io.fabric.tools:gradle:1.29.0"
     }
 
     object Kotlin {
@@ -157,13 +145,13 @@ object Libs {
     }
 
     object RxJava {
-        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.8"
+        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.9"
         val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.3.0"
         val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
 
     object Dagger {
-        private const val version = "2.22.1"
+        private const val version = "2.23.1"
         val dagger = "com.google.dagger:dagger:$version"
         val daggerAndroid = "com.google.dagger:dagger-android:$version"
         val androidSupport = "com.google.dagger:dagger-android-support:$version"
@@ -204,7 +192,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.4.2"
+        private const val version = "3.5.1"
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"

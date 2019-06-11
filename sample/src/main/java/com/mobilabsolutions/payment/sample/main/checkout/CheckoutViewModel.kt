@@ -56,7 +56,4 @@ class CheckoutViewModel @AssistedInject constructor(
     fun onRemoveButtonClicked(cartWithProduct: CartWithProduct) {
         scope.launchInteractor(changeCartQuantity, ChangeCartQuantity.ExecuteParams(false, cartWithProduct))
     }
-
-    fun onPayBtnClicked() {
-    }
 }

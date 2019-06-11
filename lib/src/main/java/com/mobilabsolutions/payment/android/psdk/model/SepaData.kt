@@ -3,7 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.model
 import org.iban4j.Iban
 
 /**
- * This class models the data needed to register sepa account as a payment aliasId
+ * This class models the data needed to register sepa account as a payment method alias
  * @author [Ugi](ugi@mobilabsolutions.com)
  */
 data class SepaData(

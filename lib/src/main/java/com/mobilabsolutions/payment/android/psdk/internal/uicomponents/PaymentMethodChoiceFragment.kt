@@ -70,7 +70,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         if (!uiRequestHandler.paymentMethodTypeSubject.hasValue()) {
-            uiRequestHandler.paymentMethodTypeSubject.onError(RuntimeException("User canceled choosing method"))
+            uiRequestHandler.paymentMethodTypeSubject.onError(UiRequestHandler.UserCancelled())
         }
     }
 

@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
 @Entity(
-        tableName = "product"
+    tableName = "product"
 )
 data class Product(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,

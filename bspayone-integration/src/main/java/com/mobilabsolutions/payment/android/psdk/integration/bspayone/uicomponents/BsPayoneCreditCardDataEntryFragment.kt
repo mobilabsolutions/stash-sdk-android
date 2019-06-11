@@ -27,6 +27,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PersonalD
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getCardNumberStringUnformatted
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -231,8 +232,12 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         lastNameEditText.getContentOnFocusLost { lastNameLostFocusSubject.onNext(it.trim()) }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
-        creditCardNumberEditText.getContentOnFocusLost { cardNumberLostFocusSubject.onNext(it.replace("\\D".toRegex(), "")) }
-        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.replace("\\D".toRegex(), "")) }
+        creditCardNumberEditText.getContentOnFocusLost { cardNumberLostFocusSubject.onNext(it.getCardNumberStringUnformatted()) }
+        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted()) }
+
+        creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
+            creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
+        })
 
         cvvEditText.getContentOnFocusLost { ccvLostFocusSubject.onNext(it.trim()) }
         cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
@@ -246,10 +251,6 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
                 .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
         }
-
-        creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
-            creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
-        })
 
         saveButton.setOnClickListener {
             viewState?.let {

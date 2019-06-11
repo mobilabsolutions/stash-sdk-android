@@ -8,7 +8,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
+import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
@@ -25,6 +27,7 @@ class PaymentMethodsFragment : BaseFragment() {
     private val viewModel: PaymentMethodsViewModel by fragmentViewModel()
     private lateinit var binding: FragmentPaymentMethodsBinding
     private lateinit var controller: PaymentMethodsEpoxyController
+    private var currentSnackBar: Snackbar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPaymentMethodsBinding.inflate(inflater, container, false)
@@ -37,10 +40,12 @@ class PaymentMethodsFragment : BaseFragment() {
 
         controller = PaymentMethodsEpoxyController(object : PaymentMethodsEpoxyController.Callbacks {
             override fun onAddBtnClicked() {
+                clearSnackBar()
                 viewModel.onAddBtnClicked()
             }
 
             override fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
+                clearSnackBar()
                 val dialog = AlertDialog.Builder(requireContext())
                 dialog.setTitle(getString(R.string.delete_payment_method_title))
                 dialog.setMessage(getString(R.string.delete_payment_method_message))
@@ -54,13 +59,28 @@ class PaymentMethodsFragment : BaseFragment() {
         })
 
         viewModel.error.observe(viewLifecycleOwner, Observer<Throwable> { throwable ->
-            this.view?.let {
-                SnackBarExtensions {
-                    throwable.getErrorSnackBar(it).show()
+            this.view?.let { view ->
+                throwable?.let {
+                    when (throwable) {
+                        is UiRequestHandler.UserCancelled -> {
+                            // Do nothing, user probably know that he cancelled.
+                        }
+                        else -> {
+                            SnackBarExtensions {
+                                currentSnackBar = throwable.getErrorSnackBar(view)
+                                currentSnackBar?.show()
+                            }
+                            viewModel.clearError()
+                        }
+                    }
                 }
             }
         })
         binding.paymentMethodsRv.setController(controller)
+    }
+
+    private fun clearSnackBar() {
+        currentSnackBar?.dismiss()
     }
 
     override fun invalidate() {

@@ -12,11 +12,11 @@ import javax.inject.Inject
 /**
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
-class LoadPaymentMethods @Inject constructor(
+class UpdatePaymentMethods @Inject constructor(
     dispatchers: AppCoroutineDispatchers,
     private val schedulers: AppRxSchedulers,
     private val paymentMethodRepository: PaymentMethodRepository
-) : SubjectInteractor<Unit, Unit, List<PaymentMethod>>() {
+) : SubjectInteractor<Unit, UpdatePaymentMethods.ExecuteParams, List<PaymentMethod>>() {
     override val dispatcher: CoroutineDispatcher = dispatchers.io
 
     override fun createObservable(params: Unit): Observable<List<PaymentMethod>> {
@@ -24,7 +24,9 @@ class LoadPaymentMethods @Inject constructor(
                 .subscribeOn(schedulers.io)
     }
 
-    override suspend fun execute(params: Unit, executeParams: Unit) {
-        // do nothing
+    override suspend fun execute(params: Unit, executeParams: ExecuteParams) {
+        paymentMethodRepository.updatePaymentMethods(userId = executeParams.userId)
     }
+
+    data class ExecuteParams(val userId: String)
 }

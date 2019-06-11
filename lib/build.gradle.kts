@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -14,6 +16,29 @@ androidExtensions {
     isExperimental = true
 }
 
+
+fun String.runCommand() : String {
+    val command = this
+    val output = ByteArrayOutputStream()
+    project.exec {
+        this.workingDir = project.rootDir
+        this.commandLine = command.split(" ")
+        this.standardOutput = output
+    }
+    return String(output.toByteArray()).trim()
+}
+
+val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand()
+
+val getCommitHash = ("git rev-parse --short HEAD").runCommand()
+
+
+val getCommitCount = ("git rev-list --count HEAD").runCommand()
+
+
+val sdkVersionCode = getCommitCount
+val sdkVersionName = "${getBranch}-${getCommitHash}"
+
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
     buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
@@ -23,8 +48,8 @@ android {
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
 
 
-        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, PaymentSdkBuildConfigs.sdkVersionCode).toInt()
-        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, PaymentSdkBuildConfigs.sdkVersionName)
+        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, sdkVersionCode).toInt()
+        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, sdkVersionName)
         println("Version code $versionCode versionName $versionName")
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -79,17 +104,6 @@ dependencies {
     api(Libs.Retrofit.retrofit)
     api(Libs.Retrofit.retrofit_rxjava_adapter)
     api(Libs.Retrofit.gsonConverter)
-    api(Libs.Retrofit.simplexmlConverter) {
-        exclude(group = "stax", module = "stax-api")
-        exclude(group = "stax", module = "stax")
-        exclude(group = "xpp3", module = "xpp3")
-    }
-
-    api(Libs.simpleframework) {
-        exclude(group = "stax", module = "stax-api")
-        exclude(group = "stax", module = "stax")
-        exclude(group = "xpp3", module = "xpp3")
-    }
 
     api(Libs.timber)
 
@@ -97,13 +111,10 @@ dependencies {
     api(Libs.RxJava.rxAndroid)
     api(Libs.RxJava.rxKotlin)
 
-    implementation(Libs.AndroidX.appcompat)
-    implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.recyclerview)
     implementation(Libs.Google.material)
 
     implementation(Libs.Utils.commonsValidator)
-    implementation(Libs.Utils.yearMonthPicker)
 
 
     implementation(Libs.Dagger.dagger)
@@ -116,7 +127,6 @@ dependencies {
     implementation(Libs.viewPump)
 
     api(Libs.threetenabp)
-    implementation("org.iban4j:iban4j:3.2.1")
     implementation(Libs.iban4j)
 
     testImplementation(project(Modules.bsPayoneIntegration))
@@ -184,4 +194,14 @@ configurations.all {
 repositories {
     mavenCentral()
 }
+
+licenseReport {
+    generateHtmlReport = true
+    generateJsonReport = true
+
+    copyHtmlReportToAssets = false
+    copyJsonReportToAssets = false
+}
+
+
 

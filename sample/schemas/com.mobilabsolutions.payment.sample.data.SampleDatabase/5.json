@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "4a7d0edab64170b7f9e52a58271f1303",
+    "identityHash": "eca7246cc7218bd96ec87df9f8fc3004",
     "entities": [
       {
         "tableName": "product",
@@ -103,12 +103,30 @@
       },
       {
         "tableName": "payment_method",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `alias` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `user_id` TEXT NOT NULL, `paymentMethod_id` TEXT NOT NULL, `alias_id` TEXT NOT NULL, `alias` TEXT NOT NULL, `type` TEXT NOT NULL, `description` TEXT NOT NULL, FOREIGN KEY(`user_id`) REFERENCES `user`(`server_user_id`) ON UPDATE CASCADE ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
             "columnName": "id",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "paymentMethodId",
+            "columnName": "paymentMethod_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "aliasId",
+            "columnName": "alias_id",
+            "affinity": "TEXT",
             "notNull": true
           },
           {
@@ -138,12 +156,67 @@
         },
         "indices": [
           {
-            "name": "index_payment_method_alias",
+            "name": "index_payment_method_paymentMethod_id",
             "unique": true,
             "columnNames": [
-              "alias"
+              "paymentMethod_id"
             ],
-            "createSql": "CREATE UNIQUE INDEX `index_payment_method_alias` ON `${TABLE_NAME}` (`alias`)"
+            "createSql": "CREATE UNIQUE INDEX `index_payment_method_paymentMethod_id` ON `${TABLE_NAME}` (`paymentMethod_id`)"
+          },
+          {
+            "name": "index_payment_method_user_id",
+            "unique": false,
+            "columnNames": [
+              "user_id"
+            ],
+            "createSql": "CREATE  INDEX `index_payment_method_user_id` ON `${TABLE_NAME}` (`user_id`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "user",
+            "onDelete": "CASCADE",
+            "onUpdate": "CASCADE",
+            "columns": [
+              "user_id"
+            ],
+            "referencedColumns": [
+              "server_user_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "user",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `server_user_id` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "server_user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_user_server_user_id",
+            "unique": true,
+            "columnNames": [
+              "server_user_id"
+            ],
+            "createSql": "CREATE UNIQUE INDEX `index_user_server_user_id` ON `${TABLE_NAME}` (`server_user_id`)"
           }
         ],
         "foreignKeys": []
@@ -152,7 +225,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4a7d0edab64170b7f9e52a58271f1303\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"eca7246cc7218bd96ec87df9f8fc3004\")"
     ]
   }
 }
