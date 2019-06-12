@@ -4,6 +4,11 @@ plugins {
     kotlin("kapt")
 }
 
+kapt {
+    correctErrorTypes = true
+    useBuildCache = true
+}
+
 val templatePublicKey = propOrDefWithTravis(PaymentSdkRelease.templatePublicKey, "")
 
 android {

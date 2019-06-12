@@ -5,6 +5,11 @@ plugins {
     kotlin("android.extensions")
 }
 
+kapt {
+    correctErrorTypes = true
+    useBuildCache = true
+}
+
 val templatePublicKey = propOrDefWithTravis(PaymentSdkRelease.templatePublicKey, "")
 
 android {
