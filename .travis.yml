@@ -41,8 +41,6 @@ before_install:
 
 install: ./gradlew spotlessCheck
 
-before_script: ./gradlew dependencyUpdates
-
 script: ./gradlew check -x :template-integration:check -x :app:check
 
 after_success: ./.buildscript.sh
