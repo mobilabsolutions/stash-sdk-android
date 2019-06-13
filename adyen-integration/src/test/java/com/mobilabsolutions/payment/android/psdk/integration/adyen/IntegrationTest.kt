@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.integration.bspayone
+package com.mobilabsolutions.payment.android.psdk.integration.adyen
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
@@ -6,15 +6,12 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
-import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
-import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenModule
 import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -53,9 +50,7 @@ class IntegrationTest {
         val methods = setOf(PaymentMethodType.SEPA, PaymentMethodType.CC)
         val integration = AdyenIntegration.create(methods)
 
-        RxJavaPlugins.setComputationSchedulerHandler { scheduler -> AndroidSchedulers.mainThread() }
-        RxJavaPlugins.setIoSchedulerHandler { scheduler -> Schedulers.trampoline() }
-        RxJavaPlugins.setNewThreadSchedulerHandler { scheduler -> AndroidSchedulers.mainThread() }
+        RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
         val graph = DaggerAdyenIntegrationTestComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
