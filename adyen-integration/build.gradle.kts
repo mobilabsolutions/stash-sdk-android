@@ -52,7 +52,7 @@ android {
                 (this as Test).also {
                     maxHeapSize = "1024m"
                     testLogging {
-                        events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED, TestLogEvent.STANDARD_OUT, TestLogEvent.STANDARD_ERROR)
+                        events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
                     }
                 }
             }, this))
