@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("com.android.library")
     kotlin("android")
@@ -42,36 +44,34 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-}
+    testOptions {
+        unitTests.apply {
+            isIncludeAndroidResources = true
+            all(KotlinClosure1<Any, Test>({
+                (this as Test).also {
+                    maxHeapSize = "1024m"
+                    testLogging {
+                        events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
+                    }
+                }
+            }, this))
+        }
+    }
 
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
 }
 
 dependencies {
     implementation(project(Modules.paymentSdk))
     implementation(Libs.Kotlin.stdlib)
-
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.Google.material)
-
-
     implementation(Libs.Utils.yearMonthPicker)
-
-
     implementation(Libs.Dagger.dagger)
     kapt(Libs.Dagger.compiler)
 
     testImplementation(Libs.junit)
-    kaptTest(Libs.Dagger.compiler)
-
-    testImplementation(Libs.junit)
-    testImplementation(Libs.mockitoCore)
-    testImplementation(Libs.mockwebserver)
-    testImplementation(Libs.PowerMock.module)
-    testImplementation(Libs.PowerMock.api)
+    testImplementation(Libs.robolectric)
     testImplementation(Libs.AndroidX.Test.core)
     kaptTest(Libs.Dagger.compiler)
 
@@ -84,9 +84,6 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.core)
     kaptAndroidTest(Libs.Dagger.compiler)
 
-}
-repositories {
-    mavenCentral()
 }
 
 licenseReport {
