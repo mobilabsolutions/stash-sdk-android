@@ -12,5 +12,5 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, AdyenModule::class])
 internal interface AdyenIntegrationTestComponent : PaymentSdkComponent {
-    fun injectTest(test: IntegrationTest)
+    fun injectTest(test: AdyenIntegrationTest)
 }
