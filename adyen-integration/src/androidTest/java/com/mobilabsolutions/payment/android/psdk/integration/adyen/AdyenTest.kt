@@ -3,27 +3,26 @@ package com.mobilabsolutions.payment.android.psdk.integration.adyen
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import com.jakewharton.threetenabp.AndroidThreeTen
+import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
-import dagger.Component
-import org.junit.Test
-import javax.inject.Inject
-import javax.inject.Singleton
-
-import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
+import dagger.Component
 import io.reactivex.rxkotlin.subscribeBy
-import junit.framework.Assert.assertTrue
 import org.junit.Assert
+import org.junit.Assert.assertTrue
 import org.junit.Ignore
+import org.junit.Test
 import timber.log.Timber
 import java.util.concurrent.CountDownLatch
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>

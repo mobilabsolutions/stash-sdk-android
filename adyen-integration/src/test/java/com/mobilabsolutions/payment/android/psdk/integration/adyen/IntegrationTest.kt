@@ -12,6 +12,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
+import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
@@ -22,7 +23,6 @@ import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.ShadowLog
 import timber.log.Timber
-import java.util.concurrent.CountDownLatch
 import javax.inject.Inject
 
 /**
@@ -51,11 +51,10 @@ class IntegrationTest {
         val integration = AdyenIntegration.create(methods)
 
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
         val graph = DaggerAdyenIntegrationTestComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
             .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
-            .adyenModule(AdyenModule())
             .build()
 
         integration.initialize(graph)
@@ -106,90 +105,69 @@ class IntegrationTest {
 
     @Test
     fun testVisaRegistration() {
-        val latch = CountDownLatch(1)
         registrationManager.registerCreditCard(validVisaCreditCardData)
             .subscribeBy(
                 onSuccess = {
                     println("Got result ${it.alias}")
                     Assert.assertTrue(it.alias.isNotEmpty())
-                    latch.countDown()
                 },
                 onError = {
                     Timber.e(it, "Error")
                     Assert.fail(it.message)
-                    latch.countDown()
                 }
             )
-        latch.await()
     }
 
     @Test
     fun testVisaRegistrationFailure() {
-        val latch = CountDownLatch(1)
         registrationManager.registerCreditCard(invalidVisaCreditCardData).subscribeBy(
             onSuccess = {
                 Assert.fail("Expected validation throwable")
-                latch.countDown()
             },
             onError = {
                 Timber.e(it, "Error")
                 Assert.assertTrue(it is ValidationException)
-                latch.countDown()
             }
         )
-        latch.await()
     }
 
     @Test
     fun testMastercardRegistration() {
-        val latch = CountDownLatch(1)
         registrationManager.registerCreditCard(validMastercardCreditCardData).subscribeBy(
             onSuccess = {
                 Assert.assertTrue(it.alias.isNotEmpty())
-                latch.countDown()
             },
             onError = {
                 Timber.e(it, "Error")
                 Assert.fail(it.message)
-                latch.countDown()
             }
         )
     }
 
     @Test
     fun testAmexRegistration() {
-
-        val latch = CountDownLatch(1)
         registrationManager.registerCreditCard(validAmexCreditCardData).subscribeBy(
             onSuccess = {
                 Assert.assertTrue(it.alias.isNotEmpty())
-                latch.countDown()
             },
             onError = {
                 Timber.e(it, "Error")
                 Assert.fail(it.message)
-                latch.countDown()
             }
         )
-        latch.await()
     }
 
     @Test
     fun testSepaRegistration() {
-
-        val latch = CountDownLatch(1)
         registrationManager.registerSepaAccount(validSepaData)
             .subscribeBy(
                 onSuccess = {
                     Assert.assertTrue(it.alias.isNotEmpty())
-                    latch.countDown()
                 },
                 onError = {
                     Timber.e(it, "Error")
                     Assert.fail(it.message)
-                    latch.countDown()
                 }
             )
-        latch.await()
     }
 }
