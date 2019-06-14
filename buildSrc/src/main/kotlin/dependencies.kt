@@ -13,11 +13,7 @@ object PaymentSdkRelease {
     val newBsApiUrl = "NEW_BS_API_URL"
     val newBsTestKey = "NEW_BS_TEST_PUBLIC_KEY"
     val hyperchargeTestKey = "HC_TEST_PUBLIC_KEY"
-
     val braintreeSandboxToken = "BRAINTREE_SANDBOX_TOKEN"
-
-    val mobilabNexusUser = "MOBILAB_NEXUS_USER"
-    val mobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
 }
 
 object PaymentSdkBuildConfigs {
@@ -53,6 +49,7 @@ object Libs {
     val junit = "junit:junit:4.12"
 
     val mockitoCore = "org.mockito:mockito-core:2.28.2"
+    val robolectric = "org.robolectric:robolectric:4.3-beta-1"
 
     val simpleframework = "org.simpleframework:simple-xml:2.7.1"
 

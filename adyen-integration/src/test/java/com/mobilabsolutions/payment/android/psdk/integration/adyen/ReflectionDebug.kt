@@ -1,4 +1,4 @@
-package com.mobilabsolutions.payment.android.psdk.integration.bspayone
+package com.mobilabsolutions.payment.android.psdk.integration.adyen
 
 import com.adyen.checkout.core.internal.PaymentHandlerImpl
 import org.junit.Test
