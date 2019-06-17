@@ -64,10 +64,10 @@ dependencies {
     implementation(project(Modules.paymentSdk))
     implementation(Libs.Kotlin.stdlib)
 
-    implementation(Libs.adyenCore)
-    implementation(Libs.adyenCardCore)
-    implementation(Libs.adyenUi)
-    implementation(Libs.adyenCheckoutBase)
+    implementation(Libs.Adyen.base)
+    implementation(Libs.Adyen.ui)
+    implementation(Libs.Adyen.core)
+    implementation(Libs.Adyen.coreCard)
 
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
