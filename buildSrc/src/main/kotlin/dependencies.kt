@@ -41,39 +41,27 @@ object Modules {
 
 object Libs {
     val androidGradlePlugin = "com.android.tools.build:gradle:3.4.1"
-
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
-
     val timber = "com.jakewharton.timber:timber:4.7.1"
-
     val junit = "junit:junit:4.12"
-
     val mockitoCore = "org.mockito:mockito-core:2.28.2"
-    val robolectric = "org.robolectric:robolectric:4.3-beta-1"
-
-    val simpleframework = "org.simpleframework:simple-xml:2.7.1"
-
+    val robolectric = "org.robolectric:robolectric:4.3"
     val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.0"
-
     val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.14.1"
-
     val iban4j = "org.iban4j:iban4j:3.2.1"
-
     val braintree = "com.braintreepayments.api:braintree:3.0.0"
-    val braintreeDropIn = "com.braintreepayments.api:drop-in:4.1.1"
-
-    val adyenCheckoutBase = "com.adyen.checkout:base:2.4.3"
-    val adyenUi = "com.adyen.checkout:ui:2.4.3"
-    val adyenCore = "com.adyen.checkout:core:2.4.3"
-    val adyenCardCore = "com.adyen.checkout:core-card:2.4.3"
-
-
     val mvrx = "com.airbnb.android:mvrx:1.0.1"
-
     val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
-    val viewPump = "io.github.inflationx:viewpump:1.0.0"
-
+    val viewPump = "io.github.inflationx:viewpump:2.0.3"
     val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
+
+    object Adyen {
+        private const val version = "2.4.4"
+        val base = "com.adyen.checkout:base:$version"
+        val ui = "com.adyen.checkout:ui:$version"
+        val core = "com.adyen.checkout:core:$version"
+        val coreCard = "com.adyen.checkout:core-card:$version"
+    }
 
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha05"
@@ -84,7 +72,6 @@ object Libs {
     object Kotlin {
         private const val version = "1.3.31"
         val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
-        val reflect = "org.jetbrains.kotlin:kotlin-reflect:$version"
         val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
         val test = "org.jetbrains.kotlin:kotlin-test-junit:$version"
@@ -101,8 +88,7 @@ object Libs {
         val appcompat = "androidx.appcompat:appcompat:1.0.2"
         val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
         val cardview = "androidx.cardview:cardview:1.0.0"
-        val archCoreTesting = "androidx.arch.core:core-testing:2.0.0"
-        val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-alpha4"
+        val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
         val coreKtx = "androidx.core:core-ktx:1.0.1"
 
         object Navigation {
@@ -113,20 +99,20 @@ object Libs {
         }
 
         object Test {
-            val core = "androidx.test:core:1.1.1-alpha02"
-            val coreKtx = "androidx.test:core:1.1.1-alpha02"
-            val ext = "androidx.test.ext:junit-ktx:1.1.1-alpha02"
-            val runner = "androidx.test:runner:1.1.1"
-            val rules = "androidx.test:rules:1.1.1"
+            val core = "androidx.test:core:1.2.0"
+            val coreKtx = "androidx.test:core:1.2.0"
+            val ext = "androidx.test.ext:junit-ktx:1.1.1"
+            val runner = "androidx.test:runner:1.2.0"
+            val rules = "androidx.test:rules:1.2.0"
 
-            val espressoCore = "androidx.test.espresso:espresso-core:3.2.0-alpha02"
-            val espressoIntents = "androidx.test.espresso:espresso-intents:3.2.0-alpha02"
+            val espressoCore = "androidx.test.espresso:espresso-core:3.2.0"
+            val espressoIntents = "androidx.test.espresso:espresso-intents:3.2.0"
 
             val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
 
         object Lifecycle {
-            private const val version = "2.0.0"
+            private const val version = "2.2.0-alpha01"
             val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
             val reactivestreams = "androidx.lifecycle:lifecycle-reactivestreams:$version"
             val compiler = "androidx.lifecycle:lifecycle-compiler:$version"
@@ -139,7 +125,6 @@ object Libs {
             val rxjava2 = "androidx.room:room-rxjava2:$version"
             val compiler = "androidx.room:room-compiler:$version"
             val ktx = "androidx.room:room-ktx:$version"
-            val testing = "androidx.room:room-testing:$version"
         }
     }
 
@@ -159,15 +144,14 @@ object Libs {
     }
 
     object Retrofit {
-        private const val version = "2.5.0"
+        private const val version = "2.6.0"
         val retrofit = "com.squareup.retrofit2:retrofit:$version"
         val retrofit_rxjava_adapter = "com.squareup.retrofit2:adapter-rxjava2:$version"
         val gsonConverter = "com.squareup.retrofit2:converter-gson:$version"
-        val simplexmlConverter = "com.squareup.retrofit2:converter-simplexml:$version"
     }
 
     object OkHttp {
-        private const val version = "3.14.1"
+        private const val version = "4.0.0-alpha02"
         val okhttp = "com.squareup.okhttp3:okhttp:$version"
         val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
     }

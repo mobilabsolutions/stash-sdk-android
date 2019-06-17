@@ -4,8 +4,8 @@ import com.google.gson.Gson
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.AuthenticationException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
-import com.mobilabsolutions.payment.android.psdk.exceptions.base.PspException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.PspException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.exceptions.registration.UnknownException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.ErrorResponse
@@ -17,7 +17,7 @@ import timber.log.Timber
  */
 class ExceptionMapper(val gson: Gson) {
     fun mapError(httpException: HttpException): BasePaymentException {
-        val errorBody = httpException.response().errorBody()?.string()
+        val errorBody = httpException.response()?.errorBody()?.string()
         Timber.d("Error body $errorBody")
         val errorResponse = gson.fromJson(errorBody, ErrorResponse::class.java)
         return when (httpException.code()) {
