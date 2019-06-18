@@ -56,7 +56,7 @@ object Libs {
     val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
 
     object Adyen {
-        private const val version = "2.4.4"
+        private const val version = "2.4.5"
         val base = "com.adyen.checkout:base:$version"
         val ui = "com.adyen.checkout:ui:$version"
         val core = "com.adyen.checkout:core:$version"
@@ -175,7 +175,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.5.1"
+        private const val version = "3.6.0"
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"
