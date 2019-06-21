@@ -551,7 +551,7 @@ registrationManager.registerSepa(sepaData, requestUUID)
 ```
 
 ### Idempotency
-All calls provided by Payment SDK are idempotent. To use idempotency simply provide a UUID with any of the registration methods used.
+All calls to the Payment SDK backend are idempotent, but PSP call idempotency cannot be guaranteed as some PSP don't support idempotent calls. To use idempotency simply provide a UUID with any of the registration methods used.
 
 **Example**
 
