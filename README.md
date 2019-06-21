@@ -3,6 +3,13 @@
 
 This repository contains Payment SDK Android client code and a sample application.
 
+Many applications need to process payments for digital or physical goods. Implementing payment functionality 
+can be very cumbersome though: there are many payment service providers that support or don't support various 
+types of payment methods and payment method registration and usage flows. The payment SDK simplifies the integration 
+of payments into our applications and abstracts away a lot of the internal complexity that different payment 
+service providers' solutions have. With the payment SDK it does not matter which payment service provider one 
+chooses to register payment methods with - the API is standardized and works across the board.
+
 ### Additional Documentation
 
 To get familiar with the overall Payment SDK project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
