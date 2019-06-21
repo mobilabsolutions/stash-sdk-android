@@ -111,6 +111,8 @@ dependencies {
     api(Libs.RxJava.rxAndroid)
     api(Libs.RxJava.rxKotlin)
 
+    api(Libs.threetenabp)
+
     implementation(Libs.AndroidX.recyclerview)
     implementation(Libs.Google.material)
 

@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="18dp"
             android:layout_marginTop="34dp"
-            android:contentDescription="@string/app_name"
+
             android:padding="4dp"
             android:rotation="180"
             app:layout_constraintStart_toStartOf="parent"
