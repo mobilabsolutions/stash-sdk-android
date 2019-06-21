@@ -452,6 +452,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         if (!validationResult.success) {
             showError(expirationDateTextView, errorCreditCardExp, validationResult)
         } else {
+            hideError(expirationDateTextView, errorCreditCardExp)
             CustomizationExtensions {
                 countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
             }
