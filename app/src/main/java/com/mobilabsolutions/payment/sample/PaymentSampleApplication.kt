@@ -28,21 +28,21 @@ class PaymentSampleApplication : DaggerApplication() {
         val mediumEmphasisColor: Int = R.color.mediumEmphasisColor
 
         val customizationPreference = PaymentUiConfiguration(
-            textColor,
-            backgroundColor,
-            buttonColor,
-            buttonTextColor,
-            cellBackgroundColor,
-            mediumEmphasisColor
+                textColor,
+                backgroundColor,
+                buttonColor,
+                buttonTextColor,
+                cellBackgroundColor,
+                mediumEmphasisColor
         )
 
         val configuration = PaymentSdkConfiguration(
                 publicKey = BuildConfig.newBsApiKey,
                 endpoint = "https://payment-dev.mblb.net/api/",
                 integrationList = listOf(
-                    AdyenIntegration to PaymentMethodType.CC,
-                    AdyenIntegration to PaymentMethodType.SEPA,
-                    BraintreeIntegration to PaymentMethodType.PAYPAL),
+                        AdyenIntegration to PaymentMethodType.CC,
+                        AdyenIntegration to PaymentMethodType.SEPA,
+                        BraintreeIntegration to PaymentMethodType.PAYPAL),
                 testMode = true,
                 paymentUiConfiguration = customizationPreference
         )

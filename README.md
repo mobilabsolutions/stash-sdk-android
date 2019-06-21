@@ -32,6 +32,8 @@ This repository contains multiple modules:
 
 ### Including the SDK in your project
 
+#### Using a maven repositort (Not available yet)
+
 **Gradle**
 
 `implementation 'com.mobilabsolutions.payment:lib:0.9.5'`
@@ -39,6 +41,114 @@ This repository contains multiple modules:
 **Gradle Kotlin DSL**
 
 `implementation ("com.mobilabsolutions.payment:lib:0.9.5")`
+
+#### Using the AAR files (Temporary, until deployed to maven repository)
+
+To use the library please add the appropriate AAR files to your project `libs` folder and
+ensure that this line is present in your gradle file:
+
+**Gradle**
+
+```groovy
+repositories {
+    flatDir { dirs("libs") }
+}
+```
+
+**Gradle Kotlin DSL**
+
+```kotlin
+implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
+```
+
+Since AAR files cannot resolve transitive dependancies you should also add the following
+dependancies to your gradle build file:
+
+**Gradle**
+
+```groovy
+implementation 'org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.30'
+implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
+implementation 'androidx.appcompat:appcompat:1.0.2'
+implementation 'com.squareup.retrofit2:retrofit:2.6.0'
+implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
+implementation 'com.squareup.retrofit2:converter-gson:2.6.0'
+implementation 'com.squareup.okhttp3:okhttp:4.0.0-alpha02'
+implementation 'com.squareup.okhttp3:logging-interceptor:4.0.0-alpha02'
+implementation 'com.jakewharton.threetenabp:threetenabp:1.2.0'
+implementation 'io.reactivex.rxjava2:rxjava:2.2.9'
+implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
+implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+implementation 'com.jakewharton.threetenabp:threetenabp:1.2.0'
+implementation 'androidx.recyclerview:recyclerview:1.0.0'
+implementation 'com.google.android.material:material:1.1.0-alpha05'
+implementation 'commons-validator:commons-validator:1.6'
+implementation 'com.google.dagger:dagger:2.23.1'
+implementation 'com.google.dagger:dagger-android:2.23.1'
+implementation 'com.google.dagger:dagger-android-support:2.23.1'
+implementation 'io.github.inflationx:calligraphy3:3.1.1'
+implementation 'io.github.inflationx:viewpump:2.0.3'
+implementation 'org.iban4j:iban4j:3.2.1'
+
+annotationProcessor 'com.google.dagger:dagger-compiler:2.23.1'
+
+//When using Adyen integration
+
+implementation 'com.adyen.checkout:base:2.4.5'
+implementation 'com.adyen.checkout:ui:2.4.5'
+implementation 'com.adyen.checkout:core:2.4.5'
+implementation 'com.adyen.checkout:core-card:2.4.5'
+
+//When using Braintree integration
+
+implementation 'com.braintreepayments.api:braintree:3.0.0'
+
+```
+
+
+**Gradle Kotlin DSL**
+
+```kotlin
+implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.30")
+implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
+implementation("androidx.appcompat:appcompat:1.0.2")
+implementation("com.squareup.retrofit2:retrofit:2.6.0")
+implementation("com.squareup.retrofit2:adapter-rxjava2:2.6.0")
+implementation("com.squareup.retrofit2:converter-gson:2.6.0")
+implementation("com.squareup.okhttp3:okhttp:4.0.0-alpha02")
+implementation("com.squareup.okhttp3:logging-interceptor:4.0.0-alpha02")
+implementation("com.jakewharton.threetenabp:threetenabp:1.2.0")
+implementation("io.reactivex.rxjava2:rxjava:2.2.9")
+implementation("io.reactivex.rxjava2:rxkotlin:2.3.0")
+implementation("io.reactivex.rxjava2:rxandroid:2.1.1")
+implementation("com.jakewharton.threetenabp:threetenabp:1.2.0")
+implementation("androidx.recyclerview:recyclerview:1.0.0")
+implementation("com.google.android.material:material:1.1.0-alpha05")
+implementation("commons-validator:commons-validator:1.6")
+implementation("com.google.dagger:dagger:2.23.1")
+implementation("com.google.dagger:dagger-android:2.23.1")
+implementation("com.google.dagger:dagger-android-support:2.23.1")
+implementation("io.github.inflationx:calligraphy3:3.1.1")
+implementation("io.github.inflationx:viewpump:2.0.3")
+implementation("org.iban4j:iban4j:3.2.1")
+
+kapt("com.google.dagger:dagger-compiler:2.23.1")
+//When using Adyen integration
+
+implementation("com.adyen.checkout:base:2.4.5")
+implementation("com.adyen.checkout:ui:2.4.5")
+implementation("com.adyen.checkout:core:2.4.5")
+implementation("com.adyen.checkout:core-card:2.4.5")
+
+//When using Braintree integration
+
+implementation("com.braintreepayments.api:braintree:3.0.0")
+
+```
+
+Furthermore if you are using Adyen integration you should add the following
+
+
 
 ### Initializing the SDK
 
@@ -441,7 +551,7 @@ registrationManager.registerSepa(sepaData, requestUUID)
 ```
 
 ### Idempotency
-All calls provided by Payment SDK are idempotent. To use idempotency simply provide a UUID to with any of the registration methods used.
+All calls to the Payment SDK backend are idempotent, but PSP call idempotency cannot be guaranteed as some PSP don't support idempotent calls. To use idempotency simply provide a UUID with any of the registration methods used.
 
 **Example**
 
