@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.view.LayoutInflater
@@ -23,6 +24,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Validatio
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getCardNumberStringUnformatted
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.onFocusGained
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import io.reactivex.disposables.CompositeDisposable
@@ -41,6 +43,7 @@ import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.cred
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.cvvEditText
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.cvvTitleTextView
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardCVV
+import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardExp
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardFirstName
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardLastName
 import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardNumber
@@ -77,18 +80,18 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     private val disposables = CompositeDisposable()
 
-    private val firstNameLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val firstNameFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val firstNameTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
-    private val lastNameLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val lastNameFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val lastNameTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
-    private val cardNumberLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val cardNumberFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val cardNumberTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     private val expirationDateSubject: BehaviorSubject<LocalDate> = BehaviorSubject.create()
 
-    private val ccvLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val ccvFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val ccvTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     private var viewState: CreditCardDataEntryViewState? = null
@@ -128,7 +131,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             ::CreditCardDataEntryViewState)
             .subscribe(this::onViewState)
 
-        disposables += firstNameLostFocusSubject
+        disposables += firstNameFocusSubject
             .doOnNext {
                 validateFirstNameAndUpdateUI(it, false)
             }
@@ -140,7 +143,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        disposables += lastNameLostFocusSubject
+        disposables += lastNameFocusSubject
             .doOnNext {
                 validateLastNameAndUpdateUI(it, false)
             }
@@ -152,7 +155,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        disposables += cardNumberLostFocusSubject
+        disposables += cardNumberFocusSubject
             .doOnNext {
                 validateCardNumberAndUpdateUI(it, false)
             }
@@ -170,7 +173,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        disposables += ccvLostFocusSubject
+        disposables += ccvFocusSubject
             .doOnNext {
                 validateCvvAndUpdateUI(it, false)
             }
@@ -206,21 +209,31 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             firstNameEditText.showKeyboardAndFocus()
         }
 
-        firstNameEditText.getContentOnFocusLost { firstNameLostFocusSubject.onNext(it.trim()) }
+        firstNameEditText.getContentOnFocusLost { firstNameFocusSubject.onNext(it.trim()) }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
-        lastNameEditText.getContentOnFocusLost { lastNameLostFocusSubject.onNext(it.trim()) }
+        lastNameEditText.getContentOnFocusLost { lastNameFocusSubject.onNext(it.trim()) }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
-        creditCardNumberEditText.getContentOnFocusLost { cardNumberLostFocusSubject.onNext(it.getCardNumberStringUnformatted().trim()) }
-        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted().trim()) }
+        creditCardNumberEditText.getContentOnFocusLost { cardNumberFocusSubject.onNext(it.getCardNumberStringUnformatted()) }
+        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted()) }
+        creditCardNumberEditText.onFocusGained {
+            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+        }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
             creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
         })
 
-        cvvEditText.getContentOnFocusLost { ccvLostFocusSubject.onNext(it.trim()) }
+        cvvEditText.getContentOnFocusLost { ccvFocusSubject.onNext(it.trim()) }
         cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
+        cvvEditText.onFocusGained {
+            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+            cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
+            expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+        }
 
         saveButton.setOnClickListener {
             viewState?.let {
@@ -238,7 +251,11 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         }
 
         expirationDateTextView.setOnClickListener {
-            val monthYearPicker = MonthYearPicker(requireContext(), paymentUIConfiguration = paymentUIConfiguration) {
+            val monthYearPicker = MonthYearPicker(requireContext(),
+                paymentUIConfiguration = paymentUIConfiguration,
+                onCancelListener = DialogInterface.OnCancelListener {
+                    expirationDateSubject.onNext(LocalDate.MIN)
+                }) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
                 val selectedExpiry = LocalDate.of(it.second, it.first, lastDay)
@@ -248,11 +265,17 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 expirationDateTextView.text = expDate
             }
             monthYearPicker.show()
+
+            // Check for the previous field's validations
+            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+            cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
         }
 
         back.setOnClickListener {
             requireActivity().onBackPressed()
         }
+
         adyenCreditCardEntrySwipeRefreshLayout.isEnabled = false
 
         disposables += uiComponentHandler.getResultObservable().subscribe {
@@ -370,7 +393,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private fun validateExpirationDateAndUpdateUI(expiryDate: LocalDate?): Boolean {
         val validationResult = validateExpirationDate(expiryDate)
         if (!validationResult.success) {
-            // Do nothing
+            showError(expirationDateTextView, errorCreditCardExp, validationResult)
         } else {
             CustomizationExtensions {
                 countryText.applyFakeEditTextCustomization(paymentUIConfiguration)

@@ -38,6 +38,14 @@ fun EditText.focusObserver(onFocusChanged: (Boolean) -> Unit) {
     this.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> onFocusChanged.invoke(p1) }
 }
 
+fun TextView.focusObserver(onFocusChanged: (Boolean) -> Unit) {
+    this.onFocusChangeListener = View.OnFocusChangeListener { _, p1 -> onFocusChanged.invoke(p1) }
+}
+
 fun EditText.getContentOnFocusLost(contentOnFocusLost: (String) -> Unit) {
     this.focusObserver { if (!it) contentOnFocusLost.invoke(this.getContentsAsString()) }
+}
+
+fun TextView.onFocusGained(contentOnFocusGained: () -> Unit) {
+    this.focusObserver { if (it) contentOnFocusGained.invoke() }
 }
