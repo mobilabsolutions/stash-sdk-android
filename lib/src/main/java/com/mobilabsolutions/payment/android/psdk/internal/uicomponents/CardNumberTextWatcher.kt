@@ -110,7 +110,7 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
 
         MASTER_CARD(CreditCardTypeWithRegex.MASTER_CARD, R.drawable.ic_card_master),
 
-        // Conflicts with MASTER_CARD, need a way (number range) to distinguish. Also, applicable only for US Cards
+        // Conflicts with MASTERCARD, need a way (number range) to distinguish. Also, applicable only for US Cards
         // DINERS_US(Regex("^5[45][0-9]{1,14}$"), R.drawable.ic_card_diners_club),
 
         DISCOVER(CreditCardTypeWithRegex.DISCOVER, R.drawable.ic_card_discover),
