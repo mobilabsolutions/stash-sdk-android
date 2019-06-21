@@ -27,6 +27,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.Validatio
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getIbanStringUnformatted
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.onFocusGained
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import com.mobilabsolutions.payment.android.util.CountryDetectorUtil
@@ -80,13 +81,13 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
 
     private val disposables = CompositeDisposable()
 
-    private val firstNameLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val firstNameFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val firstNameTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
-    private val lastNameLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val lastNameFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val lastNameTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
-    private val ibanLostFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
+    private val ibanFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val ibanTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     private val countrySubject: BehaviorSubject<String> = BehaviorSubject.create()
@@ -143,7 +144,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
             ::SepaDataEntryViewState)
             .subscribe(this::onViewStateNext)
 
-        disposables += firstNameLostFocusSubject
+        disposables += firstNameFocusSubject
             .doOnNext {
                 validateFirstNameAndUpdateUI(it, false)
             }
@@ -155,7 +156,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        disposables += lastNameLostFocusSubject
+        disposables += lastNameFocusSubject
             .doOnNext {
                 validateLastNameAndUpdateUI(it, false)
             }
@@ -167,7 +168,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        disposables += ibanLostFocusSubject
+        disposables += ibanFocusSubject
             .doOnNext {
                 validateIbanAndUpdateUI(it, false)
             }
@@ -179,14 +180,18 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        firstNameEditText.getContentOnFocusLost { firstNameLostFocusSubject.onNext(it.trim()) }
+        firstNameEditText.getContentOnFocusLost { firstNameFocusSubject.onNext(it.trim()) }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
-        lastNameEditText.getContentOnFocusLost { lastNameLostFocusSubject.onNext(it.trim()) }
+        lastNameEditText.getContentOnFocusLost { lastNameFocusSubject.onNext(it.trim()) }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
-        ibanNumberEditText.getContentOnFocusLost { ibanLostFocusSubject.onNext(it.getIbanStringUnformatted().trim()) }
+        ibanNumberEditText.getContentOnFocusLost { ibanFocusSubject.onNext(it.getIbanStringUnformatted().trim()) }
         ibanNumberEditText.observeText { ibanTextChangedSubject.onNext(it.getIbanStringUnformatted().trim()) }
+        ibanNumberEditText.onFocusGained {
+            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+        }
 
         ibanNumberEditText.addTextChangedListener(IbanTextWatcher())
 
@@ -196,6 +201,11 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
                 .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
                 .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
+
+            // Check for the previous field's validations
+            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+            ibanFocusSubject.onNext(ibanNumberEditText.text.toString().getIbanStringUnformatted())
         }
 
         saveButton.setOnClickListener {

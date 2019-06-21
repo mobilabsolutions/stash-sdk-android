@@ -65,7 +65,7 @@ import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
 /**
