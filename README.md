@@ -91,6 +91,18 @@ implementation 'io.github.inflationx:viewpump:2.0.3'
 implementation 'org.iban4j:iban4j:3.2.1'
 
 annotationProcessor 'com.google.dagger:dagger-compiler:2.23.1'
+
+//When using Adyen integration
+
+implementation 'com.adyen.checkout:base:2.4.5'
+implementation 'com.adyen.checkout:ui:2.4.5'
+implementation 'com.adyen.checkout:core:2.4.5'
+implementation 'com.adyen.checkout:core-card:2.4.5'
+
+//When using Braintree integration
+
+implementation 'com.braintreepayments.api:braintree:3.0.0'
+
 ```
 
 
@@ -121,7 +133,21 @@ implementation("io.github.inflationx:viewpump:2.0.3")
 implementation("org.iban4j:iban4j:3.2.1")
 
 kapt("com.google.dagger:dagger-compiler:2.23.1")
+//When using Adyen integration
+
+implementation("com.adyen.checkout:base:2.4.5")
+implementation("com.adyen.checkout:ui:2.4.5")
+implementation("com.adyen.checkout:core:2.4.5")
+implementation("com.adyen.checkout:core-card:2.4.5")
+
+//When using Braintree integration
+
+implementation("com.braintreepayments.api:braintree:3.0.0")
+
 ```
+
+Furthermore if you are using Adyen integration you should add the following
+
 
 
 ### Initializing the SDK
@@ -525,7 +551,7 @@ registrationManager.registerSepa(sepaData, requestUUID)
 ```
 
 ### Idempotency
-All calls provided by Payment SDK are idempotent. To use idempotency simply provide a UUID to with any of the registration methods used.
+All calls provided by Payment SDK are idempotent. To use idempotency simply provide a UUID with any of the registration methods used.
 
 **Example**
 
