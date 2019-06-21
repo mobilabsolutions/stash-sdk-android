@@ -241,15 +241,7 @@ PaymentSdk.initalize(applicationContext, configuration);
 #### Using the SDK in test mode
 
 The payment SDK can also be used in so-called test mode. Transactions created there are not forwarded to the production PSP but rather to whatever sandboxing mode the PSP provides.
-To configure the SDK to use test mode, simply prepend the `test.` subdomain to your endpoint URL (if the corresponding Load Balancer has been set up). Another method to instruct the SDK to use test mode while keeping the same URL is manually setting the `testMode` property on the `PaymentSdkConfiguration` used to configure the SDK.
-
-For example:
-
-| Test Mode | Production Mode |
-| --------- | --------------- |
-| https://test.payment.example.net/api/v1 | https://payment.example.net/api/v1 |
-
-Or in code, you should supply testMode parameter when creating your `configuration` object, as shown in the previous section
+To configure the SDK to use test mode set the `testMode` property on the `PaymentSdkConfiguration` to true when configuring the SDK.
 
 ### Registering payment method using provided UI components
 
