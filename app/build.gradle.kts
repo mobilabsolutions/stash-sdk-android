@@ -54,10 +54,14 @@ dependencies {
 
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar", "*.aar"))))
 
-    implementation(project(Modules.paymentSdk)) //Core
-    implementation(project(Modules.bsPayoneIntegration))
-    implementation(project(Modules.braintreeIntegration))
-    implementation(project(Modules.adyenIntegration))
+
+
+//    implementation(project(Modules.paymentSdk)) //Core
+//    implementation(project(Modules.bsPayoneIntegration))
+//    implementation(project(Modules.braintreeIntegration))
+//    implementation(project(Modules.adyenIntegration))
+
+    implementation(Libs.threetenabp)
 
     implementation(Libs.Kotlin.stdlib)
 
