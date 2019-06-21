@@ -17,7 +17,7 @@ class LocalProductStore @Inject constructor(
     companion object {
         private val mobilabTShirt = Product(
             image = "image_card_01",
-            name = "Mobilab",
+            name = "MobiLab",
             description = "T-Shirt print",
             price = 2385
         )

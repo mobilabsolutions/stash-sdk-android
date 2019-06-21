@@ -7,11 +7,12 @@ import android.view.ViewGroup
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.snackbar.Snackbar
+import com.mobilabsolutions.payment.sample.BuildConfig
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.productItem
-import com.mobilabsolutions.payment.sample.util.withModels
-import kotlinx.android.synthetic.main.fragment_items.*
+import kotlinx.android.synthetic.main.fragment_items.itemsRecyclerView
+import kotlinx.android.synthetic.main.fragment_items.version_text
 import javax.inject.Inject
 
 /**
@@ -26,6 +27,12 @@ class ItemsFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_items, container, false)
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        version_text.text = BuildConfig.VERSION_NAME
     }
 
     override fun invalidate() = withState(viewModel) { state ->

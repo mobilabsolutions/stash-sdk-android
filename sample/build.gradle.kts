@@ -31,7 +31,7 @@ android {
         minSdkVersion(PaymentSdkBuildConfigs.minSdk)
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
         versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, DemoRelease.versionCode).toInt()
-        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, DemoRelease.versionName)
+        versionName = "${DemoRelease.versionName}-$versionCode"
         vectorDrawables.useSupportLibrary = true
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
