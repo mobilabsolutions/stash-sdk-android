@@ -29,9 +29,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarE
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getCardNumberStringUnformatted
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusChange
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.onFocusGained
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.util.CountryDetectorUtil
@@ -229,31 +228,37 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             firstNameEditText.showKeyboardAndFocus()
         }
 
-        firstNameEditText.getContentOnFocusLost { firstNameFocusSubject.onNext(it.trim()) }
+        firstNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) firstNameFocusSubject.onNext(value.trim()) }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
-        lastNameEditText.getContentOnFocusLost { lastNameFocusSubject.onNext(it.trim()) }
+        lastNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) lastNameFocusSubject.onNext(value.trim()) }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
-        creditCardNumberEditText.getContentOnFocusLost { cardNumberFocusSubject.onNext(it.getCardNumberStringUnformatted()) }
-        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted()) }
-        creditCardNumberEditText.onFocusGained {
-            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
-            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+        creditCardNumberEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) {
+                cardNumberFocusSubject.onNext(value.trim())
+            } else {
+                firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+                lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+            }
         }
+        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted()) }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
             creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
         })
 
-        cvvEditText.getContentOnFocusLost { ccvFocusSubject.onNext(it.trim()) }
-        cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
-        cvvEditText.onFocusGained {
-            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
-            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
-            cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
-            expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+        cvvEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) {
+                ccvFocusSubject.onNext(value.trim())
+            } else {
+                firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+                lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+                cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
+                expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+            }
         }
+        cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
 
         countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
 

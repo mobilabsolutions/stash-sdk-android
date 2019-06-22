@@ -19,10 +19,9 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SepaDataV
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.ValidationResult
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusLost
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getContentOnFocusChange
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.getIbanStringUnformatted
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.observeText
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.onFocusGained
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
 import io.reactivex.disposables.CompositeDisposable
@@ -166,18 +165,21 @@ class AdyenSepaDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        firstNameEditText.getContentOnFocusLost { firstNameFocusSubject.onNext(it.trim()) }
+        firstNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) firstNameFocusSubject.onNext(value.trim()) }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
-        lastNameEditText.getContentOnFocusLost { lastNameFocusSubject.onNext(it.trim()) }
+        lastNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) lastNameFocusSubject.onNext(value.trim()) }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
-        ibanNumberEditText.getContentOnFocusLost { ibanFocusSubject.onNext(it.getIbanStringUnformatted().trim()) }
-        ibanNumberEditText.observeText { ibanTextChangedSubject.onNext(it.getIbanStringUnformatted().trim()) }
-        ibanNumberEditText.onFocusGained {
-            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
-            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+        ibanNumberEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) {
+                ibanFocusSubject.onNext(value.trim())
+            } else {
+                firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+                lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+            }
         }
+        ibanNumberEditText.observeText { ibanTextChangedSubject.onNext(it.getIbanStringUnformatted().trim()) }
 
         ibanNumberEditText.addTextChangedListener(IbanTextWatcher())
 

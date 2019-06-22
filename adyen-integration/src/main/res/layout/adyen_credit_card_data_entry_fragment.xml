@@ -35,7 +35,7 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/creditCardScreenCellLayout"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
@@ -170,10 +170,12 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:background="@drawable/edit_text_selector"
+                    android:drawableEnd="@drawable/ic_country_selection_arrow"
                     android:ems="10"
                     android:gravity="center_vertical"
                     android:hint="@string/credit_card_data_entry_country"
                     android:paddingStart="16dp"
+                    android:paddingEnd="14dp"
                     android:text=""
                     android:textAppearance="?android:attr/textAppearanceMediumInverse"
                     android:textColor="?attr/editTextColor"
@@ -312,7 +314,7 @@
 
             <Button
                 android:id="@+id/saveButton"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
                 android:layout_marginTop="8dp"
