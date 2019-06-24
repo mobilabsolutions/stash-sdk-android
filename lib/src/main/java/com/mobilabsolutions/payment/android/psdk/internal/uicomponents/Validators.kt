@@ -36,6 +36,8 @@ class CreditCardDataValidator @Inject constructor() {
     fun validateExpiry(expiryDate: LocalDate): ValidationResult {
         return if (!expiryDate.isBefore(LocalDate.now())) {
             ValidationResult(success = true)
+        } else if (expiryDate == LocalDate.MIN) {
+            ValidationResult(success = false, errorMessageResourceId = R.string.validation_error_empty)
         } else {
             ValidationResult(success = false, errorMessageResourceId = R.string.credit_card_data_expiry_validation_error)
         }

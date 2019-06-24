@@ -114,7 +114,7 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
 
     implementation(project(Modules.paymentSdk)) //Core
-    implementation(project(Modules.bsPayoneIntegration))
+    implementation(project(Modules.adyenIntegration))
     implementation(project(Modules.braintreeIntegration))
 
     implementation(Libs.Kotlin.stdlib)
