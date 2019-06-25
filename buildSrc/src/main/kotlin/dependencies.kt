@@ -47,7 +47,7 @@ object Libs {
     val mockitoCore = "org.mockito:mockito-core:2.28.2"
     val robolectric = "org.robolectric:robolectric:4.3"
     val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.1"
-    val mockwebserver = "com.squareup.okhttp3:mockwebserver:4.0.0-RC3"
+    val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.12.0"
     val iban4j = "org.iban4j:iban4j:3.2.1"
     val braintree = "com.braintreepayments.api:braintree:3.1.0"
     val mvrx = "com.airbnb.android:mvrx:1.0.2"
@@ -119,7 +119,7 @@ object Libs {
         }
 
         object Room {
-            private const val version = "2.1.0"
+            private const val version = "2.1.0-alpha06"
             val common = "androidx.room:room-common:$version"
             val runtime = "androidx.room:room-runtime:$version"
             val rxjava2 = "androidx.room:room-rxjava2:$version"
@@ -151,7 +151,7 @@ object Libs {
     }
 
     object OkHttp {
-        private const val version = "4.0.0-RC3"
+        private const val version = "4.0.0-alpha02"
         val okhttp = "com.squareup.okhttp3:okhttp:$version"
         val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
     }
