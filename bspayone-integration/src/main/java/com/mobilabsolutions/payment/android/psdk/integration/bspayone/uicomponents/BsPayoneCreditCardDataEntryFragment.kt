@@ -236,7 +236,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
         creditCardNumberEditText.getContentOnFocusChange { isFocusGained, value ->
             if (!isFocusGained) {
-                cardNumberFocusSubject.onNext(value.getCardNumberStringUnformatted())
+                cardNumberFocusSubject.onNext(value.getCardNumberStringUnformatted().trim())
             } else {
                 firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
                 lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
