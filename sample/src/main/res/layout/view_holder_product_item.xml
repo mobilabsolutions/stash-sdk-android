@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        app:cardElevation="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -70,6 +70,7 @@
                 android:text="@string/price_placeholder"
                 android:textAppearance="@style/itemPrice"
                 app:currency="@{product.price}"
+                android:paddingBottom="4dp"
                 app:layout_constraintBottom_toBottomOf="@+id/product_image"
                 app:layout_constraintStart_toEndOf="@+id/product_image"
                 tools:ignore="RtlSymmetry" />

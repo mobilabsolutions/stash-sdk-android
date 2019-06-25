@@ -13,6 +13,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/black_haze"
         android:paddingStart="4dp"
         android:paddingEnd="4dp">
 
@@ -37,6 +38,7 @@
             android:paddingStart="8dp"
             android:paddingTop="4dp"
             android:paddingEnd="8dp"
+            android:paddingBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/payment_methods_title"
             tools:listitem="@layout/view_holder_payment_method_item" />
