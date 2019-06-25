@@ -242,7 +242,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
             }
         }
-        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted()) }
+        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted().trim()) }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
             creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
