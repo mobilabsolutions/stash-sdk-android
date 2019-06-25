@@ -26,7 +26,7 @@ object PaymentSdkBuildConfigs {
 object DemoRelease {
     val fabricApiKey = "FABRIC_API_KEY"
     val versionCode = "1"
-    val versionName = "0.0.1"
+    val versionName = "0.9"
 }
 
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
