@@ -6,6 +6,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
@@ -204,7 +205,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
             creditCardScreenMainLayout.applyBackgroundCustomization(paymentUIConfiguration)
             creditCardScreenCellLayout.applyCellBackgroundCustomization(paymentUIConfiguration)
-
+            saveButton.applyCustomization(paymentUIConfiguration)
             firstNameEditText.showKeyboardAndFocus()
         }
 
@@ -434,7 +435,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     }
 
     private fun hideError(sourceView: View, errorView: TextView) {
-        sourceView.setBackgroundResource(R.drawable.edit_text_frame)
+        CustomizationExtensions {
+            (sourceView as EditText).applyEditTextCustomization(paymentUIConfiguration)
+        }
         errorView.visibility = View.GONE
     }
 

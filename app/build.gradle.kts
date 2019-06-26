@@ -10,7 +10,7 @@ kapt {
     useBuildCache = true
 }
 
-val testAar = true
+val testAar = false
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)

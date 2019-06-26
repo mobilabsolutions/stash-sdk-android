@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -491,7 +492,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     }
 
     private fun hideError(sourceView: View, errorView: TextView) {
-        sourceView.setBackgroundResource(R.drawable.edit_text_frame)
+        CustomizationExtensions {
+            (sourceView as EditText).applyEditTextCustomization(paymentUIConfiguration)
+        }
         errorView.visibility = View.GONE
     }
 
