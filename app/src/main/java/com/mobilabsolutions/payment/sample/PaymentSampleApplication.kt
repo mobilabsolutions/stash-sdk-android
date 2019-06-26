@@ -37,7 +37,7 @@ class PaymentSampleApplication : DaggerApplication() {
         )
 
         val configuration = PaymentSdkConfiguration(
-                publicKey = BuildConfig.newBsApiKey,
+                publishableKey = BuildConfig.newBsApiKey,
                 endpoint = "https://payment-dev.mblb.net/api/",
                 integrationList = listOf(
                         AdyenIntegration to PaymentMethodType.CC,

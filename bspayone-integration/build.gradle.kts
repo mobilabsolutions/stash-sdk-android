@@ -12,7 +12,7 @@ kapt {
     useBuildCache = true
 }
 
-val templatePublicKey = propOrDefWithTravis(PaymentSdkRelease.templatePublicKey, "")
+val templatePublishableKey = propOrDefWithTravis(PaymentSdkRelease.templatePublishableKey, "")
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
@@ -32,7 +32,7 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "template_public_key", "\""+templatePublicKey+"\"")
+            resValue("string", "template_public_key", "\""+templatePublishableKey+"\"")
         }
         getByName("release") {
             isMinifyEnabled = false

@@ -118,7 +118,7 @@ public class JavaSketch {
         integrations2.add(new IntegrationToPaymentMapping(BsPayoneIntegration.Companion, PaymentMethodType.SEPA));
 
         PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
-                .setPublishableKey("YourPublicKey")
+                .setPublishableKey("YourPublishableKey")
                 .setEndpoint("https://payment-dev.mblb.net/api/")
                 .setIntegrations(integrations2)
                 .setTestMode(true)

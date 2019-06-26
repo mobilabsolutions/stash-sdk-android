@@ -24,7 +24,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 class BsPayoneRegistrationInstrumentationTest {
-    val testPublicKey = BuildConfig.newBsTestKey
+    val testPublishableKey = BuildConfig.newBsTestKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val NEW_BS_PAYONE_URL = BuildConfig.newBsApiUrl
     val ccAlias = "ybDqWplVEqbnoAARpmcIXvwluuSEbLVN"
@@ -63,7 +63,7 @@ class BsPayoneRegistrationInstrumentationTest {
 
         val graph = DaggerBsPayoneTestPaymentSdkComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
-            .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
+            .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
             .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
             .build()
 

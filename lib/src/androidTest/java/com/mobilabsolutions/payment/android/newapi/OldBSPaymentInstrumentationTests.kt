@@ -31,7 +31,7 @@
 //    //QEvuprLEfAesqaVxfHOmNxRtKFNAaVyX
 //    //mOQIxngxMduuvqgTlBycdKHfCpMqwTCy
 //
-//    val testPublicKey: String = BuildConfig.oldBsTestKey
+//    val testPublishableKey: String = BuildConfig.oldBsTestKey
 //    val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 //    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
 //    val NEW_BS_PAYONE_URL: String = BuildConfig.newBsApiUrl
@@ -74,7 +74,7 @@
 //    fun setUp() {
 //        val context = InstrumentationRegistry.getContext().applicationContext as Application
 //        val graphBuilder = DaggerTestOldBsPaymentSdkComponent.builder()
-//                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context))
+//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context))
 //                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
 //                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
 //                .hyperchargeModule(HyperchargeModule())

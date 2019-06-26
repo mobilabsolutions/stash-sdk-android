@@ -1,11 +1,16 @@
 package com.mobilabsolutions.payment.android.psdk.integration.adyen
 
+/* ktlint-disable no-wildcard-imports */
+/* ktlint-disable no-wildcard-imports */
 import android.app.Application
 import com.adyen.checkout.core.CheckoutException
 import com.adyen.checkout.core.card.Card
 import com.adyen.checkout.core.card.Cards
-/* ktlint-disable no-wildcard-imports */
-import com.adyen.checkout.core.internal.*
+import com.adyen.checkout.core.internal.CheckoutApi
+import com.adyen.checkout.core.internal.PaymentHandlerImpl
+import com.adyen.checkout.core.internal.PaymentHandlerStore
+import com.adyen.checkout.core.internal.PaymentReferenceImpl
+import com.adyen.checkout.core.internal.PaymentSetupParametersImpl
 import com.adyen.checkout.core.internal.model.PaymentInitiation
 import com.adyen.checkout.core.internal.model.PaymentInitiationResponse
 import com.adyen.checkout.core.internal.model.PaymentMethodImpl
@@ -31,8 +36,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 import java.lang.reflect.Constructor
-/* ktlint-disable no-wildcard-imports */
-import java.util.*
+import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -103,13 +107,13 @@ class AdyenHandler @Inject constructor(
             val resolvedPaymentMethod = cardCheckoutMethod[0].paymentMethod as PaymentMethodImpl
 
             // Now we need to use Adyens Client Side Encryption to encrypt our credit card data
-            val publicKey = paymentSession.publicKey!!
+            val publishableKey = paymentSession.publicKey!!
             val card = Card.Builder()
                 .setNumber(creditCardData.number)
                 .setExpiryDate(creditCardData.expiryMonth, creditCardData.expiryYear)
                 .setSecurityCode(creditCardData.cvv)
                 .build()
-            val encryptedCard = Cards.ENCRYPTOR.encryptFields(card, paymentSession.generationTime, publicKey).call()
+            val encryptedCard = Cards.ENCRYPTOR.encryptFields(card, paymentSession.generationTime, publishableKey).call()
             val creditCardDetails = CardDetails.Builder()
                 .setHolderName(creditCardData.billingData?.fullName())
                 .setEncryptedCardNumber(encryptedCard.encryptedNumber)

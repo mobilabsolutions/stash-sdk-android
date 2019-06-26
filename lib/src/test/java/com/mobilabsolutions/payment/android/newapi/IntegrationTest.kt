@@ -52,7 +52,7 @@ class IntegrationTest {
     fun testMultipleIntegrations() {
         expectedException.expect(ConfigurationException::class.java)
         val paymentSdkConfiguration = PaymentSdkConfiguration(
-                publicKey = "123",
+                publishableKey = "123",
                 endpoint = "https://fakeUrl",
                 integrationList = listOf(
                     BsPayoneIntegration to PaymentMethodType.SEPA,
@@ -66,7 +66,7 @@ class IntegrationTest {
     fun testEmptyIntegrationListProvided() {
         expectedException.expect(ConfigurationException::class.java)
         val paymentSdkConfiguration = PaymentSdkConfiguration(
-            publicKey = "123",
+            publishableKey = "123",
             endpoint = "https://fakeUrl",
             integrationList = listOf()
         )
@@ -77,7 +77,7 @@ class IntegrationTest {
     fun testNoIntegrationProvided() {
         expectedException.expect(ConfigurationException::class.java)
         val paymentSdkConfiguration = PaymentSdkConfiguration(
-            publicKey = "123",
+            publishableKey = "123",
             endpoint = "https://fakeUrl"
         )
         PaymentSdk.initalize(application, paymentSdkConfiguration)

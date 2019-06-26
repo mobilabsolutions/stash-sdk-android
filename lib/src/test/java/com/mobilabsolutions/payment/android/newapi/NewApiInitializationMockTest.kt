@@ -4,7 +4,7 @@
 // import android.content.SharedPreferences
 // import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 // import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidApplicationContextException
-// import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublicKeyException
+// import com.mobilabsolutions.payment.android.psdk.exceptions.validation.InvalidPublishableKeyException
 // import org.junit.Before
 // import org.junit.Rule
 // import org.junit.Test
@@ -42,15 +42,15 @@
 //
 //    @Test
 //    fun testInitializationLengthFailure() {
-//        expectedException.expect(InvalidPublicKeyException::class.java)
-//        expectedException.expectMessage("Public key length is not valid")
+//        expectedException.expect(InvalidPublishableKeyException::class.java)
+//        expectedException.expectMessage("Publishable key length is not valid")
 //        PaymentSdk.initalize("", application)
 //    }
 //
 //    @Test
 //    fun testInitializationNullFailure() {
-//        expectedException.expect(InvalidPublicKeyException::class.java)
-//        expectedException.expectMessage("Public key not supplied")
+//        expectedException.expect(InvalidPublishableKeyException::class.java)
+//        expectedException.expectMessage("Publishable key not supplied")
 //        PaymentSdk.initalize(null, application)
 //    }
 //

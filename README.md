@@ -162,7 +162,7 @@ Furthermore if you are using Adyen integration you should add the following
 
 To use the SDK, you need to initialize with the following configuration data:
 
-* Public key - This is a publishable key provided for your merchant account 
+* Publishable key - This is a publishable key provided for your merchant account 
 through the Payment Dashboard
 * Endpoint - The URL of your backend services
 * Integration - If you are using only one integration you can supply it as
@@ -181,7 +181,7 @@ To connect the SDK to a given payment service provider (PSP), you need to pass t
 IntegrationCompanion object to the SDK. If you want to use several PSP integrations 
 you need to provide information which integration will use which payment method.
 
-Public key and endpoint depend on your backend services deployment, you can
+Publishable key and endpoint depend on your backend services deployment, you can
 learn more about backend services [here](https://github.com/mobilabsolutions/payment-sdk-backend-open)
 
 ###### Kotlin - Single Integration
@@ -189,7 +189,7 @@ learn more about backend services [here](https://github.com/mobilabsolutions/pay
 ```kotlin
 
 val  configuration = PaymentSdkConfiguration(
-        publicKey = "YourApiKey",
+        publishableKey = "YourApiKey",
         endpoint = "https://payment-dev.mblb.net/api/",
         integration = AdyenIntegration,
         testMode = true
@@ -215,7 +215,7 @@ PaymentSdk.initalize(applicationContext, configuration);
 ```kotlin
 
 val  configuration = PaymentSdkConfiguration(
-        publicKey = "YourApiKey",
+        publishableKey = "YourApiKey",
         endpoint = "https://payment-dev.mblb.net/api/",
         integrationList = listOf(
         AdyenIntegration to PaymentMethodType.CC,
@@ -356,7 +356,7 @@ val paymentUiConfiguration = PaymentUiConfiguration(
         mediumEmphasisColor
 )
 val  configuration = PaymentSdkConfiguration(
-        publicKey = "YourApiKey",
+        publishableKey = "YourApiKey",
         endpoint = "https://payment-dev.mblb.net/api/",
         integration = AdyenIntegration,
         testMode = true,

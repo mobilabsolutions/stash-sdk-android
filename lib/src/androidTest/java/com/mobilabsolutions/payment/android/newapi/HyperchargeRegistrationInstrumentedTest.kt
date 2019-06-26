@@ -38,7 +38,7 @@
 //        "(instead of inside 60 secconds callbacks are dispatched from Hypercharge ~30 minutes later)")
 // class HyperchargeRegistrationInstrumentedTest {
 //
-//    val testPublicKey = BuildConfig.newBsTestKey
+//    val testPublishableKey = BuildConfig.newBsTestKey
 //    val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 //    val OLD_BS_PAYONE_URL: String = BuildConfig.oldBsApiUrl
 //    val NEW_BS_PAYONE_URL = BuildConfig.newBsApiUrl
@@ -77,7 +77,7 @@
 //    fun setUp() {
 //        val context = InstrumentationRegistry.getContext().applicationContext as Application
 //        val graphBuilder = DaggerTestHyperchargeRegistrationSdkComponent.builder()
-//                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context))
+//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context))
 //                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
 //                .hyperchargeModule(HyperchargeModule())
 //                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))

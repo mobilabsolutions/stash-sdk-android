@@ -25,7 +25,7 @@
 // * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
 // */
 // class PayPalRedirectFlowTest {
-//    val testPublicKey = "PD-PO-nhnEiKIFQiZeVjGCM0HZY3xvaI"
+//    val testPublishableKey = "PD-PO-nhnEiKIFQiZeVjGCM0HZY3xvaI"
 //    private val MOBILAB_BE_URL = BuildConfig.mobilabBackendUrl
 //    private val OLD_BS_PAYONE_URL = BuildConfig.oldBsApiUrl
 //    //    private val NEW_BS_PAYONE_URL = "https://secure.pay1.de/client-api/"
@@ -94,7 +94,7 @@
 //
 //        val context = InstrumentationRegistry.getContext().applicationContext as Application
 //        val graph = DaggerTestPayPalRedirectSdkComponent.builder()
-//                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, emptyList()))
+//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, emptyList()))
 //                .build()
 //        graph.injectTest(this)
 //        NewPaymentSdk.supplyTestComponent(graph)
