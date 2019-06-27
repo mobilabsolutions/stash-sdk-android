@@ -61,6 +61,6 @@ data class PaymentMethod(
     }
 
     companion object {
-        const val DELIMITER = "•"
+        const val DELIMITER = " • "
     }
 }

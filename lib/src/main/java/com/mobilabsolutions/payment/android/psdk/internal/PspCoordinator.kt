@@ -194,7 +194,7 @@ class PspCoordinator @Inject constructor(
 
                         chosenIntegration.handleRegistrationRequest(registrationRequest)
                             .map {
-                                val maskedIban = standardizedData.sepaData.iban.takeLast(4)
+                                val maskedIban = standardizedData.sepaData.iban
                                 PaymentMethodAlias(it, PaymentMethodType.SEPA, extraAliasInfo = ExtraAliasInfo.SepaExtraInfo(maskedIban))
                             }
                     }
