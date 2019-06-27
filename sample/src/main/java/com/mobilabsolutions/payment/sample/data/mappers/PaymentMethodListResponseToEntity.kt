@@ -13,9 +13,17 @@ class PaymentMethodListResponseToEntity @Inject constructor() : Mapper<PaymentMe
     override fun map(from: PaymentMethodListResponse): List<PaymentMethod> {
         return from.paymentMethods.map {
             PaymentMethod(
-                    paymentMethodId = it.paymentMethodId,
-                    alias = it.alias,
-                    _type = it.type
+                paymentMethodId = it.paymentMethodId,
+                _type = it.type,
+                // Credit Card
+                mask = it.creditCardData?.mask ?: "",
+                expiryMonth = it.creditCardData?.expiryMonth ?: "",
+                expiryYear = it.creditCardData?.expiryYear ?: "",
+                _cardType = it.creditCardData?.type ?: "UNKNOWN",
+                // SEPA
+                iban = it.sepaData?.iban ?: "",
+                //PayPal
+                email = it.payPalData?.email ?: ""
             )
         }
     }

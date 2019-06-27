@@ -29,7 +29,7 @@ class PaymentMethodRepositoryImpl @Inject constructor(
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.getPaymentMethods(userId) }
         when (val result = remoteJob.await()) {
             is Success -> localPaymentMethodStore.savePaymentMethodList(userId, result.data)
-            is ErrorResult -> Timber.e(result.exception) // TODO: Biju: Show Toast/SnackBar
+            is ErrorResult -> Timber.e(result.exception)
         }
         Unit
     }
@@ -38,7 +38,7 @@ class PaymentMethodRepositoryImpl @Inject constructor(
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.addPaymentMethod(userId, aliasId, paymentMethod) }
         when (val result = remoteJob.await()) {
             is Success -> localPaymentMethodStore.savePaymentMethod(paymentMethod.copy(userId = userId), result.data.paymentMethodId)
-            is ErrorResult -> Timber.e(result.exception) // TODO: Biju: Show Toast/SnackBar
+            is ErrorResult -> Timber.e(result.exception)
         }
         Unit
     }
@@ -47,7 +47,7 @@ class PaymentMethodRepositoryImpl @Inject constructor(
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.deletePaymentMethod(paymentMethod.paymentMethodId) }
         when (val result = remoteJob.await()) {
             is Success -> localPaymentMethodStore.deletePaymentMethod(paymentMethod)
-            is ErrorResult -> Timber.e(result.exception) // TODO: Biju: Show Toast/SnackBar
+            is ErrorResult -> Timber.e(result.exception)
         }
         Unit
     }
@@ -57,7 +57,7 @@ class PaymentMethodRepositoryImpl @Inject constructor(
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.authorizePayment(authorizePaymentRequest) }
         when (val result = remoteJob.await()) {
             is Success -> localJob.await()
-            is ErrorResult -> Timber.e(result.exception) // TODO: Biju: Show Toast/SnackBar
+            is ErrorResult -> Timber.e(result.exception)
         }
         Unit
     }

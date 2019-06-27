@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.Ignore
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.mobilabsolutions.payment.android.psdk.CreditCardType
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
@@ -30,12 +31,36 @@ data class PaymentMethod(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") override val id: Long = 0,
     @ColumnInfo(name = "user_id") val userId: String = "",
     @ColumnInfo(name = "paymentMethod_id") val paymentMethodId: String = "",
-    @ColumnInfo(name = "alias") val alias: String = "",
-    @ColumnInfo(name = "type") val _type: String = "CC"
+    @ColumnInfo(name = "type") val _type: String = "CC",
+    @ColumnInfo(name = "cardType") val _cardType: String = "UNKNOWN",
+    @ColumnInfo(name = "expiryMonth") val expiryMonth: String = "",
+    @ColumnInfo(name = "expiryYear") val expiryYear: String = "",
+    @ColumnInfo(name = "mask") val mask: String = "",
+    @ColumnInfo(name = "email") val email: String = "",
+    @ColumnInfo(name = "iban") val iban: String = ""
 ) : SampleEntity {
 
     @delegate:Ignore
     val type by lazy(LazyThreadSafetyMode.NONE) {
         PaymentType.fromStringValue(_type)
+    }
+
+    @delegate:Ignore
+    val alias by lazy(LazyThreadSafetyMode.NONE) {
+        when (type) {
+            PaymentType.CC -> "$mask$DELIMITER$expiryMonth/${expiryYear.takeLast(2)}"
+            PaymentType.SEPA -> iban
+            PaymentType.PAY_PAL -> email
+            else -> DELIMITER
+        }
+    }
+
+    @delegate:Ignore
+    val cardType by lazy(LazyThreadSafetyMode.NONE) {
+        CreditCardType.fromStringValue(_cardType)
+    }
+
+    companion object {
+        const val DELIMITER = "•"
     }
 }

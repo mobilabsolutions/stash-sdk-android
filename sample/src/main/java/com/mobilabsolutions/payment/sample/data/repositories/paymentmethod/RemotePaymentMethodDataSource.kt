@@ -2,9 +2,13 @@ package com.mobilabsolutions.payment.sample.data.repositories.paymentmethod
 
 import com.mobilabsolutions.payment.sample.data.RetrofitRunner
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
+import com.mobilabsolutions.payment.sample.data.entities.PaymentType
 import com.mobilabsolutions.payment.sample.data.entities.Result
 import com.mobilabsolutions.payment.sample.data.mappers.PaymentMethodListResponseToEntity
+import com.mobilabsolutions.payment.sample.network.CreditCardData
+import com.mobilabsolutions.payment.sample.network.PayPalData
 import com.mobilabsolutions.payment.sample.network.SampleMerchantService
+import com.mobilabsolutions.payment.sample.network.SepaData
 import com.mobilabsolutions.payment.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.payment.sample.network.request.CreatePaymentMethodRequest
 import com.mobilabsolutions.payment.sample.network.response.AuthorizePaymentResponse
@@ -20,15 +24,32 @@ class RemotePaymentMethodDataSource @Inject constructor(
     private val paymentMethodListResponseToEntity: PaymentMethodListResponseToEntity
 ) {
     suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod): Result<CreatePaymentMethodResponse> {
-        return retrofitRunner.executeForServerResponse {
-            sampleMerchantService.createPaymentMethod(
-                CreatePaymentMethodRequest(
-                    alias = paymentMethod.alias,
-                    aliasId = aliasId,
-                    type = paymentMethod._type,
-                    userId = userId
+        var request = CreatePaymentMethodRequest(
+            aliasId = aliasId,
+            type = paymentMethod._type,
+            userId = userId
+        )
+
+        request = when (paymentMethod.type) {
+            PaymentType.CC -> request.copy(
+                creditCardData = CreditCardData(
+                    type = paymentMethod._cardType,
+                    mask = paymentMethod.mask,
+                    expiryMonth = paymentMethod.expiryMonth,
+                    expiryYear = paymentMethod.expiryYear
                 )
-            ).execute()
+            )
+            PaymentType.SEPA -> request.copy(
+                sepaData = SepaData(paymentMethod.iban)
+            )
+            PaymentType.PAY_PAL -> request.copy(
+                payPalData = PayPalData(paymentMethod.email)
+            )
+            else -> request
+        }
+
+        return retrofitRunner.executeForServerResponse {
+            sampleMerchantService.createPaymentMethod(request).execute()
         }
     }
 

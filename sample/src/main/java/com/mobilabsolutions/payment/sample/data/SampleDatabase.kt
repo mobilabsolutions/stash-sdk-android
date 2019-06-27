@@ -15,13 +15,13 @@ import com.mobilabsolutions.payment.sample.data.entities.User
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
 @Database(
-        entities = [
-            Product::class,
-            Cart::class,
-            PaymentMethod::class,
-            User::class
-        ],
-        version = 6
+    entities = [
+        Product::class,
+        Cart::class,
+        PaymentMethod::class,
+        User::class
+    ],
+    version = 7
 )
 abstract class SampleDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao

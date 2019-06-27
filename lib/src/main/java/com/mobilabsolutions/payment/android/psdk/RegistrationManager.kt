@@ -91,6 +91,10 @@ enum class CreditCardType {
     UNIONPAY,
     MAESTRO,
     UNKNOWN;
+
+    companion object {
+        fun fromStringValue(value: String): CreditCardType? = values().firstOrNull { it.name == value }
+    }
 }
 
 enum class CreditCardTypeWithRegex(val regex: Regex) {

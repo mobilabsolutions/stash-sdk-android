@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.mobilabsolutions.payment.android.psdk.CreditCardType
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.data.entities.PaymentType
@@ -43,7 +44,10 @@ fun imageByProductType(imageView: ImageView, product: Product) {
 @BindingAdapter("paymentImageByType")
 fun paymentImageByType(imageView: ImageView, paymentMethod: PaymentMethod) {
     val resId = when (paymentMethod.type) {
-        PaymentType.CC -> R.drawable.credit_card
+        PaymentType.CC -> when (paymentMethod.cardType) {
+            CreditCardType.AMEX -> R.drawable.credit_card
+            else -> R.drawable.credit_card
+        }
         PaymentType.SEPA -> R.drawable.sepa
         PaymentType.PAY_PAL -> R.drawable.paypal
         else -> R.drawable.credit_card
