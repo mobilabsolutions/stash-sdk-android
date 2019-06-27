@@ -22,7 +22,7 @@ class PaymentMethodListResponseToEntity @Inject constructor() : Mapper<PaymentMe
                 _cardType = it.creditCardData?.type ?: "UNKNOWN",
                 // SEPA
                 iban = it.sepaData?.iban ?: "",
-                //PayPal
+                // PayPal
                 email = it.payPalData?.email ?: ""
             )
         }

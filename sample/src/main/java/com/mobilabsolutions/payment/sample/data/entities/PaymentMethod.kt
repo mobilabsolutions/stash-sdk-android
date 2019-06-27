@@ -48,7 +48,7 @@ data class PaymentMethod(
     @delegate:Ignore
     val alias by lazy(LazyThreadSafetyMode.NONE) {
         when (type) {
-            PaymentType.CC -> "$mask$DELIMITER$expiryMonth/${expiryYear.takeLast(2)}"
+            PaymentType.CC -> "X-$mask$DELIMITER$expiryMonth/${expiryYear.takeLast(2)}"
             PaymentType.SEPA -> iban
             PaymentType.PAY_PAL -> email
             else -> DELIMITER

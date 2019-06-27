@@ -133,10 +133,9 @@ class PspCoordinator @Inject constructor(
                             val lastDigits = standardizedData.creditCardData.number.takeLast(4)
                             val creditCardExtraInfo = ExtraAliasInfo.CreditCardExtraInfo(
                                 creditCardType = cardType,
-                                creditCardMask = "X-$lastDigits",
+                                creditCardMask = lastDigits,
                                 expiryMonth = standardizedData.creditCardData.expiryMonth,
                                 expiryYear = standardizedData.creditCardData.expiryYear
-
                             )
                             PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
                         }
