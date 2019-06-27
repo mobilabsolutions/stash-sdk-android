@@ -16,14 +16,14 @@ class PaymentMethodListResponseToEntity @Inject constructor() : Mapper<PaymentMe
                 paymentMethodId = it.paymentMethodId,
                 _type = it.type,
                 // Credit Card
-                mask = it.creditCardData?.mask ?: "",
-                expiryMonth = it.creditCardData?.expiryMonth ?: "",
-                expiryYear = it.creditCardData?.expiryYear ?: "",
-                _cardType = it.creditCardData?.type ?: "UNKNOWN",
+                mask = it.creditCardAliasData?.mask ?: "",
+                expiryMonth = it.creditCardAliasData?.expiryMonth ?: "",
+                expiryYear = it.creditCardAliasData?.expiryYear ?: "",
+                _cardType = it.creditCardAliasData?.type ?: "UNKNOWN",
                 // SEPA
-                iban = it.sepaData?.iban ?: "",
+                iban = it.sepaAliasData?.iban ?: "",
                 // PayPal
-                email = it.payPalData?.email ?: ""
+                email = it.payPalAliasData?.email ?: ""
             )
         }
     }
