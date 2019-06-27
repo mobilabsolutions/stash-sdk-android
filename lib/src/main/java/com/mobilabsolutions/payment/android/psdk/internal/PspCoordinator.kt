@@ -8,6 +8,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
+import com.mobilabsolutions.payment.android.psdk.exceptions.registration.UnknownException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
@@ -143,6 +144,7 @@ class PspCoordinator @Inject constructor(
             }
         }
     }
+
     /**
      * Helper handler method is used directly from the API, it resolves the
      * proper PSP integration (as there can only be 1-1 mapping between PSP Integration and
@@ -279,7 +281,7 @@ class PspCoordinator @Inject constructor(
             when (it) {
                 is HttpException -> Single.error(exceptionMapper.mapError(it))
                 is BasePaymentException -> Single.error(it)
-                else -> Single.error(RuntimeException("Unknown throwable ${it.message}"))
+                else -> Single.error(UnknownException("${it.message}"))
             }
         }
     }

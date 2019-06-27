@@ -2,11 +2,17 @@ package com.mobilabsolutions.payment.android.psdk.integration.adyen
 
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
+import com.mobilabsolutions.payment.android.psdk.exceptions.registration.RegistrationFailedException
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents.UiComponentHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-/* ktlint-disable no-wildcard-imports */
-import com.mobilabsolutions.payment.android.psdk.internal.psphandler.*
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
@@ -53,24 +59,23 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
     }
 
     val adyenIntegrationComponent: AdyenIntegrationComponent = DaggerAdyenIntegrationComponent.builder()
-            .paymentSdkComponent(paymentSdkComponent)
-            .build()
+        .paymentSdkComponent(paymentSdkComponent)
+        .build()
 
     init {
-
         adyenIntegrationComponent.inject(this)
     }
 
     val creditCardUIDefinition = PaymentMethodDefinition(
-            methodId = "Adyen-CC",
-            pspIdentifier = identifier,
-            paymentMethodType = PaymentMethodType.CC
+        methodId = "Adyen-CC",
+        pspIdentifier = identifier,
+        paymentMethodType = PaymentMethodType.CC
     )
 
     val sepaUIDefinition = PaymentMethodDefinition(
-            methodId = "Adyen-Sepa",
-            pspIdentifier = identifier,
-            paymentMethodType = PaymentMethodType.SEPA
+        methodId = "Adyen-Sepa",
+        pspIdentifier = identifier,
+        paymentMethodType = PaymentMethodType.SEPA
     )
 
     override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
@@ -78,21 +83,13 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
     }
 
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
-
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
+
         return when (standardizedData) {
-            is CreditCardRegistrationRequest -> {
-                adyenHandler.registerCreditCard(standardizedData, additionalData)
-            }
-            is SepaRegistrationRequest -> {
-                adyenHandler.registerSepa(
-                        standardizedData
-                )
-            }
-            else -> {
-                throw RuntimeException("Unsupported payment method")
-            }
+            is CreditCardRegistrationRequest -> adyenHandler.registerCreditCard(standardizedData, additionalData)
+            is SepaRegistrationRequest -> adyenHandler.registerSepa(standardizedData)
+            else -> throw RegistrationFailedException("Unsupported payment method")
         }
     }
 
@@ -105,7 +102,7 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         return when (paymentMethodType) {
             PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)
-            PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
+            PaymentMethodType.PAYPAL -> throw ConfigurationException("PayPal is not supported in BSPayOne integration")
         }
     }
 }

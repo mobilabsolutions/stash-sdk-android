@@ -20,7 +20,7 @@ object PaymentSdkBuildConfigs {
     val compileSdk = 28
     val minSdk = 21
     val targetSdk = 28
-    val buildtoolsVersion = "28.0.3"
+    val buildtoolsVersion = "29.0.0"
 }
 
 object DemoRelease {
