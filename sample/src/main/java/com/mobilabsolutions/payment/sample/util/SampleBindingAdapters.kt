@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
+import com.mobilabsolutions.payment.android.psdk.CreditCardType
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.payment.sample.data.entities.PaymentType
@@ -43,10 +44,21 @@ fun imageByProductType(imageView: ImageView, product: Product) {
 @BindingAdapter("paymentImageByType")
 fun paymentImageByType(imageView: ImageView, paymentMethod: PaymentMethod) {
     val resId = when (paymentMethod.type) {
-        PaymentType.CC -> R.drawable.credit_card
-        PaymentType.SEPA -> R.drawable.sepa
-        PaymentType.PAY_PAL -> R.drawable.paypal
-        else -> R.drawable.credit_card
+        PaymentType.CC -> when (paymentMethod.cardType) {
+            CreditCardType.JCB -> R.drawable.ic_pm_card_jcb
+            CreditCardType.AMEX -> R.drawable.ic_pm_card_amex
+            CreditCardType.DINERS -> R.drawable.ic_pm_card_diners
+            CreditCardType.VISA -> R.drawable.ic_pm_card_visa
+            CreditCardType.MASTERCARD -> R.drawable.ic_pm_card_mastercard
+            CreditCardType.DISCOVER -> R.drawable.ic_pm_card_discover
+            CreditCardType.UNIONPAY -> R.drawable.ic_pm_card_unionpay
+            CreditCardType.MAESTRO -> R.drawable.ic_pm_card_maestro
+            CreditCardType.UNKNOWN -> R.drawable.ic_pm_card_unknown
+            else -> R.drawable.ic_pm_card_unknown
+        }
+        PaymentType.SEPA -> R.drawable.ic_pm_sepa
+        PaymentType.PAY_PAL -> R.drawable.ic_pm_paypal
+        else -> R.drawable.ic_pm_card_unknown
     }
     imageView.setImageResource(resId)
 }

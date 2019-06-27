@@ -133,10 +133,9 @@ class PspCoordinator @Inject constructor(
                             val lastDigits = standardizedData.creditCardData.number.takeLast(4)
                             val creditCardExtraInfo = ExtraAliasInfo.CreditCardExtraInfo(
                                 creditCardType = cardType,
-                                creditCardMask = "${cardType.name}-$lastDigits",
+                                creditCardMask = lastDigits,
                                 expiryMonth = standardizedData.creditCardData.expiryMonth,
                                 expiryYear = standardizedData.creditCardData.expiryYear
-
                             )
                             PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
                         }
@@ -194,7 +193,7 @@ class PspCoordinator @Inject constructor(
 
                         chosenIntegration.handleRegistrationRequest(registrationRequest)
                             .map {
-                                val maskedIban = standardizedData.sepaData.iban.takeLast(4)
+                                val maskedIban = standardizedData.sepaData.iban
                                 PaymentMethodAlias(it, PaymentMethodType.SEPA, extraAliasInfo = ExtraAliasInfo.SepaExtraInfo(maskedIban))
                             }
                     }

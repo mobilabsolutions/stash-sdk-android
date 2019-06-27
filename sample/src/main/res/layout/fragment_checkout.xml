@@ -12,7 +12,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/black_haze">
 
         <TextView
             android:id="@+id/checkout_title"
@@ -29,12 +30,12 @@
             android:id="@+id/checkout_rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="24dp"
             android:layout_marginTop="48dp"
+            android:layout_marginBottom="24dp"
             android:clipToPadding="false"
             android:overScrollMode="never"
-            android:paddingEnd="8dp"
             android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             app:layout_constraintBottom_toTopOf="@+id/label_total_amount"
             app:layout_constraintTop_toBottomOf="@+id/checkout_title"
             tools:listitem="@layout/view_holder_checkout_item" />
@@ -43,8 +44,8 @@
             android:id="@+id/label_total_amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
             android:layout_marginStart="16dp"
+            android:layout_marginBottom="24dp"
             android:fontFamily="@font/lato_bold"
             android:text="@string/total_amount"
             android:textColor="@color/darkBlack"
@@ -74,6 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_margin="16dp"
+            android:elevation="0dp"
             android:gravity="center"
             android:text="@string/checkout_button_title"
             android:textAllCaps="true"

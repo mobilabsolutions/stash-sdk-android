@@ -20,7 +20,7 @@
         android:foreground="?attr/selectableItemBackground"
         android:onClick="@{clickListener}"
         app:cardCornerRadius="8dp"
-        app:cardElevation="4dp">
+        app:cardElevation="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
