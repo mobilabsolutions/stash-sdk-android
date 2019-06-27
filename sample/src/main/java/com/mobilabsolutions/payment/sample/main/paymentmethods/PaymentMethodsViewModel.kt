@@ -56,6 +56,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
         updateUser.observe()
             .subscribeOn(schedulers.io)
             .doOnNext {
+                disposables += updatePaymentMethods.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
                 scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
             }
             .execute {
@@ -74,10 +75,12 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     fun onAddBtnClicked() {
         disposables += PaymentSdk.getRegistrationManager().registerPaymentMethodUsingUi()
             .subscribeOn(schedulers.io)
+            .observeOn(schedulers.main)
             .subscribe(this::onRegisterPaymentSuccess, this::onError)
     }
 
     fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
+        disposables += deletePaymentMethod.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
         scope.launchInteractor(deletePaymentMethod, DeletePaymentMethod.ExecuteParams(paymentMethod))
     }
 
@@ -102,6 +105,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
                     email = aliasInfo.email
                 )
             }
+            disposables += addPaymentMethod.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
             scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, aliasId = paymentMethodAlias.alias, paymentMethod = paymentMethod))
         }
     }

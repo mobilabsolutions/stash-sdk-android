@@ -90,14 +90,14 @@ class PspCoordinator @Inject constructor(
         idempotencyKey: String
     ): Single<PaymentMethodAlias> {
         return handleRegisterCreditCard(
-            creditCardData,
-            additionalUIData,
-            integrations
-                .filter { it.value.contains(PaymentMethodType.CC) }
-                .keys
-                .first(),
-            idempotencyKey
-        )
+        creditCardData,
+        additionalUIData,
+        integrations
+            .filter { it.value.contains(PaymentMethodType.CC) }
+            .keys
+            .first(),
+        idempotencyKey
+    )
     }
 
     /**
@@ -231,6 +231,9 @@ class PspCoordinator @Inject constructor(
                 if (it is UiRequestHandler.EntryCancelled) {
                     handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, idempotencyKey)
                 } else {
+                    uiRequestHandler.hostActivityProvider.subscribe {
+                        it.finish()
+                    }
                     Single.error(it)
                 }
             }
