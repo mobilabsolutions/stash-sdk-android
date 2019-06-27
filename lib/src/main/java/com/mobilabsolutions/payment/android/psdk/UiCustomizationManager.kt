@@ -188,6 +188,8 @@ object CustomizationExtensions {
             val textFieldDrawableStates = textFieldDrawableContainerState.children.filter { it != null }.map { it as GradientDrawable }
             textFieldDrawableStates[0].setStroke(1.px, CustomizationUtil.darken(ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor)))
             textFieldDrawableStates[1].setStroke(1.px, ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor))
+            textFieldDrawableStates[0].setColor(ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor))
+            textFieldDrawableStates[1].setColor(ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor))
             background = backgroundDrawable
         } else {
             background = resources.getDrawable(R.drawable.edit_text_frame_error)
@@ -215,6 +217,10 @@ object CustomizationExtensions {
             background = buttonColorDrawable
         } else {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector_disabled)
+            val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
+            val states = buttonBackgroundDrawableContainterStates.children.filter { it != null }.map { it as GradientDrawable }
+            states[0].setColor(CustomizationUtil.darken(ContextCompat.getColor(context, paymentUIConfiguration.buttonColor)))
+            states[1].setColor(CustomizationUtil.darken(ContextCompat.getColor(context, paymentUIConfiguration.buttonColor)))
             background = buttonColorDrawable
         }
         setTextColor(CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonTextColor)))

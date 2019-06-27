@@ -40,7 +40,7 @@
 // @PrepareForTest(Base64::class)
 // @PowerMockIgnore("javax.net.ssl.*")
 // class BsPayoneApiTest {
-//    val testPublicKey = "PD-PO-nhnEiKIFQiZeVjGCM0HZY3xvaI"
+//    val testPublishableKey = "PD-PO-nhnEiKIFQiZeVjGCM0HZY3xvaI"
 //    private val MOBILAB_BE_URL = "https://webhook.site/2c04923a-f96a-40b7-a43c-fa756e5e993d/"
 //    private val OLD_BS_PAYONE_URL = "https://test.soap.bs-card-service.com/soap-api/"
 //    private val NEW_BS_PAYONE_URL = "https://webhook.site/c83aff71-db72-414e-9fda-17eaacb714ac/"
@@ -143,7 +143,7 @@
 //
 //        val graph = DaggerBsPayoneApiTest_BsPayoneTestIntegrationComponent.builder()
 //                .sslSupportModule(SslSupportModule(null, null))
-//                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
+//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 //                .build()
 //
 //        integration.initialize(graph, payoneBaseUrl.toString())
@@ -182,7 +182,7 @@
 //
 //        val graph = DaggerBsPayoneApiTest_BsPayoneTestIntegrationComponent.builder()
 //                .sslSupportModule(SslSupportModule(null, null))
-//                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
+//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 //                .build()
 //
 //        integration.initialize(graph, payoneBaseUrl.toString())
@@ -218,7 +218,7 @@
 //
 //        val graph = DaggerBsPayoneApiTest_BsPayoneTestIntegrationComponent.builder()
 //                .sslSupportModule(SslSupportModule(null, null))
-//                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
+//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 //                .build()
 //
 //        integration.initialize(graph, payoneBaseUrl.toString())
@@ -251,7 +251,7 @@
 // //
 // //        val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
 // //                .sslSupportModule(SslSupportModule(null, null))
-// //                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
+// //                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 // //                .hyperchargeModule(HyperchargeModule())
 // //                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
 // //                .build()
@@ -272,7 +272,7 @@
 // //
 // //        val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
 // //                .sslSupportModule(SslSupportModule(null, null))
-// //                .paymentSdkModule(PaymentSdkModule(testPublicKey, backendBaseUrl.toString(), context, listOf(integration)))
+// //                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 // //                .hyperchargeModule(HyperchargeModule())
 // //                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
 // //                .build()

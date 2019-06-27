@@ -31,7 +31,7 @@ import javax.inject.Inject
 @RunWith(RobolectricTestRunner::class)
 class AdyenIntegrationTest {
 
-    val testPublicKey = BuildConfig.newBsTestKey
+    val testPublishableKey = BuildConfig.newBsTestKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
     @Inject
@@ -54,7 +54,7 @@ class AdyenIntegrationTest {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
         val graph = DaggerAdyenIntegrationTestComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
-            .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
+            .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
             .build()
 
         integration.initialize(graph)

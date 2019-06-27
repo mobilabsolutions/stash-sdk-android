@@ -39,7 +39,7 @@ import javax.net.ssl.X509TrustManager
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class NewPaymentSdk(
-    publicKey: String,
+    publishableKey: String,
     url: String?,
     applicationContext: Application,
     integrationMap: Map<IntegrationCompanion, Set<PaymentMethodType>>,
@@ -78,7 +78,7 @@ class NewPaymentSdk(
         // We are building modules, by providing configuration and created initialization objects
         daggerGraph = DaggerPaymentSdkComponent.builder()
             .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-            .paymentSdkModule(PaymentSdkModule(publicKey, backendUrl, applicationContext, integrationInitializationMap, testMode))
+            .paymentSdkModule(PaymentSdkModule(publishableKey, backendUrl, applicationContext, integrationInitializationMap, testMode))
             .build()
 
         // Now the graph is created and can be expanded by each of the initializations
@@ -140,7 +140,7 @@ class NewPaymentSdk(
                 }
                 AndroidThreeTen.init(applicationContext)
                 // Singleton instance creation
-                instance = NewPaymentSdk(publicKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
+                instance = NewPaymentSdk(publishableKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
 
                 initialized = true
                 // Font customization

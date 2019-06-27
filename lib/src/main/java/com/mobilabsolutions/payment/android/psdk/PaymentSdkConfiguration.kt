@@ -7,7 +7,7 @@ import javax.net.ssl.X509TrustManager
 /**
  * Payment Sdk Configuration is used for configuring the payment SDK
  *
- * * Public key - The publishable key linked to the merchant account you are using
+ * * Publishable key - The publishable key linked to the merchant account you are using
  * * Endpoint - the endpoint of your instance of Payment SDK servers
  * * Integration - If you are using single integration for all payment methods you can use this parameter
  * * Integration List - If you are using several integrations, you need to provide pairs of integration to
@@ -20,7 +20,7 @@ import javax.net.ssl.X509TrustManager
  * If you are using Java, it is recommended to use the Builder class instead of data class constructor
  */
 data class PaymentSdkConfiguration(
-    val publicKey: String,
+    val publishableKey: String,
     val endpoint: String? = null,
     val integration: IntegrationCompanion? = null,
     val integrationList: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null,
@@ -44,7 +44,7 @@ data class PaymentSdkConfiguration(
         private var x509TrustManager: X509TrustManager? = null
 
         /**
-         * Public key - The publishable key linked to the merchant account you are using
+         * Publishable key - The publishable key linked to the merchant account you are using
          */
         fun setPublishableKey(publishableKey: String): Builder {
             this.publishableKey = publishableKey

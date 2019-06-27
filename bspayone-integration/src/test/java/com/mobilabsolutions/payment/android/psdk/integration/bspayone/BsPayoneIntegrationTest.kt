@@ -26,7 +26,7 @@ import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
 class BsPayoneIntegrationTest {
-    private val testPublicKey = BuildConfig.newBsTestKey
+    private val testPublishableKey = BuildConfig.newBsTestKey
     private val mobilabBeUrl: String = BuildConfig.mobilabBackendUrl
     private val newBsPayoneUrl = BuildConfig.newBsApiUrl
 
@@ -64,7 +64,7 @@ class BsPayoneIntegrationTest {
 
         val graph = DaggerBsPayoneTestComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
-            .paymentSdkModule(PaymentSdkModule(testPublicKey, mobilabBeUrl, context, mapOf(integration to methods), true))
+            .paymentSdkModule(PaymentSdkModule(testPublishableKey, mobilabBeUrl, context, mapOf(integration to methods), true))
             .bsPayoneModule(BsPayoneModule(newBsPayoneUrl))
             .build()
 

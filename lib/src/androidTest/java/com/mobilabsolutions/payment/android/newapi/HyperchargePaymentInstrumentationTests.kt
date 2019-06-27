@@ -30,7 +30,7 @@
 //        "(instead of inside 60 secconds callbacks are dispatched from Hypercharge ~30 minutes later)")
 // class HyperchargePaymentInstrumentationTests {
 //
-//    val testPublicKey = "PD-HC-nhnEiKIFQiZeVjGCM0HZY3xvaI"
+//    val testPublishableKey = "PD-HC-nhnEiKIFQiZeVjGCM0HZY3xvaI"
 //    private val MOBILAB_BE_URL = "https://pd.mblb.net/api/" //TODO load from configuration (debug, production, etc)
 //    private val OLD_BS_PAYONE_URL = "https://test.soap.bs-card-service.com/soap-api/"
 //    //    private val NEW_BS_PAYONE_URL = "https://secure.pay1.de/client-api/"
@@ -71,7 +71,7 @@
 //    fun setUp() {
 //        val context = InstrumentationRegistry.getContext().applicationContext as Application
 //        val graphBuilder = DaggerTestHyperchargePaymentSdkComponent.builder()
-//                .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context))
+//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context))
 //                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
 //                .hyperchargeModule(HyperchargeModule())
 //                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))

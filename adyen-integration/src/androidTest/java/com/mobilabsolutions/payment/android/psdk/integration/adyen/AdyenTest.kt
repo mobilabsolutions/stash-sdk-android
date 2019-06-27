@@ -29,7 +29,7 @@ import javax.inject.Singleton
  */
 class AdyenTest {
 
-    val testPublicKey = BuildConfig.newBsTestKey
+    val testPublishableKey = BuildConfig.newBsTestKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
     @Inject
@@ -49,7 +49,7 @@ class AdyenTest {
 
         val graph = DaggerAdyenTestPaymentSdkComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
-            .paymentSdkModule(PaymentSdkModule(testPublicKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
+            .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
             .adyenModule(AdyenModule())
             .build()
 

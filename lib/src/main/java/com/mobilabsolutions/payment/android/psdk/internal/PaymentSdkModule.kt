@@ -36,7 +36,7 @@ import javax.inject.Singleton
  */
 @Module
 open class PaymentSdkModule(
-    private val publicKey: String,
+    private val publishableKey: String,
     private val mobilabUrl: String,
     private val applicationContext: Application,
     private val integrationInitializers: Map<IntegrationInitialization, Set<PaymentMethodType>>,
@@ -94,7 +94,7 @@ open class PaymentSdkModule(
             .addInterceptor(httpLoggingInterceptor)
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer " + Base64.encodeToString(publicKey.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT).trim { it <= ' ' })
+                    .addHeader("Authorization", "Bearer " + Base64.encodeToString(publishableKey.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT).trim { it <= ' ' })
                     .build()
                 chain.proceed(request)
             }
@@ -122,7 +122,7 @@ open class PaymentSdkModule(
         val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 val requestBuilder = chain.request().newBuilder()
-                    .addHeader("Publishable-Key", publicKey)
+                    .addHeader("Publishable-Key", publishableKey)
                     .addHeader("User-Agent", "Android-${BuildConfig.VERSION_CODE}-${BuildConfig.VERSION_NAME}")
                 if (testMode) {
                     requestBuilder.addHeader("PSP-Test-Mode", "true")

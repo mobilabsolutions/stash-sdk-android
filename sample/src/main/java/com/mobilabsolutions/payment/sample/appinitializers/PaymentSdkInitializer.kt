@@ -15,7 +15,7 @@ import javax.inject.Inject
 class PaymentSdkInitializer @Inject constructor() : AppInitializer {
     override fun init(application: Application) {
         val paymentSdkConfiguration = PaymentSdkConfiguration(
-                publicKey = BuildConfig.newBsApiKey,
+                publishableKey = BuildConfig.newBsApiKey,
                 endpoint = BuildConfig.mobilabBackendUrl,
                 integrationList = listOf(
                     AdyenIntegration to PaymentMethodType.CC,

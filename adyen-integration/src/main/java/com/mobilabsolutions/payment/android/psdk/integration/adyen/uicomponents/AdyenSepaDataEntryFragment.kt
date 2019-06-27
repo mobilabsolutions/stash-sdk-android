@@ -5,6 +5,7 @@ import android.os.CountDownTimer
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
@@ -316,7 +317,9 @@ class AdyenSepaDataEntryFragment : Fragment() {
     }
 
     private fun hideError(sourceView: View, errorView: TextView) {
-        sourceView.setBackgroundResource(R.drawable.edit_text_frame)
+        CustomizationExtensions {
+            (sourceView as EditText).applyEditTextCustomization(paymentUIConfiguration)
+        }
         errorView.visibility = View.GONE
     }
 
