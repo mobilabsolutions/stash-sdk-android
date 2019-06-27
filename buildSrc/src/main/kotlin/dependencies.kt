@@ -20,7 +20,7 @@ object PaymentSdkBuildConfigs {
     val compileSdk = 28
     val minSdk = 21
     val targetSdk = 28
-    val buildtoolsVersion = "28.0.3"
+    val buildtoolsVersion = "29.0.0"
 }
 
 object DemoRelease {
@@ -46,11 +46,11 @@ object Libs {
     val junit = "junit:junit:4.12"
     val mockitoCore = "org.mockito:mockito-core:2.28.2"
     val robolectric = "org.robolectric:robolectric:4.3"
-    val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.0"
-    val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.14.1"
+    val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.1"
+    val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.12.0"
     val iban4j = "org.iban4j:iban4j:3.2.1"
-    val braintree = "com.braintreepayments.api:braintree:3.0.0"
-    val mvrx = "com.airbnb.android:mvrx:1.0.1"
+    val braintree = "com.braintreepayments.api:braintree:3.1.0"
+    val mvrx = "com.airbnb.android:mvrx:1.0.2"
     val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     val viewPump = "io.github.inflationx:viewpump:2.0.3"
     val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
@@ -64,13 +64,13 @@ object Libs {
     }
 
     object Google {
-        val material = "com.google.android.material:material:1.1.0-alpha05"
+        val material = "com.google.android.material:material:1.1.0-alpha07"
         val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
         val fabricPlugin = "io.fabric.tools:gradle:1.29.0"
     }
 
     object Kotlin {
-        private const val version = "1.3.31"
+        private const val version = "1.3.40"
         val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"
@@ -85,28 +85,28 @@ object Libs {
     }
 
     object AndroidX {
-        val appcompat = "androidx.appcompat:appcompat:1.0.2"
-        val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
+        val appcompat = "androidx.appcompat:appcompat:1.1.0-beta01"
+        val recyclerview = "androidx.recyclerview:recyclerview:1.1.0-alpha06"
         val cardview = "androidx.cardview:cardview:1.0.0"
         val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
-        val coreKtx = "androidx.core:core-ktx:1.0.1"
+        val coreKtx = "androidx.core:core-ktx:1.2.0-alpha02"
 
         object Navigation {
-            private const val version = "2.0.0"
+            private const val version = "2.1.0-alpha05"
             val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             val ui = "androidx.navigation:navigation-ui-ktx:$version"
             val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
         }
 
         object Test {
-            val core = "androidx.test:core:1.2.0"
+            val core = "androidx.test:core:1.2.1-alpha01"
             val coreKtx = "androidx.test:core:1.2.0"
-            val ext = "androidx.test.ext:junit-ktx:1.1.1"
-            val runner = "androidx.test:runner:1.2.0"
-            val rules = "androidx.test:rules:1.2.0"
+            val ext = "androidx.test.ext:junit-ktx:1.1.2-alpha01"
+            val runner = "androidx.test:runner:1.3.0-alpha01"
+            val rules = "androidx.test:rules:1.3.0-alpha01"
 
-            val espressoCore = "androidx.test.espresso:espresso-core:3.2.0"
-            val espressoIntents = "androidx.test.espresso:espresso-intents:3.2.0"
+            val espressoCore = "androidx.test.espresso:espresso-core:3.3.0-alpha01"
+            val espressoIntents = "androidx.test.espresso:espresso-intents:3.3.0-alpha01"
 
             val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
@@ -129,13 +129,13 @@ object Libs {
     }
 
     object RxJava {
-        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.9"
+        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.10"
         val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.3.0"
         val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
 
     object Dagger {
-        private const val version = "2.23.1"
+        private const val version = "2.23.2"
         val dagger = "com.google.dagger:dagger:$version"
         val daggerAndroid = "com.google.dagger:dagger-android:$version"
         val androidSupport = "com.google.dagger:dagger-android-support:$version"

@@ -237,13 +237,13 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
         creditCardNumberEditText.getContentOnFocusChange { isFocusGained, value ->
             if (!isFocusGained) {
-                cardNumberFocusSubject.onNext(value.trim())
+                cardNumberFocusSubject.onNext(value.getCardNumberStringUnformatted().trim())
             } else {
                 firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
                 lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
             }
         }
-        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted()) }
+        creditCardNumberEditText.observeText { cardNumberTextChangedSubject.onNext(it.getCardNumberStringUnformatted().trim()) }
 
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
             creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)

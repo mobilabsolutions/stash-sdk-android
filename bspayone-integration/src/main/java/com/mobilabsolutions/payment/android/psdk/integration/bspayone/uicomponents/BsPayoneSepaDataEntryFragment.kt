@@ -188,7 +188,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
 
         ibanNumberEditText.getContentOnFocusChange { isFocusGained, value ->
             if (!isFocusGained) {
-                ibanFocusSubject.onNext(value.trim())
+                ibanFocusSubject.onNext(value.getIbanStringUnformatted().trim())
             } else {
                 firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
                 lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())

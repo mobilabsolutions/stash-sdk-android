@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.CreditCardTypeWithRegex
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.exceptions.registration.UnknownException
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneApi
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneBaseRequest
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneCreditCardVerifcationRequest
@@ -47,45 +48,45 @@ class BsPayoneHandler @Inject constructor(
         val bsPayoneType = BsPayoneCardType.valueOf(generalCardType.name).bsPayoneType
 
         val baseRequest =
-                bsPayoneRegistrationRequest.let {
-                    BsPayoneBaseRequest.instance(
-                            it.merchantId,
-                            it.portalId,
-                            it.apiVersion,
-                            it.mode,
-                            it.request,
-                            it.responseType,
-                            it.hash,
-                            ENCODING
-                    )
-                }
+            bsPayoneRegistrationRequest.let {
+                BsPayoneBaseRequest.instance(
+                    it.merchantId,
+                    it.portalId,
+                    it.apiVersion,
+                    it.mode,
+                    it.request,
+                    it.responseType,
+                    it.hash,
+                    ENCODING
+                )
+            }
         val request =
-                bsPayoneRegistrationRequest.let {
-                    BsPayoneCreditCardVerifcationRequest(
-                            baseRequest,
-                            it.accountId,
-                            creditCardData.number,
-                            bsPayoneType,
-                            LocalDate.of(creditCardData.expiryYear, creditCardData.expiryMonth, 1).withLastDayOfMonth(),
-                            creditCardData.cvv,
-                            STORE_CARD_DATA
+            bsPayoneRegistrationRequest.let {
+                BsPayoneCreditCardVerifcationRequest(
+                    baseRequest,
+                    it.accountId,
+                    creditCardData.number,
+                    bsPayoneType,
+                    LocalDate.of(creditCardData.expiryYear, creditCardData.expiryMonth, 1).withLastDayOfMonth(),
+                    creditCardData.cvv,
+                    STORE_CARD_DATA
 
-                    )
-                }
+                )
+            }
 
         return if (mockResponse) {
             val mockCardAlias = "MockCreditCardAlias"
             mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
-                    mockCardAlias,
-                    AliasExtra(
-                        paymentMethod = "CC",
-                        creditCardConfig = CreditCardConfig(
-                            ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
-                            ccMask = bsPayoneType + "-" + creditCardData.number.takeLast(4),
-                            ccType = bsPayoneType,
-                            ccHolderName = creditCardData.billingData?.fullName()
-                        )
+                mockCardAlias,
+                AliasExtra(
+                    paymentMethod = "CC",
+                    creditCardConfig = CreditCardConfig(
+                        ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
+                        ccMask = bsPayoneType + "-" + creditCardData.number.takeLast(4),
+                        ccType = bsPayoneType,
+                        ccHolderName = creditCardData.billingData?.fullName()
                     )
+                )
             )).blockingAwait()
             Single.just(aliasId)
         } else {
@@ -93,24 +94,24 @@ class BsPayoneHandler @Inject constructor(
                 when (it) {
                     is BsPayoneVerificationSuccessResponse -> {
                         mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
-                                it.cardAlias,
-                                AliasExtra(
-                                    paymentMethod = PaymentMethodType.CC.name,
-                                    personalData = creditCardRegistrationRequest.billingData,
-                                    creditCardConfig = CreditCardConfig(
-                                        ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
-                                        ccMask = bsPayoneType + "-" + creditCardData.number.takeLast(4),
-                                        ccType = bsPayoneType,
-                                        ccHolderName = creditCardData.billingData?.fullName()
-                                    )
-
+                            it.cardAlias,
+                            AliasExtra(
+                                paymentMethod = PaymentMethodType.CC.name,
+                                personalData = creditCardRegistrationRequest.billingData,
+                                creditCardConfig = CreditCardConfig(
+                                    ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
+                                    ccMask = bsPayoneType + "-" + creditCardData.number.takeLast(4),
+                                    ccType = bsPayoneType,
+                                    ccHolderName = creditCardData.billingData?.fullName()
                                 )
+
+                            )
                         )).blockingAwait()
                         aliasId
                     }
                     is BsPayoneVerificationErrorResponse -> throw BsPayoneErrorHandler.handleError(it)
                     is BsPayoneVerificationInvalidResponse -> throw BsPayoneErrorHandler.handleError(it)
-                    else -> throw RuntimeException("Unknown response when trying to register credit card: $it")
+                    else -> throw UnknownException("Unknown response when trying to register the credit card: $it")
                 }
             }
         }
@@ -124,20 +125,20 @@ class BsPayoneHandler @Inject constructor(
         val billingData = sepaRegistrationRequest.billingData
 
         val sepaConfig = SepaConfig(
-                iban = sepaData.iban,
-                bic = sepaData.bic,
-                name = billingData.firstName,
-                lastname = billingData.lastName,
-                street = billingData.address1,
-                zip = billingData.zip,
-                city = billingData.city,
-                country = billingData.country
+            iban = sepaData.iban,
+            bic = sepaData.bic,
+            name = billingData.firstName,
+            lastname = billingData.lastName,
+            street = billingData.address1,
+            zip = billingData.zip,
+            city = billingData.city,
+            country = billingData.country
         )
         return mobilabApiV2.updateAlias(
-                aliasId,
-                AliasUpdateRequest(
-                        extra = AliasExtra(sepaConfig = sepaConfig, paymentMethod = PaymentMethodType.SEPA.name, personalData = billingData)
-                )
+            aliasId,
+            AliasUpdateRequest(
+                extra = AliasExtra(sepaConfig = sepaConfig, paymentMethod = PaymentMethodType.SEPA.name, personalData = billingData)
+            )
         ).andThen(Single.just(aliasId))
     }
 
