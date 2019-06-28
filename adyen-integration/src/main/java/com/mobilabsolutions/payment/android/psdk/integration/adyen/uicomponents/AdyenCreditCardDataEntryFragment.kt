@@ -440,7 +440,6 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 is EditText -> sourceView.applyEditTextCustomization(paymentUIConfiguration)
                 is TextView -> sourceView.applyFakeEditTextCustomization(paymentUIConfiguration)
             }
-
         }
         errorView.visibility = View.GONE
     }

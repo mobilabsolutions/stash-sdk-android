@@ -69,7 +69,7 @@ class SelectPaymentViewModel @AssistedInject constructor(
                     paymentMethodId = this.paymentMethodId,
                     reason = "Nothing"
                 )
-                disposables += authorizePayment.errorSubject.observeOn(schedulers.main).subscribe{
+                disposables += authorizePayment.errorSubject.observeOn(schedulers.main).subscribe {
                     _error.value = it
                 }
                 scope.launchInteractor(authorizePayment, AuthorizePayment.ExecuteParams(authorizePaymentRequest = authorizePaymentRequest))
