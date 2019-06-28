@@ -55,10 +55,7 @@ class PaymentMethodRepositoryImpl @Inject constructor(
         val localJob = async(dispatchers.io) { localCartStore.emptyCart() }
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.authorizePayment(authorizePaymentRequest) }
         when (val result = remoteJob.await()) {
-            is Success -> {
-                throw RuntimeException("Test exception")
-                localJob.await()
-            }
+            is Success -> localJob.await()
             is ErrorResult -> throw result.exception
         }
         Unit
