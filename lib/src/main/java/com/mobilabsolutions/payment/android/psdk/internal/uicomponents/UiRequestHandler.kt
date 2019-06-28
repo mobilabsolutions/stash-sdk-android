@@ -101,6 +101,13 @@ class UiRequestHandler @Inject constructor() {
         chooserUsed = false
     }
 
+    fun closeFlow() {
+        hostActivityProvider = ReplaySubject.create()
+        errorSubject = PublishSubject.create()
+        processing.set(false)
+        chooserUsed = false
+    }
+
     /**
      * Signalling that user cancelled data entry and that depending on the state, either
      * a [UserCancelled] or [EntryCancelled] should be thrown

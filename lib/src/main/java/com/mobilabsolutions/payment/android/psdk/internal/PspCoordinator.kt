@@ -231,9 +231,7 @@ class PspCoordinator @Inject constructor(
                 if (it is UiRequestHandler.EntryCancelled) {
                     handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, idempotencyKey)
                 } else {
-                    uiRequestHandler.hostActivityProvider.subscribe {
-                        it.finish()
-                    }
+                    uiRequestHandler.closeFlow()
                     Single.error(it)
                 }
             }
