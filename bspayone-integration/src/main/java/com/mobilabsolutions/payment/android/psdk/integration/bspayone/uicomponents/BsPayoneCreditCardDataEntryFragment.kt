@@ -16,6 +16,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
+import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions.applyEditTextCustomization
+import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions.applyFakeEditTextCustomization
 import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
@@ -492,8 +494,9 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     }
 
     private fun hideError(sourceView: View, errorView: TextView) {
-        CustomizationExtensions {
-            (sourceView as EditText).applyEditTextCustomization(paymentUIConfiguration)
+        when (sourceView) {
+            is EditText -> sourceView.applyEditTextCustomization(paymentUIConfiguration)
+            is TextView -> sourceView.applyFakeEditTextCustomization(paymentUIConfiguration)
         }
         errorView.visibility = View.GONE
     }

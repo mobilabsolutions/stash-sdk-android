@@ -82,8 +82,8 @@ class BsPayoneHandler @Inject constructor(
                     paymentMethod = "CC",
                     creditCardConfig = CreditCardConfig(
                         ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
-                        ccMask = bsPayoneType + "-" + creditCardData.number.takeLast(4),
-                        ccType = bsPayoneType,
+                        ccMask = creditCardData.number.takeLast(4),
+                        ccType = generalCardType.name,
                         ccHolderName = creditCardData.billingData?.fullName()
                     )
                 )
@@ -100,8 +100,8 @@ class BsPayoneHandler @Inject constructor(
                                 personalData = creditCardRegistrationRequest.billingData,
                                 creditCardConfig = CreditCardConfig(
                                     ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
-                                    ccMask = bsPayoneType + "-" + creditCardData.number.takeLast(4),
-                                    ccType = bsPayoneType,
+                                    ccMask = creditCardData.number.takeLast(4),
+                                    ccType = generalCardType.name,
                                     ccHolderName = creditCardData.billingData?.fullName()
                                 )
 

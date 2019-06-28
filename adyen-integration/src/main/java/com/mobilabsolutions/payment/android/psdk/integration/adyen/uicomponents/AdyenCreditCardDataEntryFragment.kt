@@ -436,7 +436,11 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     private fun hideError(sourceView: View, errorView: TextView) {
         CustomizationExtensions {
-            (sourceView as EditText).applyEditTextCustomization(paymentUIConfiguration)
+            when (sourceView) {
+                is EditText -> sourceView.applyEditTextCustomization(paymentUIConfiguration)
+                is TextView -> sourceView.applyFakeEditTextCustomization(paymentUIConfiguration)
+            }
+
         }
         errorView.visibility = View.GONE
     }

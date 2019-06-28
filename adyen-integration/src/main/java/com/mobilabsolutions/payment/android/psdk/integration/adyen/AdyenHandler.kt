@@ -149,7 +149,7 @@ class AdyenHandler @Inject constructor(
                         extra = AliasExtra(
                             creditCardConfig = CreditCardConfig(
                                 ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
-                                ccMask = creditCardTypeName + "-" + creditCardData.number.takeLast(4),
+                                ccMask = creditCardData.number.takeLast(4),
                                 ccType = creditCardTypeName,
                                 ccHolderName = creditCardData.billingData?.fullName()
                             ),
