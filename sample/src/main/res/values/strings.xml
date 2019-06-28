@@ -26,4 +26,5 @@
     <string name="pay_amount">Pay %1$s €</string>
     <string name="payment_success">Payment completed Successfully</string>
     <string name="dummy_version">v 0.0.2</string>
+    <string name="action_ok">OK</string>
 </resources>
