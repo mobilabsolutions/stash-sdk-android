@@ -7,8 +7,7 @@ import com.mobilabsolutions.payment.sample.data.repositories.cart.LocalCartStore
 import com.mobilabsolutions.payment.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.payment.sample.util.AppCoroutineDispatchers
 import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
-import timber.log.Timber
+import kotlinx.coroutines.supervisorScope
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,39 +24,39 @@ class PaymentMethodRepositoryImpl @Inject constructor(
 
     override fun observePaymentMethods() = localPaymentMethodStore.observePaymentMethods()
 
-    override suspend fun updatePaymentMethods(userId: String) = coroutineScope {
+    override suspend fun updatePaymentMethods(userId: String) = supervisorScope {
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.getPaymentMethods(userId) }
         when (val result = remoteJob.await()) {
             is Success -> localPaymentMethodStore.savePaymentMethodList(userId, result.data)
-            is ErrorResult -> Timber.e(result.exception) // TODO: Show Toast/SnackBar
+            is ErrorResult -> throw result.exception
         }
         Unit
     }
 
-    override suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod) = coroutineScope {
+    override suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod) = supervisorScope {
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.addPaymentMethod(userId, aliasId, paymentMethod) }
         when (val result = remoteJob.await()) {
             is Success -> localPaymentMethodStore.savePaymentMethod(paymentMethod.copy(userId = userId), result.data.paymentMethodId)
-            is ErrorResult -> Timber.e(result.exception) // TODO: Show Toast/SnackBar
+            is ErrorResult -> throw result.exception
         }
         Unit
     }
 
-    override suspend fun deletePaymentMethod(paymentMethod: PaymentMethod) = coroutineScope {
+    override suspend fun deletePaymentMethod(paymentMethod: PaymentMethod) = supervisorScope {
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.deletePaymentMethod(paymentMethod.paymentMethodId) }
         when (val result = remoteJob.await()) {
             is Success -> localPaymentMethodStore.deletePaymentMethod(paymentMethod)
-            is ErrorResult -> Timber.e(result.exception) // TODO: Show Toast/SnackBar
+            is ErrorResult -> throw result.exception
         }
         Unit
     }
 
-    override suspend fun authorizePayment(authorizePaymentRequest: AuthorizePaymentRequest) = coroutineScope {
+    override suspend fun authorizePayment(authorizePaymentRequest: AuthorizePaymentRequest) = supervisorScope {
         val localJob = async(dispatchers.io) { localCartStore.emptyCart() }
         val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.authorizePayment(authorizePaymentRequest) }
         when (val result = remoteJob.await()) {
             is Success -> localJob.await()
-            is ErrorResult -> Timber.e(result.exception) // TODO: Show Toast/SnackBar
+            is ErrorResult -> throw result.exception
         }
         Unit
     }

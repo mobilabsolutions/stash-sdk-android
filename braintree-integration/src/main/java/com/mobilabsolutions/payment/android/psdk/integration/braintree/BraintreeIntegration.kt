@@ -82,8 +82,8 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
                         nonce = registrationRequest.additionalData.extraData[NONCE]!!,
                         deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]!!
                     ),
-//                                paymentMethod = PaymentMethodType.PAYPAL.name
-                    paymentMethod = "PAY_PAL"
+                    paymentMethod = "PAY_PAL",
+                    personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])
 
                 )
             )

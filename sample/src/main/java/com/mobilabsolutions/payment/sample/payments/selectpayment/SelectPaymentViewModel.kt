@@ -14,10 +14,11 @@ import com.mobilabsolutions.payment.sample.network.request.AuthorizePaymentReque
 import com.mobilabsolutions.payment.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import io.reactivex.rxkotlin.plusAssign
 
 class SelectPaymentViewModel @AssistedInject constructor(
     @Assisted initialStateMethods: SelectPaymentViewState,
-    schedulers: AppRxSchedulers,
+    val schedulers: AppRxSchedulers,
     updatePaymentMethods: UpdatePaymentMethods,
     private val authorizePayment: AuthorizePayment
 ) : BaseViewModel<SelectPaymentViewState>(initialStateMethods) {
@@ -68,6 +69,9 @@ class SelectPaymentViewModel @AssistedInject constructor(
                     paymentMethodId = this.paymentMethodId,
                     reason = "Nothing"
                 )
+                disposables += authorizePayment.errorSubject.observeOn(schedulers.main).subscribe {
+                    _error.value = it
+                }
                 scope.launchInteractor(authorizePayment, AuthorizePayment.ExecuteParams(authorizePaymentRequest = authorizePaymentRequest))
             }
         }
