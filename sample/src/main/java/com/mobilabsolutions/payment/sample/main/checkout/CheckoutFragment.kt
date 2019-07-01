@@ -71,7 +71,10 @@ class CheckoutFragment : BaseFragment() {
             view?.let {
                 // TODO: Navigation.findNavController(it).navigate()
                 Handler().postDelayed({
-                    Snackbar.make(it, R.string.payment_success, Snackbar.LENGTH_LONG).show()
+                    Snackbar
+                        .make(it, R.string.payment_success, Snackbar.LENGTH_LONG)
+                        .setAction(R.string.action_ok) { /* Nothing to do for dismissal */ }
+                        .show()
                 }, 1000)
             }
         }

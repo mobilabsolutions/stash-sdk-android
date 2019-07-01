@@ -38,7 +38,7 @@ import javax.net.ssl.X509TrustManager
  *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class NewPaymentSdk(
+class PaymentSdkImpl(
     publishableKey: String,
     url: String?,
     applicationContext: Application,
@@ -50,7 +50,7 @@ class NewPaymentSdk(
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
     @Inject
-    lateinit var newRegistrationManager: NewRegistrationManager
+    lateinit var newRegistrationManager: RegistrationManagerImpl
 
     @Inject
     internal lateinit var uiCustomizationManager: UiCustomizationManager
@@ -94,7 +94,7 @@ class NewPaymentSdk(
      */
     companion object {
 
-        private var instance: NewPaymentSdk? = null
+        private var instance: PaymentSdkImpl? = null
 
         private var initialized = false
 
@@ -140,7 +140,7 @@ class NewPaymentSdk(
                 }
                 AndroidThreeTen.init(applicationContext)
                 // Singleton instance creation
-                instance = NewPaymentSdk(publishableKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
+                instance = PaymentSdkImpl(publishableKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
 
                 initialized = true
                 // Font customization

@@ -7,6 +7,7 @@ import com.mobilabsolutions.payment.android.psdk.exceptions.payment.PaymentFaile
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -28,7 +29,7 @@ class PaymentPresenter : CommonPresenter<PaymentView>() {
 
     override fun onInitialized() {
         super.onInitialized()
-        paymentController.getPaymentMethodObservable().subscribeBy(
+        compositeDisposable += paymentController.getPaymentMethodObservable().subscribeBy(
                 onNext = {
                     paymentViewState = PaymentViewState.DataState(paymentMethods = it.keys.toList())
                     paymentMethodMap = it

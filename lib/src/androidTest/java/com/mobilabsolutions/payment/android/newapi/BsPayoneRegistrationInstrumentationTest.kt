@@ -34,7 +34,7 @@
 //    val ccAlias = "ybDqWplVEqbnoAARpmcIXvwluuSEbLVN"
 //
 //    @Inject
-//    lateinit var registrationManager: NewRegistrationManager
+//    lateinit var registrationManager: RegistrationManagerImpl
 //
 //
 //    @Inject

@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.PayPalConfig
@@ -20,6 +20,12 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
+ *
+ * Braintree integration module.
+ *
+ * This integration supports PayPal as a payment method. Since Braintree SDK offers only UI based
+ * method registration, this integration does the same.
+ *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
@@ -32,7 +38,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     lateinit var braintreeHandler: BraintreeHandler
 
     @Inject
-    lateinit var mobilabApiV2: MobilabApiV2
+    lateinit var mobilabApi: MobilabApi
 
     companion object : IntegrationCompanion {
         val CLIENT_TOKEN = "clientToken"
@@ -74,7 +80,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     }
 
     override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
-        return mobilabApiV2.updateAlias(
+        return mobilabApi.updateAlias(
             registrationRequest.standardizedData.aliasId,
             AliasUpdateRequest(
                 extra = AliasExtra(

@@ -68,7 +68,7 @@
 //    lateinit var paymentManager: NewPaymentManager
 //
 //    @Inject
-//    lateinit var registrationManager: NewRegistrationManager
+//    lateinit var registrationManager: RegistrationManagerImpl
 //
 //    @Before
 //    fun setUp() {

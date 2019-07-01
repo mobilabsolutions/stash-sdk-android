@@ -9,7 +9,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException
 import com.mobilabsolutions.payment.android.psdk.exceptions.registration.UnknownException
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
@@ -70,7 +70,7 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class PspCoordinator @Inject constructor(
-    private val mobilabApiV2: MobilabApiV2,
+    private val mobilabApi: MobilabApi,
     private val exceptionMapper: ExceptionMapper,
     private val integrations: Map<@JvmSuppressWildcards Integration, @JvmSuppressWildcards Set<@JvmSuppressWildcards PaymentMethodType>>,
     private val uiRequestHandler: UiRequestHandler,
@@ -115,7 +115,7 @@ class PspCoordinator @Inject constructor(
 
         // TODO Validate in case data is being sent from custom UI before starting the communication with the backend
         return chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
-            mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
+            mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
                     val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
@@ -177,7 +177,7 @@ class PspCoordinator @Inject constructor(
 
         // TODO Validate in case data is being sent from custom UI before starting the communication with the backend
         return chosenIntegration.getPreparationData(PaymentMethodType.SEPA).flatMap { preparationData ->
-            mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
+            mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
                 .subscribeOn(Schedulers.io())
                 .flatMap { aliasResponse ->
 
@@ -246,7 +246,7 @@ class PspCoordinator @Inject constructor(
         var email = ""
 
         return chosenIntegration.getPreparationData(PaymentMethodType.PAYPAL).flatMap { preparationData ->
-            mobilabApiV2.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
+            mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey, preparationData)
                 .subscribeOn(Schedulers.io())
                 .flatMap { aliasResponse ->
                     uiRequestHandler.handlePaypalMethodEntryRequest(

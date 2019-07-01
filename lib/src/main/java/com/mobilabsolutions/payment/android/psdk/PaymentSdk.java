@@ -2,7 +2,7 @@ package com.mobilabsolutions.payment.android.psdk;
 
 import android.app.Application;
 
-import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
+import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkImpl;
 
 /**
  * This is a main interface to Payment SDK.
@@ -22,7 +22,7 @@ public final class PaymentSdk {
      * @param paymentSdkConfiguration SDK configuration object
      */
     public static void initalize(Application applicationContext, PaymentSdkConfiguration paymentSdkConfiguration) {
-        NewPaymentSdk.Companion.initialize(applicationContext, paymentSdkConfiguration);
+        PaymentSdkImpl.Companion.initialize(applicationContext, paymentSdkConfiguration);
     }
 
     /**
@@ -30,7 +30,7 @@ public final class PaymentSdk {
      * @param paymentUIConfiguration ui configuration object
      */
     public static void configureUi(PaymentUiConfiguration paymentUIConfiguration) {
-        NewPaymentSdk.Companion.configureUi(paymentUIConfiguration);
+        PaymentSdkImpl.Companion.configureUi(paymentUIConfiguration);
     }
 
 
@@ -40,7 +40,7 @@ public final class PaymentSdk {
      * @return registration manager
      */
     public static RegistrationManager getRegistrationManager() {
-        return NewPaymentSdk.Companion.getRegistrationManager();
+        return PaymentSdkImpl.Companion.getRegistrationManager();
     }
 
 }

@@ -68,7 +68,7 @@
 //    @Inject
 //    lateinit var paymentManager: NewPaymentManager
 //    @Inject
-//    lateinit var registrationManager: NewRegistrationManager
+//    lateinit var registrationManager: RegistrationManagerImpl
 //
 //    @get:Rule
 //    var expectedException = ExpectedException.none()
