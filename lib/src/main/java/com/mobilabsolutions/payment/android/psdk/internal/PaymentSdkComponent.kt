@@ -18,7 +18,7 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = arrayOf(AndroidSupportInjectionModule::class, SslSupportModule::class, PaymentSdkModule::class))
 interface PaymentSdkComponent {
-    fun inject(paymentSdk: NewPaymentSdk)
+    fun inject(paymentSdkImpl: PaymentSdkImpl)
 
     fun inject(registrationProcessHostActivity: RegistrationProcessHostActivity)
 

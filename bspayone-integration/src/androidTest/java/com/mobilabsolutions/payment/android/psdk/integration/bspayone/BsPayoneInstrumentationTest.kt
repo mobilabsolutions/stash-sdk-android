@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
+import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
@@ -30,7 +30,7 @@ class BsPayoneRegistrationInstrumentationTest {
     val ccAlias = "ybDqWplVEqbnoAARpmcIXvwluuSEbLVN"
 
     @Inject
-    lateinit var registrationManager: NewRegistrationManager
+    lateinit var registrationManager: RegistrationManagerImpl
 
     private var validBillingData: BillingData = BillingData(
         city = "Cologne",

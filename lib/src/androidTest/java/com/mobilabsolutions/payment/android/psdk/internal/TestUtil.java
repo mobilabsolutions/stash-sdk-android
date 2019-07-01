@@ -6,7 +6,7 @@ package com.mobilabsolutions.payment.android.psdk.internal;
 public class TestUtil {
 
     public static void resetPaymentSdk() {
-        NewPaymentSdk.Companion.reset();
+        PaymentSdkImpl.Companion.reset();
 
     }
 }

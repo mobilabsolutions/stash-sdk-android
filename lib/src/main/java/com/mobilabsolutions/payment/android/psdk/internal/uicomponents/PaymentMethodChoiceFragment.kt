@@ -11,7 +11,7 @@ import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
-import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
+import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkImpl
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import io.reactivex.subjects.ReplaySubject
 import kotlinx.android.synthetic.main.payment_method_chooser_fragment.*
@@ -64,7 +64,7 @@ class PaymentMethodChoiceFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        NewPaymentSdk.getInjector().inject(this)
+        PaymentSdkImpl.getInjector().inject(this)
     }
 
     override fun onDestroyView() {

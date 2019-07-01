@@ -4,7 +4,7 @@ import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
+import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -31,7 +31,7 @@ class BsPayoneIntegrationTest {
     private val newBsPayoneUrl = BuildConfig.newBsApiUrl
 
     @Inject
-    lateinit var registrationManager: NewRegistrationManager
+    lateinit var registrationManager: RegistrationManagerImpl
 
     private val validBillingData: BillingData = BillingData(
         city = "Cologne",

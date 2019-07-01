@@ -20,6 +20,12 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 /**
+ *
+ * Braintree integration module.
+ *
+ * This integration supports PayPal as a payment method. Since Braintree SDK offers only UI based
+ * method registration, this integration does the same.
+ *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
