@@ -5,7 +5,7 @@
 // import android.content.SharedPreferences
 // import android.util.Base64
 // import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-// import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
+// import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 // import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 // import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 // import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
@@ -67,7 +67,7 @@
 //    }
 //
 //    @Inject
-//    lateinit var registrationManager: NewRegistrationManager
+//    lateinit var registrationManager: RegistrationManagerImpl
 //
 //    @Inject
 //    lateinit var uiCustomizationManager: UiCustomizationManager

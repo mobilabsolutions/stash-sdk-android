@@ -14,7 +14,7 @@ import retrofit2.http.Path
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 
-interface MobilabApiV2 {
+interface MobilabApi {
     @POST("v1/alias")
     fun createAlias(@Header("PSP-Type") psp: String, @Header("Idempotent-Key") idempotencyKey: String, @Body dynamicPspConfig: Map<String, String>): Single<AliasResponse>
 

@@ -1,7 +1,7 @@
 //package com.mobilabsolutions.payment.android.newapi;
 //
 //import com.mobilabsolutions.payment.android.psdk.PaymentSdk;
-//import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk;
+//import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkImpl;
 //import com.mobilabsolutions.payment.android.psdk.model.BillingData;
 //import com.mobilabsolutions.payment.android.psdk.model.CreditCardData;
 //import com.mobilabsolutions.payment.android.psdk.RegistrationManager;
@@ -33,7 +33,7 @@
 // */
 //
 //@RunWith(PowerMockRunner.class)
-//@PrepareForTest(NewPaymentSdk.class)
+//@PrepareForTest(PaymentSdkImpl.class)
 //public class NewApiRegistrationMockTest {
 //
 //    private CreditCardData validCreditCardData;
@@ -47,7 +47,7 @@
 //
 //    @Before
 //    public void setUp() {
-//        mockStatic(NewPaymentSdk.class);
+//        mockStatic(PaymentSdkImpl.class);
 //        when(PaymentSdk.getRegistrationManager()).thenReturn(new RegistrationManagerMock());
 //
 //        PaymentSdk.initalize("BS-KeyKey");

@@ -6,7 +6,7 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
-import com.mobilabsolutions.payment.android.psdk.internal.NewRegistrationManager
+import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
@@ -35,7 +35,7 @@ class AdyenIntegrationTest {
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
     @Inject
-    lateinit var registrationManager: NewRegistrationManager
+    lateinit var registrationManager: RegistrationManagerImpl
 
     lateinit var validVisaCreditCardData: CreditCardData
     lateinit var invalidVisaCreditCardData: CreditCardData

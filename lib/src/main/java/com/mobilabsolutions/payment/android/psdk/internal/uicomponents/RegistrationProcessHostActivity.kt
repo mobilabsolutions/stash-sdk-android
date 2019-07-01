@@ -3,7 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.R
-import com.mobilabsolutions.payment.android.psdk.internal.NewPaymentSdk
+import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkImpl
 import javax.inject.Inject
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import android.content.Context
@@ -24,7 +24,7 @@ class RegistrationProcessHostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val injector = NewPaymentSdk.getInjector()
+        val injector = PaymentSdkImpl.getInjector()
         injector.inject(this)
         uiRequestHandler.provideHostActivity(this)
         setContentView(R.layout.registration_host_activity)

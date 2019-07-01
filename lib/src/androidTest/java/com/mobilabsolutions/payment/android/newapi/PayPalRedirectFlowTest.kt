@@ -36,7 +36,7 @@
 //    var activityScenario = activityScenarioRule<>()
 //
 //    @Inject
-//    lateinit var registrationManager: NewRegistrationManager
+//    lateinit var registrationManager: RegistrationManagerImpl
 //
 //    @Inject
 //    lateinit var paymentManager: NewPaymentManager
@@ -97,7 +97,7 @@
 //                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, emptyList()))
 //                .build()
 //        graph.injectTest(this)
-//        NewPaymentSdk.supplyTestComponent(graph)
+//        PaymentSdkImpl.supplyTestComponent(graph)
 //        Timber.plant(Timber.DebugTree())
 //    }
 //

@@ -63,7 +63,7 @@
 //    )
 //
 //    @Inject
-//    lateinit var registrationManager: NewRegistrationManager
+//    lateinit var registrationManager: RegistrationManagerImpl
 //
 //    @Inject
 //    lateinit var paymentManager: NewPaymentManager
