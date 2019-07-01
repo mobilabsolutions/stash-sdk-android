@@ -63,7 +63,6 @@ class AdyenHandler @Inject constructor(
 
         val singleResult = Single.create<String> {
 
-            val billingData = creditCardRegistrationRequest.billingData
             val creditCardData = creditCardRegistrationRequest.creditCardData
 
             // Payment session received from the SDK backend
@@ -230,13 +229,14 @@ class AdyenHandler @Inject constructor(
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun paymentReferenceImplStringConstructor(): Constructor<PaymentReferenceImpl> {
         return PaymentReferenceImpl::class.java.declaredConstructors
             .filter {
                 it.parameterTypes.contains(String::class.java)
             }.first() as Constructor<PaymentReferenceImpl>
     }
-
+    @Suppress("UNCHECKED_CAST")
     private fun paymentHandlerImplConstructor(): Constructor<PaymentHandlerImpl> {
         return PaymentHandlerImpl::class.java.declaredConstructors
             .filter {

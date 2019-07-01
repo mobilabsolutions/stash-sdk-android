@@ -15,7 +15,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PayoneSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.ProviderSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.RuntimeTypeAdapterFactory
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.SketchSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import dagger.Module
 import dagger.Provides
@@ -161,7 +160,6 @@ open class PaymentSdkModule(
         val runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
             .of(ProviderSpecificData::class.java, "psp")
             .registerSubtype(PayoneSpecificData::class.java, "payone")
-            .registerSubtype(SketchSpecificData::class.java, "sketch")
 
         val gson = GsonBuilder()
             .registerTypeAdapterFactory(runtimeTypeAdapterFactory)
