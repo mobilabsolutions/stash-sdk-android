@@ -9,7 +9,7 @@ import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsP
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationErrorResponse
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationInvalidResponse
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationSuccessResponse
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.CreditCardConfig
@@ -26,7 +26,7 @@ import javax.inject.Inject
  */
 class BsPayoneHandler @Inject constructor(
     private val bsPayoneApi: BsPayoneApi,
-    private val mobilabApiV2: MobilabApiV2
+    private val mobilabApi: MobilabApi
 
 ) {
     /**
@@ -76,7 +76,7 @@ class BsPayoneHandler @Inject constructor(
 
         return if (mockResponse) {
             val mockCardAlias = "MockCreditCardAlias"
-            mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
+            mobilabApi.updateAlias(aliasId, AliasUpdateRequest(
                 mockCardAlias,
                 AliasExtra(
                     paymentMethod = "CC",
@@ -93,7 +93,7 @@ class BsPayoneHandler @Inject constructor(
             bsPayoneApi.executePayoneRequestGet(request.toMap()).map {
                 when (it) {
                     is BsPayoneVerificationSuccessResponse -> {
-                        mobilabApiV2.updateAlias(aliasId, AliasUpdateRequest(
+                        mobilabApi.updateAlias(aliasId, AliasUpdateRequest(
                             it.cardAlias,
                             AliasExtra(
                                 paymentMethod = PaymentMethodType.CC.name,
@@ -134,7 +134,7 @@ class BsPayoneHandler @Inject constructor(
             city = billingData.city,
             country = billingData.country
         )
-        return mobilabApiV2.updateAlias(
+        return mobilabApi.updateAlias(
             aliasId,
             AliasUpdateRequest(
                 extra = AliasExtra(sepaConfig = sepaConfig, paymentMethod = PaymentMethodType.SEPA.name, personalData = billingData)

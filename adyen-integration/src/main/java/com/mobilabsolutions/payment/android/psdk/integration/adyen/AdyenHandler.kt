@@ -23,7 +23,7 @@ import com.mobilabsolutions.payment.android.psdk.CreditCardTypeWithRegex
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.CreditCardConfig
@@ -43,7 +43,7 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class AdyenHandler @Inject constructor(
-    private val mobilabApiV2: MobilabApiV2,
+    private val mobilabApi: MobilabApi,
     val application: Application
 ) {
     val PAYMENT_SESSION = "paymentSession"
@@ -145,7 +145,7 @@ class AdyenHandler @Inject constructor(
                     // a payment
                     val creditCardType = CreditCardTypeWithRegex.resolveCreditCardType(creditCardData.number)
                     val creditCardTypeName = creditCardType.name
-                    mobilabApiV2.updateAlias(creditCardRegistrationRequest.aliasId, AliasUpdateRequest(
+                    mobilabApi.updateAlias(creditCardRegistrationRequest.aliasId, AliasUpdateRequest(
                         extra = AliasExtra(
                             creditCardConfig = CreditCardConfig(
                                 ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
@@ -201,7 +201,7 @@ class AdyenHandler @Inject constructor(
             city = billingData.city,
             country = billingData.country
         )
-        return mobilabApiV2.updateAlias(
+        return mobilabApi.updateAlias(
             aliasId,
             AliasUpdateRequest(
                 extra = AliasExtra(sepaConfig = sepaConfig,

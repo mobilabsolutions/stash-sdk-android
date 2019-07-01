@@ -11,7 +11,7 @@ import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.ExceptionMapper
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.PayoneSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.ProviderSpecificData
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.RuntimeTypeAdapterFactory
@@ -66,12 +66,12 @@ open class PaymentSdkModule(
     @Provides
     @Singleton
     fun provideMobilabApiV2(
-        @Named("mobilabV2HttpClient")
+        @Named("mobilabHttpClient")
         mobilabBackendOkHttpClient: OkHttpClient,
         @Named("mobilabBackendGsonConverterFactory")
         gsonConverterFactory: GsonConverterFactory,
         rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
-    ): MobilabApiV2 {
+    ): MobilabApi {
         val mobilabBackendRetrofit = Retrofit.Builder()
             .addConverterFactory(gsonConverterFactory)
             .addCallAdapterFactory(rxJava2CallAdapterFactory)
@@ -79,7 +79,7 @@ open class PaymentSdkModule(
             .baseUrl(mobilabUrl)
             .build()
 
-        val mobilabApiV2 = mobilabBackendRetrofit.create(MobilabApiV2::class.java)
+        val mobilabApiV2 = mobilabBackendRetrofit.create(MobilabApi::class.java)
         return mobilabApiV2
     }
 
@@ -113,8 +113,8 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    @Named("mobilabV2HttpClient")
-    fun provideMobilabV2HttpClient(
+    @Named("mobilabHttpClient")
+    fun providemobilabHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
         sslSupportPackage: SslSupportPackage
     ): OkHttpClient {

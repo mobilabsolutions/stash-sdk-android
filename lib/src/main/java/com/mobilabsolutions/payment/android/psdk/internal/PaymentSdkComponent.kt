@@ -3,7 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.app.Application
 import android.content.Context
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApiV2
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodChoiceFragment
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.RegistrationProcessHostActivity
 import dagger.Component
@@ -26,7 +26,7 @@ interface PaymentSdkComponent {
 
     fun provideApplication(): Application
 
-    fun provideMobilabApiV2(): MobilabApiV2
+    fun provideMobilabApi(): MobilabApi
 
     fun providesContext(): Context
 
