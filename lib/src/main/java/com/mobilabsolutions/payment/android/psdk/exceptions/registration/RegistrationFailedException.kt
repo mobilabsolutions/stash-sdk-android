@@ -6,8 +6,8 @@ import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentExce
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class RegistrationFailedException(
-    @Transient override val message: String = "Registration failed",
-    @Transient override val code: Int? = null,
-    @Transient override val errorTitle: String? = null,
-    @Transient override val originalException: Throwable? = null
+    override val message: String = "Registration failed",
+    override val code: Int? = null,
+    override val errorTitle: String? = null,
+    override val originalException: Throwable? = null
 ) : BasePaymentException(message, errorTitle, code)
