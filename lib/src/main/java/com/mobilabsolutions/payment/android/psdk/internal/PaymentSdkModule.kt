@@ -3,7 +3,6 @@ package com.mobilabsolutions.payment.android.psdk.internal
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
-import android.util.Base64
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mobilabsolutions.payment.android.BuildConfig
@@ -25,7 +24,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
@@ -64,7 +62,7 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    fun provideMobilabApiV2(
+    fun provideMobilabApi(
         @Named("mobilabHttpClient")
         mobilabBackendOkHttpClient: OkHttpClient,
         @Named("mobilabBackendGsonConverterFactory")
@@ -84,36 +82,8 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    fun provideMobilabHttpClient(
-        httpLoggingInterceptor: HttpLoggingInterceptor,
-        sslSupportPackage: SslSupportPackage
-    ): OkHttpClient {
-
-        val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
-            .addInterceptor(httpLoggingInterceptor)
-            .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Authorization", "Bearer " + Base64.encodeToString(publishableKey.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT).trim { it <= ' ' })
-                    .build()
-                chain.proceed(request)
-            }
-            .connectTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
-            .readTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
-            .writeTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
-        if (sslSupportPackage.useCustomSslSocketFactory) {
-            mobilabBackendOkHttpClientBuilder.sslSocketFactory(sslSupportPackage.sslSocketFactory!!, sslSupportPackage.x509TrustManager!!)
-            val connectionSpec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
-                .tlsVersions(TlsVersion.TLS_1_2)
-                .build()
-            mobilabBackendOkHttpClientBuilder.connectionSpecs(listOf(connectionSpec))
-        }
-        return mobilabBackendOkHttpClientBuilder.build()
-    }
-
-    @Provides
-    @Singleton
     @Named("mobilabHttpClient")
-    fun providemobilabHttpClient(
+    fun provideMobilabHttpClient(
         httpLoggingInterceptor: HttpLoggingInterceptor,
         sslSupportPackage: SslSupportPackage
     ): OkHttpClient {
