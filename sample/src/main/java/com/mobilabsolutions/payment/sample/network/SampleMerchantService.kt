@@ -11,6 +11,7 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -33,5 +34,5 @@ interface SampleMerchantService {
     fun getPaymentMethods(@Path("User-Id") userId: String): Call<PaymentMethodListResponse>
 
     @PUT("merchant/authorization")
-    fun authorizePayment(@Body request: AuthorizePaymentRequest): Call<AuthorizePaymentResponse>
+    fun authorizePayment(@Header("Idempotent-Key") idempotencyKey: String, @Body request: AuthorizePaymentRequest): Call<AuthorizePaymentResponse>
 }
