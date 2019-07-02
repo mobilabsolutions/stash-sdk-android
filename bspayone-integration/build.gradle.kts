@@ -66,7 +66,6 @@ dependencies {
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.Google.material)
-    implementation(Libs.Utils.yearMonthPicker)
     implementation(Libs.Dagger.dagger)
     kapt(Libs.Dagger.compiler)
 
