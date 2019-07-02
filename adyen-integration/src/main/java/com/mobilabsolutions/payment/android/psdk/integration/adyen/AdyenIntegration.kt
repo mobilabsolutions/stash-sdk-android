@@ -82,7 +82,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         return adyenHandler.getPreparationData(method)
     }
 
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+    override fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: String
+    ): Single<String> {
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
 
@@ -97,7 +100,8 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: String
     ): Observable<AdditionalRegistrationData> {
         return when (paymentMethodType) {
             PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)

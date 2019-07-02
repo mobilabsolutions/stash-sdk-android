@@ -17,13 +17,17 @@ interface Integration {
 
     fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>>
 
-    fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String>
+    fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: String
+    ): Single<String>
 
     fun handlePaymentMethodEntryRequest(
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: String
     ): Observable<AdditionalRegistrationData>
 }
 

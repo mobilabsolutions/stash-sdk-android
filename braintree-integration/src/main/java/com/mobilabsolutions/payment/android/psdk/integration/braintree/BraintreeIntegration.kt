@@ -17,6 +17,7 @@ import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -41,7 +42,9 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     lateinit var mobilabApi: MobilabApi
 
     companion object : IntegrationCompanion {
-        val CLIENT_TOKEN = "clientToken"
+        const val CLIENT_TOKEN = "clientToken"
+
+        const val IDEMPOTENCY_MESSAGE = "Idempotency Key passed to Braintree Integration, But Braintree API is not Idempotent. However, Braintree detects duplicate activity for PayPal with the email"
 
         var integration: BraintreeIntegration? = null
 
@@ -79,7 +82,13 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         return Single.just(emptyMap())
     }
 
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+    override fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: String
+    ): Single<String> {
+
+        Timber.w(IDEMPOTENCY_MESSAGE)
+
         return mobilabApi.updateAlias(
             registrationRequest.standardizedData.aliasId,
             AliasUpdateRequest(
@@ -102,8 +111,12 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: String
     ): Observable<AdditionalRegistrationData> {
+
+        Timber.w(IDEMPOTENCY_MESSAGE)
+
         return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMapObservable {
             Observable.just(
                 AdditionalRegistrationData(

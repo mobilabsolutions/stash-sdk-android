@@ -15,6 +15,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistr
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -33,6 +34,8 @@ class BsPayoneIntegration private constructor(
     lateinit var uiComponentHandler: UiComponentHandler
 
     companion object : IntegrationCompanion {
+        const val IDEMPOTENCY_MESSAGE = "Idempotency Key passed to BsPayOne Integration, But BsPayOne API is not Idempotent."
+
         var integration: BsPayoneIntegration? = null
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA)
@@ -63,9 +66,9 @@ class BsPayoneIntegration private constructor(
 
     init {
         bsPayoneIntegrationComponent = DaggerBsPayoneIntegrationComponent.builder()
-                .paymentSdkComponent(paymentSdkComponent)
-                .bsPayoneModule(BsPayoneModule(url))
-                .build()
+            .paymentSdkComponent(paymentSdkComponent)
+            .bsPayoneModule(BsPayoneModule(url))
+            .build()
 
         bsPayoneIntegrationComponent.inject(this)
     }
@@ -74,19 +77,25 @@ class BsPayoneIntegration private constructor(
         return Single.just(emptyMap())
     }
 
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+    override fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: String
+    ): Single<String> {
+
+        Timber.w(IDEMPOTENCY_MESSAGE)
+
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
                 bsPayoneHandler.registerCreditCard(
-                        standardizedData,
-                        BsPayoneRegistrationRequest.fromMap(additionalData.extraData)
+                    standardizedData,
+                    BsPayoneRegistrationRequest.fromMap(additionalData.extraData)
                 )
             }
             is SepaRegistrationRequest -> {
                 bsPayoneHandler.registerSepa(
-                        standardizedData
+                    standardizedData
                 )
             }
             else -> {
@@ -99,8 +108,12 @@ class BsPayoneIntegration private constructor(
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: String
     ): Observable<AdditionalRegistrationData> {
+
+        Timber.w(IDEMPOTENCY_MESSAGE)
+
         return when (paymentMethodType) {
             PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)

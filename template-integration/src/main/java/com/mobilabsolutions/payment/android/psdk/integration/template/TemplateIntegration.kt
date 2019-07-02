@@ -11,6 +11,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Registratio
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
+import timber.log.Timber
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -20,6 +21,8 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
     override val identifier = "Template"
 
     companion object : IntegrationCompanion {
+        const val IDEMPOTENCY_MESSAGE = "Idempotency Key passed to Template Integration, But Template API is not Idempotent."
+
         var integration: TemplateIntegration? = null
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA, PaymentMethodType.PAYPAL)
@@ -51,15 +54,21 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
 
     init {
         templateIntegrationComponent = DaggerTemplateIntegrationComponent.builder()
-                .paymentSdkComponent(paymentSdkComponent)
-                .build()
+            .paymentSdkComponent(paymentSdkComponent)
+            .build()
     }
 
     override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
         return Single.just(emptyMap())
     }
 
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+    override fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: String
+    ): Single<String> {
+
+        // Warn if Template doesn't support Idempotency
+        Timber.w(IDEMPOTENCY_MESSAGE)
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
@@ -68,8 +77,13 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: String
     ): Observable<AdditionalRegistrationData> {
+
+        // Warn if Template doesn't support Idempotency
+        Timber.w(IDEMPOTENCY_MESSAGE)
+
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }
