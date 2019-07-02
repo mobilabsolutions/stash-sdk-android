@@ -72,7 +72,7 @@ public class TLSSocketFactoryCompat extends SSLSocketFactory {
     }
 
     private Socket enableTLSOnSocket(Socket socket) {
-        if (socket != null && (socket instanceof SSLSocket)) {
+        if (socket instanceof SSLSocket) {
             //Create list of supported protocols
             ArrayList<String> supportedProtocols = new ArrayList<>();
             for (String protocol : ((SSLSocket) socket).getEnabledProtocols()) {

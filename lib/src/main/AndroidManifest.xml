@@ -4,8 +4,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application>
-        <!--android:usesCleartextTraffic="true"-->
+    <application
+        android:allowBackup="false"
+        >
+
         <activity
             android:name=".psdk.internal.uicomponents.RegistrationProcessHostActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />

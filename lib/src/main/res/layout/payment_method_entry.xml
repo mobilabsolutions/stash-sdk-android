@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="TextView"
+        tools:text="TextView"
         app:layout_constraintBottom_toBottomOf="@+id/paymentMethodIconLinearLayout"
         app:layout_constraintStart_toEndOf="@+id/paymentMethodIconLinearLayout"
         app:layout_constraintTop_toTopOf="@+id/paymentMethodIconLinearLayout"

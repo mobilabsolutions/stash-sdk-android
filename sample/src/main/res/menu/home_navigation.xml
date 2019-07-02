@@ -4,7 +4,7 @@
     <item
             android:id="@+id/items"
             android:icon="@drawable/ic_items"
-            android:title="Items"/>
+            android:title="@string/items_tab"/>
 
     <item
             android:id="@+id/checkout"
