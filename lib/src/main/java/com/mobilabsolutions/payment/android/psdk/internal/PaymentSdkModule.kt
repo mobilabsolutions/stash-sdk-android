@@ -164,7 +164,6 @@ open class PaymentSdkModule(
 
         val gson = GsonBuilder()
             .registerTypeAdapterFactory(runtimeTypeAdapterFactory)
-            .registerTypeHierarchyAdapter(Throwable::class.java, ThrowableSerializer())
             .create()
         return GsonConverterFactory.create(gson)
     }
@@ -184,7 +183,6 @@ open class PaymentSdkModule(
 
         val gson = GsonBuilder()
             .registerTypeAdapterFactory(extraInfoTypeAdapterFactory)
-            .registerTypeHierarchyAdapter(Throwable::class.java, ThrowableSerializer())
             .create()
         return gson
     }
