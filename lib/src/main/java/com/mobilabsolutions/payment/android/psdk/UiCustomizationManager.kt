@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Resources
@@ -129,6 +130,7 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
         return paymentUIConfiguration
     }
 
+    @SuppressLint("ApplySharedPref")
     private fun storePreference() {
         val preferenceJson = gson.toJson(paymentUIConfiguration)
         sharedPreferences.edit().putString(CUSTOMIZATION_KEY, preferenceJson).commit()
