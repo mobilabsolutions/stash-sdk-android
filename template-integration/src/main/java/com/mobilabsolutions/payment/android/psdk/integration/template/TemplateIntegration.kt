@@ -21,7 +21,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
     override val identifier = "Template"
 
     companion object : IntegrationCompanion {
-        const val IDEMPOTENCY_MESSAGE = "Idempotency Key passed to Template Integration, But Template API is not Idempotent."
+        const val IDEMPOTENCY_MESSAGE = "Idempotency Key passed to [Template] Integration, But [Template] API is not Idempotent."
 
         var integration: TemplateIntegration? = null
 
@@ -67,7 +67,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         idempotencyKey: String
     ): Single<String> {
 
-        // Warn if Template doesn't support Idempotency
+        // Warn if [Template] doesn't support Idempotency
         Timber.w(IDEMPOTENCY_MESSAGE)
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
@@ -81,7 +81,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         idempotencyKey: String
     ): Observable<AdditionalRegistrationData> {
 
-        // Warn if Template doesn't support Idempotency
+        // Warn if [Template] doesn't support Idempotency
         Timber.w(IDEMPOTENCY_MESSAGE)
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.

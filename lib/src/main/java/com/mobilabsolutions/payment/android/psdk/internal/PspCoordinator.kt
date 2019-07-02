@@ -58,8 +58,8 @@ import javax.inject.Inject
  *
  * ### Idempotency
  *
- * PSP Coordinator hand over the idempotency-key to the SDK's createAlias
- * MobiLab SDK Backend is idempotent, PSP supports for idempotency is depends on each PSP
+ * PSP Coordinator hand over the idempotency-key to the PSP Implementation. Supports for idempotency is depends on each PSP
+ * MobiLab SDK Backend is idempotent.
  *
  * When handling UI requests, there are only two possible outcomes:
  *  * Success
@@ -203,8 +203,8 @@ class PspCoordinator @Inject constructor(
     }
 
     /**
-     * A handler method that checks for UI request idempotency, then if the chooser needs to be shown, and
-     * finally which screen should be shown, based on available integrations and SDK configuration
+     * A handler method that checks if the chooser needs to be shown, and
+     * which screen should be shown, based on available integrations and SDK configuration
      */
     fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: String): Single<PaymentMethodAlias> {
         val requestId = Random().nextInt(Int.MAX_VALUE)
