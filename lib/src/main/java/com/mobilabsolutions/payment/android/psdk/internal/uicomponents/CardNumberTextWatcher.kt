@@ -100,7 +100,7 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
 
         AMEX(CreditCardTypeWithRegex.AMEX, R.drawable.ic_card_amex),
 
-        DINERS(CreditCardTypeWithRegex.DINERS, R.drawable.ic_card_diners_club),
+        DINERS(CreditCardTypeWithRegex.DINERS, R.drawable.ic_card_diners),
 
         VISA(CreditCardTypeWithRegex.VISA, R.drawable.ic_card_visa),
 
@@ -111,13 +111,13 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
         MASTER_CARD(CreditCardTypeWithRegex.MASTER_CARD, R.drawable.ic_card_master),
 
         // Conflicts with MASTERCARD, need a way (number range) to distinguish. Also, applicable only for US Cards
-        // DINERS_US(Regex("^5[45][0-9]{1,14}$"), R.drawable.ic_card_diners_club),
+        // DINERS_US(Regex("^5[45][0-9]{1,14}$"), R.drawable.ic_card_diners),
 
         DISCOVER(CreditCardTypeWithRegex.DISCOVER, R.drawable.ic_card_discover),
 
-        UNIONPAY_16(CreditCardTypeWithRegex.UNIONPAY_16, R.drawable.ic_card_union_pay),
+        UNIONPAY_16(CreditCardTypeWithRegex.UNIONPAY_16, R.drawable.ic_card_unionpay),
 
-        UNIONPAY_19(CreditCardTypeWithRegex.UNIONPAY_19, R.drawable.ic_card_union_pay),
+        UNIONPAY_19(CreditCardTypeWithRegex.UNIONPAY_19, R.drawable.ic_card_unionpay),
 
         MAESTRO(CreditCardTypeWithRegex.MAESTRO, R.drawable.ic_card_maestro)
     }
