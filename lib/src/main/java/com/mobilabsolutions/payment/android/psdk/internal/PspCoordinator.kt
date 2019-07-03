@@ -58,7 +58,7 @@ import javax.inject.Inject
  *
  * ### Idempotency
  *
- * PSP Coordinator hand over the idempotency-key to the PSP Implementation. Supports for idempotency is depends on each PSP
+ * PSP Coordinator hands over the idempotency-key to the PSP Implementation. Supports for idempotency depends on each PSP
  *
  * When handling UI requests, there are only two possible outcomes:
  *  * Success
