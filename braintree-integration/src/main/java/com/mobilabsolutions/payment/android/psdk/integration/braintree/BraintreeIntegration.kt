@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.integration.braintree
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
@@ -41,10 +42,11 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     @Inject
     lateinit var mobilabApi: MobilabApi
 
+    @Inject
+    lateinit var application: Application
+
     companion object : IntegrationCompanion {
         const val CLIENT_TOKEN = "clientToken"
-
-        const val IDEMPOTENCY_MESSAGE = "Idempotency Key passed to Braintree Integration, But Braintree API is not Idempotent. However, Braintree detects duplicate activity for PayPal with the email"
 
         var integration: BraintreeIntegration? = null
 
@@ -87,7 +89,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         idempotencyKey: String
     ): Single<String> {
 
-        Timber.w(IDEMPOTENCY_MESSAGE)
+        Timber.w(application.getString(R.string.idempotency_message))
 
         return mobilabApi.updateAlias(
             registrationRequest.standardizedData.aliasId,
@@ -115,7 +117,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         idempotencyKey: String
     ): Observable<AdditionalRegistrationData> {
 
-        Timber.w(IDEMPOTENCY_MESSAGE)
+        Timber.w(application.getString(R.string.idempotency_message))
 
         return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMapObservable {
             Observable.just(

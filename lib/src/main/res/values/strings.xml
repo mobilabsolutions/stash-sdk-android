@@ -50,4 +50,6 @@
     <string name="month_year_picker_year_label">Year</string>
     <string name="month_year_picker_ok_button_label">OK</string>
 
+    // --- Idempotency ---
+    <string name="idempotency_message">Idempotency Key supplied, while the Integration\'s Payment Method doesn\'t support Idempotency</string>
 </resources>

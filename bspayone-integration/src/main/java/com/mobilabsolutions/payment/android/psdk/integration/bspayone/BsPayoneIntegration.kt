@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
@@ -33,8 +34,10 @@ class BsPayoneIntegration private constructor(
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
+    @Inject
+    lateinit var application: Application
+
     companion object : IntegrationCompanion {
-        const val IDEMPOTENCY_MESSAGE = "Idempotency Key passed to BsPayOne Integration, But BsPayOne API is not Idempotent."
 
         var integration: BsPayoneIntegration? = null
 
@@ -81,13 +84,11 @@ class BsPayoneIntegration private constructor(
         registrationRequest: RegistrationRequest,
         idempotencyKey: String
     ): Single<String> {
-
-        Timber.w(IDEMPOTENCY_MESSAGE)
-
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
+                Timber.w(application.getString(R.string.idempotency_message))
                 bsPayoneHandler.registerCreditCard(
                     standardizedData,
                     BsPayoneRegistrationRequest.fromMap(additionalData.extraData)
@@ -111,11 +112,11 @@ class BsPayoneIntegration private constructor(
         resultObservable: Observable<UiRequestHandler.DataEntryResult>,
         idempotencyKey: String
     ): Observable<AdditionalRegistrationData> {
-
-        Timber.w(IDEMPOTENCY_MESSAGE)
-
         return when (paymentMethodType) {
-            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            PaymentMethodType.CC -> {
+                Timber.w(application.getString(R.string.idempotency_message))
+                uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            }
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)
             PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
         }

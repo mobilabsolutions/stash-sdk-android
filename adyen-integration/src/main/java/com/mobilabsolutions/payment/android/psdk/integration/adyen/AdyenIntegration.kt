@@ -1,5 +1,6 @@
 package com.mobilabsolutions.payment.android.psdk.integration.adyen
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
@@ -17,6 +18,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMe
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -30,6 +32,9 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
+
+    @Inject
+    lateinit var application: Application
 
     companion object : IntegrationCompanion {
         var integration: AdyenIntegration? = null
@@ -90,7 +95,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         val additionalData = registrationRequest.additionalData
 
         return when (standardizedData) {
-            is CreditCardRegistrationRequest -> adyenHandler.registerCreditCard(standardizedData, additionalData)
+            is CreditCardRegistrationRequest -> {
+                Timber.w(application.getString(R.string.idempotency_message))
+                adyenHandler.registerCreditCard(standardizedData, additionalData)
+            }
             is SepaRegistrationRequest -> adyenHandler.registerSepa(standardizedData)
             else -> throw RegistrationFailedException("Unsupported payment method")
         }
@@ -104,7 +112,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         idempotencyKey: String
     ): Observable<AdditionalRegistrationData> {
         return when (paymentMethodType) {
-            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            PaymentMethodType.CC -> {
+                Timber.w(application.getString(R.string.idempotency_message))
+                uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            }
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)
             PaymentMethodType.PAYPAL -> throw ConfigurationException("PayPal is not supported in BSPayOne integration")
         }
