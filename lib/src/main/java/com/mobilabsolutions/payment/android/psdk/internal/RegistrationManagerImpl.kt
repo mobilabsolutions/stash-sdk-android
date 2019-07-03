@@ -19,11 +19,11 @@ class RegistrationManagerImpl @Inject constructor(
 ) : RegistrationManager {
 
     override fun registerCreditCard(creditCardData: CreditCardData, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
-        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, idempotency = Idempotency(idempotencyKey))
+        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, idempotencyKey = IdempotencyKey(idempotencyKey))
     }
 
     override fun registerSepaAccount(sepaData: SepaData, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
-        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, idempotency = Idempotency(idempotencyKey))
+        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, idempotencyKey = IdempotencyKey(idempotencyKey))
     }
 
     override fun getAvailablePaymentMethodsTypes(): Set<PaymentMethodType> {
@@ -31,16 +31,16 @@ class RegistrationManagerImpl @Inject constructor(
     }
 
     override fun registerPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
-        return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, Idempotency(idempotencyKey))
+        return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, IdempotencyKey(idempotencyKey))
     }
 }
 
-data class Idempotency(
+data class IdempotencyKey(
     val key: String,
     val isUserSupplied: Boolean
 ) {
     constructor(key: UUID?) : this(
         (key ?: UUID.randomUUID()).toString(),
-        !key?.toString().isNullOrBlank()
+        key != null
     )
 }

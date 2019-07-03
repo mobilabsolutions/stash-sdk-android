@@ -1,11 +1,11 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
-import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.UiComponentHandler
-import com.mobilabsolutions.payment.android.psdk.internal.Idempotency
+import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
@@ -36,7 +36,7 @@ class BsPayoneIntegration private constructor(
     lateinit var uiComponentHandler: UiComponentHandler
 
     @Inject
-    lateinit var application: Application
+    lateinit var applicationContext: Context
 
     companion object : IntegrationCompanion {
 
@@ -83,14 +83,14 @@ class BsPayoneIntegration private constructor(
 
     override fun handleRegistrationRequest(
         registrationRequest: RegistrationRequest,
-        idempotency: Idempotency
+        idempotencyKey: IdempotencyKey
     ): Single<String> {
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
-                if (idempotency.isUserSupplied) {
-                    Timber.w(application.getString(R.string.idempotency_message))
+                if (idempotencyKey.isUserSupplied) {
+                    Timber.w(applicationContext.getString(R.string.idempotency_message))
                 }
                 bsPayoneHandler.registerCreditCard(
                     standardizedData,
@@ -113,12 +113,12 @@ class BsPayoneIntegration private constructor(
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
         resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotency: Idempotency
+        idempotencyKey: IdempotencyKey
     ): Observable<AdditionalRegistrationData> {
         return when (paymentMethodType) {
             PaymentMethodType.CC -> {
-                if (idempotency.isUserSupplied) {
-                    Timber.w(application.getString(R.string.idempotency_message))
+                if (idempotencyKey.isUserSupplied) {
+                    Timber.w(applicationContext.getString(R.string.idempotency_message))
                 }
                 uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
             }

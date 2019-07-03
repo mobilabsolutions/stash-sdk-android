@@ -1,10 +1,10 @@
 package com.mobilabsolutions.payment.android.psdk.integration.template
 
-import android.app.Application
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
-import com.mobilabsolutions.payment.android.psdk.internal.Idempotency
+import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
@@ -25,7 +25,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
     override val identifier = "Template"
 
     @Inject
-    lateinit var application: Application
+    lateinit var applicationContext: Context
 
     companion object : IntegrationCompanion {
 
@@ -70,12 +70,12 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
 
     override fun handleRegistrationRequest(
         registrationRequest: RegistrationRequest,
-        idempotency: Idempotency
+        idempotencyKey: IdempotencyKey
     ): Single<String> {
 
         // Warn if [Template] doesn't support Idempotency
-        if (idempotency.isUserSupplied) {
-            Timber.w(application.getString(R.string.idempotency_message))
+        if (idempotencyKey.isUserSupplied) {
+            Timber.w(applicationContext.getString(R.string.idempotency_message))
         }
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
@@ -86,12 +86,12 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
         resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotency: Idempotency
+        idempotencyKey: IdempotencyKey
     ): Observable<AdditionalRegistrationData> {
 
         // Warn if [Template] doesn't support Idempotency
-        if (idempotency.isUserSupplied) {
-            Timber.w(application.getString(R.string.idempotency_message))
+        if (idempotencyKey.isUserSupplied) {
+            Timber.w(applicationContext.getString(R.string.idempotency_message))
         }
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
