@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.internal.psphandler
 
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.Idempotency
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
@@ -19,7 +20,7 @@ interface Integration {
 
     fun handleRegistrationRequest(
         registrationRequest: RegistrationRequest,
-        idempotencyKey: String
+        idempotency: Idempotency
     ): Single<String>
 
     fun handlePaymentMethodEntryRequest(
@@ -27,7 +28,7 @@ interface Integration {
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
         resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotencyKey: String
+        idempotency: Idempotency
     ): Observable<AdditionalRegistrationData>
 }
 

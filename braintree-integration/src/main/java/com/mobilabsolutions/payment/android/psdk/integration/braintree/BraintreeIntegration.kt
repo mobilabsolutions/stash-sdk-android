@@ -3,6 +3,7 @@ package com.mobilabsolutions.payment.android.psdk.integration.braintree
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.Idempotency
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
@@ -86,10 +87,12 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
 
     override fun handleRegistrationRequest(
         registrationRequest: RegistrationRequest,
-        idempotencyKey: String
+        idempotency: Idempotency
     ): Single<String> {
 
-        Timber.w(application.getString(R.string.idempotency_message))
+        if (idempotency.isUserSupplied) {
+            Timber.w(application.getString(R.string.idempotency_message))
+        }
 
         return mobilabApi.updateAlias(
             registrationRequest.standardizedData.aliasId,
@@ -113,10 +116,12 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
         resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotencyKey: String
+        idempotency: Idempotency
     ): Observable<AdditionalRegistrationData> {
 
-        Timber.w(application.getString(R.string.idempotency_message))
+        if (idempotency.isUserSupplied) {
+            Timber.w(application.getString(R.string.idempotency_message))
+        }
 
         return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMapObservable {
             Observable.just(
