@@ -59,7 +59,6 @@ import javax.inject.Inject
  * ### Idempotency
  *
  * PSP Coordinator hand over the idempotency-key to the PSP Implementation. Supports for idempotency is depends on each PSP
- * MobiLab SDK Backend is idempotent.
  *
  * When handling UI requests, there are only two possible outcomes:
  *  * Success

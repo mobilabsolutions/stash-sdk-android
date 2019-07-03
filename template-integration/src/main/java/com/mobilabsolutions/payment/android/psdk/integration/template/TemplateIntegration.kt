@@ -1,7 +1,9 @@
 package com.mobilabsolutions.payment.android.psdk.integration.template
 
+import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
@@ -12,6 +14,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequest
 import io.reactivex.Observable
 import io.reactivex.Single
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -20,8 +23,10 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
 
     override val identifier = "Template"
 
+    @Inject
+    lateinit var application: Application
+
     companion object : IntegrationCompanion {
-        const val IDEMPOTENCY_MESSAGE = "Idempotency Key passed to [Template] Integration, But [Template] API is not Idempotent."
 
         var integration: TemplateIntegration? = null
 
@@ -68,7 +73,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
     ): Single<String> {
 
         // Warn if [Template] doesn't support Idempotency
-        Timber.w(IDEMPOTENCY_MESSAGE)
+        Timber.w(application.getString(R.string.idempotency_message))
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
@@ -82,7 +87,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
     ): Observable<AdditionalRegistrationData> {
 
         // Warn if [Template] doesn't support Idempotency
-        Timber.w(IDEMPOTENCY_MESSAGE)
+        Timber.w(application.getString(R.string.idempotency_message))
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }

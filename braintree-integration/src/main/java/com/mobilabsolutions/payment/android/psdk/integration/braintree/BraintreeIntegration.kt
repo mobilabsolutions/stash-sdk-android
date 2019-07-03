@@ -101,7 +101,6 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
                     ),
                     paymentMethod = "PAY_PAL",
                     personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])
-
                 )
             )
         ).subscribeOn(Schedulers.io()).andThen(
