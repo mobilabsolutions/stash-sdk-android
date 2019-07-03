@@ -356,7 +356,7 @@ class UiRequestHandler @Inject constructor() {
     /**
      * Entry point for requests for CreditCard UI handling from PSP Coordinator
      */
-    fun registerCreditCardUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
+    internal fun registerCreditCardUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.CC)
         }.keys.first()
@@ -373,7 +373,7 @@ class UiRequestHandler @Inject constructor() {
     /**
      * Entry point for requests for SEPA UI handling from PSP Coordinator
      */
-    fun registerSepaUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
+    internal fun registerSepaUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.SEPA)
         }.keys.first()

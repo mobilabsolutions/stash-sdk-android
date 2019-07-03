@@ -13,7 +13,7 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class RegistrationManagerImpl @Inject constructor(
+class RegistrationManagerImpl @Inject internal constructor(
     private val pspCoordinator: PspCoordinator
 
 ) : RegistrationManager {

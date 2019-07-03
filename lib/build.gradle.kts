@@ -1,7 +1,9 @@
+import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.library")
+    id("org.jetbrains.dokka-android")
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
@@ -184,6 +186,25 @@ val javadocPublic by tasks.creating(Javadoc::class) {
     setDestinationDir(file("../javadocPublic/"))
     options.overview = "overview.html"
     isFailOnError = false
+}
+
+
+tasks {
+
+    create<DokkaAndroidTask>("dokkaPublic") {
+        moduleName = "lib"
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokkaPublic"
+        packageOptions {
+            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            suppress = true
+        }
+    }
+    dokka {
+        moduleName = "lib"
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokka"
+    }
 }
 
 configurations.all {
