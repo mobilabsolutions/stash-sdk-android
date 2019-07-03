@@ -1,7 +1,6 @@
 include("lib")
 include("adyen-integration")
 include("template-integration")
-include("app")
 include("bspayone-integration")
 include("braintree-integration")
 include("sample")

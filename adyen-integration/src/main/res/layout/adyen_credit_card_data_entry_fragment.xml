@@ -339,7 +339,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="80dp"
-                android:text="Credit Card"
+                android:text="@string/credit_card_data_entry_title"
                 android:textColor="@color/gable_green"
                 android:textSize="24sp"
                 android:textStyle="bold"

@@ -31,7 +31,7 @@
         android:textColor="@color/white"
         android:textSize="14sp"
         android:textStyle="bold"
-        />
+        tools:ignore="RelativeOverlap" />
 
     <TextView
         android:id="@+id/snackbar_text"

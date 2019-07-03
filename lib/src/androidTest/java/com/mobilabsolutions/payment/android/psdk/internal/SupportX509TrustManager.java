@@ -23,8 +23,7 @@ public class SupportX509TrustManager {
                 throw new IllegalStateException("Unexpected default trust managers:"
                         + Arrays.toString(trustManagers));
             }
-            X509TrustManager trustManager = (X509TrustManager) trustManagers[0];
-            return trustManager;
+            return (X509TrustManager) trustManagers[0];
         } catch (NoSuchAlgorithmException | KeyStoreException e) {
             e.printStackTrace();
             return null;

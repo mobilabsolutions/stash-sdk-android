@@ -183,7 +183,6 @@ object Libs {
 
     object Utils {
         val commonsValidator = "commons-validator:commons-validator:1.6"
-        val yearMonthPicker = "com.whiteelephant:monthandyearpicker:1.3.0"
     }
 }
 

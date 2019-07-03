@@ -94,7 +94,7 @@ class CountryGroupAdapter(
 }
 
 class TextViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-    val rootView = view.rootView
+    val rootView: View = view.rootView
     val textView: TextView = view.textView
 }
 
