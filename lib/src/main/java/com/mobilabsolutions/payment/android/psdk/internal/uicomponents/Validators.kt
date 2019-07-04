@@ -4,6 +4,7 @@ import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
 import org.apache.commons.validator.routines.CodeValidator
 import org.apache.commons.validator.routines.CreditCardValidator
+import org.apache.commons.validator.routines.RegexValidator
 import org.apache.commons.validator.routines.checkdigit.LuhnCheckDigit
 import org.iban4j.Iban
 import org.threeten.bp.LocalDate
@@ -24,9 +25,9 @@ class CreditCardDataValidator @Inject constructor() {
             CreditCardValidator.DISCOVER_VALIDATOR,
             CreditCardValidator.MASTERCARD_VALIDATOR,
             CreditCardValidator.VISA_VALIDATOR,
-            CodeValidator("^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}\$", LuhnCheckDigit.LUHN_CHECK_DIGIT), // Maestro
             CodeValidator("^(3(?:088|096|112|158|337|5(?:2[89]|[3-8][0-9]))\\d{12})\$", LuhnCheckDigit.LUHN_CHECK_DIGIT), // JCB
-            CodeValidator("^(62[0-9]{14,17})\$", LuhnCheckDigit.LUHN_CHECK_DIGIT) // Union Pay
+            CodeValidator("^(62[0-9]{14,17})\$", LuhnCheckDigit.LUHN_CHECK_DIGIT), // Union Pay
+            CodeValidator(RegexValidator(arrayOf("^(50[0-9]{1,11})\$", "^(5[68][0-9]{1,13})\$", "^(6[0-9]{1,18})\$")), LuhnCheckDigit.LUHN_CHECK_DIGIT) // Maestro
         )
     )
 
