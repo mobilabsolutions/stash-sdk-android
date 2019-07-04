@@ -28,6 +28,7 @@ class MonthYearPicker(
     cancellable: Boolean = true,
     onCancelListener: DialogInterface.OnCancelListener? = null,
     val paymentUIConfiguration: PaymentUiConfiguration? = null,
+    val selectedDate: LocalDate? = null,
     val onDatePickedListener: (Pair<Int, Int>) -> Unit
 ) : Dialog(context, themeResId) {
 
@@ -68,6 +69,9 @@ class MonthYearPicker(
                     if (child is EditText)
                         child.setTextColor(color)
                 }
+                selectedDate?.let {
+                    monthNumberPicker.value = it.monthValue
+                }
                 monthNumberPicker.invalidate()
 
                 count = yearNumberPicker.childCount
@@ -75,6 +79,9 @@ class MonthYearPicker(
                     val child = yearNumberPicker.getChildAt(i)
                     if (child is EditText)
                         child.setTextColor(color)
+                }
+                selectedDate?.let {
+                    yearNumberPicker.value = it.year
                 }
                 yearNumberPicker.invalidate()
             } catch (e: Exception) {
