@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents
 
 import android.content.DialogInterface
@@ -259,6 +263,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(),
                 paymentUIConfiguration = paymentUIConfiguration,
+                selectedDate = selectedExpiryDate,
                 onCancelListener = DialogInterface.OnCancelListener {
                     expirationDateSubject.onNext(LocalDate.MIN)
                 }) {

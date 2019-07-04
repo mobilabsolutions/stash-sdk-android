@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright © MobiLab Solutions GmbH
+  -->
+
 <resources>
     <color name="white">#ffffff</color>
     <color name="black_haze">#f6f7f7</color>

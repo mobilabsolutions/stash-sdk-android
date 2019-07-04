@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.sample.data.repositories.user
 
 import com.mobilabsolutions.payment.sample.data.entities.ErrorResult

@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.BsPayoneCreditCardDataEntryFragment

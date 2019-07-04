@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.sample.main.checkout
 
 import com.airbnb.epoxy.TypedEpoxyController

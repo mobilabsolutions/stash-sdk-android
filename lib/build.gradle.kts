@@ -1,5 +1,9 @@
-import org.jetbrains.dokka.gradle.DokkaAndroidTask
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 import java.io.ByteArrayOutputStream
+import org.jetbrains.dokka.gradle.DokkaAndroidTask
 
 plugins {
     id("com.android.library")

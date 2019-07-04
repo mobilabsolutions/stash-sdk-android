@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents
 
 import androidx.appcompat.app.AppCompatActivity

@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents
 
 import android.app.Activity.RESULT_OK
@@ -299,6 +303,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(),
                 paymentUIConfiguration = paymentUIConfiguration,
+                selectedDate = selectedExpiryDate,
                 onCancelListener = DialogInterface.OnCancelListener {
                     expirationDateSubject.onNext(LocalDate.MIN)
                 }) {

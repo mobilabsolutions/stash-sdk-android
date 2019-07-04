@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
 
 val haveFabricApiKey = propOrDefWithTravis(DemoRelease.fabricApiKey, "").isNotEmpty()

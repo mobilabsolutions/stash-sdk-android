@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.exceptions.registration
 
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.BasePaymentException

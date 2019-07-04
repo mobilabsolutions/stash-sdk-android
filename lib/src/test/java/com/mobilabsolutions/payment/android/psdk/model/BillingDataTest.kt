@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.model
 
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException

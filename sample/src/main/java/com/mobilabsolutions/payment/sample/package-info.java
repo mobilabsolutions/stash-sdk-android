@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */

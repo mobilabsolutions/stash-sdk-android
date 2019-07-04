@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 import org.gradle.api.Project
 import java.util.Properties
 
@@ -26,7 +30,7 @@ object PaymentSdkBuildConfigs {
 object DemoRelease {
     val fabricApiKey = "FABRIC_API_KEY"
     val versionCode = "1"
-    val versionName = "0.9"
+    val versionName = "0.10"
 }
 
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"

@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.internal.psphandler
 
 import com.mobilabsolutions.payment.android.psdk.model.BillingData

@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.sample.data.repositories.cart
 
 import com.mobilabsolutions.payment.sample.data.DatabaseTransactionRunner
