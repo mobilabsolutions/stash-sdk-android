@@ -1,9 +1,11 @@
 package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.UiComponentHandler
+import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
@@ -15,6 +17,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistr
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -32,7 +35,11 @@ class BsPayoneIntegration private constructor(
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
+    @Inject
+    lateinit var applicationContext: Context
+
     companion object : IntegrationCompanion {
+
         var integration: BsPayoneIntegration? = null
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA)
@@ -63,9 +70,9 @@ class BsPayoneIntegration private constructor(
 
     init {
         bsPayoneIntegrationComponent = DaggerBsPayoneIntegrationComponent.builder()
-                .paymentSdkComponent(paymentSdkComponent)
-                .bsPayoneModule(BsPayoneModule(url))
-                .build()
+            .paymentSdkComponent(paymentSdkComponent)
+            .bsPayoneModule(BsPayoneModule(url))
+            .build()
 
         bsPayoneIntegrationComponent.inject(this)
     }
@@ -74,19 +81,25 @@ class BsPayoneIntegration private constructor(
         return Single.just(emptyMap())
     }
 
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+    override fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: IdempotencyKey
+    ): Single<String> {
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
+                if (idempotencyKey.isUserSupplied) {
+                    Timber.w(applicationContext.getString(R.string.idempotency_message))
+                }
                 bsPayoneHandler.registerCreditCard(
-                        standardizedData,
-                        BsPayoneRegistrationRequest.fromMap(additionalData.extraData)
+                    standardizedData,
+                    BsPayoneRegistrationRequest.fromMap(additionalData.extraData)
                 )
             }
             is SepaRegistrationRequest -> {
                 bsPayoneHandler.registerSepa(
-                        standardizedData
+                    standardizedData
                 )
             }
             else -> {
@@ -99,10 +112,16 @@ class BsPayoneIntegration private constructor(
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: IdempotencyKey
     ): Observable<AdditionalRegistrationData> {
         return when (paymentMethodType) {
-            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            PaymentMethodType.CC -> {
+                if (idempotencyKey.isUserSupplied) {
+                    Timber.w(applicationContext.getString(R.string.idempotency_message))
+                }
+                uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            }
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)
             PaymentMethodType.PAYPAL -> throw RuntimeException("PayPal is not supported in BsPayone integration")
         }

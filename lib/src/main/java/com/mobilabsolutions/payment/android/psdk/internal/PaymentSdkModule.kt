@@ -44,7 +44,6 @@ open class PaymentSdkModule(
 
     companion object {
         const val DEFAULT_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
-        const val IDEMPOTENCY_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
     }
 
     private var uiCustomizationManager: UiCustomizationManager? = null
@@ -133,7 +132,6 @@ open class PaymentSdkModule(
 
         val gson = GsonBuilder()
             .registerTypeAdapterFactory(runtimeTypeAdapterFactory)
-            .registerTypeHierarchyAdapter(Throwable::class.java, ThrowableSerializer())
             .create()
         return GsonConverterFactory.create(gson)
     }
@@ -153,23 +151,14 @@ open class PaymentSdkModule(
 
         val gson = GsonBuilder()
             .registerTypeAdapterFactory(extraInfoTypeAdapterFactory)
-            .registerTypeHierarchyAdapter(Throwable::class.java, ThrowableSerializer())
             .create()
         return gson
     }
 
     @Provides
     @Singleton
-    @Named("default")
     fun provideDefaultSharedPreferences(): SharedPreferences = applicationContext.getSharedPreferences(
         DEFAULT_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
-    )
-
-    @Provides
-    @Singleton
-    @Named("idempotency")
-    fun provideIdempotencySharedPreferences(): SharedPreferences = applicationContext.getSharedPreferences(
-        IDEMPOTENCY_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
     )
 
     @Provides
@@ -192,7 +181,7 @@ open class PaymentSdkModule(
 
     @Provides
     @Singleton
-    fun provideUiCustomizationManager(gson: Gson, @Named("default") sharedPreferences: SharedPreferences): UiCustomizationManager {
+    fun provideUiCustomizationManager(gson: Gson, sharedPreferences: SharedPreferences): UiCustomizationManager {
         if (uiCustomizationManager == null) {
             uiCustomizationManager = UiCustomizationManager(gson, sharedPreferences)
         }

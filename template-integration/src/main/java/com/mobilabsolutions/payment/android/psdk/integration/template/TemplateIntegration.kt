@@ -1,7 +1,10 @@
 package com.mobilabsolutions.payment.android.psdk.integration.template
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
+import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
@@ -11,6 +14,8 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Registratio
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
+import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -19,7 +24,11 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
 
     override val identifier = "Template"
 
+    @Inject
+    lateinit var applicationContext: Context
+
     companion object : IntegrationCompanion {
+
         var integration: TemplateIntegration? = null
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA, PaymentMethodType.PAYPAL)
@@ -51,15 +60,23 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
 
     init {
         templateIntegrationComponent = DaggerTemplateIntegrationComponent.builder()
-                .paymentSdkComponent(paymentSdkComponent)
-                .build()
+            .paymentSdkComponent(paymentSdkComponent)
+            .build()
     }
 
     override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
         return Single.just(emptyMap())
     }
 
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+    override fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: IdempotencyKey
+    ): Single<String> {
+
+        // Warn if [Template] doesn't support Idempotency
+        if (idempotencyKey.isUserSupplied) {
+            Timber.w(applicationContext.getString(R.string.idempotency_message))
+        }
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
@@ -68,8 +85,15 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: IdempotencyKey
     ): Observable<AdditionalRegistrationData> {
+
+        // Warn if [Template] doesn't support Idempotency
+        if (idempotencyKey.isUserSupplied) {
+            Timber.w(applicationContext.getString(R.string.idempotency_message))
+        }
+
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 }

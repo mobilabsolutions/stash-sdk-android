@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.PspCoordinator
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
@@ -19,7 +20,6 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
-import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -191,6 +191,7 @@ class UiRequestHandler @Inject constructor() {
         integration: Integration,
         paymentMethodType: PaymentMethodType,
         requestId: Int,
+        idempotencyKey: IdempotencyKey,
         block: (Pair<CreditCardData, AdditionalRegistrationData>) -> Single<PaymentMethodAlias>
     ): Single<PaymentMethodAlias> {
         checkFlow(requestId)
@@ -206,7 +207,8 @@ class UiRequestHandler @Inject constructor() {
                 hostActivity,
                 paymentMethodType,
                 AdditionalRegistrationData(),
-                resultSubject
+                resultSubject,
+                idempotencyKey
             ).subscribeOn(AndroidSchedulers.mainThread())
                 .flatMap {
 
@@ -249,6 +251,7 @@ class UiRequestHandler @Inject constructor() {
         integration: Integration,
         paymentMethodType: PaymentMethodType,
         requestId: Int,
+        idempotencyKey: IdempotencyKey,
         block: (Pair<SepaData, AdditionalRegistrationData>) -> Single<PaymentMethodAlias>
     ): Single<PaymentMethodAlias> {
 
@@ -265,7 +268,8 @@ class UiRequestHandler @Inject constructor() {
                 hostActivity,
                 paymentMethodType,
                 AdditionalRegistrationData(),
-                resultSubject
+                resultSubject,
+                idempotencyKey
             ).subscribeOn(AndroidSchedulers.mainThread())
                 .flatMap {
                     val sepaData = SepaData(
@@ -301,7 +305,8 @@ class UiRequestHandler @Inject constructor() {
         activity: Activity?,
         integration: Integration,
         additionalRegistrationData: AdditionalRegistrationData,
-        requestId: Int
+        requestId: Int,
+        idempotencyKey: IdempotencyKey
     ): Single<AdditionalRegistrationData> {
         checkFlow(requestId)
         val resultSubject = PublishSubject.create<DataEntryResult>()
@@ -313,7 +318,8 @@ class UiRequestHandler @Inject constructor() {
                 hostActivity,
                 PaymentMethodType.PAYPAL,
                 additionalRegistrationData,
-                resultSubject
+                resultSubject,
+                idempotencyKey
             ).firstOrError()
                 .doFinally {
                     flowCompleted(hostActivity)
@@ -356,7 +362,12 @@ class UiRequestHandler @Inject constructor() {
     /**
      * Entry point for requests for CreditCard UI handling from PSP Coordinator
      */
-    internal fun registerCreditCardUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
+    internal fun registerCreditCardUsingUIComponent(
+        activity: Activity?,
+        pspCoordinator: PspCoordinator,
+        idempotencyKey: IdempotencyKey,
+        requestId: Int
+    ): Single<PaymentMethodAlias> {
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.CC)
         }.keys.first()
@@ -364,16 +375,22 @@ class UiRequestHandler @Inject constructor() {
             activity,
             chosenIntegration,
             PaymentMethodType.CC,
-            requestId
+            requestId,
+            idempotencyKey
         ) { (creditCardData, additionalUIData) ->
-            pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
+            pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
         }
     }
 
     /**
      * Entry point for requests for SEPA UI handling from PSP Coordinator
      */
-    internal fun registerSepaUsingUIComponent(activity: Activity?, pspCoordinator: PspCoordinator, requestId: Int): Single<PaymentMethodAlias> {
+    internal fun registerSepaUsingUIComponent(
+        activity: Activity?,
+        pspCoordinator: PspCoordinator,
+        idempotencyKey: IdempotencyKey,
+        requestId: Int
+    ): Single<PaymentMethodAlias> {
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.SEPA)
         }.keys.first()
@@ -381,9 +398,10 @@ class UiRequestHandler @Inject constructor() {
             activity,
             chosenIntegration,
             PaymentMethodType.SEPA,
-            requestId
+            requestId,
+            idempotencyKey
         ) { (sepaData, additionalUIData) ->
-            pspCoordinator.handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = UUID.randomUUID().toString())
+            pspCoordinator.handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
         }
     }
 }
