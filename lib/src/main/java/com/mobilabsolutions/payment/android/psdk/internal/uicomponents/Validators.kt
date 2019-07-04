@@ -2,7 +2,9 @@ package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
 import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationScope
+import org.apache.commons.validator.routines.CodeValidator
 import org.apache.commons.validator.routines.CreditCardValidator
+import org.apache.commons.validator.routines.checkdigit.LuhnCheckDigit
 import org.iban4j.Iban
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
@@ -15,7 +17,18 @@ data class ValidationResult(val success: Boolean, val errorMessageResourceId: In
 
 @IntegrationScope
 class CreditCardDataValidator @Inject constructor() {
-    private val validator = CreditCardValidator()
+    private val validator = CreditCardValidator(
+        arrayOf(
+            CreditCardValidator.AMEX_VALIDATOR,
+            CreditCardValidator.DINERS_VALIDATOR,
+            CreditCardValidator.DISCOVER_VALIDATOR,
+            CreditCardValidator.MASTERCARD_VALIDATOR,
+            CreditCardValidator.VISA_VALIDATOR,
+            CodeValidator("^(5018|5020|5038|6304|6759|6761|6763)[0-9]{8,15}\$", LuhnCheckDigit.LUHN_CHECK_DIGIT), // Maestro
+            CodeValidator("^(3(?:088|096|112|158|337|5(?:2[89]|[3-8][0-9]))\\d{12})\$", LuhnCheckDigit.LUHN_CHECK_DIGIT), // JCB
+            CodeValidator("^(62[0-9]{14,17})\$", LuhnCheckDigit.LUHN_CHECK_DIGIT) // Union Pay
+        )
+    )
 
     fun validateCreditCardNumber(number: String): ValidationResult {
         return when {
