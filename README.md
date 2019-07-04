@@ -611,5 +611,5 @@ The Android Payment SDK is in active development, we welcome your feedback! Plea
 
 ### License
 
-The MobilabPayment iOS SDK is open source and available under the TODO license. See the LICENSE file for more info.
+The MobilabPayment Android SDK is open source and available under the TODO license. See the LICENSE file for more info.
 
