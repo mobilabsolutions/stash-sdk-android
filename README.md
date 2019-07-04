@@ -159,8 +159,14 @@ Furthermore if you are using Adyen integration you should add the following
 
 We use [Timber](https://github.com/JakeWharton/timber) to log. In order to see the logs, install timber with a `Tree` instance.
 
+**Kotlin**
 ```kotlin
 Timber.plant(Timber.DebugTree())
+```
+
+**Java**
+```java
+Timber.plant(new Timber.DebugTree());
 ```
 
 Note that there are no `Tree` implementations installed by default, to avoid logging in production.
