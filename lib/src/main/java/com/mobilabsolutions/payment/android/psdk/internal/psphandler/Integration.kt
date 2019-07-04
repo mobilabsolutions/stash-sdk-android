@@ -2,6 +2,7 @@ package com.mobilabsolutions.payment.android.psdk.internal.psphandler
 
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
@@ -17,13 +18,17 @@ interface Integration {
 
     fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>>
 
-    fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String>
+    fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: IdempotencyKey
+    ): Single<String>
 
     fun handlePaymentMethodEntryRequest(
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: IdempotencyKey
     ): Observable<AdditionalRegistrationData>
 }
 

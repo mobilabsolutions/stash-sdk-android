@@ -73,7 +73,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     fun onAddBtnClicked() {
-        disposables += PaymentSdk.getRegistrationManager().registerPaymentMethodUsingUi()
+        disposables += PaymentSdk.getRegistrationManager().registerPaymentMethodUsingUi(/* idempotencyKey = UUID.randomUUID() */)
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.main)
             .subscribe(this::onRegisterPaymentSuccess, this::onError)

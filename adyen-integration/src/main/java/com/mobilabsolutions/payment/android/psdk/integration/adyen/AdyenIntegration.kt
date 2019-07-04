@@ -1,10 +1,12 @@
 package com.mobilabsolutions.payment.android.psdk.integration.adyen
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.exceptions.registration.RegistrationFailedException
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents.UiComponentHandler
+import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
@@ -17,6 +19,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMe
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -30,6 +33,9 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
+
+    @Inject
+    lateinit var applicationContext: Context
 
     companion object : IntegrationCompanion {
         var integration: AdyenIntegration? = null
@@ -82,12 +88,20 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         return adyenHandler.getPreparationData(method)
     }
 
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+    override fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: IdempotencyKey
+    ): Single<String> {
         val standardizedData = registrationRequest.standardizedData
         val additionalData = registrationRequest.additionalData
 
         return when (standardizedData) {
-            is CreditCardRegistrationRequest -> adyenHandler.registerCreditCard(standardizedData, additionalData)
+            is CreditCardRegistrationRequest -> {
+                if (idempotencyKey.isUserSupplied) {
+                    Timber.w(applicationContext.getString(R.string.idempotency_message))
+                }
+                adyenHandler.registerCreditCard(standardizedData, additionalData)
+            }
             is SepaRegistrationRequest -> adyenHandler.registerSepa(standardizedData)
             else -> throw RegistrationFailedException("Unsupported payment method")
         }
@@ -97,10 +111,16 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: IdempotencyKey
     ): Observable<AdditionalRegistrationData> {
         return when (paymentMethodType) {
-            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            PaymentMethodType.CC -> {
+                if (idempotencyKey.isUserSupplied) {
+                    Timber.w(applicationContext.getString(R.string.idempotency_message))
+                }
+                uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
+            }
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)
             PaymentMethodType.PAYPAL -> throw ConfigurationException("PayPal is not supported in BSPayOne integration")
         }

@@ -31,6 +31,7 @@ interface PaymentSdkComponent {
     fun providesContext(): Context
 
     fun provideRxJava2Converter(): RxJava2CallAdapterFactory
+
     fun provideHttpLoggingInterceptor(): HttpLoggingInterceptor
 
     fun provideUiCustomizationManager(): UiCustomizationManager

@@ -13,6 +13,7 @@ import com.mobilabsolutions.payment.sample.network.request.AuthorizePaymentReque
 import com.mobilabsolutions.payment.sample.network.request.CreatePaymentMethodRequest
 import com.mobilabsolutions.payment.sample.network.response.AuthorizePaymentResponse
 import com.mobilabsolutions.payment.sample.network.response.CreatePaymentMethodResponse
+import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -67,7 +68,7 @@ class RemotePaymentMethodDataSource @Inject constructor(
 
     suspend fun authorizePayment(authorizePaymentRequest: AuthorizePaymentRequest): Result<AuthorizePaymentResponse> {
         return retrofitRunner.executeForServerResponse {
-            sampleMerchantService.authorizePayment(authorizePaymentRequest).execute()
+            sampleMerchantService.authorizePayment(UUID.randomUUID().toString(), authorizePaymentRequest).execute()
         }
     }
 }

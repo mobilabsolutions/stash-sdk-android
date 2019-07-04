@@ -1,7 +1,9 @@
 package com.mobilabsolutions.payment.android.psdk.integration.braintree
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
+import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
@@ -17,6 +19,7 @@ import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -40,8 +43,11 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     @Inject
     lateinit var mobilabApi: MobilabApi
 
+    @Inject
+    lateinit var applicationContext: Context
+
     companion object : IntegrationCompanion {
-        val CLIENT_TOKEN = "clientToken"
+        const val CLIENT_TOKEN = "clientToken"
 
         var integration: BraintreeIntegration? = null
 
@@ -79,7 +85,15 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         return Single.just(emptyMap())
     }
 
-    override fun handleRegistrationRequest(registrationRequest: RegistrationRequest): Single<String> {
+    override fun handleRegistrationRequest(
+        registrationRequest: RegistrationRequest,
+        idempotencyKey: IdempotencyKey
+    ): Single<String> {
+
+        if (idempotencyKey.isUserSupplied) {
+            Timber.w(applicationContext.getString(R.string.idempotency_message))
+        }
+
         return mobilabApi.updateAlias(
             registrationRequest.standardizedData.aliasId,
             AliasUpdateRequest(
@@ -90,7 +104,6 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
                     ),
                     paymentMethod = "PAY_PAL",
                     personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])
-
                 )
             )
         ).subscribeOn(Schedulers.io()).andThen(
@@ -102,8 +115,14 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
+        idempotencyKey: IdempotencyKey
     ): Observable<AdditionalRegistrationData> {
+
+        if (idempotencyKey.isUserSupplied) {
+            Timber.w(applicationContext.getString(R.string.idempotency_message))
+        }
+
         return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMapObservable {
             Observable.just(
                 AdditionalRegistrationData(
