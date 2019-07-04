@@ -61,7 +61,11 @@ class PaymentMethodsViewModel @AssistedInject constructor(
             .subscribeOn(schedulers.io)
             .doOnNext {
                 disposables += updatePaymentMethods.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
-                scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
+
+                // Prevent the first time payment method list update, with an invalid user id.
+                if (it.userId != User.EMPTY_USER.userId) {
+                    scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
+                }
             }
             .execute {
                 copy(user = it() ?: User.EMPTY_USER)
