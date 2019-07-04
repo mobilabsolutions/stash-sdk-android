@@ -155,7 +155,15 @@ implementation("com.braintreepayments.api:braintree:3.0.0")
 
 Furthermore if you are using Adyen integration you should add the following
 
+###### Enable Logging
 
+We use [Timber](https://github.com/JakeWharton/timber) to log. In order to see the logs, install timber with a `Tree` instance.
+
+```kotlin
+Timber.plant(Timber.DebugTree())
+```
+
+Note that there are no `Tree` implementations installed by default, to avoid logging in production.
 
 ### Initializing the SDK
 
