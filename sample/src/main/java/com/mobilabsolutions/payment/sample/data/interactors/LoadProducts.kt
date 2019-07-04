@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.sample.data.interactors
 
 import com.mobilabsolutions.payment.sample.core.SubjectInteractor

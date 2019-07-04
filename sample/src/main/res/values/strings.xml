@@ -1,3 +1,7 @@
+<!--
+  ~ Copyright © MobiLab Solutions GmbH
+  -->
+
 <resources>
     <string name="app_name">Payment SDK Sample</string>
     <string name="items">List of Items</string>

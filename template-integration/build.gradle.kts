@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 plugins {
     id("com.android.library")
     kotlin("android")

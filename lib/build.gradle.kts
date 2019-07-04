@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 import java.io.ByteArrayOutputStream
 
 plugins {

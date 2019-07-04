@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.internal.api.backend
 
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasResponse

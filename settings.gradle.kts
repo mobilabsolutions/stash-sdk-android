@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 include("lib")
 include("adyen-integration")
 include("template-integration")

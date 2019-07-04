@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 import org.gradle.api.Project
 import java.util.Properties
 

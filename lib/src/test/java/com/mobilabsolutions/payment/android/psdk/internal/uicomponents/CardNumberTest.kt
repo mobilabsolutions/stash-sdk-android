@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.android.psdk.internal.uicomponents
 
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.CardNumberTextWatcher.CardTypeWithIcon
