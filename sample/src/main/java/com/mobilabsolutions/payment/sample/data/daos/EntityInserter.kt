@@ -1,3 +1,7 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
 package com.mobilabsolutions.payment.sample.data.daos
 
 import com.mobilabsolutions.payment.sample.data.DatabaseTransactionRunner
