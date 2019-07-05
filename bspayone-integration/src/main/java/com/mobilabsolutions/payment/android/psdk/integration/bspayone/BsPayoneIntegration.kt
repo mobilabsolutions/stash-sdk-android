@@ -6,7 +6,6 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.UiComponentHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey

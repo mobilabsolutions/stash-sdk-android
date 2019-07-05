@@ -13,7 +13,6 @@ kapt {
     useBuildCache = true
 }
 
-val templatePublishableKey = propOrDefWithTravis(PaymentSdkRelease.templatePublishableKey, "")
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
@@ -25,16 +24,6 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-    }
-
-    buildTypes {
-        getByName("debug") {
-            resValue("string", "template_public_key", "\""+templatePublishableKey+"\"")
-        }
-        getByName("release") {
-            isMinifyEnabled = false
-            resValue("string", "template_public_key", "\""+templatePublishableKey+"\"")
-        }
     }
 
     compileOptions {

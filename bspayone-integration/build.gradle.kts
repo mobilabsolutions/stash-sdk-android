@@ -33,6 +33,17 @@ android {
         isAbortOnError = false
     }
 
+    buildTypes {
+
+        getByName("debug") {
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
+        }
+
+        getByName("release") {
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
+        }
+    }
+
 
     buildTypes {
         getByName("debug") {
