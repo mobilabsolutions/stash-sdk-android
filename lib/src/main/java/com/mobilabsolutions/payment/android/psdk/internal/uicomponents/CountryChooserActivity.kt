@@ -53,7 +53,11 @@ class CountryChooserActivity : AppCompatActivity() {
         })
 
         back.setOnClickListener {
-            onBackPressed()
+            if (searchView.hasFocus()) {
+                searchView.clearFocus()
+            } else {
+                onBackPressed()
+            }
         }
     }
 
