@@ -25,7 +25,7 @@ import javax.net.ssl.X509TrustManager
  */
 data class PaymentSdkConfiguration(
     val publishableKey: String,
-    val endpoint: String? = null,
+    val endpoint: String,
     val integration: IntegrationCompanion? = null,
     val integrationList: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null,
     val paymentUiConfiguration: PaymentUiConfiguration? = null,
@@ -124,7 +124,7 @@ data class PaymentSdkConfiguration(
         fun build(): PaymentSdkConfiguration {
             return PaymentSdkConfiguration(
                 publishableKey,
-                endpoint,
+                endpoint!!,
                 integration,
                 integrations,
                 paymentUIConfiguration,
