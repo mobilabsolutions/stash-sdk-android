@@ -366,7 +366,7 @@ class UiRequestHandler @Inject constructor() {
     /**
      * Entry point for requests for CreditCard UI handling from PSP Coordinator
      */
-    fun registerCreditCardUsingUIComponent(
+    internal fun registerCreditCardUsingUIComponent(
         activity: Activity?,
         pspCoordinator: PspCoordinator,
         idempotencyKey: IdempotencyKey,
@@ -389,7 +389,7 @@ class UiRequestHandler @Inject constructor() {
     /**
      * Entry point for requests for SEPA UI handling from PSP Coordinator
      */
-    fun registerSepaUsingUIComponent(
+    internal fun registerSepaUsingUIComponent(
         activity: Activity?,
         pspCoordinator: PspCoordinator,
         idempotencyKey: IdempotencyKey,

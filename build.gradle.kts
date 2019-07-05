@@ -21,12 +21,15 @@ buildscript {
         classpath(Libs.Google.fabricPlugin)
 
         classpath(Libs.licencePlugin)
+
+        classpath(Libs.dokkaPlugin)
     }
 }
 
 plugins {
     id("com.diffplug.gradle.spotless") version ("3.23.1")
     id("com.github.ben-manes.versions") version ("0.21.0")
+
 }
 
 

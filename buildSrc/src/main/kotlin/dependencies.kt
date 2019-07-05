@@ -58,6 +58,7 @@ object Libs {
     val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     val viewPump = "io.github.inflationx:viewpump:2.0.3"
     val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
+    val dokkaPlugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
 
     object Adyen {
         private const val version = "2.4.5"

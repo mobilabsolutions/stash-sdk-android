@@ -72,7 +72,7 @@ import javax.inject.Inject
  *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class PspCoordinator @Inject constructor(
+internal class PspCoordinator @Inject constructor(
     private val mobilabApi: MobilabApi,
     private val exceptionMapper: ExceptionMapper,
     private val integrations: Map<@JvmSuppressWildcards Integration, @JvmSuppressWildcards Set<@JvmSuppressWildcards PaymentMethodType>>,
