@@ -32,12 +32,24 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
         }
         getByName("release") {
             isMinifyEnabled = false
-            resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
         }
+    }
+
+    buildTypes {
+
+        getByName("debug") {
+
+
+        }
+
+
     }
 
     compileOptions {
