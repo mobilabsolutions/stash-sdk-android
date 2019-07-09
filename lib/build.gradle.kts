@@ -126,24 +126,6 @@ dependencies {
     kaptAndroidTest(Libs.Dagger.compiler)
 }
 
-
-tasks {
-    create<DokkaAndroidTask>("dokkaPublic") {
-        moduleName = "lib"
-        outputFormat = "html"
-        outputDirectory = "$buildDir/dokkaPublic"
-        packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
-            suppress = true
-        }
-    }
-    dokka {
-        moduleName = "lib"
-        outputFormat = "html"
-        outputDirectory = "$buildDir/dokka"
-    }
-}
-
 configurations.all {
     resolutionStrategy {
         cacheChangingModulesFor(0, TimeUnit.SECONDS)
@@ -163,35 +145,57 @@ licenseReport {
     copyJsonReportToAssets = false
 }
 
-//tasks.register<Jar>("sourcesJar") {
-//    from(sourceSets["main"].allSource)
-//    archiveClassifier.set("sources")
-//}
+tasks {
+    create<DokkaAndroidTask>("dokkaPublic") {
+        moduleName = "lib"
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokkaPublic"
+        packageOptions {
+            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            suppress = true
+        }
+    }
 
-//tasks.register<Jar>("javadocJar") {
-//    from(tasks.javadoc)
-//    archiveClassifier.set("javadoc")
-//}
+    dokka {
+        moduleName = "lib"
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokka"
+    }
+
+    create<Jar>("javadocJar") {
+        dependsOn(dokka)
+        archiveClassifier.set("javadoc")
+        from(dokka.get().outputDirectory)
+    }
+
+    create<Jar>("sourcesJar") {
+        from(android.sourceSets["main"].java.sourceFiles)
+        archiveClassifier.set("sources")
+    }
+}
 
 publishing {
     publications {
-        create<MavenPublication>("maven") {
+        create<MavenPublication>("lib") {
             groupId = "com.mobilabsolutions.payment.android.psdk"
             artifactId = "payment-sdk-lib"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/lib-release.aar")
-//            artifact(tasks["sourcesJar"])
-//            artifact(tasks["javadocJar"])
 
-//            versionMapping {
-//                usage("java-api") {
-//                    fromResolutionOf("runtimeClasspath")
-//                }
-//                usage("java-runtime") {
-//                    fromResolutionResult()
-//                }
-//            }
+            artifact(tasks["javadocJar"])
+
+            artifact(tasks["sourcesJar"])
+
+            versionMapping {
+                usage("java-api") {
+                    fromResolutionOf("runtimeClasspath")
+                }
+                usage("java-runtime") {
+                    fromResolutionResult()
+                }
+            }
+
             pom {
                 name.set("Android Payment SDK")
                 description.set("The payment SDK simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
@@ -226,13 +230,25 @@ publishing {
                 }
                 withXml {
                     val dependenciesNode = asNode().appendNode("dependencies")
-                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
                     configurations.implementation.get().allDependencies.forEach {
                         if (it.group != null && it.name != "unspecified" && it.version != null) {
                             with(dependenciesNode.appendNode("dependency")) {
                                 appendNode("groupId", it.group)
                                 appendNode("artifactId", it.name)
                                 appendNode("version", it.version)
+                                appendNode("scope", "runtime")
+                            }
+                        }
+                    }
+                    // List all "api" dependencies as "compile" dependencies
+                    configurations.api.get().allDependencies.forEach {
+                        if (it.group != null && it.name != "unspecified" && it.version != null) {
+                            with(dependenciesNode.appendNode("dependency")) {
+                                appendNode("groupId", it.group)
+                                appendNode("artifactId", it.name)
+                                appendNode("version", it.version)
+                                appendNode("scope", "compile")
                             }
                         }
                     }
@@ -242,7 +258,7 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("$buildDir/repo")
+            url = uri("$rootDir/repo")
         }
     }
 }

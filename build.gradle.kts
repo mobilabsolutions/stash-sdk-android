@@ -57,7 +57,3 @@ configurations.all {
         cacheChangingModulesFor(0, TimeUnit.SECONDS)
     }
 }
-
-tasks {
-
-}
