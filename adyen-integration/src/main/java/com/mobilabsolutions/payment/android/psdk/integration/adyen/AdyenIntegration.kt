@@ -115,16 +115,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotencyKey: IdempotencyKey
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
     ): Observable<AdditionalRegistrationData> {
         return when (paymentMethodType) {
-            PaymentMethodType.CC -> {
-                if (idempotencyKey.isUserSupplied) {
-                    Timber.w(applicationContext.getString(R.string.idempotency_message))
-                }
-                uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
-            }
+            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)
             PaymentMethodType.PAYPAL -> throw ConfigurationException("PayPal is not supported in BSPayOne integration")
         }

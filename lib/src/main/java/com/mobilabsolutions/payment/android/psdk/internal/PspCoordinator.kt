@@ -28,6 +28,7 @@ import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import retrofit2.HttpException
 import java.util.Random
+import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -209,7 +210,7 @@ internal class PspCoordinator @Inject constructor(
      * A handler method that checks if the chooser needs to be shown, and
      * which screen should be shown, based on available integrations and SDK configuration
      */
-    fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: IdempotencyKey): Single<PaymentMethodAlias> {
+    fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?): Single<PaymentMethodAlias> {
         val requestId = Random().nextInt(Int.MAX_VALUE)
         val resolvedPaymentMethodType = if (specificPaymentMethodType != null) {
             Single.just(specificPaymentMethodType)
@@ -218,13 +219,13 @@ internal class PspCoordinator @Inject constructor(
         }
         return resolvedPaymentMethodType.flatMap {
             when (it) {
-                PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity, idempotencyKey, requestId)
-                PaymentMethodType.CC -> uiRequestHandler.registerCreditCardUsingUIComponent(activity, this, idempotencyKey, requestId)
-                PaymentMethodType.SEPA -> uiRequestHandler.registerSepaUsingUIComponent(activity, this, idempotencyKey, requestId)
+                PaymentMethodType.PAYPAL -> registerPayPalUsingUIComponent(activity, requestId)
+                PaymentMethodType.CC -> uiRequestHandler.registerCreditCardUsingUIComponent(activity, this, requestId)
+                PaymentMethodType.SEPA -> uiRequestHandler.registerSepaUsingUIComponent(activity, this, requestId)
             }
         }.onErrorResumeNext {
             if (it is UiRequestHandler.EntryCancelled) {
-                handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, idempotencyKey)
+                handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType)
             } else {
                 uiRequestHandler.closeFlow()
                 Single.error(it)
@@ -240,14 +241,14 @@ internal class PspCoordinator @Inject constructor(
      * This method will similarly to SEPA and Credit Card create the alias by calling the backend endpoint, processes additional data, and upon PayPal flow
      * completion create the PaymentMethodAlias object that is returned to 3rd party developer.
      */
-    private fun registerPayPalUsingUIComponent(activity: Activity?, idempotencyKey: IdempotencyKey, requestId: Int): Single<PaymentMethodAlias> {
+    private fun registerPayPalUsingUIComponent(activity: Activity?, requestId: Int): Single<PaymentMethodAlias> {
 
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.PAYPAL)
         }.keys.first()
 
         var email = ""
-
+        val idempotencyKey = IdempotencyKey(UUID.randomUUID().toString(), false)
         return chosenIntegration.getPreparationData(PaymentMethodType.PAYPAL).flatMap { preparationData ->
             mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey.key, preparationData)
                 .subscribeOn(Schedulers.io())
@@ -256,8 +257,7 @@ internal class PspCoordinator @Inject constructor(
                         activity,
                         chosenIntegration,
                         AdditionalRegistrationData(aliasResponse.pspExtra),
-                        requestId,
-                        idempotencyKey)
+                        requestId)
                         .flatMap {
                             email = it.extraData[BillingData.ADDITIONAL_DATA_EMAIL] ?: ""
                             val additionalData = it

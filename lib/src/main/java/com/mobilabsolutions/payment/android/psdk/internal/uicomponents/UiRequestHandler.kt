@@ -24,6 +24,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.ReplaySubject
+import java.util.UUID
 import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -195,8 +196,7 @@ class UiRequestHandler @Inject constructor() {
         integration: Integration,
         paymentMethodType: PaymentMethodType,
         requestId: Int,
-        idempotencyKey: IdempotencyKey,
-        block: (Pair<CreditCardData, AdditionalRegistrationData>) -> Single<PaymentMethodAlias>
+        block: (CreditCardData, AdditionalRegistrationData, IdempotencyKey) -> Single<PaymentMethodAlias>
     ): Single<PaymentMethodAlias> {
         checkFlow(requestId)
         val hostActivitySingle = launchHostActivity(activity)
@@ -211,11 +211,10 @@ class UiRequestHandler @Inject constructor() {
                 hostActivity,
                 paymentMethodType,
                 AdditionalRegistrationData(),
-                resultSubject,
-                idempotencyKey
+                resultSubject
             ).subscribeOn(AndroidSchedulers.mainThread())
                 .flatMap {
-
+                    val idempotencyKey = IdempotencyKey(UUID.randomUUID().toString(), false)
                     val expiryMonth = it.extraData.getValue((CreditCardData.EXPIRY_MONTH)).toInt()
                     val expiryYear = it.extraData.getValue(CreditCardData.EXPIRY_YEAR).toInt()
                     val creditCardData = CreditCardData(
@@ -228,7 +227,7 @@ class UiRequestHandler @Inject constructor() {
                             lastName = it.extraData.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME))
                     )
                     resultSubject.onNext(DataEntryResult.Processing())
-                    block.invoke(Pair(creditCardData, it))
+                    block.invoke(creditCardData, it, idempotencyKey)
                         .toObservable()
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext {
@@ -255,8 +254,7 @@ class UiRequestHandler @Inject constructor() {
         integration: Integration,
         paymentMethodType: PaymentMethodType,
         requestId: Int,
-        idempotencyKey: IdempotencyKey,
-        block: (Pair<SepaData, AdditionalRegistrationData>) -> Single<PaymentMethodAlias>
+        block: (SepaData, AdditionalRegistrationData, IdempotencyKey) -> Single<PaymentMethodAlias>
     ): Single<PaymentMethodAlias> {
 
         checkFlow(requestId)
@@ -272,10 +270,12 @@ class UiRequestHandler @Inject constructor() {
                 hostActivity,
                 paymentMethodType,
                 AdditionalRegistrationData(),
-                resultSubject,
-                idempotencyKey
+                resultSubject
             ).subscribeOn(AndroidSchedulers.mainThread())
                 .flatMap {
+
+                    val idempotencyKey = IdempotencyKey(UUID.randomUUID().toString(), false)
+
                     val sepaData = SepaData(
                         iban = it.extraData.getValue(SepaData.IBAN),
                         billingData = BillingData(
@@ -284,7 +284,7 @@ class UiRequestHandler @Inject constructor() {
                         )
                     )
                     resultSubject.onNext(DataEntryResult.Processing())
-                    block.invoke(Pair(sepaData, it))
+                    block.invoke(sepaData, it, idempotencyKey)
                         .toObservable()
                         .observeOn(AndroidSchedulers.mainThread())
                         .doOnNext {
@@ -309,8 +309,7 @@ class UiRequestHandler @Inject constructor() {
         activity: Activity?,
         integration: Integration,
         additionalRegistrationData: AdditionalRegistrationData,
-        requestId: Int,
-        idempotencyKey: IdempotencyKey
+        requestId: Int
     ): Single<AdditionalRegistrationData> {
         checkFlow(requestId)
         val resultSubject = PublishSubject.create<DataEntryResult>()
@@ -322,8 +321,7 @@ class UiRequestHandler @Inject constructor() {
                 hostActivity,
                 PaymentMethodType.PAYPAL,
                 additionalRegistrationData,
-                resultSubject,
-                idempotencyKey
+                resultSubject
             ).firstOrError()
                 .doFinally {
                     flowCompleted(hostActivity)
@@ -369,7 +367,6 @@ class UiRequestHandler @Inject constructor() {
     internal fun registerCreditCardUsingUIComponent(
         activity: Activity?,
         pspCoordinator: PspCoordinator,
-        idempotencyKey: IdempotencyKey,
         requestId: Int
     ): Single<PaymentMethodAlias> {
         val chosenIntegration = integrations.filter {
@@ -379,9 +376,8 @@ class UiRequestHandler @Inject constructor() {
             activity,
             chosenIntegration,
             PaymentMethodType.CC,
-            requestId,
-            idempotencyKey
-        ) { (creditCardData, additionalUIData) ->
+            requestId
+        ) { creditCardData, additionalUIData, idempotencyKey ->
             pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
         }
     }
@@ -392,19 +388,19 @@ class UiRequestHandler @Inject constructor() {
     internal fun registerSepaUsingUIComponent(
         activity: Activity?,
         pspCoordinator: PspCoordinator,
-        idempotencyKey: IdempotencyKey,
         requestId: Int
     ): Single<PaymentMethodAlias> {
+
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.SEPA)
         }.keys.first()
+
         return handleSepaMethodEntryRequest(
             activity,
             chosenIntegration,
             PaymentMethodType.SEPA,
-            requestId,
-            idempotencyKey
-        ) { (sepaData, additionalUIData) ->
+            requestId
+        ) { sepaData, additionalUIData, idempotencyKey ->
             pspCoordinator.handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
         }
     }

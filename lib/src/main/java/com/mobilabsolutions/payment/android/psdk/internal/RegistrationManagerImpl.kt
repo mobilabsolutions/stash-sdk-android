@@ -34,8 +34,8 @@ class RegistrationManagerImpl @Inject internal constructor(
         return pspCoordinator.getAvailablePaymentMethods()
     }
 
-    override fun registerPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
-        return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType, IdempotencyKey(idempotencyKey))
+    override fun registerPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?): Single<PaymentMethodAlias> {
+        return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType)
     }
 }
 
