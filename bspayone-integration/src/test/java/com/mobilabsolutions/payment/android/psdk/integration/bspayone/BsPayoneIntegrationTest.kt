@@ -6,7 +6,6 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
-import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
@@ -30,7 +29,7 @@ import javax.inject.Inject
 
 @RunWith(RobolectricTestRunner::class)
 class BsPayoneIntegrationTest {
-    private val testPublishableKey = BuildConfig.newBsTestKey
+    private val testPublishableKey = BuildConfig.testPublishableKey
     private val mobilabBeUrl: String = BuildConfig.mobilabBackendUrl
     private val newBsPayoneUrl = BuildConfig.newBsApiUrl
 

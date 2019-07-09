@@ -7,7 +7,6 @@ package com.mobilabsolutions.payment.android.psdk.integration.adyen
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import com.jakewharton.threetenabp.AndroidThreeTen
-import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
@@ -35,7 +34,7 @@ import javax.inject.Inject
 @RunWith(RobolectricTestRunner::class)
 class AdyenIntegrationTest {
 
-    val testPublishableKey = BuildConfig.newBsTestKey
+    val testPublishableKey = BuildConfig.testPublishableKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
     @Inject

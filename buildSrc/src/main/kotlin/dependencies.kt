@@ -10,14 +10,8 @@ object PaymentSdkRelease {
     val travisTag = "TRAVIS_TAG"
     val templatePublishableKey = "TEMPLATE_PUBLIC_KEY"
     val mobilabBackendUrl = "BACKEND_DEVELOPMENT"
-    val oldBsTestKey = "BS_TEST_PUBLIC_KEY"
-    val oldBsApiUrl = "BS_TEST_API_URL"
-    val oldBsExistingSepaAlias = "BS_EXISTING_SEPA_ALIAS"
-    val oldBsExistingCcAlias = "BS_EXISTING_CC_ALIAS"
     val newBsApiUrl = "NEW_BS_API_URL"
-    val newBsTestKey = "NEW_BS_TEST_PUBLIC_KEY"
-    val hyperchargeTestKey = "HC_TEST_PUBLIC_KEY"
-    val braintreeSandboxToken = "BRAINTREE_SANDBOX_TOKEN"
+    val testPublishableKey = "NEW_BS_TEST_PUBLIC_KEY"
 }
 
 object PaymentSdkBuildConfigs {

@@ -44,14 +44,13 @@ import javax.net.ssl.X509TrustManager
  */
 class PaymentSdkImpl(
     publishableKey: String,
-    url: String?,
+    url: String,
     applicationContext: Application,
     integrationMap: Map<IntegrationCompanion, Set<PaymentMethodType>>,
     testMode: Boolean,
     sslSocketFactory: SSLSocketFactory?,
     x509TrustManager: X509TrustManager?
 ) {
-    val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
     @Inject
     lateinit var newRegistrationManager: RegistrationManagerImpl
@@ -65,10 +64,9 @@ class PaymentSdkImpl(
      * Here we are building the dagger graph as described
      */
     init {
-        val backendUrl = url ?: MOBILAB_BE_URL
 
         val processedPaymentMethodTypes: MutableSet<PaymentMethodType> = mutableSetOf()
-        integrationMap.forEach { (integration, paymentMethodTypeSet) ->
+        integrationMap.forEach { (_, paymentMethodTypeSet) ->
             processedPaymentMethodTypes.forEach {
                 if (paymentMethodTypeSet.contains(it)) {
                     throw ConfigurationException("Integration handling for ${it.name} payment method type already registered!")
@@ -82,7 +80,7 @@ class PaymentSdkImpl(
         // We are building modules, by providing configuration and created initialization objects
         daggerGraph = DaggerPaymentSdkComponent.builder()
             .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-            .paymentSdkModule(PaymentSdkModule(publishableKey, backendUrl, applicationContext, integrationInitializationMap, testMode))
+            .paymentSdkModule(PaymentSdkModule(publishableKey, url, applicationContext, integrationInitializationMap, testMode))
             .build()
 
         // Now the graph is created and can be expanded by each of the initializations
