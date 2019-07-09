@@ -189,6 +189,7 @@ object Libs {
     object Utils {
         val commonsValidator = "commons-validator:commons-validator:1.6"
     }
+
 }
 
 fun Project.propOrDefWithTravis(propertyName: String, defaultValue: String): String {

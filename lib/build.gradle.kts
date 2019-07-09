@@ -2,12 +2,13 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-import java.io.ByteArrayOutputStream
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
+import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.library")
     id("org.jetbrains.dokka-android")
+    id("maven-publish")
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
@@ -22,8 +23,7 @@ androidExtensions {
     isExperimental = true
 }
 
-
-fun String.runCommand() : String {
+fun String.runCommand(): String {
     val command = this
     val output = ByteArrayOutputStream()
     project.exec {
@@ -38,11 +38,10 @@ val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand()
 
 val getCommitHash = ("git rev-parse --short HEAD").runCommand()
 
-
 val getCommitCount = ("git rev-list --count HEAD").runCommand()
 
-
 val sdkVersionCode = getCommitCount
+
 val sdkVersionName = "${getBranch}-${getCommitHash}"
 
 android {
@@ -53,12 +52,11 @@ android {
         minSdkVersion(PaymentSdkBuildConfigs.minSdk)
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
 
-
         versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, sdkVersionCode).toInt()
         versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, sdkVersionName)
         println("Version code $versionCode versionName $versionName")
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -124,12 +122,10 @@ dependencies {
 
     implementation(Libs.Utils.commonsValidator)
 
-
     implementation(Libs.Dagger.dagger)
     implementation(Libs.Dagger.daggerAndroid)
     implementation(Libs.Dagger.androidSupport)
     kapt(Libs.Dagger.compiler)
-
 
     implementation(Libs.caligraphy)
     implementation(Libs.viewPump)
@@ -157,12 +153,10 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.ext)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     kaptAndroidTest(Libs.Dagger.compiler)
-
 }
 
 
 tasks {
-
     create<DokkaAndroidTask>("dokkaPublic") {
         moduleName = "lib"
         outputFormat = "html"
@@ -198,5 +192,86 @@ licenseReport {
     copyJsonReportToAssets = false
 }
 
+//tasks.register<Jar>("sourcesJar") {
+//    from(sourceSets["main"].allSource)
+//    archiveClassifier.set("sources")
+//}
 
+//tasks.register<Jar>("javadocJar") {
+//    from(tasks.javadoc)
+//    archiveClassifier.set("javadoc")
+//}
 
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.mobilabsolutions.payment.android.psdk"
+            artifactId = "payment-sdk-lib"
+            version = android.defaultConfig.versionName
+
+            artifact("$buildDir/outputs/aar/lib-release.aar")
+//            artifact(tasks["sourcesJar"])
+//            artifact(tasks["javadocJar"])
+
+//            versionMapping {
+//                usage("java-api") {
+//                    fromResolutionOf("runtimeClasspath")
+//                }
+//                usage("java-runtime") {
+//                    fromResolutionResult()
+//                }
+//            }
+            pom {
+                name.set("Android Payment SDK")
+                description.set("The payment SDK simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
+                url.set("https://mobilabsolutions.com/")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("Ugi")
+                        name.set("Uglješa Jovanović")
+                        email.set("ugi@mobilabsolutions.com")
+                    }
+                    developer {
+                        id.set("Yisuk")
+                        name.set("Yisuk Kim")
+                        email.set("yisuk@mobilabsolutions.com")
+                    }
+                    developer {
+                        id.set("Biju")
+                        name.set("Biju Parvathy")
+                        email.set("Biju@mobilabsolutions.com")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:https://github.com/mobilabsolutions/payment-sdk-android-open.git")
+                    developerConnection.set("scm:git:https://github.com/mobilabsolutions/payment-sdk-android-open.git")
+                    url.set("https://github.com/mobilabsolutions/payment-sdk-android-open")
+                }
+                withXml {
+                    val dependenciesNode = asNode().appendNode("dependencies")
+                    //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                    configurations.implementation.get().allDependencies.forEach {
+                        if (it.group != null && it.name != "unspecified" && it.version != null) {
+                            with(dependenciesNode.appendNode("dependency")) {
+                                appendNode("groupId", it.group)
+                                appendNode("artifactId", it.name)
+                                appendNode("version", it.version)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = uri("$buildDir/repo")
+        }
+    }
+}

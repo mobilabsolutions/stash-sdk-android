@@ -29,11 +29,11 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "template_public_key", "\""+templatePublishableKey+"\"")
+            resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
         }
         getByName("release") {
             isMinifyEnabled = false
-            resValue("string", "template_public_key", "\""+templatePublishableKey+"\"")
+            resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
         }
     }
 
@@ -53,10 +53,8 @@ dependencies {
     implementation(project(Modules.paymentSdk))
     implementation(Libs.Kotlin.stdlib)
 
-
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
-
 
     implementation(Libs.braintree)
 

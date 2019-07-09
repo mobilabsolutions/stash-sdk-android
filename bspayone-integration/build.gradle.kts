@@ -27,16 +27,15 @@ android {
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
     }
+
     lintOptions {
         isAbortOnError = false
     }
 
-
     buildTypes {
         getByName("debug") {
-            resValue("string", "template_public_key", "\""+templatePublishableKey+"\"")
+            resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
         }
         getByName("release") {
             isMinifyEnabled = false
@@ -61,7 +60,6 @@ android {
             }, this))
         }
     }
-
 }
 
 dependencies {
@@ -86,7 +84,6 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.core)
     kaptAndroidTest(Libs.Dagger.compiler)
-
 }
 
 licenseReport {
