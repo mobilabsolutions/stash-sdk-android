@@ -126,17 +126,6 @@ dependencies {
     kaptAndroidTest(Libs.Dagger.compiler)
 }
 
-configurations.all {
-    resolutionStrategy {
-        cacheChangingModulesFor(0, TimeUnit.SECONDS)
-        cacheDynamicVersionsFor(0, TimeUnit.SECONDS)
-    }
-}
-
-repositories {
-    mavenCentral()
-}
-
 licenseReport {
     generateHtmlReport = true
     generateJsonReport = true

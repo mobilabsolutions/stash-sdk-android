@@ -37,26 +37,10 @@ android {
     }
 
     buildTypes {
-
-        getByName("debug") {
-            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
-        }
-
-        getByName("release") {
-            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
-        }
-    }
-
-    buildTypes {
         getByName("debug") {
             resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
         }
         getByName("release") {
-            resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
             isMinifyEnabled = false
         }
     }
