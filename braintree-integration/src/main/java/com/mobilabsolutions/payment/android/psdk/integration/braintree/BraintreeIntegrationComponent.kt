@@ -12,7 +12,7 @@ import dagger.Component
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @IntegrationScope
-@Component(dependencies = arrayOf(PaymentSdkComponent::class), modules = arrayOf(BraintreeModule::class))
+@Component(dependencies = [PaymentSdkComponent::class], modules = [BraintreeModule::class])
 interface BraintreeIntegrationComponent {
     fun inject(integration: BraintreeIntegration)
 
