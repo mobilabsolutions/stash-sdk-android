@@ -83,8 +83,6 @@ class AdyenSepaDataEntryFragment : Fragment() {
     private val ibanFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val ibanTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
-    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.create()
-
     private var viewState: SepaDataEntryViewState? = null
 
     private var waitTimer: CountDownTimer? = null
@@ -214,9 +212,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
                         adyenSepaEntrySwipeRefresh.isRefreshing = false
-                        currentSnackbar?.let { snackbar ->
-                            snackbar.dismissWithoutAnimating()
-                        }
+                        currentSnackbar?.dismissWithoutAnimating()
                         currentSnackbar = it.throwable.getErrorSnackBar(adyenSepaEntrySwipeRefresh)
                         currentSnackbar?.show()
                     }

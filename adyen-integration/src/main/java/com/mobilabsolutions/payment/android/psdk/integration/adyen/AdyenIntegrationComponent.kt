@@ -14,7 +14,7 @@ import dagger.Component
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @IntegrationScope
-@Component(dependencies = arrayOf(PaymentSdkComponent::class), modules = arrayOf(AdyenModule::class))
+@Component(dependencies = [PaymentSdkComponent::class], modules = [AdyenModule::class])
 interface AdyenIntegrationComponent {
     fun inject(integration: AdyenIntegration)
 

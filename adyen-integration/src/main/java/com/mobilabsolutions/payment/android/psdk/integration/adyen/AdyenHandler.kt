@@ -65,7 +65,7 @@ class AdyenHandler @Inject constructor(
         their SDK for a significant time period.
          */
 
-        val singleResult = Single.create<String> {
+        return Single.create<String> {
 
             val creditCardData = creditCardRegistrationRequest.creditCardData
 
@@ -184,7 +184,6 @@ class AdyenHandler @Inject constructor(
             // observers tied to the lifecycle. Since all calls are internal and rather quick we can
             // run everything on the main thread except the network calls
         }.subscribeOn(AndroidSchedulers.mainThread())
-        return singleResult
     }
 
     fun registerSepa(
@@ -235,16 +234,14 @@ class AdyenHandler @Inject constructor(
 
     @Suppress("UNCHECKED_CAST")
     private fun paymentReferenceImplStringConstructor(): Constructor<PaymentReferenceImpl> {
-        return PaymentReferenceImpl::class.java.declaredConstructors
-            .filter {
-                it.parameterTypes.contains(String::class.java)
-            }.first() as Constructor<PaymentReferenceImpl>
+        return PaymentReferenceImpl::class.java.declaredConstructors.first {
+            it.parameterTypes.contains(String::class.java)
+        } as Constructor<PaymentReferenceImpl>
     }
     @Suppress("UNCHECKED_CAST")
     private fun paymentHandlerImplConstructor(): Constructor<PaymentHandlerImpl> {
-        return PaymentHandlerImpl::class.java.declaredConstructors
-            .filter {
-                it.parameterTypes.contains(Application::class.java)
-            }.first() as Constructor<PaymentHandlerImpl>
+        return PaymentHandlerImpl::class.java.declaredConstructors.first {
+            it.parameterTypes.contains(Application::class.java)
+        } as Constructor<PaymentHandlerImpl>
     }
 }
