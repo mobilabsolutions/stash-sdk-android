@@ -22,13 +22,18 @@ platform :android do
     upload_to_play_store(track: 'beta')
   end
 
-   desc "Deploy to Fabric Release"
-   lane :deploy_release_fabric do |options|
-       gradle(task: "assembleRelease")
+  desc "Deploy to Maven"
+  lane :deploy_release_maven do
+    gradle(task: "assembleRelease deploy")
+  end
 
-       crashlytics(
-           api_token: options[:FABRIC_API_KEY],
-           build_secret: options[:FABRIC_BUILD_SECRET]
-         )
-      end
+  desc "Deploy to Fabric Release"
+  lane :deploy_release_fabric do |options|
+    gradle(task: "assembleRelease")
+
+    crashlytics(
+      api_token: options[:FABRIC_API_KEY],
+      build_secret: options[:FABRIC_BUILD_SECRET]
+    )
+  end
 end
