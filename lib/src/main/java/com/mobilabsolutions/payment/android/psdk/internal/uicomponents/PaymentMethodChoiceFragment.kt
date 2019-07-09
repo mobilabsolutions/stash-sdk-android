@@ -90,8 +90,7 @@ class PaymentMethodChoiceFragment : Fragment() {
         val paymentUIConfiguration: PaymentUiConfiguration
     ) : RecyclerView.Adapter<PaymentMethodViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaymentMethodViewHolder {
-            val holder = PaymentMethodViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.payment_method_entry, parent, false))
-            return holder
+            return PaymentMethodViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.payment_method_entry, parent, false))
         }
 
         override fun getItemCount(): Int {

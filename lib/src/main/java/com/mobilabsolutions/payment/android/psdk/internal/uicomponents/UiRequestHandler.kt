@@ -77,7 +77,7 @@ class UiRequestHandler @Inject constructor() {
     private var startedNewTask = false
 
     var hostActivityProvider: ReplaySubject<AppCompatActivity> =
-        ReplaySubject.create<AppCompatActivity>()
+        ReplaySubject.create()
 
     lateinit var paymentMethodTypeSubject: ReplaySubject<PaymentMethodType>
 
@@ -234,8 +234,8 @@ class UiRequestHandler @Inject constructor() {
                         .doOnNext {
                             resultSubject.onNext(DataEntryResult.Success())
                         }
-                        .doOnError {
-                            resultSubject.onNext(DataEntryResult.Failure(it))
+                        .doOnError { throwable ->
+                            resultSubject.onNext(DataEntryResult.Failure(throwable))
                         }
                         .filterNotSuccess()
                 }
@@ -290,8 +290,8 @@ class UiRequestHandler @Inject constructor() {
                         .doOnNext {
                             resultSubject.onNext(DataEntryResult.Success())
                         }
-                        .doOnError {
-                            resultSubject.onNext(DataEntryResult.Failure(it))
+                        .doOnError { throwable ->
+                            resultSubject.onNext(DataEntryResult.Failure(throwable))
                         }
                         .filterNotSuccess()
                 }.firstOrError()

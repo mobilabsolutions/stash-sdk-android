@@ -40,5 +40,3 @@ data class PayPalConfig(
     val nonce: String = "",
     val deviceData: String = ""
 )
-
-data class DeviceData(@SerializedName("correlation_id") val correlationId: String)

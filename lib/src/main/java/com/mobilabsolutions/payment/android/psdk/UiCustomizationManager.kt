@@ -118,7 +118,7 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
     private lateinit var paymentUIConfiguration: PaymentUiConfiguration
 
     companion object {
-        val CUSTOMIZATION_KEY = "Customization"
+        const val CUSTOMIZATION_KEY = "Customization"
     }
 
     init {
@@ -142,10 +142,10 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
 
     private fun loadPreference() {
         val customizationJson = sharedPreferences.getString(CUSTOMIZATION_KEY, "")!!
-        if (customizationJson.isEmpty()) {
-            paymentUIConfiguration = PaymentUiConfiguration()
+        paymentUIConfiguration = if (customizationJson.isEmpty()) {
+            PaymentUiConfiguration()
         } else {
-            paymentUIConfiguration = gson.fromJson(customizationJson, PaymentUiConfiguration::class.java)
+            gson.fromJson(customizationJson, PaymentUiConfiguration::class.java)
         }
     }
 }
@@ -188,17 +188,17 @@ object CustomizationExtensions {
      * Apply text view background customizations
      */
     private fun TextView.applyOnTextView(paymentUIConfiguration: PaymentUiConfiguration) {
-        if (error == null) {
+        background = if (error == null) {
             val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.edit_text_selector)
             val textFieldDrawableContainerState = (backgroundDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
-            val textFieldDrawableStates = textFieldDrawableContainerState.children.filter { it != null }.map { it as GradientDrawable }
+            val textFieldDrawableStates = textFieldDrawableContainerState.children.filterNotNull().map { it as GradientDrawable }
             textFieldDrawableStates[0].setStroke(1.px, CustomizationUtil.darken(ContextCompat.getColor(context, R.color.cool_gray)))
             textFieldDrawableStates[1].setStroke(1.px, ContextCompat.getColor(context, R.color.cool_gray))
             textFieldDrawableStates[0].setColor(ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor))
             textFieldDrawableStates[1].setColor(ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor))
-            background = backgroundDrawable
+            backgroundDrawable
         } else {
-            background = resources.getDrawable(R.drawable.edit_text_frame_error)
+            resources.getDrawable(R.drawable.edit_text_frame_error)
         }
         this.applyTextCustomization(paymentUIConfiguration)
     }
@@ -214,20 +214,20 @@ object CustomizationExtensions {
      * Apply button customizations
      */
     fun Button.applyCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
-        if (isEnabled) {
+        background = if (isEnabled) {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector)
             val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
-            val states = buttonBackgroundDrawableContainterStates.children.filter { it != null }.map { it as GradientDrawable }
+            val states = buttonBackgroundDrawableContainterStates.children.filterNotNull().map { it as GradientDrawable }
             states[0].setColor(CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonColor)))
             states[1].setColor(ContextCompat.getColor(context, paymentUIConfiguration.buttonColor))
-            background = buttonColorDrawable
+            buttonColorDrawable
         } else {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector_disabled)
             val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
-            val states = buttonBackgroundDrawableContainterStates.children.filter { it != null }.map { it as GradientDrawable }
+            val states = buttonBackgroundDrawableContainterStates.children.filterNotNull().map { it as GradientDrawable }
             states[0].setColor(ContextCompat.getColor(context, R.color.cool_gray))
             states[1].setColor(ContextCompat.getColor(context, R.color.cool_gray))
-            background = buttonColorDrawable
+            buttonColorDrawable
         }
         setTextColor(CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonTextColor)))
     }

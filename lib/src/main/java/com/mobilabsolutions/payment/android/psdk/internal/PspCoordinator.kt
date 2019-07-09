@@ -202,7 +202,7 @@ internal class PspCoordinator @Inject constructor(
      * as well as which payment method are supported by which integration.
      */
     fun getAvailablePaymentMethods(): Set<PaymentMethodType> {
-        return integrations.values.flatMap { it }.toSet()
+        return integrations.values.flatten().toSet()
     }
 
     /**

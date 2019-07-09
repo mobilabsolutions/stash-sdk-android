@@ -37,7 +37,7 @@ data class PaymentSdkConfiguration(
     /**
      * Builder for Payment SDK configuration object
      */
-    class Builder() {
+    class Builder {
         private var publishableKey: String = ""
         private var endpoint: String? = null
         private var integration: IntegrationCompanion? = null
@@ -105,7 +105,7 @@ data class PaymentSdkConfiguration(
          * you can do that by providing SslFactory and x509TrustManager
          */
         fun setSslSocketFactory(sslSocketFactory: SSLSocketFactory): Builder {
-            this.sslFactory = sslFactory
+            this.sslFactory = sslSocketFactory
             return this
         }
 
