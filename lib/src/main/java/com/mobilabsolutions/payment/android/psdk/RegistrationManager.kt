@@ -128,6 +128,7 @@ enum class CreditCardTypeWithRegex(val regex: Regex) {
                 UNIONPAY_16.regex.matches(creditCardNumber) -> CreditCardType.UNIONPAY
                 UNIONPAY_19.regex.matches(creditCardNumber) -> CreditCardType.UNIONPAY
                 MAESTRO.regex.matches(creditCardNumber) -> CreditCardType.MAESTRO
+                JCB.regex.matches(creditCardNumber) -> CreditCardType.JCB
                 else -> CreditCardType.UNKNOWN
             }
         }
