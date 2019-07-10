@@ -4,6 +4,7 @@
 
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
+import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.library")
@@ -21,6 +22,31 @@ kapt {
 
 val templatePublishableKey = propOrDefWithTravis(PaymentSdkRelease.templatePublishableKey, "")
 
+androidExtensions {
+    isExperimental = true
+}
+
+fun String.runCommand(): String {
+    val command = this
+    val output = ByteArrayOutputStream()
+    project.exec {
+        this.workingDir = project.rootDir
+        this.commandLine = command.split(" ")
+        this.standardOutput = output
+    }
+    return String(output.toByteArray()).trim()
+}
+
+val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand()
+
+val getCommitHash = ("git rev-parse --short HEAD").runCommand()
+
+val getCommitCount = ("git rev-list --count HEAD").runCommand()
+
+val sdkVersionCode = getCommitCount
+
+val sdkVersionName = "${getBranch}-${getCommitHash}"
+
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
     buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
@@ -29,11 +55,34 @@ android {
         minSdkVersion(PaymentSdkBuildConfigs.minSdk)
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
 
+        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, sdkVersionCode).toInt()
+        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, sdkVersionName)
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     lintOptions {
         isAbortOnError = false
+    }
+
+    buildTypes {
+
+        getByName("debug") {
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+        }
+
+        getByName("release") {
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+        }
     }
 
     buildTypes {
@@ -45,10 +94,7 @@ android {
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
+
 
     testOptions {
         unitTests.apply {
@@ -135,9 +181,9 @@ publishing {
 
             artifact("$buildDir/outputs/aar/bspayone-integration-release.aar")
 
-            //artifact(tasks["javadocJar"])
+            artifact(tasks["javadocJar"])
 
-            //artifact(tasks["sourcesJar"])
+            artifact(tasks["sourcesJar"])
 
             versionMapping {
                 usage("java-api") {

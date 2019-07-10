@@ -1,8 +1,9 @@
-import org.jetbrains.dokka.gradle.DokkaAndroidTask
-
 /*
  * Copyright © MobiLab Solutions GmbH
  */
+
+import org.jetbrains.dokka.gradle.DokkaAndroidTask
+import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.library")
@@ -10,12 +11,38 @@ plugins {
     id("maven-publish")
     kotlin("android")
     kotlin("kapt")
+    kotlin("android.extensions")
 }
 
 kapt {
     correctErrorTypes = true
     useBuildCache = true
 }
+
+androidExtensions {
+    isExperimental = true
+}
+
+fun String.runCommand(): String {
+    val command = this
+    val output = ByteArrayOutputStream()
+    project.exec {
+        this.workingDir = project.rootDir
+        this.commandLine = command.split(" ")
+        this.standardOutput = output
+    }
+    return String(output.toByteArray()).trim()
+}
+
+val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand()
+
+val getCommitHash = ("git rev-parse --short HEAD").runCommand()
+
+val getCommitCount = ("git rev-list --count HEAD").runCommand()
+
+val sdkVersionCode = getCommitCount
+
+val sdkVersionName = "${getBranch}-${getCommitHash}"
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
@@ -24,6 +51,9 @@ android {
     defaultConfig {
         minSdkVersion(PaymentSdkBuildConfigs.minSdk)
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
+
+        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, sdkVersionCode).toInt()
+        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, sdkVersionName)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -62,10 +92,6 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.rules)
     androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
     kaptAndroidTest(Libs.Dagger.compiler)
-}
-
-repositories {
-    mavenCentral()
 }
 
 licenseReport {
@@ -189,7 +215,7 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("$projectDir/repo")
+            url = uri("$rootDir/repo")
         }
     }
 }
