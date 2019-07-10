@@ -89,14 +89,8 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotencyKey: IdempotencyKey
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
     ): Observable<AdditionalRegistrationData> {
-
-        // Warn if [Template] doesn't support Idempotency
-        if (idempotencyKey.isUserSupplied) {
-            Timber.w(applicationContext.getString(R.string.idempotency_message))
-        }
 
         TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }

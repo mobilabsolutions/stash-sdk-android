@@ -117,13 +117,8 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotencyKey: IdempotencyKey
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
     ): Observable<AdditionalRegistrationData> {
-
-        if (idempotencyKey.isUserSupplied) {
-            Timber.w(applicationContext.getString(R.string.idempotency_message))
-        }
 
         return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMapObservable {
             Observable.just(

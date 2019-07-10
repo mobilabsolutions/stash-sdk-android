@@ -42,7 +42,7 @@ interface RegistrationManager {
      * @param specificPaymentMethodType skip payment method chooser and immediately show specific type entry UI
      * @returnstring string representing aliasId
      */
-    fun registerPaymentMethodUsingUi(activity: Activity? = null, specificPaymentMethodType: PaymentMethodType? = null, idempotencyKey: UUID? = null): Single<PaymentMethodAlias>
+    fun registerPaymentMethodUsingUi(activity: Activity? = null, specificPaymentMethodType: PaymentMethodType? = null): Single<PaymentMethodAlias>
 }
 
 data class PaymentMethodAlias(
