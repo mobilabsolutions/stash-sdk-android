@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.com/mobilabsolutions/payment-sdk-android-open.svg?token=FD4eibz3gzcfCVXeJm9e&branch=master)](https://travis-ci.com/mobilabsolutions/payment-sdk-android-open)
-# Android Payment SDK
+# Stash Android SDK
 
 This repository contains the Stash Android SDK client code and a demo application.
 
