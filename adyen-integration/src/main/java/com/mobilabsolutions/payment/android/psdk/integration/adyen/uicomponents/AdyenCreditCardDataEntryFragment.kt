@@ -300,9 +300,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
                         adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
-                        currentSnackbar?.let { snackbar ->
-                            snackbar.dismissWithoutAnimating()
-                        }
+                        currentSnackbar?.dismissWithoutAnimating()
                         currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout)
                         currentSnackbar?.show()
                     }

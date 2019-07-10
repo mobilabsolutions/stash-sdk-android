@@ -19,7 +19,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -75,18 +74,6 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
     init {
         adyenIntegrationComponent.inject(this)
     }
-
-    val creditCardUIDefinition = PaymentMethodDefinition(
-        methodId = "Adyen-CC",
-        pspIdentifier = identifier,
-        paymentMethodType = PaymentMethodType.CC
-    )
-
-    val sepaUIDefinition = PaymentMethodDefinition(
-        methodId = "Adyen-Sepa",
-        pspIdentifier = identifier,
-        paymentMethodType = PaymentMethodType.SEPA
-    )
 
     override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
         return adyenHandler.getPreparationData(method)

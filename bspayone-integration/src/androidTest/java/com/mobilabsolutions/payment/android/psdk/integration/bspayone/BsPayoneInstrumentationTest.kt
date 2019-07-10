@@ -6,7 +6,6 @@ package com.mobilabsolutions.payment.android.psdk.integration.bspayone
 
 import android.app.Application
 import androidx.test.InstrumentationRegistry
-import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
@@ -28,7 +27,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 class BsPayoneRegistrationInstrumentationTest {
-    val testPublishableKey = BuildConfig.newBsTestKey
+    val testPublishableKey = BuildConfig.testPublishableKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
     val NEW_BS_PAYONE_URL = BuildConfig.newBsApiUrl
     val ccAlias = "ybDqWplVEqbnoAARpmcIXvwluuSEbLVN"

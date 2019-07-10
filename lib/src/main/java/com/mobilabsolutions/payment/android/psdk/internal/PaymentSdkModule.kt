@@ -43,11 +43,11 @@ open class PaymentSdkModule(
     private val integrationInitializers: Map<IntegrationInitialization, Set<PaymentMethodType>>,
     private val testMode: Boolean
 ) {
-    val MOBILAB_TIMEOUT = 60L
-    val TIMEOUT_UNIT = TimeUnit.SECONDS
 
     companion object {
         const val DEFAULT_SHARED_PREFERENCES_NAME = "DefaultSharedPreferences"
+        const val MOBILAB_TIMEOUT = 60L
+        val TIMEOUT_UNIT = TimeUnit.SECONDS
     }
 
     private var uiCustomizationManager: UiCustomizationManager? = null
@@ -79,8 +79,7 @@ open class PaymentSdkModule(
             .baseUrl(mobilabUrl)
             .build()
 
-        val mobilabApiV2 = mobilabBackendRetrofit.create(MobilabApi::class.java)
-        return mobilabApiV2
+        return mobilabBackendRetrofit.create(MobilabApi::class.java)
     }
 
     @Provides
@@ -153,10 +152,9 @@ open class PaymentSdkModule(
             .registerSubtype(ExtraAliasInfo.SepaExtraInfo::class.java, "SEPA")
             .registerSubtype(ExtraAliasInfo.PaypalExtraInfo::class.java, "PAYPAL")
 
-        val gson = GsonBuilder()
+        return GsonBuilder()
             .registerTypeAdapterFactory(extraInfoTypeAdapterFactory)
             .create()
-        return gson
     }
 
     @Provides

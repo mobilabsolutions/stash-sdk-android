@@ -16,7 +16,6 @@ kapt {
     useBuildCache = true
 }
 
-val templatePublishableKey = propOrDefWithTravis(PaymentSdkRelease.templatePublishableKey, "")
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)

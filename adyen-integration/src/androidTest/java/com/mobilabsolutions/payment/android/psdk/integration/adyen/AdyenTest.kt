@@ -7,12 +7,11 @@ package com.mobilabsolutions.payment.android.psdk.integration.adyen
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import com.jakewharton.threetenabp.AndroidThreeTen
-import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
-import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
+import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -33,7 +32,7 @@ import javax.inject.Singleton
  */
 class AdyenTest {
 
-    val testPublishableKey = BuildConfig.newBsTestKey
+    val testPublishableKey = BuildConfig.testPublishableKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
     @Inject

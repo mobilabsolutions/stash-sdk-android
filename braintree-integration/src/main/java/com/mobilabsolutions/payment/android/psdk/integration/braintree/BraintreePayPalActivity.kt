@@ -31,9 +31,9 @@ import javax.inject.Inject
 class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         PaymentMethodNonceCreatedListener, BraintreeErrorListener, BraintreeCancelListener {
 
-    val deviceFingerprintSubject = ReplaySubject.create<String>()
+    private val deviceFingerprintSubject = ReplaySubject.create<String>()
 
-    var pointOfNoReturnReached: Boolean = false
+    private var pointOfNoReturnReached: Boolean = false
 
     override fun onCancel(requestCode: Int) {
         braintreeHandler.resultSubject.onError(UiRequestHandler.UserCancelled())

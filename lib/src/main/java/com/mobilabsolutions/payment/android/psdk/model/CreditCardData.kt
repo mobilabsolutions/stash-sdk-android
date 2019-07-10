@@ -17,10 +17,10 @@ data class CreditCardData(
 ) {
     companion object {
 
-        val CREDIT_CARD_NUMBER = "CREDIT_CARD_NUMBER"
-        val EXPIRY_MONTH = "EXPIRY_DATE"
-        val EXPIRY_YEAR = "EXPIRY_YEAR"
-        val CVV = "CVV"
+        const val CREDIT_CARD_NUMBER = "CREDIT_CARD_NUMBER"
+        const val EXPIRY_MONTH = "EXPIRY_DATE"
+        const val EXPIRY_YEAR = "EXPIRY_YEAR"
+        const val CVV = "CVV"
     }
 
     class Builder {

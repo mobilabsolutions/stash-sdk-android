@@ -20,7 +20,7 @@ import javax.inject.Singleton
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Singleton
-@Component(modules = arrayOf(AndroidSupportInjectionModule::class, SslSupportModule::class, PaymentSdkModule::class))
+@Component(modules = [AndroidSupportInjectionModule::class, SslSupportModule::class, PaymentSdkModule::class])
 interface PaymentSdkComponent {
     fun inject(paymentSdkImpl: PaymentSdkImpl)
 
