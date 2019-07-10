@@ -43,9 +43,9 @@ val getCommitHash = ("git rev-parse --short HEAD").runCommand()
 
 val getCommitCount = ("git rev-list --count HEAD").runCommand()
 
-val sdkVersionCode = getCommitCount
+val sdkVersionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
 
-val sdkVersionName = "${getBranch}-${getCommitHash}"
+val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "$getBranch-$getCommitHash")
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
@@ -55,8 +55,12 @@ android {
         minSdkVersion(PaymentSdkBuildConfigs.minSdk)
         targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
 
-        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, sdkVersionCode).toInt()
-        versionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, sdkVersionName)
+        versionCode = sdkVersionCode
+        versionName = if (isTravisTag) {
+            sdkVersionName
+        } else {
+            "$sdkVersionName-SNAPSHOT"
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -247,7 +251,12 @@ publishing {
     }
     repositories {
         maven {
-            url = uri("$rootDir/repo")
+            name = "Nexus"
+            url = uri("https://nexus.mblb.net/repository/mblb-internal/")
+            credentials {
+                username = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusUsername, "")
+                password = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusPassword, "")
+            }
         }
     }
 }
