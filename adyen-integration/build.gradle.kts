@@ -20,7 +20,6 @@ kapt {
     useBuildCache = true
 }
 
-val templatePublishableKey = propOrDefWithTravis(PaymentSdkRelease.templatePublishableKey, "")
 
 androidExtensions {
     isExperimental = true

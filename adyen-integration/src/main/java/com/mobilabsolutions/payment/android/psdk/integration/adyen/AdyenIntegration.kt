@@ -19,7 +19,6 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
-import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.PaymentMethodDefinition
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -76,18 +75,6 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         adyenIntegrationComponent.inject(this)
     }
 
-    val creditCardUIDefinition = PaymentMethodDefinition(
-        methodId = "Adyen-CC",
-        pspIdentifier = identifier,
-        paymentMethodType = PaymentMethodType.CC
-    )
-
-    val sepaUIDefinition = PaymentMethodDefinition(
-        methodId = "Adyen-Sepa",
-        pspIdentifier = identifier,
-        paymentMethodType = PaymentMethodType.SEPA
-    )
-
     override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
         return adyenHandler.getPreparationData(method)
     }
@@ -115,16 +102,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotencyKey: IdempotencyKey
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
     ): Observable<AdditionalRegistrationData> {
         return when (paymentMethodType) {
-            PaymentMethodType.CC -> {
-                if (idempotencyKey.isUserSupplied) {
-                    Timber.w(applicationContext.getString(R.string.idempotency_message))
-                }
-                uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
-            }
+            PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, resultObservable)
             PaymentMethodType.SEPA -> uiComponentHandler.handleSepaDataEntryRequest(activity, resultObservable)
             PaymentMethodType.PAYPAL -> throw ConfigurationException("PayPal is not supported in BSPayOne integration")
         }

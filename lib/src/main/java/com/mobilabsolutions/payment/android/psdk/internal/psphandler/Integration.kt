@@ -31,8 +31,7 @@ interface Integration {
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotencyKey: IdempotencyKey
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
     ): Observable<AdditionalRegistrationData>
 }
 

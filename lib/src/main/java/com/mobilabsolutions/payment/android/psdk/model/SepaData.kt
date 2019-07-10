@@ -17,7 +17,7 @@ data class SepaData(
 
 ) {
     companion object {
-        val IBAN = "IBAN"
+        const val IBAN = "IBAN"
     }
 
     @Transient

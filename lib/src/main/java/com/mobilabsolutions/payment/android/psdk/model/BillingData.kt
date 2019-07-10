@@ -28,9 +28,6 @@ data class BillingData(
 
     companion object {
 
-        @JvmStatic
-        fun empty() = BillingData()
-
         const val ADDITIONAL_DATA_FIRST_NAME = "ADDITIONAL_DATA_FIRST_NAME"
         const val ADDITIONAL_DATA_LAST_NAME = "ADDITIONAL_DATA_LAST_NAME"
         const val ADDITIONAL_DATA_COUNTRY = "ADDITIONAL_DATA_COUNTRY"

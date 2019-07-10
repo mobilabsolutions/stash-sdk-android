@@ -19,7 +19,7 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.integration.braintree.test.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreePayPalActivity
@@ -36,7 +36,7 @@ import org.junit.Test
  */
 class PayPalIntentRegistrationTest {
     val MOBILAB_BACKEND_URL = BuildConfig.mobilabBackendUrl
-    val MOBILAB_TEST_PUBLISHABLE_KEY = BuildConfig.newBsTestKey
+    val MOBILAB_TEST_PUBLISHABLE_KEY = BuildConfig.testPublishableKey
 
     @get:Rule
     val intentsTestRule = object : IntentsTestRule<BraintreePayPalActivity>(BraintreePayPalActivity::class.java, false, false) {

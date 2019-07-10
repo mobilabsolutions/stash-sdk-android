@@ -38,9 +38,6 @@ import javax.inject.Inject
 class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
     override val identifier = "BRAINTREE"
 
-    val NONCE = "NONCE"
-    val DEVICE_FINGERPRINT = "DEVICE_FINGERPRINT"
-
     @Inject
     lateinit var braintreeHandler: BraintreeHandler
 
@@ -52,7 +49,8 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
 
     companion object : IntegrationCompanion {
         const val CLIENT_TOKEN = "clientToken"
-
+        const val NONCE = "NONCE"
+        const val DEVICE_FINGERPRINT = "DEVICE_FINGERPRINT"
         var integration: BraintreeIntegration? = null
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.PAYPAL)
@@ -103,8 +101,8 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
             AliasUpdateRequest(
                 extra = AliasExtra(
                     payPalConfig = PayPalConfig(
-                        nonce = registrationRequest.additionalData.extraData[NONCE]!!,
-                        deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]!!
+                        nonce = registrationRequest.additionalData.extraData[NONCE] ?: error("Missing nonce"),
+                        deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT] ?: error("Missing device fingerprint")
                     ),
                     paymentMethod = "PAY_PAL",
                     personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])
@@ -119,13 +117,8 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
         activity: AppCompatActivity,
         paymentMethodType: PaymentMethodType,
         additionalRegistrationData: AdditionalRegistrationData,
-        resultObservable: Observable<UiRequestHandler.DataEntryResult>,
-        idempotencyKey: IdempotencyKey
+        resultObservable: Observable<UiRequestHandler.DataEntryResult>
     ): Observable<AdditionalRegistrationData> {
-
-        if (idempotencyKey.isUserSupplied) {
-            Timber.w(applicationContext.getString(R.string.idempotency_message))
-        }
 
         return braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData).flatMapObservable {
             Observable.just(

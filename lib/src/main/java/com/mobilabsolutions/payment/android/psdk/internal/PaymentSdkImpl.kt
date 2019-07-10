@@ -190,11 +190,11 @@ class PaymentSdkImpl(
          * Provide dagger graph to UI components that live in core library
          */
         internal fun getInjector(): PaymentSdkComponent {
-            if (instance != null) {
-                return instance!!.daggerGraph
+            return if (instance != null) {
+                instance!!.daggerGraph
             } else {
                 if (testComponent != null) {
-                    return testComponent!!
+                    testComponent!!
                 } else {
                     throw RuntimeException("Payment SDK not initialized!")
                 }
