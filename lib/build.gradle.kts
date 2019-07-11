@@ -12,6 +12,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
+    signing
 }
 
 kapt {
@@ -152,7 +153,7 @@ tasks {
 
     dokka {
         moduleName = "lib"
-        outputFormat = "html"
+        outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokka"
     }
 
@@ -165,6 +166,14 @@ tasks {
     create<Jar>("sourcesJar") {
         from(android.sourceSets["main"].java.sourceFiles)
         archiveClassifier.set("sources")
+    }
+
+    publish {
+        dependsOn(build)
+    }
+
+    publishToMavenLocal {
+        dependsOn(build)
     }
 }
 
@@ -260,4 +269,8 @@ publishing {
             }
         }
     }
+}
+
+signing {
+    sign(publishing.publications["lib"])
 }

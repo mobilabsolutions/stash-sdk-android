@@ -13,6 +13,7 @@ plugins {
     kotlin("android")
     kotlin("kapt")
     kotlin("android.extensions")
+    signing
 }
 
 kapt {
@@ -75,26 +76,18 @@ android {
     }
 
     buildTypes {
-
-        getByName("debug") {
-            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
-        }
-
-        getByName("release") {
-            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
-        }
-    }
-
-    buildTypes {
         getByName("debug") {
             resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
         }
+
         getByName("release") {
             isMinifyEnabled = false
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
         }
     }
 
@@ -158,7 +151,7 @@ tasks {
 
     dokka {
         moduleName = "lib"
-        outputFormat = "html"
+        outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokka"
     }
 
@@ -171,6 +164,14 @@ tasks {
     create<Jar>("sourcesJar") {
         from(android.sourceSets["main"].java.sourceFiles)
         archiveClassifier.set("sources")
+    }
+
+    publish {
+        dependsOn(build)
+    }
+
+    publishToMavenLocal {
+        dependsOn(build)
     }
 }
 
@@ -267,3 +268,8 @@ publishing {
         }
     }
 }
+
+signing {
+    sign(publishing.publications["bspayone"])
+}
+

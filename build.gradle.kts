@@ -35,6 +35,11 @@ plugins {
 }
 
 allprojects {
+
+    extra["signing.keyId"] = "CCE33870"
+    extra["signing.secretKeyRingFile"] = rootProject.file("signing/secring.gpg")
+    extra["signing.password"] = "android"
+
     repositories {
         google()
         jcenter()
