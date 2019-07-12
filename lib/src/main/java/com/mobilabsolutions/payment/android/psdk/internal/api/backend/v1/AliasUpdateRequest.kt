@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2
+package com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>

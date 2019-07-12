@@ -28,10 +28,10 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.OtherException
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.CreditCardConfig
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasExtra
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasUpdateRequest
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.CreditCardConfig
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.SepaConfig
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
