@@ -4,8 +4,8 @@
 
 package com.mobilabsolutions.payment.android.psdk.internal.api.backend
 
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasResponse
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasResponse
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasUpdateRequest
 import io.reactivex.Completable
 import io.reactivex.Single
 import retrofit2.http.Body

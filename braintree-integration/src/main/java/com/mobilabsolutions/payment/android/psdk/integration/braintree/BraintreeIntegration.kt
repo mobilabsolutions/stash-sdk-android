@@ -11,9 +11,9 @@ import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.PayPalConfig
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasExtra
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasUpdateRequest
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.PayPalConfig
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
