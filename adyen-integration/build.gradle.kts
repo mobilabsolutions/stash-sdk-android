@@ -21,7 +21,6 @@ kapt {
     useBuildCache = true
 }
 
-
 androidExtensions {
     isExperimental = true
 }
@@ -233,7 +232,14 @@ publishing {
                     val dependenciesNode = asNode().appendNode("dependencies")
                     // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
                     configurations.implementation.get().allDependencies.forEach {
-                        if (it.group != null && it.name != "unspecified" && it.version != null) {
+                        if (it.group == "payment-sdk-android-open") { // Core lib
+                            with(dependenciesNode.appendNode("dependency")) {
+                                appendNode("groupId", "com.mobilabsolutions.payment.android.psdk")
+                                appendNode("artifactId", "payment-sdk-lib")
+                                appendNode("version", android.defaultConfig.versionName)
+                                appendNode("scope", "compile")
+                            }
+                        } else if (it.group != null && it.name != "unspecified" && it.version != null) {
                             with(dependenciesNode.appendNode("dependency")) {
                                 appendNode("groupId", it.group)
                                 appendNode("artifactId", it.name)
