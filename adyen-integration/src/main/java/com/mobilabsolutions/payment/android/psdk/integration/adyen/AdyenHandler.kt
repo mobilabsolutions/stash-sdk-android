@@ -107,7 +107,9 @@ class AdyenHandler @Inject constructor(
             // So we will do the same here
             val cardCheckoutMethodFactory = CardCheckoutMethodFactory(application)
             val cardCheckoutMethod = cardCheckoutMethodFactory.initCheckoutMethods(paymentSession).call()
-            val resolvedPaymentMethod = cardCheckoutMethod[0].paymentMethod as PaymentMethodImpl
+            val resolvedPaymentMethod = cardCheckoutMethod.first { method ->
+                method.paymentMethod.type == "card"
+            }.paymentMethod as PaymentMethodImpl
 
             // Now we need to use Adyens Client Side Encryption to encrypt our credit card data
             val publishableKey = paymentSession.publicKey!!
@@ -151,7 +153,7 @@ class AdyenHandler @Inject constructor(
                     mobilabApi.updateAlias(creditCardRegistrationRequest.aliasId, AliasUpdateRequest(
                         extra = AliasExtra(
                             creditCardConfig = CreditCardConfig(
-                                ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear,
+                                ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear.toString().takeLast(2),
                                 ccMask = creditCardData.number.takeLast(4),
                                 ccType = creditCardTypeName,
                                 ccHolderName = creditCardData.billingData?.fullName()
@@ -238,6 +240,7 @@ class AdyenHandler @Inject constructor(
             it.parameterTypes.contains(String::class.java)
         } as Constructor<PaymentReferenceImpl>
     }
+
     @Suppress("UNCHECKED_CAST")
     private fun paymentHandlerImplConstructor(): Constructor<PaymentHandlerImpl> {
         return PaymentHandlerImpl::class.java.declaredConstructors.first {
