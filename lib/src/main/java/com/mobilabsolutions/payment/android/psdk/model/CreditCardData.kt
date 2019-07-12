@@ -12,6 +12,11 @@ data class CreditCardData(
     val number: String,
     val expiryMonth: Int,
     val expiryYear: Int,
+    /**
+     * Card security code (CSC; also called card verification data - CVD,
+     * card verification number, card verification value - CVV, card verification value code,
+     * card verification code - CVC, verification code - V-code or V code], or signature panel code - SPC
+     */
     val cvv: String,
     val billingData: BillingData? = null
 ) {
@@ -42,6 +47,12 @@ data class CreditCardData(
             this.expiryYear = expiryYear
             return this
         }
+
+        /**
+         * Set card security code (CSC; also called card verification data - CVD,
+         * card verification number, card verification value - CVV, card verification value code,
+         * card verification code - CVC, verification code - V-code or V code], or signature panel code - SPC
+         */
         fun setCvv(cvv: String): Builder {
             this.cvv = cvv
             return this
