@@ -149,6 +149,11 @@ tasks {
             prefix = "com.mobilabsolutions.payment.android.psdk.internal"
             suppress = true
         }
+        includes = listOf(
+            "src/main/java/com/mobilabsolutions/payment/android/psdk/model/model-package-description.md",
+            "src/main/java/com/mobilabsolutions/payment/android/psdk/payment-sdk-package-description.md"
+
+        )
     }
 
     dokka {

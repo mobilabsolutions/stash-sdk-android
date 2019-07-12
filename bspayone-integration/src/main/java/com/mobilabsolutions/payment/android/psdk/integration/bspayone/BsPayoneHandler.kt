@@ -14,10 +14,10 @@ import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsP
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationInvalidResponse
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.pspapi.BsPayoneVerificationSuccessResponse
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasExtra
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.AliasUpdateRequest
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.CreditCardConfig
-import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v2.SepaConfig
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasExtra
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasUpdateRequest
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.CreditCardConfig
+import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.SepaConfig
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
 import com.mobilabsolutions.payment.android.util.withLastDayOfMonth
