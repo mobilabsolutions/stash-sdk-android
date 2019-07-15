@@ -148,20 +148,25 @@ tasks {
         }
     }
 
-    dokka {
+    val dokkaJavadoc = create<DokkaAndroidTask>("dokkaJavadoc") {
         moduleName = "lib"
         outputFormat = "javadoc"
-        outputDirectory = "$buildDir/dokka"
+        outputDirectory = "$buildDir/dokkaJavadoc"
+        noStdlibLink = true
+        packageOptions {
+            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            suppress = true
+        }
     }
 
     create<Jar>("javadocJar") {
-        dependsOn(dokka)
+        dependsOn(dokkaJavadoc)
         archiveClassifier.set("javadoc")
-        from(dokka.get().outputDirectory)
+        from("$buildDir/dokkaJavadoc")
     }
 
     create<Jar>("sourcesJar") {
-        from(android.sourceSets["main"].java.sourceFiles)
+        from(android.sourceSets["main"].java.srcDirs)
         archiveClassifier.set("sources")
     }
 
