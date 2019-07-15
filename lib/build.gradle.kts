@@ -140,6 +140,13 @@ licenseReport {
     copyJsonReportToAssets = false
 }
 
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor(0, TimeUnit.SECONDS)
+        cacheDynamicVersionsFor(0, TimeUnit.SECONDS)
+    }
+}
+
 tasks {
     create<DokkaAndroidTask>("dokkaPublic") {
         moduleName = "lib"
@@ -155,19 +162,16 @@ tasks {
         )
     }
 
+    dokka {
+        moduleName = "lib"
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokka"
+    }
+
     val dokkaJavadoc = create<DokkaAndroidTask>("dokkaJavadoc") {
         moduleName = "lib"
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokkaJavadoc"
-        noStdlibLink = true
-        packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
-            suppress = true
-        }
-        includes = listOf(
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/model/model-package-description.md",
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/payment-sdk-package-description.md"
-        )
     }
 
     create<Jar>("javadocJar") {

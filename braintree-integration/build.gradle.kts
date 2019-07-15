@@ -130,15 +130,16 @@ tasks {
         }
     }
 
+    dokka {
+        moduleName = "lib"
+        outputFormat = "html"
+        outputDirectory = "$buildDir/dokka"
+    }
+
     val dokkaJavadoc = create<DokkaAndroidTask>("dokkaJavadoc") {
         moduleName = "lib"
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokkaJavadoc"
-        noStdlibLink = true
-        packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
-            suppress = true
-        }
     }
 
     create<Jar>("javadocJar") {
