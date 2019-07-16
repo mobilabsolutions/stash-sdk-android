@@ -5,7 +5,6 @@
 package com.mobilabsolutions.payment.android.psdk.internal
 
 import android.app.Application
-import androidx.annotation.VisibleForTesting
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
@@ -133,7 +132,7 @@ class PaymentSdkImpl(
                             }
                             integrationList.forEach {
                                 // Check whether the paired payment method is supported
-                                if(!it.first.supportedPaymentMethodTypes.contains(it.second)){
+                                if (!it.first.supportedPaymentMethodTypes.contains(it.second)) {
                                     throw ConfigurationException("${it.second.name} is not supported in ${it.first.name} integration")
                                 }
                             }

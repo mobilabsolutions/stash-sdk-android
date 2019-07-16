@@ -64,7 +64,7 @@ class IntegrationTest {
                 AdyenIntegration to PaymentMethodType.SEPA
             )
         )
-        PaymentSdk.initalize(application, paymentSdkConfiguration)
+        PaymentSdk.initialize(application, paymentSdkConfiguration)
     }
 
     @Test
@@ -114,7 +114,7 @@ class IntegrationTest {
                 BraintreeIntegration to PaymentMethodType.CC
             )
         )
-        PaymentSdk.initalize(application, paymentSdkConfiguration)
+        PaymentSdk.initialize(application, paymentSdkConfiguration)
     }
 }
 
