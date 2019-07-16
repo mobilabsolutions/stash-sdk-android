@@ -78,7 +78,7 @@ class IntegrationTest {
                 BraintreeIntegration to PaymentMethodType.CC
             )
         )
-        PaymentSdk.initalize(application, paymentSdkConfiguration)
+        PaymentSdk.initialize(application, paymentSdkConfiguration)
     }
 
     @Test
@@ -89,7 +89,7 @@ class IntegrationTest {
             endpoint = "https://fakeUrl",
             integrationList = listOf()
         )
-        PaymentSdk.initalize(application, paymentSdkConfiguration)
+        PaymentSdk.initialize(application, paymentSdkConfiguration)
     }
 
     @Test
@@ -99,7 +99,7 @@ class IntegrationTest {
             publishableKey = "123",
             endpoint = "https://fakeUrl"
         )
-        PaymentSdk.initalize(application, paymentSdkConfiguration)
+        PaymentSdk.initialize(application, paymentSdkConfiguration)
     }
 
     @Test

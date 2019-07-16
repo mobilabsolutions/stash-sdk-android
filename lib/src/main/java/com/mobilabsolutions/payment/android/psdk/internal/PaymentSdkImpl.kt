@@ -8,9 +8,9 @@ import android.app.Application
 import androidx.annotation.VisibleForTesting
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
-import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
+import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
@@ -106,6 +106,7 @@ class PaymentSdkImpl(
         /**
          * Initalize method verifies the configuration and invokes the creation of the singleton
          */
+        @JvmStatic
         @Synchronized
         fun initialize(applicationContext: Application, configuration: PaymentSdkConfiguration) {
             configuration.apply {
@@ -169,6 +170,7 @@ class PaymentSdkImpl(
         /**
          * Update the UI configurations, effects will be applied only after the screen is recreated
          */
+        @JvmStatic
         fun configureUi(paymentUIConfiguration: PaymentUiConfiguration) {
             assertInitialized()
             instance!!.uiCustomizationManager.setCustomizationPreferences(paymentUIConfiguration)
@@ -177,6 +179,7 @@ class PaymentSdkImpl(
         /**
          * Returns the registration manager object
          */
+        @JvmStatic
         fun getRegistrationManager(): RegistrationManager {
             assertInitialized()
             return instance!!.newRegistrationManager
