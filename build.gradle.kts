@@ -3,15 +3,18 @@
  */
 
 buildscript {
+
     repositories {
         google()
         jcenter()
         maven(url = "https://maven.fabric.io/public")
     }
+
     dependencies {
         classpath(Libs.androidGradlePlugin)
 
         classpath(Libs.Kotlin.gradlePlugin)
+
         classpath(Libs.Kotlin.extensions)
 
         classpath(Libs.gradleVersionsPlugin)
@@ -29,11 +32,14 @@ buildscript {
 plugins {
     id("com.diffplug.gradle.spotless") version ("3.23.1")
     id("com.github.ben-manes.versions") version ("0.21.0")
-
 }
 
-
 allprojects {
+
+    extra["signing.keyId"] = "CCE33870"
+    extra["signing.secretKeyRingFile"] = rootProject.file("signing/secring.gpg")
+    extra["signing.password"] = "android"
+
     repositories {
         google()
         jcenter()
@@ -49,7 +55,6 @@ subprojects {
             ktlint("0.31.0")
         }
     }
-
 }
 
 configurations.all {

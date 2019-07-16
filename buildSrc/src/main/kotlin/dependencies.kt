@@ -12,6 +12,8 @@ object PaymentSdkRelease {
     val mobilabBackendUrl = "BACKEND_DEVELOPMENT"
     val newBsApiUrl = "NEW_BS_API_URL"
     val testPublishableKey = "NEW_BS_TEST_PUBLIC_KEY"
+    val MobilabNexusUsername = "NEW_BS_TEST_PUBLIC_KEY"
+    val MobilabNexusPassword = "NEW_BS_TEST_PUBLIC_KEY"
 }
 
 object PaymentSdkBuildConfigs {
@@ -28,6 +30,8 @@ object DemoRelease {
 }
 
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
+
+val isTravisTag: Boolean = System.getenv("TRAVIS_TAG") != null
 
 object Modules {
     val templateIntegration = ":template-integration"
@@ -183,6 +187,7 @@ object Libs {
     object Utils {
         val commonsValidator = "commons-validator:commons-validator:1.6"
     }
+
 }
 
 fun Project.propOrDefWithTravis(propertyName: String, defaultValue: String): String {
