@@ -12,8 +12,8 @@ object PaymentSdkRelease {
     val mobilabBackendUrl = "BACKEND_DEVELOPMENT"
     val newBsApiUrl = "NEW_BS_API_URL"
     val testPublishableKey = "NEW_BS_TEST_PUBLIC_KEY"
-    val MobilabNexusUsername = "NEW_BS_TEST_PUBLIC_KEY"
-    val MobilabNexusPassword = "NEW_BS_TEST_PUBLIC_KEY"
+    val MobilabNexusUsername = "MOBILAB_NEXUS_USER"
+    val MobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
 }
 
 object PaymentSdkBuildConfigs {
