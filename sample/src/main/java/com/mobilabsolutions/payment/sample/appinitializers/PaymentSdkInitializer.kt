@@ -28,7 +28,7 @@ class PaymentSdkInitializer @Inject constructor() : AppInitializer {
                 ),
                 testMode = true
         )
-        PaymentSdk.initalize(
+        PaymentSdk.initialize(
                 application,
                 paymentSdkConfiguration
         )

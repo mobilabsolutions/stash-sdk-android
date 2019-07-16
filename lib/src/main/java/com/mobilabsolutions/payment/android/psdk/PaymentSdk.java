@@ -22,19 +22,21 @@ public final class PaymentSdk {
     /**
      * Initialize the SDK by using configuration object {@link PaymentSdkConfiguration}. This needs to be done before the Payment SDK is used
      * for the first time.
-     * @param applicationContext Application context
+     *
+     * @param applicationContext      Application context
      * @param paymentSdkConfiguration SDK configuration object
      */
-    public static void initalize(Application applicationContext, PaymentSdkConfiguration paymentSdkConfiguration) {
-        PaymentSdkImpl.Companion.initialize(applicationContext, paymentSdkConfiguration);
+    public static void initialize(Application applicationContext, PaymentSdkConfiguration paymentSdkConfiguration) {
+        PaymentSdkImpl.initialize(applicationContext, paymentSdkConfiguration);
     }
 
     /**
      * Provide a customization object for UI components so it blends better with the rest of your application.
+     *
      * @param paymentUIConfiguration ui configuration object
      */
     public static void configureUi(PaymentUiConfiguration paymentUIConfiguration) {
-        PaymentSdkImpl.Companion.configureUi(paymentUIConfiguration);
+        PaymentSdkImpl.configureUi(paymentUIConfiguration);
     }
 
 
@@ -44,7 +46,7 @@ public final class PaymentSdk {
      * @return registration manager
      */
     public static RegistrationManager getRegistrationManager() {
-        return PaymentSdkImpl.Companion.getRegistrationManager();
+        return PaymentSdkImpl.getRegistrationManager();
     }
 
 }
