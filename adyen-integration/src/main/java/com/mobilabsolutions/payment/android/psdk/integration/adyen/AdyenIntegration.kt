@@ -29,7 +29,7 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkComponent) : Integration {
-    override val identifier = "ADYEN"
+    override val identifier = name
 
     @Inject
     lateinit var adyenHandler: AdyenHandler
@@ -41,7 +41,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
     lateinit var applicationContext: Context
 
     companion object : IntegrationCompanion {
+
         var integration: AdyenIntegration? = null
+
+        override val name = "ADYEN"
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA)
 

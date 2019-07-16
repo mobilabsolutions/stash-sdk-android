@@ -11,6 +11,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
+import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
@@ -62,6 +63,20 @@ class IntegrationTest {
                     BsPayoneIntegration to PaymentMethodType.SEPA,
                     AdyenIntegration to PaymentMethodType.SEPA
                 )
+        )
+        PaymentSdk.initalize(application, paymentSdkConfiguration)
+    }
+
+    @Test
+    fun testMultipleIntegrationsWithUnsupportedPaymentMethods() {
+        expectedException.expect(ConfigurationException::class.java)
+        val paymentSdkConfiguration = PaymentSdkConfiguration(
+            publishableKey = "123",
+            endpoint = "https://fakeUrl",
+            integrationList = listOf(
+                BraintreeIntegration to PaymentMethodType.SEPA,
+                BraintreeIntegration to PaymentMethodType.CC
+            )
         )
         PaymentSdk.initalize(application, paymentSdkConfiguration)
     }

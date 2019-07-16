@@ -37,6 +37,8 @@ interface Integration {
 
 interface IntegrationCompanion {
 
+    val name: PspIdentifier
+
     val supportedPaymentMethodTypes: Set<PaymentMethodType>
 
     fun create(enabledPaymentMethodTypeSet: Set<PaymentMethodType>): IntegrationInitialization
