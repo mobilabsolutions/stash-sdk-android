@@ -11,6 +11,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentSdk
 import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
+import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
 import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
@@ -53,15 +54,29 @@ class IntegrationTest {
     }
 
     @Test
-    fun testMultipleIntegrations() {
+    fun testDuplicateIntegrations() {
         expectedException.expect(ConfigurationException::class.java)
         val paymentSdkConfiguration = PaymentSdkConfiguration(
-                publishableKey = "123",
-                endpoint = "https://fakeUrl",
-                integrationList = listOf(
-                    BsPayoneIntegration to PaymentMethodType.SEPA,
-                    AdyenIntegration to PaymentMethodType.SEPA
-                )
+            publishableKey = "123",
+            endpoint = "https://fakeUrl",
+            integrationList = listOf(
+                BsPayoneIntegration to PaymentMethodType.SEPA,
+                AdyenIntegration to PaymentMethodType.SEPA
+            )
+        )
+        PaymentSdk.initialize(application, paymentSdkConfiguration)
+    }
+
+    @Test
+    fun testMultipleIntegrationsWithUnsupportedPaymentMethods() {
+        expectedException.expect(ConfigurationException::class.java)
+        val paymentSdkConfiguration = PaymentSdkConfiguration(
+            publishableKey = "123",
+            endpoint = "https://fakeUrl",
+            integrationList = listOf(
+                BraintreeIntegration to PaymentMethodType.SEPA,
+                BraintreeIntegration to PaymentMethodType.CC
+            )
         )
         PaymentSdk.initialize(application, paymentSdkConfiguration)
     }
@@ -83,6 +98,21 @@ class IntegrationTest {
         val paymentSdkConfiguration = PaymentSdkConfiguration(
             publishableKey = "123",
             endpoint = "https://fakeUrl"
+        )
+        PaymentSdk.initialize(application, paymentSdkConfiguration)
+    }
+
+    @Test
+    fun testBothIntegrationAndIntegrationListProvided() {
+        expectedException.expect(ConfigurationException::class.java)
+        val paymentSdkConfiguration = PaymentSdkConfiguration(
+            publishableKey = "123",
+            endpoint = "https://fakeUrl",
+            integration = BraintreeIntegration,
+            integrationList = listOf(
+                BraintreeIntegration to PaymentMethodType.SEPA,
+                BraintreeIntegration to PaymentMethodType.CC
+            )
         )
         PaymentSdk.initialize(application, paymentSdkConfiguration)
     }

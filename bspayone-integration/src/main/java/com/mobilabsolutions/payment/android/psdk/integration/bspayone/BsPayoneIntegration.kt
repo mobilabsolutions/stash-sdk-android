@@ -30,7 +30,7 @@ class BsPayoneIntegration private constructor(
     paymentSdkComponent: PaymentSdkComponent,
     val url: String = BuildConfig.newBsApiUrl
 ) : Integration {
-    override val identifier = "BS_PAYONE"
+    override val identifier = name
 
     @Inject
     lateinit var bsPayoneHandler: BsPayoneHandler
@@ -44,6 +44,8 @@ class BsPayoneIntegration private constructor(
     companion object : IntegrationCompanion {
 
         var integration: BsPayoneIntegration? = null
+
+        override val name = "BS_PAYONE"
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA)
 

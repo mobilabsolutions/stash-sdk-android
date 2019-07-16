@@ -26,7 +26,7 @@ import javax.inject.Inject
  */
 class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
 
-    override val identifier = "Template"
+    override val identifier = name
 
     @Inject
     lateinit var applicationContext: Context
@@ -34,6 +34,8 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
     companion object : IntegrationCompanion {
 
         var integration: TemplateIntegration? = null
+
+        override val name = "Template"
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.CC, PaymentMethodType.SEPA, PaymentMethodType.PAYPAL)
 
