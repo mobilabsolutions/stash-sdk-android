@@ -54,15 +54,15 @@ class IntegrationTest {
     }
 
     @Test
-    fun testMultipleIntegrations() {
+    fun testDuplicateIntegrations() {
         expectedException.expect(ConfigurationException::class.java)
         val paymentSdkConfiguration = PaymentSdkConfiguration(
-                publishableKey = "123",
-                endpoint = "https://fakeUrl",
-                integrationList = listOf(
-                    BsPayoneIntegration to PaymentMethodType.SEPA,
-                    AdyenIntegration to PaymentMethodType.SEPA
-                )
+            publishableKey = "123",
+            endpoint = "https://fakeUrl",
+            integrationList = listOf(
+                BsPayoneIntegration to PaymentMethodType.SEPA,
+                AdyenIntegration to PaymentMethodType.SEPA
+            )
         )
         PaymentSdk.initalize(application, paymentSdkConfiguration)
     }
@@ -98,6 +98,21 @@ class IntegrationTest {
         val paymentSdkConfiguration = PaymentSdkConfiguration(
             publishableKey = "123",
             endpoint = "https://fakeUrl"
+        )
+        PaymentSdk.initalize(application, paymentSdkConfiguration)
+    }
+
+    @Test
+    fun testBothIntegrationAndIntegrationListProvided() {
+        expectedException.expect(ConfigurationException::class.java)
+        val paymentSdkConfiguration = PaymentSdkConfiguration(
+            publishableKey = "123",
+            endpoint = "https://fakeUrl",
+            integration = BraintreeIntegration,
+            integrationList = listOf(
+                BraintreeIntegration to PaymentMethodType.SEPA,
+                BraintreeIntegration to PaymentMethodType.CC
+            )
         )
         PaymentSdk.initalize(application, paymentSdkConfiguration)
     }
