@@ -130,6 +130,12 @@ class PaymentSdkImpl(
                             if (integrationList.isEmpty()) {
                                 throw ConfigurationException("Integration list was provided, but it was empty")
                             }
+                            integrationList.forEach {
+                                // Check whether the paired payment method is supported
+                                if (!it.first.supportedPaymentMethodTypes.contains(it.second)) {
+                                    throw ConfigurationException("${it.second.name} is not supported in ${it.first.name} integration")
+                                }
+                            }
                             integrationList.toList().groupBy {
                                 it.first
                             }.map {

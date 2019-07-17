@@ -36,7 +36,7 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
-    override val identifier = "BRAINTREE"
+    override val identifier = name
 
     @Inject
     lateinit var braintreeHandler: BraintreeHandler
@@ -48,10 +48,16 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
     lateinit var applicationContext: Context
 
     companion object : IntegrationCompanion {
+
         const val CLIENT_TOKEN = "clientToken"
+
         const val NONCE = "NONCE"
+
         const val DEVICE_FINGERPRINT = "DEVICE_FINGERPRINT"
+
         var integration: BraintreeIntegration? = null
+
+        override val name = "BRAINTREE"
 
         override val supportedPaymentMethodTypes: Set<PaymentMethodType> = setOf(PaymentMethodType.PAYPAL)
 
