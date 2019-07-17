@@ -28,6 +28,7 @@ env:
 branches:
   only:
     - master
+    - maven-test
     - /^(\d+\.)?(\d+\.)?\d+(-\w+)?$/
 
 before_install:
