@@ -10,7 +10,7 @@ if [ ! -z $TRAVIS_TAG ]; then
 # If there's a tag, release.
     echo Publish to Maven Release
     ./gradlew publish
-elif [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
+elif [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'maven-test' ]; then
 # If it's not pull request and the branch is master, deploy the sample app to Fabric beta.
     echo Deploy to Fabric Beta.
     bundle update
