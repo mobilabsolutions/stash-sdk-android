@@ -26,12 +26,12 @@ object PaymentSdkBuildConfigs {
 object DemoRelease {
     val fabricApiKey = "FABRIC_API_KEY"
     val versionCode = "1"
-    val versionName = "0.10"
+    val versionName = "0.11" // 0.<Sprint number>
 }
 
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
 
-val isTravisTag: Boolean = System.getenv("TRAVIS_TAG") != null
+val isTravisTag: Boolean = !System.getenv("TRAVIS_TAG").isNullOrBlank()
 
 object Modules {
     val templateIntegration = ":template-integration"
