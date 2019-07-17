@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.payment.sample.main.items
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,6 @@ import android.view.ViewGroup
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.snackbar.Snackbar
-import com.mobilabsolutions.payment.sample.BuildConfig
 import com.mobilabsolutions.payment.sample.R
 import com.mobilabsolutions.payment.sample.core.BaseFragment
 import com.mobilabsolutions.payment.sample.productItem
@@ -33,9 +33,11 @@ class ItemsFragment : BaseFragment() {
         return inflater.inflate(R.layout.fragment_items, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        version_text.text = BuildConfig.VERSION_NAME
+        version_text.text = "App - v${com.mobilabsolutions.payment.sample.BuildConfig.VERSION_NAME} \n" +
+            "Lib - v${com.mobilabsolutions.payment.android.BuildConfig.VERSION_NAME}"
     }
 
     override fun invalidate() = withState(viewModel) { state ->

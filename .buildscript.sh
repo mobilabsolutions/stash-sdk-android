@@ -8,14 +8,15 @@ echo Is this PR: ${TRAVIS_PULL_REQUEST}
 
 if [ ! -z $TRAVIS_TAG ]; then
 # If there's a tag, release.
-    echo Deploy to Maven
-    bundle update
-    bundle exec fastlane deploy_release_maven
+    echo Publish to Maven Release
+    ./gradlew publish
 elif [ $TRAVIS_PULL_REQUEST = 'false' ] && [ $TRAVIS_BRANCH = 'master' ]; then
 # If it's not pull request and the branch is master, deploy the sample app to Fabric beta.
     echo Deploy to Fabric Beta.
     bundle update
     bundle exec fastlane deploy_release_fabric FABRIC_API_KEY:$FABRIC_API_KEY FABRIC_BUILD_SECRET:$FABRIC_BUILD_SECRET
+    echo Publish to Maven Snapshots
+    ./gradlew publish
 else
 # If it's pull request,
 	echo This is a pull request, no deployemnt.

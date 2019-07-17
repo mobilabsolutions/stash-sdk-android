@@ -46,7 +46,7 @@ val getCommitCount = ("git rev-list --count HEAD").runCommand()
 
 val sdkVersionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
 
-val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "$getBranch-$getCommitHash")
+val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
 
 android {
     compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
@@ -272,8 +272,14 @@ publishing {
     }
     repositories {
         maven {
-            name = "Nexus"
-            url = uri("https://nexus.mblb.net/repository/mblb-internal/")
+            name = "nexus"
+
+            val releasesRepoUrl = "https://nexus.mblb.net/repository/releases/"
+            val snapshotsRepoUrl = "https://nexus.mblb.net/repository/snapshots/"
+
+            // It's a release if tagged, else snapshot
+            url = uri(if (isTravisTag) releasesRepoUrl else snapshotsRepoUrl)
+
             credentials {
                 username = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusUsername, "")
                 password = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusPassword, "")
