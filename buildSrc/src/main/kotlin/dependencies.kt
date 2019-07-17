@@ -31,7 +31,7 @@ object DemoRelease {
 
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
 
-val isTravisTag: Boolean = System.getenv("TRAVIS_TAG") != null
+val isTravisTag: Boolean = !System.getenv("TRAVIS_TAG").isNullOrBlank()
 
 object Modules {
     val templateIntegration = ":template-integration"
