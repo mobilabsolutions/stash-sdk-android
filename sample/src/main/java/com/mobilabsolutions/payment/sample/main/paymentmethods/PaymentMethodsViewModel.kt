@@ -12,7 +12,7 @@ import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.payment.android.psdk.ExtraAliasInfo
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodAlias
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
+import com.mobilabsolutions.payment.android.psdk.Stash
 import com.mobilabsolutions.payment.sample.core.BaseViewModel
 import com.mobilabsolutions.payment.sample.core.launchInteractor
 import com.mobilabsolutions.payment.sample.data.entities.PaymentMethod
@@ -81,7 +81,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     fun onAddBtnClicked() {
-        disposables += PaymentSdk.getRegistrationManager().registerPaymentMethodUsingUi(/* idempotencyKey = UUID.randomUUID() */)
+        disposables += Stash.getRegistrationManager().registerPaymentMethodUsingUi(/* idempotencyKey = UUID.randomUUID() */)
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.main)
             .subscribe(this::onRegisterPaymentSuccess, this::onError)

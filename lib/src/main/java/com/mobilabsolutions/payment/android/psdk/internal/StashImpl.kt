@@ -8,9 +8,9 @@ import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
 import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
 import com.mobilabsolutions.payment.android.psdk.RegistrationManager
+import com.mobilabsolutions.payment.android.psdk.StashConfiguration
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
@@ -23,7 +23,7 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 
 /**
- * This class is responsible for configuring and initializing the Payment SDK. It is a singleton
+ * This class is responsible for configuring and initializing the Stash. It is a singleton
  * that is injected with registration and customization managers after the dagger graph has been created.
  * Since we are providing the same dagger graph to the integration modules, graph initialization is a three
  * step process:
@@ -42,7 +42,7 @@ import javax.net.ssl.X509TrustManager
  *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class PaymentSdkImpl(
+class StashImpl(
     publishableKey: String,
     url: String,
     applicationContext: Application,
@@ -58,7 +58,7 @@ class PaymentSdkImpl(
     @Inject
     internal lateinit var uiCustomizationManager: UiCustomizationManager
 
-    val daggerGraph: PaymentSdkComponent
+    val daggerGraph: StashComponent
 
     /**
      * Here we are building the dagger graph as described
@@ -78,9 +78,9 @@ class PaymentSdkImpl(
         val integrationInitializationMap = integrationMap.mapKeys { it.key.create(it.value) }
 
         // We are building modules, by providing configuration and created initialization objects
-        daggerGraph = DaggerPaymentSdkComponent.builder()
+        daggerGraph = DaggerStashComponent.builder()
             .sslSupportModule(SslSupportModule(sslSocketFactory, x509TrustManager))
-            .paymentSdkModule(PaymentSdkModule(publishableKey, url, applicationContext, integrationInitializationMap, testMode))
+            .stashModule(StashModule(publishableKey, url, applicationContext, integrationInitializationMap, testMode))
             .build()
 
         // Now the graph is created and can be expanded by each of the initializations
@@ -96,18 +96,18 @@ class PaymentSdkImpl(
      */
     companion object {
 
-        private var instance: PaymentSdkImpl? = null
+        private var instance: StashImpl? = null
 
         private var initialized = false
 
-        private var testComponent: PaymentSdkComponent? = null
+        private var testComponent: StashComponent? = null
 
         /**
          * Initalize method verifies the configuration and invokes the creation of the singleton
          */
         @JvmStatic
         @Synchronized
-        fun initialize(applicationContext: Application, configuration: PaymentSdkConfiguration) {
+        fun initialize(applicationContext: Application, configuration: StashConfiguration) {
             configuration.apply {
 
                 if (initialized) {
@@ -149,7 +149,7 @@ class PaymentSdkImpl(
                 }
                 AndroidThreeTen.init(applicationContext)
                 // Singleton instance creation
-                instance = PaymentSdkImpl(publishableKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
+                instance = StashImpl(publishableKey, endpoint, applicationContext, integrationInitializationMap, testMode, sslFactory, x509TrustManager)
 
                 initialized = true
                 // Font customization
@@ -190,7 +190,7 @@ class PaymentSdkImpl(
         private fun assertInitialized() {
             if (instance == null) {
                 throw RuntimeException(
-                    "Payment SDK is not initialized, make sure you called initialize method before using"
+                    "Stash is not initialized, make sure you called initialize method before using"
                 )
             }
         }
@@ -198,14 +198,14 @@ class PaymentSdkImpl(
         /**
          * Provide dagger graph to UI components that live in core library
          */
-        internal fun getInjector(): PaymentSdkComponent {
+        internal fun getInjector(): StashComponent {
             return if (instance != null) {
                 instance!!.daggerGraph
             } else {
                 if (testComponent != null) {
                     testComponent!!
                 } else {
-                    throw RuntimeException("Payment SDK not initialized!")
+                    throw RuntimeException("Stash not initialized!")
                 }
             }
         }
@@ -213,7 +213,7 @@ class PaymentSdkImpl(
         /**
          * For use in tests
          */
-        internal fun supplyTestComponent(testComponent: PaymentSdkComponent) {
+        internal fun supplyTestComponent(testComponent: StashComponent) {
             this.testComponent = testComponent
         }
 

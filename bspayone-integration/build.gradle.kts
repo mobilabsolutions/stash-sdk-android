@@ -21,7 +21,7 @@ kapt {
     useBuildCache = true
 }
 
-val templatePublishableKey = propOrDefWithTravis(PaymentSdkRelease.templatePublishableKey, "")
+val templatePublishableKey = propOrDefWithTravis(StashRelease.templatePublishableKey, "")
 
 androidExtensions {
     isExperimental = true
@@ -44,17 +44,17 @@ val getCommitHash = ("git rev-parse --short HEAD").runCommand()
 
 val getCommitCount = ("git rev-list --count HEAD").runCommand()
 
-val sdkVersionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
+val sdkVersionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, getCommitCount).toInt()
 
-val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
+val sdkVersionName = propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
 
 android {
-    compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-    buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
+    compileSdkVersion(StashBuildConfigs.compileSdk)
+    buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
 
     defaultConfig {
-        minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-        targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
+        minSdkVersion(StashBuildConfigs.minSdk)
+        targetSdkVersion(StashBuildConfigs.targetSdk)
 
         versionCode = sdkVersionCode
         versionName = if (isTravisTag) {
@@ -78,16 +78,16 @@ android {
     buildTypes {
         getByName("debug") {
             resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
-            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(StashRelease.newBsApiUrl, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
         }
 
         getByName("release") {
             isMinifyEnabled = false
-            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(StashRelease.newBsApiUrl, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
         }
     }
 
@@ -107,7 +107,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Modules.paymentSdk))
+    implementation(project(Modules.stash))
     implementation(Libs.Kotlin.stdlib)
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
@@ -120,7 +120,7 @@ dependencies {
     testImplementation(Libs.AndroidX.Test.core)
     kaptTest(Libs.Dagger.compiler)
 
-    androidTestImplementation(project(Modules.paymentSdk))
+    androidTestImplementation(project(Modules.stash))
     androidTestImplementation(Libs.junit)
     androidTestImplementation(Libs.mockitoCore)
     androidTestImplementation(Libs.mockwebserver)
@@ -204,8 +204,8 @@ publishing {
             }
 
             pom {
-                name.set("Android Payment SDK - BsPayOne")
-                description.set("The payment SDK simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
+                name.set("Stash - BsPayOne")
+                description.set("The Stash simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
                 url.set("https://mobilabsolutions.com/")
                 licenses {
                     license {
@@ -281,8 +281,8 @@ publishing {
             url = uri(if (isTravisTag) releasesRepoUrl else snapshotsRepoUrl)
 
             credentials {
-                username = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusUsername, "")
-                password = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusPassword, "")
+                username = propOrDefWithTravis(StashRelease.MobilabNexusUsername, "")
+                password = propOrDefWithTravis(StashRelease.MobilabNexusPassword, "")
             }
         }
     }

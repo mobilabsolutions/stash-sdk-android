@@ -28,13 +28,13 @@ androidExtensions {
 }
 
 android {
-    compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-    buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
+    compileSdkVersion(StashBuildConfigs.compileSdk)
+    buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
     defaultConfig {
         applicationId = "com.mobilabsolutions.payment.sample"
-        minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-        targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
-        versionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, DemoRelease.versionCode).toInt()
+        minSdkVersion(StashBuildConfigs.minSdk)
+        targetSdkVersion(StashBuildConfigs.targetSdk)
+        versionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, DemoRelease.versionCode).toInt()
         versionName = "${DemoRelease.versionName}-$versionCode"
         vectorDrawables.useSupportLibrary = true
 
@@ -60,8 +60,8 @@ android {
 
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
 
             applicationIdSuffix = ".debug"
             versionNameSuffix = ".debug"
@@ -76,8 +76,8 @@ android {
         getByName("release") {
             signingConfig = signingConfigs.getByName("debug")
 
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
         }
     }
 
@@ -115,7 +115,7 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.rules)
     androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
 
-    implementation(project(Modules.paymentSdk)) //Core
+    implementation(project(Modules.stash)) //Core
     implementation(project(Modules.adyenIntegration))
     implementation(project(Modules.bsPayoneIntegration))
     implementation(project(Modules.braintreeIntegration))

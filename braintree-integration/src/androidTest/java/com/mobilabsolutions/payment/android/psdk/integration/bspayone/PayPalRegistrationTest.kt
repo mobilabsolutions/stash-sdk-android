@@ -18,9 +18,9 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreePayPalActivity
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.R
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
+import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
+import com.mobilabsolutions.payment.android.psdk.internal.StashModule
 import dagger.Component
 import org.junit.Before
 import org.junit.Ignore
@@ -44,12 +44,12 @@ class PayPalRegistrationTest {
             val methods = setOf(PaymentMethodType.PAYPAL)
             val initialization = BraintreeIntegration.create(methods)
             val component = DaggerTestPayPalRegistrationComponent.builder()
-                    .paymentSdkModule(PaymentSdkModule(
-                            MOBILAB_TEST_PUBLISHABLE_KEY,
-                            MOBILAB_BACKEND_URL,
-                            context.applicationContext as Application,
-                            mapOf(initialization to methods), true))
-                    .build()
+                .stashModule(StashModule(
+                    MOBILAB_TEST_PUBLISHABLE_KEY,
+                    MOBILAB_BACKEND_URL,
+                    context.applicationContext as Application,
+                    mapOf(initialization to methods), true))
+                .build()
             initialization.initialize(component)
         }
     }
@@ -78,7 +78,7 @@ class PayPalRegistrationTest {
 }
 
 @Singleton
-@Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
-internal interface TestPayPalRegistrationComponent : PaymentSdkComponent {
+@Component(modules = [SslSupportModule::class, StashModule::class])
+internal interface TestPayPalRegistrationComponent : StashComponent {
     fun injectTest(test: PayPalRegistrationTest)
 }

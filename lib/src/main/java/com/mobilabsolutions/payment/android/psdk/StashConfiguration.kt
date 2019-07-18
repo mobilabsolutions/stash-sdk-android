@@ -9,10 +9,10 @@ import javax.net.ssl.SSLSocketFactory
 import javax.net.ssl.X509TrustManager
 
 /**
- * Payment Sdk Configuration is used for configuring the payment SDK
+ * Stash Configuration is used for configuring the Stash
  *
  * * Publishable key - The publishable key linked to the merchant account you are using
- * * Endpoint - the endpoint of your instance of Payment SDK servers
+ * * Endpoint - the endpoint of your instance of Stash servers
  * * Integration - If you are using single integration for all payment methods you can use this parameter
  * * Integration List - If you are using several integrations, you need to provide pairs of integration to
  * payment method type
@@ -23,7 +23,7 @@ import javax.net.ssl.X509TrustManager
  *
  * If you are using Java, it is recommended to use the Builder class instead of data class constructor
  */
-data class PaymentSdkConfiguration(
+data class StashConfiguration(
     val publishableKey: String,
     val endpoint: String,
     val integration: IntegrationCompanion? = null,
@@ -32,10 +32,9 @@ data class PaymentSdkConfiguration(
     val testMode: Boolean = false,
     val sslFactory: SSLSocketFactory? = null,
     val x509TrustManager: X509TrustManager? = null
-
 ) {
     /**
-     * Builder for Payment SDK configuration object
+     * Builder for Stash configuration object
      */
     class Builder {
         private var publishableKey: String = ""
@@ -56,7 +55,7 @@ data class PaymentSdkConfiguration(
         }
 
         /**
-         * Endpoint - the endpoint of your instance of Payment SDK servers
+         * Endpoint - the endpoint of your instance of Stash servers
          */
         fun setEndpoint(endpoint: String): Builder {
             this.endpoint = endpoint
@@ -121,8 +120,8 @@ data class PaymentSdkConfiguration(
         /**
          * Build and return configuration object
          */
-        fun build(): PaymentSdkConfiguration {
-            return PaymentSdkConfiguration(
+        fun build(): StashConfiguration {
+            return StashConfiguration(
                 publishableKey,
                 endpoint!!,
                 integration,

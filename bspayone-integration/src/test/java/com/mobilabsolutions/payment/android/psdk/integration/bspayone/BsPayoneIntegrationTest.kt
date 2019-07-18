@@ -8,8 +8,8 @@ import android.app.Application
 import androidx.test.core.app.ApplicationProvider
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
+import com.mobilabsolutions.payment.android.psdk.internal.StashModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -67,7 +67,7 @@ class BsPayoneIntegrationTest {
 
         val graph = DaggerBsPayoneTestComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
-            .paymentSdkModule(PaymentSdkModule(testPublishableKey, mobilabBeUrl, context, mapOf(integration to methods), true))
+            .stashModule(StashModule(testPublishableKey, mobilabBeUrl, context, mapOf(integration to methods), true))
             .bsPayoneModule(BsPayoneModule(newBsPayoneUrl))
             .build()
 

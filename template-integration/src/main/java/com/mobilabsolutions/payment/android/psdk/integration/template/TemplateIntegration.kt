@@ -10,7 +10,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.R
 import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
+import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.IntegrationCompanion
@@ -24,7 +24,7 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
+class TemplateIntegration(stashComponent: StashComponent) : Integration {
 
     override val identifier = name
 
@@ -48,10 +48,10 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
                     return integration
                 }
 
-                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url: String): Integration {
+                override fun initialize(stashComponent: StashComponent, url: String): Integration {
                     if (integration == null) {
                         if (url.isEmpty()) {
-                            integration = TemplateIntegration(paymentSdkComponent)
+                            integration = TemplateIntegration(stashComponent)
                         } else {
                             TODO("Handle specific url here if PSP supports specific urls")
                         }
@@ -66,7 +66,7 @@ class TemplateIntegration(paymentSdkComponent: PaymentSdkComponent) : Integratio
 
     init {
         templateIntegrationComponent = DaggerTemplateIntegrationComponent.builder()
-            .paymentSdkComponent(paymentSdkComponent)
+            .stashComponent(stashComponent)
             .build()
     }
 

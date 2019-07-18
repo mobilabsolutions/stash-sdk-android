@@ -10,8 +10,8 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
 import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
+import com.mobilabsolutions.payment.android.psdk.internal.StashModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -57,7 +57,7 @@ class AdyenIntegrationTest {
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
         val graph = DaggerAdyenIntegrationTestComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
-            .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
+            .stashModule(StashModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
             .build()
 
         integration.initialize(graph)

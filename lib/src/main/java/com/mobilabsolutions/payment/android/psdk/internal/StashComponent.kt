@@ -20,9 +20,9 @@ import javax.inject.Singleton
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Singleton
-@Component(modules = [AndroidSupportInjectionModule::class, SslSupportModule::class, PaymentSdkModule::class])
-interface PaymentSdkComponent {
-    fun inject(paymentSdkImpl: PaymentSdkImpl)
+@Component(modules = [AndroidSupportInjectionModule::class, SslSupportModule::class, StashModule::class])
+interface StashComponent {
+    fun inject(stashImpl: StashImpl)
 
     fun inject(registrationProcessHostActivity: RegistrationProcessHostActivity)
 

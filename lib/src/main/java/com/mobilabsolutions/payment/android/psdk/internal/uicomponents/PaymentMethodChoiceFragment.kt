@@ -15,11 +15,17 @@ import com.mobilabsolutions.payment.android.R
 import com.mobilabsolutions.payment.android.psdk.CustomizationExtensions
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.PaymentUiConfiguration
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkImpl
 import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
+import com.mobilabsolutions.payment.android.psdk.internal.StashImpl
 import io.reactivex.subjects.ReplaySubject
-import kotlinx.android.synthetic.main.payment_method_chooser_fragment.*
-import kotlinx.android.synthetic.main.payment_method_entry.view.*
+import kotlinx.android.synthetic.main.payment_method_chooser_fragment.cancelImageView
+import kotlinx.android.synthetic.main.payment_method_chooser_fragment.explanationTextView
+import kotlinx.android.synthetic.main.payment_method_chooser_fragment.paymentMethodChooserRootLayout
+import kotlinx.android.synthetic.main.payment_method_chooser_fragment.paymentMethodRecyclerView
+import kotlinx.android.synthetic.main.payment_method_chooser_fragment.titleTextView
+import kotlinx.android.synthetic.main.payment_method_entry.view.paymentMethodIconImageView
+import kotlinx.android.synthetic.main.payment_method_entry.view.paymentMethodRootView
+import kotlinx.android.synthetic.main.payment_method_entry.view.paymentMethodTypeTextView
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -46,9 +52,9 @@ class PaymentMethodChoiceFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
         paymentMethodAdapter = PaymentMethodAdapter(
-                uiRequestHandler.availablePaymentMethods(),
-                uiRequestHandler.paymentMethodTypeSubject,
-                paymentUIConfiguration
+            uiRequestHandler.availablePaymentMethods(),
+            uiRequestHandler.paymentMethodTypeSubject,
+            paymentUIConfiguration
         )
         CustomizationExtensions {
             paymentMethodChooserRootLayout.applyBackgroundCustomization(paymentUIConfiguration)
@@ -68,7 +74,7 @@ class PaymentMethodChoiceFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        PaymentSdkImpl.getInjector().inject(this)
+        StashImpl.getInjector().inject(this)
     }
 
     override fun onDestroyView() {
@@ -100,18 +106,18 @@ class PaymentMethodChoiceFragment : Fragment() {
         override fun onBindViewHolder(holder: PaymentMethodViewHolder, position: Int) {
             val paymentMethodType = availablePaymentMethods[position]
             holder.paymentMethodName.setText(
-                    when (paymentMethodType) {
-                        PaymentMethodType.CC -> R.string.payment_chooser_credit_card
-                        PaymentMethodType.SEPA -> R.string.payment_chooser_sepa
-                        PaymentMethodType.PAYPAL -> R.string.payment_chooser_paypal
-                    }
+                when (paymentMethodType) {
+                    PaymentMethodType.CC -> R.string.payment_chooser_credit_card
+                    PaymentMethodType.SEPA -> R.string.payment_chooser_sepa
+                    PaymentMethodType.PAYPAL -> R.string.payment_chooser_paypal
+                }
             )
             holder.paymentMethodIcon.setImageResource(
-                    when (paymentMethodType) {
-                        PaymentMethodType.CC -> R.drawable.ic_credit
-                        PaymentMethodType.SEPA -> R.drawable.ic_sepa_symbol
-                        PaymentMethodType.PAYPAL -> R.drawable.ic_paypal_grey
-                    }
+                when (paymentMethodType) {
+                    PaymentMethodType.CC -> R.drawable.ic_credit
+                    PaymentMethodType.SEPA -> R.drawable.ic_sepa_symbol
+                    PaymentMethodType.PAYPAL -> R.drawable.ic_paypal_grey
+                }
             )
             holder.rootView.setOnClickListener {
                 paymentMethodSubject.onNext(paymentMethodType)

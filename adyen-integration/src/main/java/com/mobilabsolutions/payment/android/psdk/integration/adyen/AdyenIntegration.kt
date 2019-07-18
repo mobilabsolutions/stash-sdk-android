@@ -12,7 +12,7 @@ import com.mobilabsolutions.payment.android.psdk.exceptions.registration.Registr
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.uicomponents.UiComponentHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
+import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
@@ -28,7 +28,7 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkComponent) : Integration {
+class AdyenIntegration @Inject constructor(stashComponent: StashComponent) : Integration {
     override val identifier = name
 
     @Inject
@@ -56,10 +56,10 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
                     return integration
                 }
 
-                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url: String): Integration {
+                override fun initialize(stashComponent: StashComponent, url: String): Integration {
                     if (integration == null) {
                         if (url.isEmpty()) {
-                            integration = AdyenIntegration(paymentSdkComponent)
+                            integration = AdyenIntegration(stashComponent)
                         } else {
                             throw RuntimeException("Adyen doesn't support custom endpoint url")
                         }
@@ -71,7 +71,7 @@ class AdyenIntegration @Inject constructor(paymentSdkComponent: PaymentSdkCompon
     }
 
     val adyenIntegrationComponent: AdyenIntegrationComponent = DaggerAdyenIntegrationComponent.builder()
-        .paymentSdkComponent(paymentSdkComponent)
+        .stashComponent(stashComponent)
         .build()
 
     init {

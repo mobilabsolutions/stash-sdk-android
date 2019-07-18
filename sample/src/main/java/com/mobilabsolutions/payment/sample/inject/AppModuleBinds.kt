@@ -8,8 +8,8 @@ import com.mobilabsolutions.payment.sample.appinitializers.AppInitializer
 import com.mobilabsolutions.payment.sample.appinitializers.CrashlyticsInitializer
 import com.mobilabsolutions.payment.sample.appinitializers.DebugToolsInitializer
 import com.mobilabsolutions.payment.sample.appinitializers.EpoxyInitializer
-import com.mobilabsolutions.payment.sample.appinitializers.PaymentSdkInitializer
 import com.mobilabsolutions.payment.sample.appinitializers.RxAndroidInitializer
+import com.mobilabsolutions.payment.sample.appinitializers.StashInitializer
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoSet
@@ -37,5 +37,5 @@ abstract class AppModuleBinds {
 
     @Binds
     @IntoSet
-    abstract fun providePaymentSdkInitializer(bind: PaymentSdkInitializer): AppInitializer
+    abstract fun provideStashInitializer(bind: StashInitializer): AppInitializer
 }

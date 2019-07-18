@@ -19,11 +19,11 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
-import com.mobilabsolutions.payment.android.psdk.integration.braintree.test.BuildConfig
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreePayPalActivity
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
+import com.mobilabsolutions.payment.android.psdk.integration.braintree.test.BuildConfig
+import com.mobilabsolutions.payment.android.psdk.internal.StashModule
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 import org.junit.Before
@@ -46,13 +46,13 @@ class PayPalIntentRegistrationTest {
             val methods = setOf(PaymentMethodType.PAYPAL)
             val initialization = BraintreeIntegration.create(methods)
             val component = DaggerTestPayPalRegistrationComponent.builder()
-                    .paymentSdkModule(PaymentSdkModule(
-                            MOBILAB_TEST_PUBLISHABLE_KEY,
-                            MOBILAB_BACKEND_URL,
-                            context.applicationContext as Application,
-                            mapOf(initialization to methods),
-                            true))
-                    .build()
+                .stashModule(StashModule(
+                    MOBILAB_TEST_PUBLISHABLE_KEY,
+                    MOBILAB_BACKEND_URL,
+                    context.applicationContext as Application,
+                    mapOf(initialization to methods),
+                    true))
+                .build()
             initialization.initialize(component)
         }
     }

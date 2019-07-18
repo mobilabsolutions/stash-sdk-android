@@ -3,7 +3,7 @@
  */
 # Package com.mobilabsolutions.payment.android.psdk
 
-Payment SDK
+Stash
 
-Public api of the payment SDK. Through these classes you can configure the Payment SDK,
-customize the appearance of the prebuild UI components and register the payment methods. 
+Public api of the Stash. Through these classes you can configure the Stash,
+customize the appearance of the prebuilt UI components and register the payment methods. 

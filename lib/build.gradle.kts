@@ -41,17 +41,17 @@ val getCommitHash = ("git rev-parse --short HEAD").runCommand()
 
 val getCommitCount = ("git rev-list --count HEAD").runCommand()
 
-val sdkVersionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
+val sdkVersionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, getCommitCount).toInt()
 
-val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
+val sdkVersionName = propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
 
 android {
-    compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-    buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
+    compileSdkVersion(StashBuildConfigs.compileSdk)
+    buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
 
     defaultConfig {
-        minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-        targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
+        minSdkVersion(StashBuildConfigs.minSdk)
+        targetSdkVersion(StashBuildConfigs.targetSdk)
 
         versionCode = sdkVersionCode
         versionName = if (isTravisTag) {
@@ -225,8 +225,8 @@ publishing {
             }
 
             pom {
-                name.set("Android Payment SDK")
-                description.set("The payment SDK simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
+                name.set("Stash")
+                description.set("The Stash simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
                 url.set("https://mobilabsolutions.com/")
                 licenses {
                     license {
@@ -295,8 +295,8 @@ publishing {
             url = uri(if (isTravisTag) releasesRepoUrl else snapshotsRepoUrl)
 
             credentials {
-                username = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusUsername, "")
-                password = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusPassword, "")
+                username = propOrDefWithTravis(StashRelease.MobilabNexusUsername, "")
+                password = propOrDefWithTravis(StashRelease.MobilabNexusPassword, "")
             }
         }
     }

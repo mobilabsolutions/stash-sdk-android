@@ -36,7 +36,7 @@ import javax.inject.Singleton
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Module
-open class PaymentSdkModule(
+open class StashModule(
     private val publishableKey: String,
     private val mobilabUrl: String,
     private val applicationContext: Application,

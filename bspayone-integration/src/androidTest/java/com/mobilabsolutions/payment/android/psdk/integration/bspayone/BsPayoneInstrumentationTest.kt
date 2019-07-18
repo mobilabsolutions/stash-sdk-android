@@ -8,9 +8,9 @@ import android.app.Application
 import androidx.test.InstrumentationRegistry
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
+import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
+import com.mobilabsolutions.payment.android.psdk.internal.StashModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -64,9 +64,9 @@ class BsPayoneRegistrationInstrumentationTest {
         val methods = setOf(PaymentMethodType.SEPA, PaymentMethodType.CC)
         val integration = BsPayoneIntegration.create(methods)
 
-        val graph = DaggerBsPayoneTestPaymentSdkComponent.builder()
+        val graph = DaggerBsPayoneTestStashComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
-            .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
+            .stashModule(StashModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
             .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
             .build()
 
@@ -166,7 +166,7 @@ class BsPayoneRegistrationInstrumentationTest {
 }
 
 @Singleton
-@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, BsPayoneModule::class])
-internal interface BsPayoneTestPaymentSdkComponent : PaymentSdkComponent {
+@Component(modules = [SslSupportModule::class, StashModule::class, BsPayoneModule::class])
+internal interface BsPayoneTestStashComponent : StashComponent {
     fun injectTest(test: BsPayoneRegistrationInstrumentationTest)
 }

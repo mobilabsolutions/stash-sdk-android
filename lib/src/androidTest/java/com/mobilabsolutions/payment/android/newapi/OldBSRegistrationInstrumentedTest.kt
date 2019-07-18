@@ -76,7 +76,7 @@
 //    fun setUp() {
 //        val context = InstrumentationRegistry.getContext().applicationContext as Application
 //        val graphBuilder = DaggerTestOldBsRegistrationSdkComponent.builder()
-//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context))
+//                .stashModule(StashModule(testPublishableKey, MOBILAB_BE_URL, context))
 //                .hyperchargeModule(HyperchargeModule())
 //                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
 //
@@ -236,8 +236,8 @@
 // }
 //
 // @Singleton
-// @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
-// internal interface TestOldBsRegistrationSdkComponent : PaymentSdkComponent {
+// @Component(modules = [SslSupportModule::class, StashModule::class, com.mobilabsolutions.payment.android.psdk.integration.bsoldintegration.oldbspayone.OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+// internal interface TestOldBsRegistrationSdkComponent : StashComponent {
 //    fun injectTest(test: OldBSRegistrationInstrumentedTest)
 // }
 //

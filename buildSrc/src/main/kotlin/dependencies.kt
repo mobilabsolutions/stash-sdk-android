@@ -5,7 +5,7 @@
 import org.gradle.api.Project
 import java.util.Properties
 
-object PaymentSdkRelease {
+object StashRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
     val travisTag = "TRAVIS_TAG"
     val templatePublishableKey = "TEMPLATE_PUBLIC_KEY"
@@ -16,7 +16,7 @@ object PaymentSdkRelease {
     val MobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
 }
 
-object PaymentSdkBuildConfigs {
+object StashBuildConfigs {
     val compileSdk = 28
     val minSdk = 21
     val targetSdk = 28
@@ -38,7 +38,7 @@ object Modules {
     val bsPayoneIntegration = ":bspayone-integration"
     val braintreeIntegration = ":braintree-integration"
     val adyenIntegration = ":adyen-integration"
-    val paymentSdk = ":lib"
+    val stash = ":lib"
 }
 
 object Libs {

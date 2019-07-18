@@ -6,28 +6,28 @@ package com.mobilabsolutions.payment.android.psdk;
 
 import android.app.Application;
 
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkImpl;
+import com.mobilabsolutions.payment.android.psdk.internal.StashImpl;
 
 /**
- * This is a main interface to Payment SDK.
+ * This is a main interface to Stash.
  * <p>
  * It is used by providing a configuration object to the initialize method, and retrieving {@link RegistrationManager}
  * instance to register your payment methods. You can also customize UI components by providing customization configuration.
  *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-public final class PaymentSdk {
+public final class Stash {
 
 
     /**
-     * Initialize the SDK by using configuration object {@link PaymentSdkConfiguration}. This needs to be done before the Payment SDK is used
+     * Initialize the SDK by using configuration object {@link StashConfiguration}. This needs to be done before the Stash is used
      * for the first time.
      *
-     * @param applicationContext      Application context
-     * @param paymentSdkConfiguration SDK configuration object
+     * @param applicationContext Application context
+     * @param stashConfiguration SDK configuration object
      */
-    public static void initialize(Application applicationContext, PaymentSdkConfiguration paymentSdkConfiguration) {
-        PaymentSdkImpl.initialize(applicationContext, paymentSdkConfiguration);
+    public static void initialize(Application applicationContext, StashConfiguration stashConfiguration) {
+        StashImpl.initialize(applicationContext, stashConfiguration);
     }
 
     /**
@@ -36,7 +36,7 @@ public final class PaymentSdk {
      * @param paymentUIConfiguration ui configuration object
      */
     public static void configureUi(PaymentUiConfiguration paymentUIConfiguration) {
-        PaymentSdkImpl.configureUi(paymentUIConfiguration);
+        StashImpl.configureUi(paymentUIConfiguration);
     }
 
 
@@ -46,7 +46,7 @@ public final class PaymentSdk {
      * @return registration manager
      */
     public static RegistrationManager getRegistrationManager() {
-        return PaymentSdkImpl.getRegistrationManager();
+        return StashImpl.getRegistrationManager();
     }
 
 }

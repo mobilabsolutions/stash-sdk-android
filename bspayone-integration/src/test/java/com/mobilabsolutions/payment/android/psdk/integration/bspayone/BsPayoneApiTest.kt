@@ -10,8 +10,8 @@
 // import android.util.Base64
 // import com.mobilabsolutions.payment.android.psdk.UiCustomizationManager
 // import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
-// import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-// import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
+// import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
+// import com.mobilabsolutions.payment.android.psdk.internal.StashModule
 // import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
 // import com.mobilabsolutions.payment.android.psdk.model.BillingData
 // import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -65,8 +65,8 @@
 //                    .bufferedReader().use { it.readText() }
 //
 //    @Singleton
-//    @Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
-//    internal interface BsPayoneTestIntegrationComponent : PaymentSdkComponent {
+//    @Component(modules = [SslSupportModule::class, StashModule::class])
+//    internal interface BsPayoneTestIntegrationComponent : StashComponent {
 //        fun injectTest(test: BsPayoneApiTest)
 //    }
 //
@@ -147,7 +147,7 @@
 //
 //        val graph = DaggerBsPayoneApiTest_BsPayoneTestIntegrationComponent.builder()
 //                .sslSupportModule(SslSupportModule(null, null))
-//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
+//                .stashModule(StashModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 //                .build()
 //
 //        integration.initialize(graph, payoneBaseUrl.toString())
@@ -186,7 +186,7 @@
 //
 //        val graph = DaggerBsPayoneApiTest_BsPayoneTestIntegrationComponent.builder()
 //                .sslSupportModule(SslSupportModule(null, null))
-//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
+//                .stashModule(StashModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 //                .build()
 //
 //        integration.initialize(graph, payoneBaseUrl.toString())
@@ -222,7 +222,7 @@
 //
 //        val graph = DaggerBsPayoneApiTest_BsPayoneTestIntegrationComponent.builder()
 //                .sslSupportModule(SslSupportModule(null, null))
-//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
+//                .stashModule(StashModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 //                .build()
 //
 //        integration.initialize(graph, payoneBaseUrl.toString())
@@ -253,9 +253,9 @@
 // //
 // //        val integration = BsPayoneIntegration.create()
 // //
-// //        val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
+// //        val graph = DaggerBsPayoneApiTest_UnitTestStashComponent.builder()
 // //                .sslSupportModule(SslSupportModule(null, null))
-// //                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
+// //                .stashModule(StashModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 // //                .hyperchargeModule(HyperchargeModule())
 // //                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
 // //                .build()
@@ -274,9 +274,9 @@
 // //
 // //        val integration = BsPayoneIntegration.create()
 // //
-// //        val graph = DaggerBsPayoneApiTest_UnitTestPaymentSdkComponent.builder()
+// //        val graph = DaggerBsPayoneApiTest_UnitTestStashComponent.builder()
 // //                .sslSupportModule(SslSupportModule(null, null))
-// //                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
+// //                .stashModule(StashModule(testPublishableKey, backendBaseUrl.toString(), context, listOf(integration)))
 // //                .hyperchargeModule(HyperchargeModule())
 // //                .bsPayoneModule(BsPayoneModule(payoneBaseUrl.toString()))
 // //                .build()
@@ -288,7 +288,7 @@
 // //
 // //        assertNotNull(uiCustomizationManager)
 // //        uiCustomizationManager.setPaypalRedirectActivityCustomizations(customization)
-// //        val preferences = context.getSharedPreferences(PaymentSdkModule.DEFAULT_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+// //        val preferences = context.getSharedPreferences(StashModule.DEFAULT_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
 // //        val paypalCustomizationString = preferences.getString(NewUiCustomizationManager.PAYPAL_CUSTOMIZATION_KEY, "")
 // //        assertNotNull(paypalCustomizationString)
 // //        assertNotEquals(paypalCustomizationString, "")

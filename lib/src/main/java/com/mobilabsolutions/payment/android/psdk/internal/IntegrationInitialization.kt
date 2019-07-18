@@ -13,7 +13,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 interface IntegrationInitialization {
     val enabledPaymentMethodTypes: Set<PaymentMethodType>
 
-    fun initialize(paymentSdkComponent: PaymentSdkComponent, url: String = ""): Integration
+    fun initialize(stashComponent: StashComponent, url: String = ""): Integration
 
     fun initializedOrNull(): Integration?
 }

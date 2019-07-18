@@ -98,10 +98,10 @@
 //
 //        val context = InstrumentationRegistry.getContext().applicationContext as Application
 //        val graph = DaggerTestPayPalRedirectSdkComponent.builder()
-//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, backendBaseUrl.toString(), context, emptyList()))
+//                .stashModule(StashModule(testPublishableKey, backendBaseUrl.toString(), context, emptyList()))
 //                .build()
 //        graph.injectTest(this)
-//        PaymentSdkImpl.supplyTestComponent(graph)
+//        StashImpl.supplyTestComponent(graph)
 //        Timber.plant(Timber.DebugTree())
 //    }
 //
@@ -135,7 +135,7 @@
 //
 //
 // @Singleton
-// @Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
-// internal interface TestPayPalRedirectSdkComponent : PaymentSdkComponent {
+// @Component(modules = [SslSupportModule::class, StashModule::class])
+// internal interface TestPayPalRedirectSdkComponent : StashComponent {
 //    fun injectTest(test: PayPalRedirectFlowTest)
 // }

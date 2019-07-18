@@ -74,8 +74,8 @@
 //    @Before
 //    fun setUp() {
 //        val context = InstrumentationRegistry.getContext().applicationContext as Application
-//        val graphBuilder = DaggerTestHyperchargePaymentSdkComponent.builder()
-//                .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context))
+//        val graphBuilder = DaggerTestHyperchargeStashComponent.builder()
+//                .stashModule(StashModule(testPublishableKey, MOBILAB_BE_URL, context))
 //                .oldBsPayoneModule(OldBsPayoneModule(OLD_BS_PAYONE_URL))
 //                .hyperchargeModule(HyperchargeModule())
 //                .bsPayoneModule(BsPayoneModule(NEW_BS_PAYONE_URL))
@@ -181,7 +181,7 @@
 // }
 //
 // @Singleton
-// @Component(modules = [SslSupportModule::class, PaymentSdkModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
-// internal interface TestHyperchargePaymentSdkComponent : PaymentSdkComponent {
+// @Component(modules = [SslSupportModule::class, StashModule::class, OldBsPayoneModule::class, HyperchargeModule::class, BsPayoneModule::class])
+// internal interface TestHyperchargeStashComponent : StashComponent {
 //    fun injectTest(test: HyperchargePaymentInstrumentationTests)
 // }

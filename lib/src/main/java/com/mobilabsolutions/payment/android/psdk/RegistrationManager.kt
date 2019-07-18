@@ -36,7 +36,7 @@ interface RegistrationManager {
     fun getAvailablePaymentMethodsTypes(): Set<PaymentMethodType>
 
     /**
-     * Let payment SDK handle data using built-in UI components
+     * Let Stash handle data using built-in UI components
      *
      * @param activity the activity context to launch from. If activity is null, a new task will be created
      * @param specificPaymentMethodType skip payment method chooser and immediately show specific type entry UI
@@ -61,29 +61,29 @@ data class PaymentMethodAlias(
     }
 }
 
-    sealed class ExtraAliasInfo {
+sealed class ExtraAliasInfo {
 
-        data class CreditCardExtraInfo(
-            val creditCardMask: String,
-            val expiryMonth: Int,
-            val expiryYear: Int,
-            val creditCardType: CreditCardType
-        ) : ExtraAliasInfo()
+    data class CreditCardExtraInfo(
+        val creditCardMask: String,
+        val expiryMonth: Int,
+        val expiryYear: Int,
+        val creditCardType: CreditCardType
+    ) : ExtraAliasInfo()
 
-        data class SepaExtraInfo(
-            val maskedIban: String
-        ) : ExtraAliasInfo()
+    data class SepaExtraInfo(
+        val maskedIban: String
+    ) : ExtraAliasInfo()
 
-        data class PaypalExtraInfo(
-            val email: String
-        ) : ExtraAliasInfo()
+    data class PaypalExtraInfo(
+        val email: String
+    ) : ExtraAliasInfo()
 
-        data class JavaExtraInfo(
-            val creditCardExtraInfo: CreditCardExtraInfo? = null,
-            val sepaExtraInfo: SepaExtraInfo? = null,
-            val paypalExtraInfo: PaypalExtraInfo? = null
-        )
-    }
+    data class JavaExtraInfo(
+        val creditCardExtraInfo: CreditCardExtraInfo? = null,
+        val sepaExtraInfo: SepaExtraInfo? = null,
+        val paypalExtraInfo: PaypalExtraInfo? = null
+    )
+}
 
 enum class CreditCardType {
     JCB,

@@ -9,10 +9,10 @@ import androidx.test.core.app.ApplicationProvider
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ValidationException
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.RegistrationManagerImpl
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
+import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
+import com.mobilabsolutions.payment.android.psdk.internal.StashModule
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
 import com.mobilabsolutions.payment.android.psdk.model.SepaData
@@ -50,9 +50,9 @@ class AdyenTest {
         val methods = setOf(PaymentMethodType.SEPA, PaymentMethodType.CC)
         val integration = AdyenIntegration.create(methods)
 
-        val graph = DaggerAdyenTestPaymentSdkComponent.builder()
+        val graph = DaggerAdyenTestStashComponent.builder()
             .sslSupportModule(SslSupportModule(null, null))
-            .paymentSdkModule(PaymentSdkModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
+            .stashModule(StashModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
             .adyenModule(AdyenModule())
             .build()
 
@@ -194,7 +194,7 @@ class AdyenTest {
 }
 
 @Singleton
-@Component(modules = [SslSupportModule::class, PaymentSdkModule::class, AdyenModule::class])
-internal interface AdyenTestPaymentSdkComponent : PaymentSdkComponent {
+@Component(modules = [SslSupportModule::class, StashModule::class, AdyenModule::class])
+internal interface AdyenTestStashComponent : StashComponent {
     fun injectTest(test: AdyenTest)
 }

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
+import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.MobilabApi
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasExtra
 import com.mobilabsolutions.payment.android.psdk.internal.api.backend.v1.AliasUpdateRequest
@@ -35,7 +35,7 @@ import javax.inject.Inject
  *
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integration {
+class BraintreeIntegration(stashComponent: StashComponent) : Integration {
     override val identifier = name
 
     @Inject
@@ -70,9 +70,9 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
                     return integration
                 }
 
-                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url: String): Integration {
+                override fun initialize(stashComponent: StashComponent, url: String): Integration {
                     if (integration == null) {
-                        integration = BraintreeIntegration(paymentSdkComponent)
+                        integration = BraintreeIntegration(stashComponent)
                     }
                     return integration as Integration
                 }
@@ -84,7 +84,7 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
 
     init {
         braintreeIntegrationComponent = DaggerBraintreeIntegrationComponent.builder()
-            .paymentSdkComponent(paymentSdkComponent)
+            .stashComponent(stashComponent)
             .build()
         braintreeIntegrationComponent.inject(this)
     }
@@ -107,8 +107,10 @@ class BraintreeIntegration(paymentSdkComponent: PaymentSdkComponent) : Integrati
             AliasUpdateRequest(
                 extra = AliasExtra(
                     payPalConfig = PayPalConfig(
-                        nonce = registrationRequest.additionalData.extraData[NONCE] ?: error("Missing nonce"),
-                        deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT] ?: error("Missing device fingerprint")
+                        nonce = registrationRequest.additionalData.extraData[NONCE]
+                            ?: error("Missing nonce"),
+                        deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]
+                            ?: error("Missing device fingerprint")
                     ),
                     paymentMethod = "PAY_PAL",
                     personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])

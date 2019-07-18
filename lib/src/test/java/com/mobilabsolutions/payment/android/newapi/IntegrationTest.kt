@@ -7,15 +7,15 @@ package com.mobilabsolutions.payment.android.newapi
 import android.app.Application
 import android.content.SharedPreferences
 import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
-import com.mobilabsolutions.payment.android.psdk.PaymentSdk
-import com.mobilabsolutions.payment.android.psdk.PaymentSdkConfiguration
+import com.mobilabsolutions.payment.android.psdk.Stash
+import com.mobilabsolutions.payment.android.psdk.StashConfiguration
 import com.mobilabsolutions.payment.android.psdk.exceptions.base.ConfigurationException
 import com.mobilabsolutions.payment.android.psdk.integration.adyen.AdyenIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.braintree.BraintreeIntegration
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.BsPayoneIntegration
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkModule
 import com.mobilabsolutions.payment.android.psdk.internal.SslSupportModule
+import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
+import com.mobilabsolutions.payment.android.psdk.internal.StashModule
 import dagger.Component
 import org.junit.Before
 import org.junit.Rule
@@ -56,7 +56,7 @@ class IntegrationTest {
     @Test
     fun testDuplicateIntegrations() {
         expectedException.expect(ConfigurationException::class.java)
-        val paymentSdkConfiguration = PaymentSdkConfiguration(
+        val stashConfiguration = StashConfiguration(
             publishableKey = "123",
             endpoint = "https://fakeUrl",
             integrationList = listOf(
@@ -64,13 +64,13 @@ class IntegrationTest {
                 AdyenIntegration to PaymentMethodType.SEPA
             )
         )
-        PaymentSdk.initialize(application, paymentSdkConfiguration)
+        Stash.initialize(application, stashConfiguration)
     }
 
     @Test
     fun testMultipleIntegrationsWithUnsupportedPaymentMethods() {
         expectedException.expect(ConfigurationException::class.java)
-        val paymentSdkConfiguration = PaymentSdkConfiguration(
+        val stashConfiguration = StashConfiguration(
             publishableKey = "123",
             endpoint = "https://fakeUrl",
             integrationList = listOf(
@@ -78,34 +78,34 @@ class IntegrationTest {
                 BraintreeIntegration to PaymentMethodType.CC
             )
         )
-        PaymentSdk.initialize(application, paymentSdkConfiguration)
+        Stash.initialize(application, stashConfiguration)
     }
 
     @Test
     fun testEmptyIntegrationListProvided() {
         expectedException.expect(ConfigurationException::class.java)
-        val paymentSdkConfiguration = PaymentSdkConfiguration(
+        val stashConfiguration = StashConfiguration(
             publishableKey = "123",
             endpoint = "https://fakeUrl",
             integrationList = listOf()
         )
-        PaymentSdk.initialize(application, paymentSdkConfiguration)
+        Stash.initialize(application, stashConfiguration)
     }
 
     @Test
     fun testNoIntegrationProvided() {
         expectedException.expect(ConfigurationException::class.java)
-        val paymentSdkConfiguration = PaymentSdkConfiguration(
+        val stashConfiguration = StashConfiguration(
             publishableKey = "123",
             endpoint = "https://fakeUrl"
         )
-        PaymentSdk.initialize(application, paymentSdkConfiguration)
+        Stash.initialize(application, stashConfiguration)
     }
 
     @Test
     fun testBothIntegrationAndIntegrationListProvided() {
         expectedException.expect(ConfigurationException::class.java)
-        val paymentSdkConfiguration = PaymentSdkConfiguration(
+        val stashConfiguration = StashConfiguration(
             publishableKey = "123",
             endpoint = "https://fakeUrl",
             integration = BraintreeIntegration,
@@ -114,12 +114,12 @@ class IntegrationTest {
                 BraintreeIntegration to PaymentMethodType.CC
             )
         )
-        PaymentSdk.initialize(application, paymentSdkConfiguration)
+        Stash.initialize(application, stashConfiguration)
     }
 }
 
 @Singleton
-@Component(modules = [SslSupportModule::class, PaymentSdkModule::class])
-internal interface IntegrationTestSdkComponent : PaymentSdkComponent {
+@Component(modules = [SslSupportModule::class, StashModule::class])
+internal interface IntegrationTestSdkComponent : StashComponent {
     fun injectTest(integrationTest: IntegrationTest)
 }

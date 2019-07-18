@@ -5,7 +5,7 @@
 package com.mobilabsolutions.payment.android.psdk
 
 import android.util.Base64
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkImpl
+import com.mobilabsolutions.payment.android.psdk.internal.StashImpl
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,11 +21,9 @@ import org.powermock.modules.junit4.PowerMockRunner
 @PowerMockIgnore("javax.net.ssl.*")
 class PublicApiTest {
 
-//    val paymentSdk : PaymentSdk = PaymentSdkImpl("123")
-
     @Before
     fun setUp() {
-        PaymentSdkImpl.reset()
+        StashImpl.reset()
     }
 
     @Test

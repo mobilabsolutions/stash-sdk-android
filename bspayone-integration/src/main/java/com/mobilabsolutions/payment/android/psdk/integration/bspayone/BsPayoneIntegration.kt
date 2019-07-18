@@ -10,7 +10,7 @@ import com.mobilabsolutions.payment.android.psdk.PaymentMethodType
 import com.mobilabsolutions.payment.android.psdk.integration.bspayone.uicomponents.UiComponentHandler
 import com.mobilabsolutions.payment.android.psdk.internal.IdempotencyKey
 import com.mobilabsolutions.payment.android.psdk.internal.IntegrationInitialization
-import com.mobilabsolutions.payment.android.psdk.internal.PaymentSdkComponent
+import com.mobilabsolutions.payment.android.psdk.internal.StashComponent
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.CreditCardRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
@@ -27,7 +27,7 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BsPayoneIntegration private constructor(
-    paymentSdkComponent: PaymentSdkComponent,
+    stashComponent: StashComponent,
     val url: String = BuildConfig.newBsApiUrl
 ) : Integration {
     override val identifier = name
@@ -57,12 +57,12 @@ class BsPayoneIntegration private constructor(
                     return integration
                 }
 
-                override fun initialize(paymentSdkComponent: PaymentSdkComponent, url: String): Integration {
+                override fun initialize(stashComponent: StashComponent, url: String): Integration {
                     if (integration == null) {
                         if (url.isEmpty()) {
-                            integration = BsPayoneIntegration(paymentSdkComponent)
+                            integration = BsPayoneIntegration(stashComponent)
                         } else {
-                            integration = BsPayoneIntegration(paymentSdkComponent, url)
+                            integration = BsPayoneIntegration(stashComponent, url)
                         }
                     }
                     return integration as Integration
@@ -75,7 +75,7 @@ class BsPayoneIntegration private constructor(
 
     init {
         bsPayoneIntegrationComponent = DaggerBsPayoneIntegrationComponent.builder()
-            .paymentSdkComponent(paymentSdkComponent)
+            .stashComponent(stashComponent)
             .bsPayoneModule(BsPayoneModule(url))
             .build()
 
