@@ -2,12 +2,11 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
-import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.library")
+    id("PaymentSdkPlugin")
     id("org.jetbrains.dokka-android")
     id("maven-publish")
     kotlin("android")
@@ -23,81 +22,6 @@ kapt {
 
 androidExtensions {
     isExperimental = true
-}
-
-fun String.runCommand(): String {
-    val command = this
-    val output = ByteArrayOutputStream()
-    project.exec {
-        this.workingDir = project.rootDir
-        this.commandLine = command.split(" ")
-        this.standardOutput = output
-    }
-    return String(output.toByteArray()).trim()
-}
-
-val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand()
-
-val getCommitHash = ("git rev-parse --short HEAD").runCommand()
-
-val getCommitCount = ("git rev-list --count HEAD").runCommand()
-
-val sdkVersionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
-
-val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
-
-android {
-    compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-    buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
-
-    defaultConfig {
-        minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-        targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
-
-        versionCode = sdkVersionCode
-        versionName = if (isTravisTag) {
-            sdkVersionName
-        } else {
-            "$sdkVersionName-SNAPSHOT"
-        }
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        getByName("debug") {
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
-        }
-        getByName("release") {
-            isMinifyEnabled = false
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    lintOptions {
-        isAbortOnError = false
-    }
-
-    testOptions {
-        unitTests.apply {
-            isIncludeAndroidResources = true
-            all(KotlinClosure1<Any, Test>({
-                (this as Test).also {
-                    maxHeapSize = "1024m"
-                    testLogging {
-                        events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
-                    }
-                }
-            }, this))
-        }
-    }
 }
 
 dependencies {

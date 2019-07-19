@@ -3,7 +3,8 @@
  */
 
 import org.gradle.api.Project
-import java.util.Properties
+import java.io.ByteArrayOutputStream
+import java.util.*
 
 object PaymentSdkRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
@@ -204,4 +205,15 @@ fun Project.propOrDefWithTravis(propertyName: String, defaultValue: String): Str
         }
     }
     return if (propertyValue == null || propertyValue.isEmpty()) defaultValue else propertyValue
+}
+
+fun String.runCommand(project: Project): String {
+    val command = this
+    val output = ByteArrayOutputStream()
+    project.exec {
+        this.workingDir = project.rootDir
+        this.commandLine = command.split(" ")
+        this.standardOutput = output
+    }
+    return String(output.toByteArray()).trim()
 }
