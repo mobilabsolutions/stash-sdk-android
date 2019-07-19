@@ -1,14 +1,27 @@
+import PaymentSdkRelease.templatePublishableKey
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
+import com.jaredsburrows.license.LicensePlugin
+import com.jaredsburrows.license.LicenseReportExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.publish.PublicationContainer
+import org.gradle.api.publish.PublishingExtension
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.kotlin.dsl.KotlinClosure1
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.create
+import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.invoke
+import org.gradle.plugins.signing.SigningExtension
+import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jetbrains.kotlin.gradle.internal.AndroidExtensionsExtension
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
@@ -28,6 +41,8 @@ class PaymentSdkPlugin : Plugin<Project> {
             }
             true
         }
+        project.configureLicenseReport()
+        project.configureDependencies()
     }
 
     private fun Project.configureKotlin() {
@@ -41,10 +56,6 @@ class PaymentSdkPlugin : Plugin<Project> {
         configure<AndroidExtensionsExtension> {
             isExperimental = true
         }
-    }
-
-    private fun Project.applyPlugins() {
-
     }
 
     private fun LibraryExtension.configureAndroidLibraryOptions(project: Project) {
@@ -72,11 +83,14 @@ class PaymentSdkPlugin : Plugin<Project> {
 
         buildTypes {
             getByName("debug") {
+                resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
+                buildConfigField("String", "newBsApiUrl", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
                 buildConfigField("String", "mobilabBackendUrl", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
                 buildConfigField("String", "testPublishableKey", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
             }
             getByName("release") {
                 isMinifyEnabled = false
+                buildConfigField("String", "newBsApiUrl", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
                 buildConfigField("String", "mobilabBackendUrl", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
                 buildConfigField("String", "testPublishableKey", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
             }
@@ -98,6 +112,27 @@ class PaymentSdkPlugin : Plugin<Project> {
                     }
                 }, this))
             }
+        }
+    }
+
+    private fun Project.configureLicenseReport() {
+        configure<LicenseReportExtension> {
+            generateHtmlReport = true
+            generateJsonReport = true
+
+            copyHtmlReportToAssets = false
+            copyJsonReportToAssets = false
+        }
+    }
+
+    private fun Project.configureDependencies() {
+        dependencies {
+            "implementation"(Libs.Kotlin.stdlib)
+            "implementation"(Libs.Dagger.dagger)
+            "kapt"(Libs.Dagger.compiler)
+            "implementation"(Libs.AndroidX.constraintlayout)
+            "implementation"(Libs.AndroidX.appcompat)
+            "implementation"(Libs.Google.material)
         }
     }
 }

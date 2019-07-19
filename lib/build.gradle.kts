@@ -3,82 +3,16 @@
  */
 
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
-import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.library")
+    id("PaymentSdkPlugin")
     id("org.jetbrains.dokka-android")
     id("maven-publish")
-    kotlin("android")
-    kotlin("kapt")
-    kotlin("android.extensions")
     signing
 }
 
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-}
-
-androidExtensions {
-    isExperimental = true
-}
-
-fun String.runCommand(): String {
-    val command = this
-    val output = ByteArrayOutputStream()
-    project.exec {
-        this.workingDir = project.rootDir
-        this.commandLine = command.split(" ")
-        this.standardOutput = output
-    }
-    return String(output.toByteArray()).trim()
-}
-
-val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand()
-
-val getCommitHash = ("git rev-parse --short HEAD").runCommand()
-
-val getCommitCount = ("git rev-list --count HEAD").runCommand()
-
-val sdkVersionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
-
-val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
-
-android {
-    compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-    buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
-
-    defaultConfig {
-        minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-        targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
-
-        versionCode = sdkVersionCode
-        versionName = if (isTravisTag) {
-            sdkVersionName
-        } else {
-            "$sdkVersionName-SNAPSHOT"
-        }
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    lintOptions {
-        isAbortOnError = false
-    }
-}
-
 dependencies {
-    implementation(Libs.Kotlin.stdlib)
-
-    implementation(Libs.AndroidX.constraintlayout)
-    implementation(Libs.AndroidX.appcompat)
-
     api(Libs.OkHttp.okhttp)
     api(Libs.OkHttp.loggingInterceptor)
 
@@ -95,14 +29,11 @@ dependencies {
     api(Libs.threetenabp)
 
     implementation(Libs.AndroidX.recyclerview)
-    implementation(Libs.Google.material)
 
     implementation(Libs.Utils.commonsValidator)
 
-    implementation(Libs.Dagger.dagger)
     implementation(Libs.Dagger.daggerAndroid)
     implementation(Libs.Dagger.androidSupport)
-    kapt(Libs.Dagger.compiler)
 
     implementation(Libs.caligraphy)
     implementation(Libs.viewPump)
@@ -130,14 +61,6 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.ext)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     kaptAndroidTest(Libs.Dagger.compiler)
-}
-
-licenseReport {
-    generateHtmlReport = true
-    generateJsonReport = true
-
-    copyHtmlReportToAssets = false
-    copyJsonReportToAssets = false
 }
 
 configurations.all {

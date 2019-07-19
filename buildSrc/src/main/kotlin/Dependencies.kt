@@ -43,7 +43,7 @@ object Modules {
 }
 
 object Libs {
-    val androidGradlePlugin = "com.android.tools.build:gradle:3.4.1"
+    val androidGradlePlugin = "com.android.tools.build:gradle:3.4.2"
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
     val timber = "com.jakewharton.timber:timber:4.7.1"
     val junit = "junit:junit:4.12"
@@ -74,7 +74,7 @@ object Libs {
     }
 
     object Kotlin {
-        private const val version = "1.3.40"
+        private const val version = "1.3.41"
         val stdlib = "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$version"
         val gradlePlugin = "org.jetbrains.kotlin:kotlin-gradle-plugin:$version"
         val extensions = "org.jetbrains.kotlin:kotlin-android-extensions:$version"

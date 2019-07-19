@@ -6,47 +6,31 @@ import org.jetbrains.dokka.gradle.DokkaAndroidTask
 
 plugins {
     id("com.android.library")
-    id("PaymentSdkPlugin")
     id("org.jetbrains.dokka-android")
     id("maven-publish")
     signing
+    id("PaymentSdkPlugin")
 }
 
 dependencies {
     implementation(project(Modules.paymentSdk))
-    implementation(Libs.Kotlin.stdlib)
 
     implementation(Libs.Adyen.base)
     implementation(Libs.Adyen.ui)
     implementation(Libs.Adyen.core)
     implementation(Libs.Adyen.coreCard)
 
-    implementation(Libs.AndroidX.appcompat)
-    implementation(Libs.AndroidX.constraintlayout)
-    implementation(Libs.Google.material)
-    implementation(Libs.Dagger.dagger)
-    kapt(Libs.Dagger.compiler)
-
     testImplementation(Libs.junit)
     testImplementation(Libs.robolectric)
     testImplementation(Libs.AndroidX.Test.core)
     kaptTest(Libs.Dagger.compiler)
 
-    androidTestImplementation(project(Modules.paymentSdk))
     androidTestImplementation(Libs.junit)
     androidTestImplementation(Libs.mockitoCore)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.core)
     kaptAndroidTest(Libs.Dagger.compiler)
-}
-
-licenseReport {
-    generateHtmlReport = true
-    generateJsonReport = true
-
-    copyHtmlReportToAssets = false
-    copyJsonReportToAssets = false
 }
 
 tasks {

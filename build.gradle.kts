@@ -1,7 +1,6 @@
 /*
  * Copyright © MobiLab Solutions GmbH
  */
-
 buildscript {
 
     repositories {
@@ -23,8 +22,6 @@ buildscript {
 
         classpath(Libs.Google.fabricPlugin)
 
-        classpath(Libs.licencePlugin)
-
         classpath(Libs.dokkaPlugin)
     }
 }
@@ -35,7 +32,6 @@ plugins {
 }
 
 allprojects {
-
     extra["signing.keyId"] = "CCE33870"
     extra["signing.secretKeyRingFile"] = rootProject.file("signing/secring.gpg")
     extra["signing.password"] = "android"
@@ -62,3 +58,4 @@ configurations.all {
         cacheChangingModulesFor(0, TimeUnit.SECONDS)
     }
 }
+

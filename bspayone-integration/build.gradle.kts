@@ -2,118 +2,18 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
-import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.library")
+    id("PaymentSdkPlugin")
     id("org.jetbrains.dokka-android")
     id("maven-publish")
-    kotlin("android")
-    kotlin("kapt")
-    kotlin("android.extensions")
     signing
-}
-
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-}
-
-val templatePublishableKey = propOrDefWithTravis(PaymentSdkRelease.templatePublishableKey, "")
-
-androidExtensions {
-    isExperimental = true
-}
-
-fun String.runCommand(): String {
-    val command = this
-    val output = ByteArrayOutputStream()
-    project.exec {
-        this.workingDir = project.rootDir
-        this.commandLine = command.split(" ")
-        this.standardOutput = output
-    }
-    return String(output.toByteArray()).trim()
-}
-
-val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand()
-
-val getCommitHash = ("git rev-parse --short HEAD").runCommand()
-
-val getCommitCount = ("git rev-list --count HEAD").runCommand()
-
-val sdkVersionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
-
-val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
-
-android {
-    compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-    buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
-
-    defaultConfig {
-        minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-        targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
-
-        versionCode = sdkVersionCode
-        versionName = if (isTravisTag) {
-            sdkVersionName
-        } else {
-            "$sdkVersionName-SNAPSHOT"
-        }
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    lintOptions {
-        isAbortOnError = false
-    }
-
-    buildTypes {
-        getByName("debug") {
-            resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
-            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
-        }
-
-        getByName("release") {
-            isMinifyEnabled = false
-            buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
-        }
-    }
-
-    testOptions {
-        unitTests.apply {
-            isIncludeAndroidResources = true
-            all(KotlinClosure1<Any, Test>({
-                (this as Test).also {
-                    maxHeapSize = "1024m"
-                    testLogging {
-                        events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
-                    }
-                }
-            }, this))
-        }
-    }
 }
 
 dependencies {
     implementation(project(Modules.paymentSdk))
-    implementation(Libs.Kotlin.stdlib)
-    implementation(Libs.AndroidX.appcompat)
-    implementation(Libs.AndroidX.constraintlayout)
-    implementation(Libs.Google.material)
-    implementation(Libs.Dagger.dagger)
-    kapt(Libs.Dagger.compiler)
 
     testImplementation(Libs.junit)
     testImplementation(Libs.robolectric)
@@ -128,14 +28,6 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.core)
     kaptAndroidTest(Libs.Dagger.compiler)
-}
-
-licenseReport {
-    generateHtmlReport = true
-    generateJsonReport = true
-
-    copyHtmlReportToAssets = false
-    copyJsonReportToAssets = false
 }
 
 tasks {
@@ -291,4 +183,3 @@ publishing {
 signing {
     sign(publishing.publications["bspayone"])
 }
-
