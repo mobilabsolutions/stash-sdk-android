@@ -9,6 +9,7 @@ import org.gradle.kotlin.dsl.KotlinClosure1
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.getByType
+import org.jetbrains.kotlin.gradle.internal.AndroidExtensionsExtension
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
 /**
@@ -16,7 +17,7 @@ import org.jetbrains.kotlin.gradle.plugin.KaptExtension
  */
 class PaymentSdkPlugin : Plugin<Project> {
     override fun apply(project: Project) {
-
+        project.configureKotlin()
         project.plugins.all { plugin: Plugin<*>? ->
             when (plugin) {
                 is LibraryPlugin -> {
@@ -29,12 +30,21 @@ class PaymentSdkPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.configureKapt() {
+    private fun Project.configureKotlin() {
+        apply(plugin = "kotlin-android")
         apply(plugin = "kotlin-kapt")
         configure<KaptExtension> {
             correctErrorTypes = true
             useBuildCache = true
         }
+        apply(plugin = "kotlin-android-extensions")
+        configure<AndroidExtensionsExtension> {
+            isExperimental = true
+        }
+    }
+
+    private fun Project.applyPlugins() {
+
     }
 
     private fun LibraryExtension.configureAndroidLibraryOptions(project: Project) {

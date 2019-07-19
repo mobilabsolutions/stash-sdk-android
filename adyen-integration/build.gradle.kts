@@ -9,19 +9,7 @@ plugins {
     id("PaymentSdkPlugin")
     id("org.jetbrains.dokka-android")
     id("maven-publish")
-    kotlin("android")
-    kotlin("kapt")
-    kotlin("android.extensions")
     signing
-}
-
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-}
-
-androidExtensions {
-    isExperimental = true
 }
 
 dependencies {
