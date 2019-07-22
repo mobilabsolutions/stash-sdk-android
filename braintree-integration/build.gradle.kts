@@ -165,8 +165,8 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("braintree") {
-            groupId = "com.mobilabsolutions.payment.android.psdk.integration.braintree"
-            artifactId = "payment-sdk-braintree"
+            groupId = "com.mobilabsolutions.stash.braintree"
+            artifactId = "braintree"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/braintree-integration-release.aar")

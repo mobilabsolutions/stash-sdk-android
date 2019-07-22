@@ -139,23 +139,23 @@ licenseReport {
 
 tasks {
     create<DokkaAndroidTask>("dokkaPublic") {
-        moduleName = "lib"
+        moduleName = "adyen-integration"
         outputFormat = "html"
         outputDirectory = "$buildDir/dokkaPublic"
         packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            prefix = "com.mobilabsolutions.stash.adyen.uicomponents"
             suppress = true
         }
     }
 
     dokka {
-        moduleName = "lib"
+        moduleName = "adyen-integration"
         outputFormat = "html"
         outputDirectory = "$buildDir/dokka"
     }
 
     val dokkaJavadoc = create<DokkaAndroidTask>("dokkaJavadoc") {
-        moduleName = "lib"
+        moduleName = "adyen-integration"
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokkaJavadoc"
     }
@@ -183,8 +183,8 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("adyen") {
-            groupId = "com.mobilabsolutions.payment.android.psdk.integration.adyen"
-            artifactId = "payment-sdk-adyen"
+            groupId = "com.mobilabsolutions.stash"
+            artifactId = "adyen"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/adyen-integration-release.aar")

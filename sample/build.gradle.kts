@@ -31,7 +31,7 @@ android {
     compileSdkVersion(StashBuildConfigs.compileSdk)
     buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
     defaultConfig {
-        applicationId = "com.mobilabsolutions.payment.sample"
+        applicationId = "com.mobilabsolutions.stash.sample"
         minSdkVersion(StashBuildConfigs.minSdk)
         targetSdkVersion(StashBuildConfigs.targetSdk)
         versionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, DemoRelease.versionCode).toInt()

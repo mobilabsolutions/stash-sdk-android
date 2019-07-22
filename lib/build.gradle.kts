@@ -206,7 +206,7 @@ publishing {
     publications {
         create<MavenPublication>("lib") {
             groupId = "com.mobilabsolutions.payment.android.psdk"
-            artifactId = "payment-sdk-lib"
+            artifactId = "lib"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/lib-release.aar")

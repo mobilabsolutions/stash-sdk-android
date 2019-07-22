@@ -15,7 +15,7 @@
 
         <variable
             name="paymentMethod"
-            type="com.mobilabsolutions.payment.sample.data.entities.PaymentMethod" />
+            type="com.mobilabsolutions.stash.sample.data.entities.PaymentMethod" />
 
         <variable
             name="selectListener"

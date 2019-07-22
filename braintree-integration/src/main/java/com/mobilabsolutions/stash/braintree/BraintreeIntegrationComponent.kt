@@ -1,0 +1,20 @@
+/*
+ * Copyright © MobiLab Solutions GmbH
+ */
+
+package com.mobilabsolutions.stash.braintree
+
+import com.mobilabsolutions.stash.core.internal.IntegrationScope
+import com.mobilabsolutions.stash.core.internal.StashComponent
+import dagger.Component
+
+/**
+ * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
+ */
+@IntegrationScope
+@Component(dependencies = [StashComponent::class], modules = [BraintreeModule::class])
+interface BraintreeIntegrationComponent {
+    fun inject(integration: BraintreeIntegration)
+
+    fun inject(payPalActivity: BraintreePayPalActivity)
+}

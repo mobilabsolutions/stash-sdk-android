@@ -184,8 +184,8 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("bspayone") {
-            groupId = "com.mobilabsolutions.payment.android.psdk.integration.bspayone"
-            artifactId = "payment-sdk-bspayone"
+            groupId = "com.mobilabsolutions.stash.bspayone"
+            artifactId = "bspayone"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/bspayone-integration-release.aar")

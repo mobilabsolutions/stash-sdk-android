@@ -11,7 +11,7 @@
 
     <fragment
             android:id="@+id/checkoutScreen"
-            android:name="com.mobilabsolutions.payment.sample.main.checkout.CheckoutFragment"
+            android:name="com.mobilabsolutions.stash.sample.main.checkout.CheckoutFragment"
             android:label="@string/checkout"
             tools:layout="@layout/fragment_checkout">
 
