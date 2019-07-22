@@ -12,7 +12,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,9 +20,9 @@ import javax.inject.Singleton
  */
 @Singleton
 class UserRepositoryImpl @Inject constructor(
-    private val dispatchers: AppCoroutineDispatchers,
-    private val localUserStore: LocalUserStore,
-    private val remoteUserDataSource: RemoteUserDataSource
+        private val dispatchers: AppCoroutineDispatchers,
+        private val localUserStore: LocalUserStore,
+        private val remoteUserDataSource: RemoteUserDataSource
 ) : UserRepository {
 
     init {
@@ -46,13 +45,13 @@ class UserRepositoryImpl @Inject constructor(
         val localUser = localJob.await()
         when (val result = remoteJob.await()) {
             is Success -> localUserStore.saveUser(mergeUser(local = localUser, remote = result.data))
-            is ErrorResult -> Timber.e(result.exception)
+            is ErrorResult -> throw result.exception
         }
     }
 
     private fun mergeUser(local: User, remote: User): User {
         return local.copy(
-            userId = remote.userId
+                userId = remote.userId
         )
     }
 }

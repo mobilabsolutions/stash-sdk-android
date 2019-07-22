@@ -6,6 +6,7 @@ package com.mobilabsolutions.payment.sample.main.paymentmethods
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -31,16 +32,15 @@ import timber.log.Timber
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
 class PaymentMethodsViewModel @AssistedInject constructor(
-    @Assisted initialStateMethods: PaymentMethodsViewState,
-    updateUser: UpdateUser,
-    updatePaymentMethods: UpdatePaymentMethods,
-    private val deletePaymentMethod: DeletePaymentMethod,
-    private val addPaymentMethod: AddPaymentMethod,
-    private val schedulers: AppRxSchedulers
+        @Assisted initialStateMethods: PaymentMethodsViewState,
+        updateUser: UpdateUser,
+        updatePaymentMethods: UpdatePaymentMethods,
+        private val deletePaymentMethod: DeletePaymentMethod,
+        private val addPaymentMethod: AddPaymentMethod,
+        private val schedulers: AppRxSchedulers
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
 
     private val _error = MutableLiveData<Throwable>()
-
     val error: LiveData<Throwable>
         get() = _error
 
@@ -57,39 +57,51 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     init {
-        updateUser.observe()
-            .subscribeOn(schedulers.io)
-            .doOnNext {
-                disposables += updatePaymentMethods.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
+        disposables += deletePaymentMethod.errorSubject
+                .subscribeOn(schedulers.io)
+                .observeOn(schedulers.main)
+                .subscribe(this::onError)
 
-                // Prevent the first time payment method list update, with an invalid user id.
-                if (it.userId != User.EMPTY_USER.userId) {
-                    scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
+        disposables += addPaymentMethod.errorSubject
+                .subscribeOn(schedulers.io)
+                .observeOn(schedulers.main)
+                .subscribe(this::onError)
+
+        disposables += updatePaymentMethods.errorSubject
+                .subscribeOn(schedulers.io)
+                .observeOn(schedulers.main)
+                .subscribe(this::onError)
+
+        updateUser.observe()
+                .subscribeOn(schedulers.io)
+                .doOnNext {
+                    // Prevent the first time payment method list update, with an invalid user id.
+                    if (it.userId != User.EMPTY_USER.userId) {
+                        viewModelScope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
+                    }
                 }
-            }
-            .execute {
-                copy(user = it() ?: User.EMPTY_USER)
-            }
+                .execute {
+                    copy(user = it() ?: User.EMPTY_USER)
+                }
 
         updatePaymentMethods.observe()
-            .subscribeOn(schedulers.io)
-            .execute {
-                copy(paymentMethods = it() ?: emptyList())
-            }
+                .subscribeOn(schedulers.io)
+                .execute {
+                    copy(paymentMethods = it() ?: emptyList())
+                }
         updateUser.setParams(Unit)
         updatePaymentMethods.setParams(Unit)
     }
 
     fun onAddBtnClicked() {
         disposables += PaymentSdk.getRegistrationManager().registerPaymentMethodUsingUi(/* idempotencyKey = UUID.randomUUID() */)
-            .subscribeOn(schedulers.io)
-            .observeOn(schedulers.main)
-            .subscribe(this::onRegisterPaymentSuccess, this::onError)
+                .subscribeOn(schedulers.io)
+                .observeOn(schedulers.main)
+                .subscribe(this::onRegisterPaymentSuccess, this::onError)
     }
 
     fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
-        disposables += deletePaymentMethod.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
-        scope.launchInteractor(deletePaymentMethod, DeletePaymentMethod.ExecuteParams(paymentMethod))
+        viewModelScope.launchInteractor(deletePaymentMethod, DeletePaymentMethod.ExecuteParams(paymentMethod))
     }
 
     private fun onRegisterPaymentSuccess(paymentMethodAlias: PaymentMethodAlias) {
@@ -101,20 +113,19 @@ class PaymentMethodsViewModel @AssistedInject constructor(
         withState {
             val paymentMethod = when (val aliasInfo = paymentMethodAlias.extraAliasInfo) {
                 is ExtraAliasInfo.CreditCardExtraInfo -> PaymentMethod(_type = type,
-                    mask = aliasInfo.creditCardMask,
-                    _cardType = aliasInfo.creditCardType.name,
-                    expiryMonth = aliasInfo.expiryMonth.toString(),
-                    expiryYear = aliasInfo.expiryYear.toString()
+                        mask = aliasInfo.creditCardMask,
+                        _cardType = aliasInfo.creditCardType.name,
+                        expiryMonth = aliasInfo.expiryMonth.toString(),
+                        expiryYear = aliasInfo.expiryYear.toString()
                 )
                 is ExtraAliasInfo.SepaExtraInfo -> PaymentMethod(_type = type,
-                    iban = aliasInfo.maskedIban
+                        iban = aliasInfo.maskedIban
                 )
                 is ExtraAliasInfo.PaypalExtraInfo -> PaymentMethod(_type = type,
-                    email = aliasInfo.email
+                        email = aliasInfo.email
                 )
             }
-            disposables += addPaymentMethod.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
-            scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, aliasId = paymentMethodAlias.alias, paymentMethod = paymentMethod))
+            viewModelScope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, aliasId = paymentMethodAlias.alias, paymentMethod = paymentMethod))
         }
     }
 

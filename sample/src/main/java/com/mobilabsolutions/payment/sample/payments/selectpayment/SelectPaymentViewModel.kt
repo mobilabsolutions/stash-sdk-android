@@ -6,6 +6,7 @@ package com.mobilabsolutions.payment.sample.payments.selectpayment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -21,10 +22,10 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.rxkotlin.plusAssign
 
 class SelectPaymentViewModel @AssistedInject constructor(
-    @Assisted initialStateMethods: SelectPaymentViewState,
-    val schedulers: AppRxSchedulers,
-    updatePaymentMethods: UpdatePaymentMethods,
-    private val authorizePayment: AuthorizePayment
+        @Assisted initialStateMethods: SelectPaymentViewState,
+        val schedulers: AppRxSchedulers,
+        updatePaymentMethods: UpdatePaymentMethods,
+        private val authorizePayment: AuthorizePayment
 ) : BaseViewModel<SelectPaymentViewState>(initialStateMethods) {
 
     private var lastSelectedPaymentMethod: PaymentMethod? = null
@@ -47,11 +48,17 @@ class SelectPaymentViewModel @AssistedInject constructor(
     }
 
     init {
+
+        disposables += authorizePayment.errorSubject
+                .subscribeOn(schedulers.io)
+                .observeOn(schedulers.main)
+                .subscribe(_error::setValue)
+
         updatePaymentMethods.observe()
-            .subscribeOn(schedulers.io)
-            .execute {
-                copy(paymentMethods = it() ?: emptyList())
-            }
+                .subscribeOn(schedulers.io)
+                .execute {
+                    copy(paymentMethods = it() ?: emptyList())
+                }
 
         updatePaymentMethods.setParams(Unit)
     }
@@ -68,15 +75,12 @@ class SelectPaymentViewModel @AssistedInject constructor(
         lastSelectedPaymentMethod?.run {
             withState {
                 val authorizePaymentRequest = AuthorizePaymentRequest(
-                    amount = it.amount,
-                    currency = "EUR",
-                    paymentMethodId = this.paymentMethodId,
-                    reason = "Nothing"
+                        amount = it.amount,
+                        currency = "EUR",
+                        paymentMethodId = this.paymentMethodId,
+                        reason = "Nothing"
                 )
-                disposables += authorizePayment.errorSubject.observeOn(schedulers.main).subscribe {
-                    _error.value = it
-                }
-                scope.launchInteractor(authorizePayment, AuthorizePayment.ExecuteParams(authorizePaymentRequest = authorizePaymentRequest))
+                viewModelScope.launchInteractor(authorizePayment, AuthorizePayment.ExecuteParams(authorizePaymentRequest = authorizePaymentRequest))
             }
         }
     }

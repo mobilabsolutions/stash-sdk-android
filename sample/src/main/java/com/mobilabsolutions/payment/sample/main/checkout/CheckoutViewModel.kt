@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.payment.sample.main.checkout
 
+import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -54,10 +55,10 @@ class CheckoutViewModel @AssistedInject constructor(
     }
 
     fun onAddButtonClicked(cartWithProduct: CartWithProduct) {
-        scope.launchInteractor(changeCartQuantity, ChangeCartQuantity.ExecuteParams(true, cartWithProduct))
+        viewModelScope.launchInteractor(changeCartQuantity, ChangeCartQuantity.ExecuteParams(true, cartWithProduct))
     }
 
     fun onRemoveButtonClicked(cartWithProduct: CartWithProduct) {
-        scope.launchInteractor(changeCartQuantity, ChangeCartQuantity.ExecuteParams(false, cartWithProduct))
+        viewModelScope.launchInteractor(changeCartQuantity, ChangeCartQuantity.ExecuteParams(false, cartWithProduct))
     }
 }
