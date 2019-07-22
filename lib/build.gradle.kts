@@ -153,7 +153,7 @@ tasks {
         outputFormat = "html"
         outputDirectory = "$buildDir/dokkaPublic"
         packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            prefix = "com.mobilabsolutions.stash.internal"
             suppress = true
         }
         includes = listOf(
@@ -173,7 +173,7 @@ tasks {
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokkaJavadoc"
         packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            prefix = "com.mobilabsolutions.stash.internal"
             suppress = true
         }
         includes = listOf(
@@ -224,7 +224,7 @@ publishing {
 
             pom {
                 name.set("Stash")
-                description.set("The Stash simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
+                description.set("The Stash SDK simplifies the integration of the payment process into your mobile application and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
                 url.set("https://mobilabsolutions.com/")
                 licenses {
                     license {

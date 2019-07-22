@@ -4,8 +4,8 @@
 
 package com.mobilabsolutions.stash.bspayone
 
-import com.mobilabsolutions.stash.bspayone.uicomponents.BsPayoneCreditCardDataEntryFragment
-import com.mobilabsolutions.stash.bspayone.uicomponents.BsPayoneSepaDataEntryFragment
+import com.mobilabsolutions.stash.bspayone.internal.uicomponents.BsPayoneCreditCardDataEntryFragment
+import com.mobilabsolutions.stash.bspayone.internal.uicomponents.BsPayoneSepaDataEntryFragment
 import com.mobilabsolutions.stash.core.internal.IntegrationScope
 import com.mobilabsolutions.stash.core.internal.StashComponent
 import dagger.Component

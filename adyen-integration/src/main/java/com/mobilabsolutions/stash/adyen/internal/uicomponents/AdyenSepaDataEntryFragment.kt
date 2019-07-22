@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.adyen.uicomponents
+package com.mobilabsolutions.stash.adyen.internal.uicomponents
 
 import android.os.Bundle
 import android.os.CountDownTimer

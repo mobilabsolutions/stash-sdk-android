@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.braintree
+package com.mobilabsolutions.stash.braintree.internal.uicomponents
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -17,6 +17,9 @@ import com.braintreepayments.api.models.Configuration
 import com.braintreepayments.api.models.PayPalAccountNonce
 import com.braintreepayments.api.models.PayPalRequest
 import com.braintreepayments.api.models.PaymentMethodNonce
+import com.mobilabsolutions.stash.braintree.BraintreeHandler
+import com.mobilabsolutions.stash.braintree.BraintreeIntegration
+import com.mobilabsolutions.stash.braintree.R
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.exceptions.base.OtherException
 import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler

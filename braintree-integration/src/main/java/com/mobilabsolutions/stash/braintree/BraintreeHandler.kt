@@ -6,6 +6,7 @@ package com.mobilabsolutions.stash.braintree
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
+import com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreePayPalActivity
 import com.mobilabsolutions.stash.core.internal.IntegrationScope
 import com.mobilabsolutions.stash.core.internal.psphandler.AdditionalRegistrationData
 import io.reactivex.Single

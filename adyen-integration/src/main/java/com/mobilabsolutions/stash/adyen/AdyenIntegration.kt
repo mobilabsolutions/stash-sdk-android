@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.exceptions.registration.RegistrationFailedException
-import com.mobilabsolutions.stash.adyen.uicomponents.UiComponentHandler
+import com.mobilabsolutions.stash.adyen.internal.uicomponents.UiComponentHandler
 import com.mobilabsolutions.stash.core.internal.IdempotencyKey
 import com.mobilabsolutions.stash.core.internal.IntegrationInitialization
 import com.mobilabsolutions.stash.core.internal.StashComponent

@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.bspayone.uicomponents
+package com.mobilabsolutions.stash.bspayone.internal.uicomponents
 
 import android.app.Activity
 import android.content.Intent

@@ -143,7 +143,7 @@ tasks {
         outputFormat = "html"
         outputDirectory = "$buildDir/dokkaPublic"
         packageOptions {
-            prefix = "com.mobilabsolutions.stash.adyen.uicomponents"
+            prefix = "com.mobilabsolutions.stash.internal"
             suppress = true
         }
     }
@@ -158,6 +158,10 @@ tasks {
         moduleName = "adyen-integration"
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokkaJavadoc"
+        packageOptions {
+            prefix = "com.mobilabsolutions.stash.internal"
+            suppress = true
+        }
     }
 
     create<Jar>("javadocJar") {
@@ -202,7 +206,7 @@ publishing {
 
             pom {
                 name.set("Stash - Adyen")
-                description.set("The Stash simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
+                description.set("The Adyen Integration for the Stash SDK")
                 url.set("https://mobilabsolutions.com/")
                 licenses {
                     license {

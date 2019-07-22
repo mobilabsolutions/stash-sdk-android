@@ -4,8 +4,8 @@
 
 package com.mobilabsolutions.stash.adyen
 
-import com.mobilabsolutions.stash.adyen.uicomponents.AdyenCreditCardDataEntryFragment
-import com.mobilabsolutions.stash.adyen.uicomponents.AdyenSepaDataEntryFragment
+import com.mobilabsolutions.stash.adyen.internal.uicomponents.AdyenCreditCardDataEntryFragment
+import com.mobilabsolutions.stash.adyen.internal.uicomponents.AdyenSepaDataEntryFragment
 import com.mobilabsolutions.stash.core.internal.IntegrationScope
 import com.mobilabsolutions.stash.core.internal.StashComponent
 import dagger.Component

@@ -6,8 +6,9 @@ package com.mobilabsolutions.stash.bspayone
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
+import com.mobilabsolutions.stash.bspayone.internal.BsPayoneRegistrationRequest
 import com.mobilabsolutions.stash.core.PaymentMethodType
-import com.mobilabsolutions.stash.bspayone.uicomponents.UiComponentHandler
+import com.mobilabsolutions.stash.bspayone.internal.uicomponents.UiComponentHandler
 import com.mobilabsolutions.stash.core.internal.IdempotencyKey
 import com.mobilabsolutions.stash.core.internal.IntegrationInitialization
 import com.mobilabsolutions.stash.core.internal.StashComponent

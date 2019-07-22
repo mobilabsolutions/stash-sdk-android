@@ -19,8 +19,8 @@ import androidx.test.espresso.intent.rule.IntentsTestRule
 import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
+import com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreePayPalActivity
 import com.mobilabsolutions.stash.core.PaymentMethodType
-import com.mobilabsolutions.stash.braintree.test.BuildConfig
 import com.mobilabsolutions.stash.core.internal.StashModule
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not

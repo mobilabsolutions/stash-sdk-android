@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.bspayone.pspapi
+package com.mobilabsolutions.stash.bspayone.internal.pspapi
 
 import com.google.gson.annotations.SerializedName
 import org.threeten.bp.LocalDate

@@ -1,7 +1,7 @@
 /*
  * Copyright © MobiLab Solutions GmbH
  */
-# Package com.mobilabsolutions.payment.android.psdk
+# Package com.mobilabsolutions.stash.core
 
 Stash
 

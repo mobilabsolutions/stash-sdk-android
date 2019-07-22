@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.braintree
 
+import com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreePayPalActivity
 import com.mobilabsolutions.stash.core.internal.IntegrationScope
 import com.mobilabsolutions.stash.core.internal.StashComponent
 import dagger.Component

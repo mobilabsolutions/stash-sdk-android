@@ -4,15 +4,17 @@
 
 package com.mobilabsolutions.stash.bspayone
 
+import com.mobilabsolutions.stash.bspayone.internal.BsPayoneErrorHandler
+import com.mobilabsolutions.stash.bspayone.internal.BsPayoneRegistrationRequest
 import com.mobilabsolutions.stash.core.CreditCardTypeWithRegex
 import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.exceptions.registration.UnknownException
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneApi
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneBaseRequest
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneCreditCardVerifcationRequest
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneVerificationErrorResponse
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneVerificationInvalidResponse
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneVerificationSuccessResponse
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneApi
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneBaseRequest
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneCreditCardVerifcationRequest
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneVerificationErrorResponse
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneVerificationInvalidResponse
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneVerificationSuccessResponse
 import com.mobilabsolutions.stash.core.internal.api.backend.MobilabApi
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasExtra
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasUpdateRequest

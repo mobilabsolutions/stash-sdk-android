@@ -2,24 +2,33 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.adyen.uicomponents
+package com.mobilabsolutions.stash.bspayone.internal.uicomponents
 
+import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.core.CustomizationExtensions
+import com.mobilabsolutions.stash.core.CustomizationExtensions.applyEditTextCustomization
+import com.mobilabsolutions.stash.core.CustomizationExtensions.applyFakeEditTextCustomization
 import com.mobilabsolutions.stash.core.PaymentUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
-import com.mobilabsolutions.stash.adyen.AdyenIntegration
-import com.mobilabsolutions.stash.adyen.R
+import com.mobilabsolutions.stash.bspayone.BsPayoneIntegration
+import com.mobilabsolutions.stash.bspayone.R
 import com.mobilabsolutions.stash.core.internal.uicomponents.CardNumberTextWatcher
+import com.mobilabsolutions.stash.core.internal.uicomponents.Country
+import com.mobilabsolutions.stash.core.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.stash.core.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.stash.core.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.stash.core.internal.uicomponents.PersonalDataValidator
@@ -31,42 +40,48 @@ import com.mobilabsolutions.stash.core.internal.uicomponents.getContentOnFocusCh
 import com.mobilabsolutions.stash.core.internal.uicomponents.observeText
 import com.mobilabsolutions.stash.core.model.BillingData
 import com.mobilabsolutions.stash.core.model.CreditCardData
+import com.mobilabsolutions.stash.core.util.CountryDetectorUtil
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.adyenCreditCardEntrySwipeRefreshLayout
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.back
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryText
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.countryTitleTextView
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardNumberEditText
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardNumberTitleTextView
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenCellLayout
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenMainLayout
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.creditCardScreenTitle
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.cvvEditText
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.cvvTitleTextView
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardCVV
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardExp
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardFirstName
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardLastName
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.errorCreditCardNumber
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.expirationDateTextView
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.expirationDateTitleTextView
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.firstNameEditText
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.firstNameTitleTextView
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.lastNameEditText
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.lastNameTitleTextView
-import kotlinx.android.synthetic.main.adyen_credit_card_data_entry_fragment.saveButton
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.back
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.bsPayoneCreditCardEntrySwipeRefresh
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardNumberEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardNumberTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenCellLayout
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenMainLayout
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenTitle
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.cvvEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.cvvTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardCVV
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardExp
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardFirstName
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardLastName
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardNumber
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.expirationDateTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.expirationDateTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
+import java.util.Locale
 import javax.inject.Inject
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class AdyenCreditCardDataEntryFragment : Fragment() {
+class BsPayoneCreditCardDataEntryFragment : Fragment() {
+
+    companion object {
+        private const val COUNTRY_REQUEST_CODE = 1
+    }
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
@@ -98,7 +113,11 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private val ccvFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val ccvTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
+    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.create()
+
     private var viewState: CreditCardDataEntryViewState? = null
+
+    private lateinit var suggestedCountry: Locale
 
     private var waitTimer: CountDownTimer? = null
 
@@ -106,14 +125,18 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     private var selectedExpiryDate: LocalDate? = null
 
+    private lateinit var selectedCountry: Country
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AdyenIntegration.integration?.adyenIntegrationComponent?.inject(this)
+        BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
+        suggestedCountry = CountryDetectorUtil.getBestGuessAtCurrentCountry(requireContext())
+        selectedCountry = Country(suggestedCountry.displayName, suggestedCountry.country, suggestedCountry.isO3Country)
         Timber.d("Created")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.adyen_credit_card_data_entry_fragment, container, false)
+        return inflater.inflate(R.layout.credit_card_data_entry_fragment, container, false)
     }
 
     override fun onDestroyView() {
@@ -123,8 +146,6 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        countryText.visibility = View.GONE
-        countryTitleTextView.visibility = View.GONE
 
         disposables += Observables.combineLatest(
             firstNameTextChangedSubject,
@@ -132,7 +153,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             cardNumberTextChangedSubject,
             expirationDateSubject,
             ccvTextChangedSubject,
-            AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState)
+            countrySubject,
+            BsPayoneCreditCardDataEntryFragment::CreditCardDataEntryViewState)
             .subscribe(this::onViewState)
 
         disposables += firstNameFocusSubject
@@ -209,7 +231,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
             creditCardScreenMainLayout.applyBackgroundCustomization(paymentUIConfiguration)
             creditCardScreenCellLayout.applyCellBackgroundCustomization(paymentUIConfiguration)
-            saveButton.applyCustomization(paymentUIConfiguration)
+
             firstNameEditText.showKeyboardAndFocus()
         }
 
@@ -245,11 +267,29 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         }
         cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
 
+        countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
+
+        countryText.text = suggestedCountry.displayCountry
+
+        countryText.setOnClickListener {
+            startActivityForResult(Intent(context, CountryChooserActivity::class.java)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
+
+            // Check for the previous field's validations
+            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
+            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
+            cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
+            expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+            ccvFocusSubject.onNext(cvvEditText.text.toString().trim())
+        }
+
         saveButton.setOnClickListener {
             viewState?.let {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
+                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = selectedCountry.alpha2Code
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue
@@ -287,25 +327,41 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             requireActivity().onBackPressed()
         }
 
-        adyenCreditCardEntrySwipeRefreshLayout.isEnabled = false
+        bsPayoneCreditCardEntrySwipeRefresh.isEnabled = false
 
         disposables += uiComponentHandler.getResultObservable().subscribe {
             when (it) {
                 is UiRequestHandler.DataEntryResult.Success -> {
-                    adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
+                    bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = false
                 }
                 is UiRequestHandler.DataEntryResult.Processing -> {
-                    adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = true
+                    bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = true
                 }
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
-                        adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
-                        currentSnackbar?.dismissWithoutAnimating()
-                        currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout)
+                        bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = false
+                        currentSnackbar?.let { snackbar ->
+                            snackbar.dismissWithoutAnimating()
+                        }
+                        currentSnackbar = it.throwable.getErrorSnackBar(bsPayoneCreditCardEntrySwipeRefresh)
                         currentSnackbar?.show()
                     }
                 }
             }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        try {
+            if (requestCode == COUNTRY_REQUEST_CODE && resultCode == RESULT_OK) {
+                data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
+                    selectedCountry = it
+                    countryText.text = it.displayName
+                }
+            }
+        } catch (ex: Exception) {
+            Toast.makeText(activity, ex.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -317,6 +373,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         success = validateCardNumber(state.cardNumber).success && success
         success = validateExpirationDate(state.expirationDate).success && success
         success = validateCVV(state.cvv).success && success
+        success = validateCountry(state.country).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
             saveButton.applyCustomization(paymentUIConfiguration)
@@ -379,6 +436,10 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         return creditCardDataValidator.validateCreditCardNumber(number)
     }
 
+    private fun validateCountry(country: String): ValidationResult {
+        return ValidationResult(success = country.isNotEmpty())
+    }
+
     private fun validateCvvAndUpdateUI(cvv: String, isDelayed: Boolean): Boolean {
         val validationResult = validateCVV(cvv)
         if (!validationResult.success) {
@@ -438,11 +499,9 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     }
 
     private fun hideError(sourceView: View, errorView: TextView) {
-        CustomizationExtensions {
-            when (sourceView) {
-                is EditText -> sourceView.applyEditTextCustomization(paymentUIConfiguration)
-                is TextView -> sourceView.applyFakeEditTextCustomization(paymentUIConfiguration)
-            }
+        when (sourceView) {
+            is EditText -> sourceView.applyEditTextCustomization(paymentUIConfiguration)
+            is TextView -> sourceView.applyFakeEditTextCustomization(paymentUIConfiguration)
         }
         errorView.visibility = View.GONE
     }
@@ -457,6 +516,17 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         val lastName: String = "",
         val cardNumber: String = "",
         val expirationDate: LocalDate? = null,
-        val cvv: String = ""
+        val cvv: String = "",
+        val country: String = "Germany"
     )
+}
+
+inline fun TextView.onTextChanged(crossinline body: (text: CharSequence) -> Unit): TextWatcher {
+    val watcher = object : TextWatcher {
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = body(s)
+        override fun afterTextChanged(s: Editable?) = Unit
+    }
+    addTextChangedListener(watcher)
+    return watcher
 }

@@ -5,13 +5,13 @@
 package com.mobilabsolutions.stash.bspayone
 
 import com.google.gson.GsonBuilder
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneApi
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneExpiryDateConverter
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneVerificationBaseResponse
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneVerificationErrorResponse
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneVerificationInvalidResponse
-import com.mobilabsolutions.stash.bspayone.pspapi.BsPayoneVerificationSuccessResponse
-import com.mobilabsolutions.stash.bspayone.pspapi.PayoneKeyPairConverterFactory
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneApi
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneExpiryDateConverter
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneVerificationBaseResponse
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneVerificationErrorResponse
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneVerificationInvalidResponse
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.BsPayoneVerificationSuccessResponse
+import com.mobilabsolutions.stash.bspayone.internal.pspapi.PayoneKeyPairConverterFactory
 import com.mobilabsolutions.stash.core.internal.IntegrationScope
 import com.mobilabsolutions.stash.core.internal.api.backend.RuntimeTypeAdapterFactory
 import dagger.Module

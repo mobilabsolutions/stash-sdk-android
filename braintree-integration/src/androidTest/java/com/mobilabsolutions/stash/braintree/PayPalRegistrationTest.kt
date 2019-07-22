@@ -13,7 +13,7 @@ import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.ActivityTestRule
 import androidx.test.uiautomator.UiDevice
-import com.mobilabsolutions.payment.android.BuildConfig
+import com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreePayPalActivity
 import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.internal.SslSupportModule
 import com.mobilabsolutions.stash.core.internal.StashComponent

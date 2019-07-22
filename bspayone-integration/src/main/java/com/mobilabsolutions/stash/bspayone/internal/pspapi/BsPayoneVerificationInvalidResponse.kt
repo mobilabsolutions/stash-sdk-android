@@ -2,14 +2,14 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.bspayone.pspapi
+package com.mobilabsolutions.stash.bspayone.internal.pspapi
 
 import com.google.gson.annotations.SerializedName
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-data class BsPayoneVerificationErrorResponse(
+data class BsPayoneVerificationInvalidResponse(
     override val status: String,
     @SerializedName("errorcode")
     val errorCode: Int,

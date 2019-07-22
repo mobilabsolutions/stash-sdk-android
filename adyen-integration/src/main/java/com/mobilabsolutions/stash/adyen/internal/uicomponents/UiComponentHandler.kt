@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.adyen.uicomponents
+package com.mobilabsolutions.stash.adyen.internal.uicomponents
 
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.stash.adyen.R
