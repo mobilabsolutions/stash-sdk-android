@@ -205,14 +205,12 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("lib") {
-            groupId = "com.mobilabsolutions.payment.android.psdk"
-            artifactId = "lib"
+            groupId = "com.mobilabsolutions.stash"
+            artifactId = "core"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/lib-release.aar")
-
             artifact(tasks["javadocJar"])
-
             artifact(tasks["sourcesJar"])
 
             versionMapping {
@@ -248,7 +246,7 @@ publishing {
                     developer {
                         id.set("Biju")
                         name.set("Biju Parvathy")
-                        email.set("Biju@mobilabsolutions.com")
+                        email.set("biju@mobilabsolutions.com")
                     }
                 }
                 scm {

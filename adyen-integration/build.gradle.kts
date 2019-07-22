@@ -188,9 +188,7 @@ publishing {
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/adyen-integration-release.aar")
-
             artifact(tasks["javadocJar"])
-
             artifact(tasks["sourcesJar"])
 
             versionMapping {
@@ -226,7 +224,7 @@ publishing {
                     developer {
                         id.set("Biju")
                         name.set("Biju Parvathy")
-                        email.set("Biju@mobilabsolutions.com")
+                        email.set("biju@mobilabsolutions.com")
                     }
                 }
                 scm {
@@ -240,10 +238,10 @@ publishing {
                     configurations.implementation.get().allDependencies.forEach {
                         if (it.group == "payment-sdk-android-open") { // Core lib
                             with(dependenciesNode.appendNode("dependency")) {
-                                appendNode("groupId", "com.mobilabsolutions.payment.android.psdk")
-                                appendNode("artifactId", "payment-sdk-lib")
+                                appendNode("groupId", "com.mobilabsolutions.stash")
+                                appendNode("artifactId", "core")
                                 appendNode("version", android.defaultConfig.versionName)
-                                appendNode("scope", "compile")
+                                appendNode("scope", "runtime")
                             }
                         } else if (it.group != null && it.name != "unspecified" && it.version != null) {
                             with(dependenciesNode.appendNode("dependency")) {
