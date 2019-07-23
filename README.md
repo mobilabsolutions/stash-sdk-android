@@ -5,16 +5,16 @@ This repository contains the Stash Android SDK client code and a demo applicatio
 
 Many applications need to process payments for digital or physical goods. Implementing payment functionality 
 can be very cumbersome though: there are many payment service providers that support or don't support various 
-types of payment methods and payment method registration and usage flows. The payment SDK simplifies the integration 
+types of payment methods and payment method registration and usage flows. The Stash simplifies the integration 
 of payments into our applications and abstracts away a lot of the internal complexity that different payment 
-service providers' solutions have. With the payment SDK it does not matter which payment service provider one 
+service providers' solutions have. With the Stash it does not matter which payment service provider one 
 chooses to register payment methods with - the API is standardized and works across the board.
 
 ### Additional Documentation
 
-To get familiar with the overall Payment SDK project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
+To get familiar with the overall Stash project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
 
-To learn more about the Android Payment SDK architecture and flows please visit [Android SDK Wiki](https://github.com/mobilabsolutions/payment-sdk-android-open/wiki)
+To learn more about the Android Stash architecture and flows please visit [Android SDK Wiki](https://github.com/mobilabsolutions/payment-sdk-android-open/wiki)
 
 ### Requirements
 
@@ -45,11 +45,11 @@ At the moment, the Stash Android SDK supports the following PSPs:
 
 **Gradle**
 
-`implementation 'com.mobilabsolutions.payment:lib:0.9.5'`
+`implementation 'com.mobilabsolutions.stash:core:0.9.5'`
 
 **Gradle Kotlin DSL**
 
-`implementation ("com.mobilabsolutions.payment:lib:0.9.5")`
+`implementation ("com.mobilabsolutions.stash:core:0.9.5")`
 
 #### Using the AAR files (Temporary, until deployed to maven repository)
 
@@ -195,33 +195,33 @@ The publishable key and the endpoint depend on your backend services deployment,
 
 ```kotlin
 
-val  configuration = PaymentSdkConfiguration(
+val  configuration = StashConfiguration(
         publishableKey = "YourApiKey",
         endpoint = "https://payment-dev.mblb.net/api/",
         integration = AdyenIntegration,
         testMode = true
 )
-PaymentSdk.initalize(applicationContext, configuration)
+Stash.initalize(applicationContext, configuration)
 ```
 
 ###### Java - Single Integration
 
 ```java
 
-PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+StashConfiguration configuration = new StashConfiguration.Builder()
         .setPublishableKey("YourPublishableKey")
         .setEndpoint("https://payment-dev.mblb.net/api/")
         .setIntegration(AdyenIntegration.Companion)
         .setTestMode(true)
         .build();
 
-PaymentSdk.initalize(applicationContext, configuration);
+Stash.initalize(applicationContext, configuration);
 ``` 
 ###### Kotlin - Multiple Integrations
 
 ```kotlin
 
-val  configuration = PaymentSdkConfiguration(
+val  configuration = StashConfiguration(
         publishableKey = "YourApiKey",
         endpoint = "https://payment-dev.mblb.net/api/",
         integrationList = listOf(
@@ -231,7 +231,7 @@ val  configuration = PaymentSdkConfiguration(
         )
         testMode = true
 )
-PaymentSdk.initalize(applicationContext, configuration)
+Stash.initalize(applicationContext, configuration)
 ```
 
 ###### Java - Multiple Integrations
@@ -243,19 +243,19 @@ List<IntegrationToPaymentMapping> integrationList = new LinkedList<>();
         integrationList.add(new IntegrationToPaymentMapping(AdyenIntegration.Companion, PaymentMethodType.CC));
         integrationList.add(new IntegrationToPaymentMapping(BsPayoneIntegration.Companion, PaymentMethodType.SEPA));
         
-PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+StashConfiguration configuration = new StashConfiguration.Builder()
         .setPublishableKey("YourPublishableKey")
         .setEndpoint("https://payment-dev.mblb.net/api/")
         .setIntegrations(integrationList)
         .setTestMode(true)
         .build();
 
-PaymentSdk.initalize(applicationContext, configuration);
+Stash.initalize(applicationContext, configuration);
 ``` 
 #### Using the SDK in Test Mode
 
 The Stash SDK can also be used in a so-called test mode. The transactions created in test mode are not forwarded to the production PSP, but rather to the sandboxing mode that the PSP provides. 
-To configure the SDK to use the test mode, set the `testMode` property on the `PaymentSdkConfiguration` to true when configuring the SDK.
+To configure the SDK to use the test mode, set the `testMode` property on the `StashConfiguration` to true when configuring the SDK.
 
 ### Registering a Payment Method Using the Provided UI Components
 
@@ -269,7 +269,7 @@ Kotlin
 
 ```kotlin
 
-val registrationManager = PaymentSdk.getRegistrationManager()
+val registrationManager = Stash.getRegistrationManager()
 registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CC)
         .subscribeBy(
             onSuccess = { paymentAlias ->
@@ -303,7 +303,7 @@ Java
 
 ```java
 
-RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
+RegistrationManager registrationManager = Stash.getRegistrationManager();
 registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CC, null) 
         .subscribe(
                 paymentMethodAlias -> {
@@ -337,7 +337,7 @@ registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CC, 
 
 #### Customizing the UI
 
-You can change the color scheme of the screens shown when requesting payment method data from the user. To do this, you can either provide a `PaymentUiConfiguration` object when configuring the SDK, or use the `configureUi` method of the `PaymentSDK` after it has been initialized. The `PaymentUiConfiguration` expects the colors defined as resource ids.
+You can change the color scheme of the screens shown when requesting payment method data from the user. To do this, you can either provide a `PaymentUiConfiguration` object when configuring the SDK, or use the `configureUi` method of the `Stash` after it has been initialized. The `PaymentUiConfiguration` expects the colors defined as resource ids.
 
 Below you can see a sample using random colors provided by Android.
 
@@ -359,14 +359,14 @@ val paymentUiConfiguration = PaymentUiConfiguration(
         cellBackgroundColor,
         mediumEmphasisColor
 )
-val  configuration = PaymentSdkConfiguration(
+val  configuration = StashConfiguration(
         publishableKey = "YourApiKey",
         endpoint = "https://payment-dev.mblb.net/api/",
         integration = AdyenIntegration,
         testMode = true,
         paymentUiConfiguration = paymentUiConfiguration
 )
-PaymentSdk.initalize(this, configuration)
+Stash.initalize(this, configuration)
 ```
 
 Java
@@ -381,7 +381,7 @@ PaymentUiConfiguration paymentUiConfiguration = new PaymentUiConfiguration.Build
         .setMediumEmphasisColor(R.color.unknown_blue)
         .build();
 
-PaymentSdkConfiguration configuration = new PaymentSdkConfiguration.Builder()
+StashConfiguration configuration = new StashConfiguration.Builder()
         .setPublishableKey("YourPublishableKey")
         .setEndpoint("https://payment-dev.mblb.net/api/")
         .setIntegration(AdyenIntegration.Companion)
@@ -429,7 +429,7 @@ val creditCardData = CreditCardData(
 
 val requestUUID = UUID.randomUUID()
 
-val registrationManager = PaymentSdk.getRegistrationManager()
+val registrationManager = Stash.getRegistrationManager()
 registrationManager.registerCreditCard(creditCardData, requestUUID)
     .subscribeBy(
         onSuccess = { paymentAlias ->
@@ -501,7 +501,7 @@ val sepaData = SepaData(
 
 val requestUUID = UUID.randomUUID()
 
-val registrationManager = PaymentSdk.getRegistrationManager()
+val registrationManager = Stash.getRegistrationManager()
 registrationManager.registerSepa(sepaData, requestUUID)
         .subscribeBy(
                 onSuccess = { paymentAlias ->
@@ -530,7 +530,7 @@ SepaData sepaData = new SepaData.Builder().
         .build()
 
 
-RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
+RegistrationManager registrationManager = Stash.getRegistrationManager();
 
 UUID requestUUID = UUID.randomUUID()
 
@@ -556,7 +556,7 @@ All calls to the Stash SDK backend are idempotent, but the PSP call idempotency 
 Kotlin
 ```kotlin
 val registrationIdempotencyKey = UUID.randomUUID()
-val registrationManager = PaymentSdk.getRegistrationManager()
+val registrationManager = Stash.getRegistrationManager()
 registrationManager.registerPaymentMehodUsingUi(activity, idempotencyKey = registrationIdempotencyKey)
         .subscribeBy(
                 onSuccess = {
@@ -573,7 +573,7 @@ Java
 ```java
 UUID registrationIdempotencyKey = UUID.randomUUID();
 
-RegistrationManager registrationManager = PaymentSdk.getRegistrationManager();
+RegistrationManager registrationManager = Stash.getRegistrationManager();
 registrationManager.registerPaymentMehodUsingUi(activity, null, registrationIdempotencyKey) 
         .subscribe(
                 paymentAlias -> {

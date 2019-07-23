@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/itemsScreen"
-        android:name="com.mobilabsolutions.payment.sample.main.items.ItemsFragment"
+        android:name="com.mobilabsolutions.stash.sample.main.items.ItemsFragment"
         android:label="@string/items"
         tools:layout="@layout/fragment_items">
 
