@@ -118,12 +118,12 @@ dependencies {
 
     testImplementation(Libs.junit)
     testImplementation(Libs.mockitoCore)
-    testImplementation(Libs.mockwebserver)
+    testImplementation(Libs.OkHttp.mockwebserver)
     testImplementation(Libs.PowerMock.module)
     testImplementation(Libs.PowerMock.api)
     kaptTest(Libs.Dagger.compiler)
 
-    androidTestImplementation(Libs.mockwebserver)
+    androidTestImplementation(Libs.OkHttp.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.core)
     androidTestImplementation(Libs.AndroidX.Test.coreKtx)

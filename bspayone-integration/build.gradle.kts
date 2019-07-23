@@ -123,7 +123,7 @@ dependencies {
     androidTestImplementation(project(Modules.stash))
     androidTestImplementation(Libs.junit)
     androidTestImplementation(Libs.mockitoCore)
-    androidTestImplementation(Libs.mockwebserver)
+    androidTestImplementation(Libs.OkHttp.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.core)
