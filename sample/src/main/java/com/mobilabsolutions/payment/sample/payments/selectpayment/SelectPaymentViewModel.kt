@@ -22,10 +22,10 @@ import com.squareup.inject.assisted.AssistedInject
 import io.reactivex.rxkotlin.plusAssign
 
 class SelectPaymentViewModel @AssistedInject constructor(
-        @Assisted initialStateMethods: SelectPaymentViewState,
-        val schedulers: AppRxSchedulers,
-        updatePaymentMethods: UpdatePaymentMethods,
-        private val authorizePayment: AuthorizePayment
+    @Assisted initialStateMethods: SelectPaymentViewState,
+    val schedulers: AppRxSchedulers,
+    updatePaymentMethods: UpdatePaymentMethods,
+    private val authorizePayment: AuthorizePayment
 ) : BaseViewModel<SelectPaymentViewState>(initialStateMethods) {
 
     private var lastSelectedPaymentMethod: PaymentMethod? = null

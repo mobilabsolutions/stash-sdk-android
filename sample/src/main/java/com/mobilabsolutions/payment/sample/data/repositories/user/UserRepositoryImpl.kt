@@ -20,9 +20,9 @@ import javax.inject.Singleton
  */
 @Singleton
 class UserRepositoryImpl @Inject constructor(
-        private val dispatchers: AppCoroutineDispatchers,
-        private val localUserStore: LocalUserStore,
-        private val remoteUserDataSource: RemoteUserDataSource
+    private val dispatchers: AppCoroutineDispatchers,
+    private val localUserStore: LocalUserStore,
+    private val remoteUserDataSource: RemoteUserDataSource
 ) : UserRepository {
 
     init {

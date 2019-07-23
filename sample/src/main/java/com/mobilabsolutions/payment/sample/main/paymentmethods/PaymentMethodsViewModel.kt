@@ -32,12 +32,12 @@ import timber.log.Timber
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
 class PaymentMethodsViewModel @AssistedInject constructor(
-        @Assisted initialStateMethods: PaymentMethodsViewState,
-        updateUser: UpdateUser,
-        updatePaymentMethods: UpdatePaymentMethods,
-        private val deletePaymentMethod: DeletePaymentMethod,
-        private val addPaymentMethod: AddPaymentMethod,
-        private val schedulers: AppRxSchedulers
+    @Assisted initialStateMethods: PaymentMethodsViewState,
+    updateUser: UpdateUser,
+    updatePaymentMethods: UpdatePaymentMethods,
+    private val deletePaymentMethod: DeletePaymentMethod,
+    private val addPaymentMethod: AddPaymentMethod,
+    private val schedulers: AppRxSchedulers
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
 
     private val _error = MutableLiveData<Throwable>()

@@ -13,7 +13,7 @@ import io.reactivex.disposables.CompositeDisposable
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
  */
 open class BaseViewModel<S : MvRxState>(
-        initialState: S
+    initialState: S
 ) : BaseMvRxViewModel<S>(initialState, debugMode = BuildConfig.DEBUG) {
 
     val disposables = CompositeDisposable()
