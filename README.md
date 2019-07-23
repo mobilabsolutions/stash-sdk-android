@@ -45,11 +45,11 @@ At the moment, the Stash Android SDK supports the following PSPs:
 
 **Gradle**
 
-`implementation 'com.mobilabsolutions.payment:lib:0.9.5'`
+`implementation 'com.mobilabsolutions.stash:core:0.9.5'`
 
 **Gradle Kotlin DSL**
 
-`implementation ("com.mobilabsolutions.payment:lib:0.9.5")`
+`implementation ("com.mobilabsolutions.stash:core:0.9.5")`
 
 #### Using the AAR files (Temporary, until deployed to maven repository)
 

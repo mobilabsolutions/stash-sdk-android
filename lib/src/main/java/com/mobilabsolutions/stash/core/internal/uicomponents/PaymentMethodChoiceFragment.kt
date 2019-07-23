@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.CustomizationExtensions
 import com.mobilabsolutions.stash.core.PaymentMethodType
-import com.mobilabsolutions.stash.core.PaymentUiConfiguration
+import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
 import com.mobilabsolutions.stash.core.internal.StashImpl
 import io.reactivex.subjects.ReplaySubject
@@ -40,7 +40,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    lateinit var paymentUIConfiguration: PaymentUiConfiguration
+    lateinit var stashUIConfiguration: StashUiConfiguration
 
     private lateinit var paymentMethodAdapter: PaymentMethodAdapter
 
@@ -50,16 +50,16 @@ class PaymentMethodChoiceFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
+        stashUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
         paymentMethodAdapter = PaymentMethodAdapter(
             uiRequestHandler.availablePaymentMethods(),
             uiRequestHandler.paymentMethodTypeSubject,
-            paymentUIConfiguration
+            stashUIConfiguration
         )
         CustomizationExtensions {
-            paymentMethodChooserRootLayout.applyBackgroundCustomization(paymentUIConfiguration)
-            titleTextView.applyTextCustomization(paymentUIConfiguration)
-            explanationTextView.applyTextCustomization(paymentUIConfiguration)
+            paymentMethodChooserRootLayout.applyBackgroundCustomization(stashUIConfiguration)
+            titleTextView.applyTextCustomization(stashUIConfiguration)
+            explanationTextView.applyTextCustomization(stashUIConfiguration)
         }
 
         uiRequestHandler.availablePaymentMethods().forEach { Timber.d("Method: ${it.name}") }
@@ -93,7 +93,7 @@ class PaymentMethodChoiceFragment : Fragment() {
     class PaymentMethodAdapter(
         val availablePaymentMethods: List<PaymentMethodType>,
         val paymentMethodSubject: ReplaySubject<PaymentMethodType>,
-        val paymentUIConfiguration: PaymentUiConfiguration
+        val stashUIConfiguration: StashUiConfiguration
     ) : RecyclerView.Adapter<PaymentMethodViewHolder>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PaymentMethodViewHolder {
             return PaymentMethodViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.payment_method_entry, parent, false))
@@ -123,8 +123,8 @@ class PaymentMethodChoiceFragment : Fragment() {
                 paymentMethodSubject.onNext(paymentMethodType)
             }
             CustomizationExtensions {
-                holder.paymentMethodName.applyTextCustomization(paymentUIConfiguration)
-                holder.rootView.applyCellBackgroundCustomization(paymentUIConfiguration)
+                holder.paymentMethodName.applyTextCustomization(stashUIConfiguration)
+                holder.rootView.applyCellBackgroundCustomization(stashUIConfiguration)
             }
         }
     }

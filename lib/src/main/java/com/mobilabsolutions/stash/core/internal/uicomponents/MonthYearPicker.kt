@@ -9,7 +9,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import com.mobilabsolutions.stash.core.R
-import com.mobilabsolutions.stash.core.PaymentUiConfiguration
+import com.mobilabsolutions.stash.core.StashUiConfiguration
 import kotlinx.android.synthetic.main.month_year_picker.monthNumberPicker
 import kotlinx.android.synthetic.main.month_year_picker.monthYearPickerRoot
 import kotlinx.android.synthetic.main.month_year_picker.okButton
@@ -31,7 +31,7 @@ class MonthYearPicker(
     themeResId: Int = R.style.MonthYearPickerStyle,
     cancellable: Boolean = true,
     onCancelListener: DialogInterface.OnCancelListener? = null,
-    val paymentUIConfiguration: PaymentUiConfiguration? = null,
+    val stashUIConfiguration: StashUiConfiguration? = null,
     val selectedDate: LocalDate? = null,
     val onDatePickedListener: (Pair<Int, Int>) -> Unit
 ) : Dialog(context, themeResId) {
@@ -52,7 +52,7 @@ class MonthYearPicker(
 
         yearNumberPicker.wrapSelectorWheel = false
 
-        paymentUIConfiguration?.apply {
+        stashUIConfiguration?.apply {
             monthYearPickerRoot.background = context.getDrawable(backgroundColor)
             CustomizationExtensions {
                 okButton.applyCustomization(this@apply)
@@ -63,7 +63,7 @@ class MonthYearPicker(
                 val selectorWheelPaintField = NumberPicker::class.java
                         .getDeclaredField("mSelectorWheelPaint")
                 selectorWheelPaintField.isAccessible = true
-                val color = ContextCompat.getColor(context, paymentUIConfiguration.textColor)
+                val color = ContextCompat.getColor(context, stashUIConfiguration.textColor)
                 (selectorWheelPaintField.get(monthNumberPicker) as Paint).color = color
                 (selectorWheelPaintField.get(yearNumberPicker) as Paint).color = color
 

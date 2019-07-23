@@ -22,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.core.CustomizationExtensions
 import com.mobilabsolutions.stash.core.CustomizationExtensions.applyEditTextCustomization
 import com.mobilabsolutions.stash.core.CustomizationExtensions.applyFakeEditTextCustomization
-import com.mobilabsolutions.stash.core.PaymentUiConfiguration
+import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
 import com.mobilabsolutions.stash.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.stash.bspayone.R
@@ -95,7 +95,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    private lateinit var paymentUIConfiguration: PaymentUiConfiguration
+    private lateinit var stashUIConfiguration: StashUiConfiguration
 
     private val disposables = CompositeDisposable()
 
@@ -211,26 +211,26 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
+        stashUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
         CustomizationExtensions {
 
-            creditCardScreenTitle.applyTextCustomization(paymentUIConfiguration)
-            firstNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            lastNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            creditCardNumberTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            expirationDateTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            countryTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            cvvTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            creditCardScreenTitle.applyTextCustomization(stashUIConfiguration)
+            firstNameTitleTextView.applyTextCustomization(stashUIConfiguration)
+            lastNameTitleTextView.applyTextCustomization(stashUIConfiguration)
+            creditCardNumberTitleTextView.applyTextCustomization(stashUIConfiguration)
+            expirationDateTitleTextView.applyTextCustomization(stashUIConfiguration)
+            countryTitleTextView.applyTextCustomization(stashUIConfiguration)
+            cvvTitleTextView.applyTextCustomization(stashUIConfiguration)
 
-            firstNameEditText.applyEditTextCustomization(paymentUIConfiguration)
-            lastNameEditText.applyEditTextCustomization(paymentUIConfiguration)
-            creditCardNumberEditText.applyEditTextCustomization(paymentUIConfiguration)
-            cvvEditText.applyEditTextCustomization(paymentUIConfiguration)
-            expirationDateTextView.applyFakeEditTextCustomization(paymentUIConfiguration)
-            countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
-            creditCardScreenMainLayout.applyBackgroundCustomization(paymentUIConfiguration)
-            creditCardScreenCellLayout.applyCellBackgroundCustomization(paymentUIConfiguration)
+            firstNameEditText.applyEditTextCustomization(stashUIConfiguration)
+            lastNameEditText.applyEditTextCustomization(stashUIConfiguration)
+            creditCardNumberEditText.applyEditTextCustomization(stashUIConfiguration)
+            cvvEditText.applyEditTextCustomization(stashUIConfiguration)
+            expirationDateTextView.applyFakeEditTextCustomization(stashUIConfiguration)
+            countryText.applyFakeEditTextCustomization(stashUIConfiguration)
+            creditCardScreenMainLayout.applyBackgroundCustomization(stashUIConfiguration)
+            creditCardScreenCellLayout.applyCellBackgroundCustomization(stashUIConfiguration)
 
             firstNameEditText.showKeyboardAndFocus()
         }
@@ -302,7 +302,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(),
-                paymentUIConfiguration = paymentUIConfiguration,
+                stashUIConfiguration = stashUIConfiguration,
                 selectedDate = selectedExpiryDate,
                 onCancelListener = DialogInterface.OnCancelListener {
                     expirationDateSubject.onNext(LocalDate.MIN)
@@ -376,7 +376,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         success = validateCountry(state.country).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
-            saveButton.applyCustomization(paymentUIConfiguration)
+            saveButton.applyCustomization(stashUIConfiguration)
         }
     }
 
@@ -467,7 +467,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         } else {
             hideError(expirationDateTextView, errorCreditCardExp)
             CustomizationExtensions {
-                countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
+                countryText.applyFakeEditTextCustomization(stashUIConfiguration)
             }
         }
         return validationResult.success
@@ -500,8 +500,8 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
     private fun hideError(sourceView: View, errorView: TextView) {
         when (sourceView) {
-            is EditText -> sourceView.applyEditTextCustomization(paymentUIConfiguration)
-            is TextView -> sourceView.applyFakeEditTextCustomization(paymentUIConfiguration)
+            is EditText -> sourceView.applyEditTextCustomization(stashUIConfiguration)
+            is TextView -> sourceView.applyFakeEditTextCustomization(stashUIConfiguration)
         }
         errorView.visibility = View.GONE
     }

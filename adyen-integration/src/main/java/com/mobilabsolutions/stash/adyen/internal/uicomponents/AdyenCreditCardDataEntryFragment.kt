@@ -17,7 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.adyen.AdyenIntegration
 import com.mobilabsolutions.stash.adyen.R
 import com.mobilabsolutions.stash.core.CustomizationExtensions
-import com.mobilabsolutions.stash.core.PaymentUiConfiguration
+import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
 import com.mobilabsolutions.stash.core.internal.uicomponents.CardNumberTextWatcher
 import com.mobilabsolutions.stash.core.internal.uicomponents.CreditCardDataValidator
@@ -80,7 +80,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiCustomizationManager: UiCustomizationManager
 
-    private lateinit var paymentUIConfiguration: PaymentUiConfiguration
+    private lateinit var stashUIConfiguration: StashUiConfiguration
 
     private val disposables = CompositeDisposable()
 
@@ -189,27 +189,27 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             }
             .subscribe()
 
-        paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
+        stashUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
         CustomizationExtensions {
 
-            creditCardScreenTitle.applyTextCustomization(paymentUIConfiguration)
-            firstNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            lastNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            creditCardNumberTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            expirationDateTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            countryTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            cvvTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            creditCardScreenTitle.applyTextCustomization(stashUIConfiguration)
+            firstNameTitleTextView.applyTextCustomization(stashUIConfiguration)
+            lastNameTitleTextView.applyTextCustomization(stashUIConfiguration)
+            creditCardNumberTitleTextView.applyTextCustomization(stashUIConfiguration)
+            expirationDateTitleTextView.applyTextCustomization(stashUIConfiguration)
+            countryTitleTextView.applyTextCustomization(stashUIConfiguration)
+            cvvTitleTextView.applyTextCustomization(stashUIConfiguration)
 
-            firstNameEditText.applyEditTextCustomization(paymentUIConfiguration)
-            lastNameEditText.applyEditTextCustomization(paymentUIConfiguration)
-            creditCardNumberEditText.applyEditTextCustomization(paymentUIConfiguration)
-            cvvEditText.applyEditTextCustomization(paymentUIConfiguration)
-            expirationDateTextView.applyFakeEditTextCustomization(paymentUIConfiguration)
-            countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
-            creditCardScreenMainLayout.applyBackgroundCustomization(paymentUIConfiguration)
-            creditCardScreenCellLayout.applyCellBackgroundCustomization(paymentUIConfiguration)
-            saveButton.applyCustomization(paymentUIConfiguration)
+            firstNameEditText.applyEditTextCustomization(stashUIConfiguration)
+            lastNameEditText.applyEditTextCustomization(stashUIConfiguration)
+            creditCardNumberEditText.applyEditTextCustomization(stashUIConfiguration)
+            cvvEditText.applyEditTextCustomization(stashUIConfiguration)
+            expirationDateTextView.applyFakeEditTextCustomization(stashUIConfiguration)
+            countryText.applyFakeEditTextCustomization(stashUIConfiguration)
+            creditCardScreenMainLayout.applyBackgroundCustomization(stashUIConfiguration)
+            creditCardScreenCellLayout.applyCellBackgroundCustomization(stashUIConfiguration)
+            saveButton.applyCustomization(stashUIConfiguration)
             firstNameEditText.showKeyboardAndFocus()
         }
 
@@ -262,7 +262,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(),
-                paymentUIConfiguration = paymentUIConfiguration,
+                stashUIConfiguration = stashUIConfiguration,
                 selectedDate = selectedExpiryDate,
                 onCancelListener = DialogInterface.OnCancelListener {
                     expirationDateSubject.onNext(LocalDate.MIN)
@@ -319,7 +319,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         success = validateCVV(state.cvv).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
-            saveButton.applyCustomization(paymentUIConfiguration)
+            saveButton.applyCustomization(stashUIConfiguration)
         }
     }
 
@@ -406,7 +406,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         } else {
             hideError(expirationDateTextView, errorCreditCardExp)
             CustomizationExtensions {
-                countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
+                countryText.applyFakeEditTextCustomization(stashUIConfiguration)
             }
         }
         return validationResult.success
@@ -440,8 +440,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
     private fun hideError(sourceView: View, errorView: TextView) {
         CustomizationExtensions {
             when (sourceView) {
-                is EditText -> sourceView.applyEditTextCustomization(paymentUIConfiguration)
-                is TextView -> sourceView.applyFakeEditTextCustomization(paymentUIConfiguration)
+                is EditText -> sourceView.applyEditTextCustomization(stashUIConfiguration)
+                is TextView -> sourceView.applyFakeEditTextCustomization(stashUIConfiguration)
             }
         }
         errorView.visibility = View.GONE

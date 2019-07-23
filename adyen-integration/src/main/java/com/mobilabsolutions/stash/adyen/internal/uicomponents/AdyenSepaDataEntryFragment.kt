@@ -14,7 +14,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.core.CustomizationExtensions
-import com.mobilabsolutions.stash.core.PaymentUiConfiguration
+import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
 import com.mobilabsolutions.stash.adyen.AdyenIntegration
 import com.mobilabsolutions.stash.adyen.R
@@ -61,7 +61,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
 
-    lateinit var paymentUIConfiguration: PaymentUiConfiguration
+    lateinit var stashUIConfiguration: StashUiConfiguration
 
     @Inject
     lateinit var sepaDataValidator: SepaDataValidator
@@ -105,22 +105,22 @@ class AdyenSepaDataEntryFragment : Fragment() {
         countryText.visibility = View.GONE
         countryTitleTextView.visibility = View.GONE
 
-        paymentUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
+        stashUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
         CustomizationExtensions {
-            ibanTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            firstNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            lastNameTitleTextView.applyTextCustomization(paymentUIConfiguration)
-            sepaScreenTitle.applyTextCustomization(paymentUIConfiguration)
-            countryTitleTextView.applyTextCustomization(paymentUIConfiguration)
+            ibanTitleTextView.applyTextCustomization(stashUIConfiguration)
+            firstNameTitleTextView.applyTextCustomization(stashUIConfiguration)
+            lastNameTitleTextView.applyTextCustomization(stashUIConfiguration)
+            sepaScreenTitle.applyTextCustomization(stashUIConfiguration)
+            countryTitleTextView.applyTextCustomization(stashUIConfiguration)
 
-            firstNameEditText.applyEditTextCustomization(paymentUIConfiguration)
-            lastNameEditText.applyEditTextCustomization(paymentUIConfiguration)
-            countryText.applyFakeEditTextCustomization(paymentUIConfiguration)
-            ibanNumberEditText.applyEditTextCustomization(paymentUIConfiguration)
-            saveButton.applyCustomization(paymentUIConfiguration)
-            sepaScreenMainLayout.applyBackgroundCustomization(paymentUIConfiguration)
-            sepaScreenCellLayout.applyCellBackgroundCustomization(paymentUIConfiguration)
+            firstNameEditText.applyEditTextCustomization(stashUIConfiguration)
+            lastNameEditText.applyEditTextCustomization(stashUIConfiguration)
+            countryText.applyFakeEditTextCustomization(stashUIConfiguration)
+            ibanNumberEditText.applyEditTextCustomization(stashUIConfiguration)
+            saveButton.applyCustomization(stashUIConfiguration)
+            sepaScreenMainLayout.applyBackgroundCustomization(stashUIConfiguration)
+            sepaScreenCellLayout.applyCellBackgroundCustomization(stashUIConfiguration)
 
             firstNameEditText.showKeyboardAndFocus()
         }
@@ -238,7 +238,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
         success = validateIban(state.iban).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
-            saveButton.applyCustomization(paymentUIConfiguration)
+            saveButton.applyCustomization(stashUIConfiguration)
         }
     }
 
@@ -318,7 +318,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
 
     private fun hideError(sourceView: View, errorView: TextView) {
         CustomizationExtensions {
-            (sourceView as EditText).applyEditTextCustomization(paymentUIConfiguration)
+            (sourceView as EditText).applyEditTextCustomization(stashUIConfiguration)
         }
         errorView.visibility = View.GONE
     }

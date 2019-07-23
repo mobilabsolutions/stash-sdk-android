@@ -33,10 +33,10 @@ public final class Stash {
     /**
      * Provide a customization object for UI components so it blends better with the rest of your application.
      *
-     * @param paymentUIConfiguration ui configuration object
+     * @param stashUIConfiguration ui configuration object
      */
-    public static void configureUi(PaymentUiConfiguration paymentUIConfiguration) {
-        StashImpl.configureUi(paymentUIConfiguration);
+    public static void configureUi(StashUiConfiguration stashUIConfiguration) {
+        StashImpl.configureUi(stashUIConfiguration);
     }
 
 

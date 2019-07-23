@@ -33,7 +33,7 @@ import javax.inject.Inject
  * or you can use the Builder supplied. The values must be reference to the color
  * defined in application resources.
  */
-data class PaymentUiConfiguration(
+data class StashUiConfiguration(
     /**
      * Text color
      */
@@ -61,7 +61,7 @@ data class PaymentUiConfiguration(
 
 ) {
     class Builder {
-        private var preference = PaymentUiConfiguration()
+        private var preference = StashUiConfiguration()
         /**
          * Text color
          */
@@ -105,7 +105,7 @@ data class PaymentUiConfiguration(
             return this
         }
 
-        fun build(): PaymentUiConfiguration = preference
+        fun build(): StashUiConfiguration = preference
     }
 }
 
@@ -114,7 +114,7 @@ data class PaymentUiConfiguration(
  * colors for specific elements
  */
 class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sharedPreferences: SharedPreferences) {
-    private lateinit var paymentUIConfiguration: PaymentUiConfiguration
+    private lateinit var stashUIConfiguration: StashUiConfiguration
 
     companion object {
         const val CUSTOMIZATION_KEY = "Customization"
@@ -124,27 +124,27 @@ class UiCustomizationManager @Inject internal constructor(val gson: Gson, val sh
         loadPreference()
     }
 
-    fun setCustomizationPreferences(paymentUIConfiguration: PaymentUiConfiguration) {
-        this.paymentUIConfiguration = paymentUIConfiguration
+    fun setCustomizationPreferences(stashUIConfiguration: StashUiConfiguration) {
+        this.stashUIConfiguration = stashUIConfiguration
         storePreference()
     }
 
-    fun getCustomizationPreferences(): PaymentUiConfiguration {
-        return paymentUIConfiguration
+    fun getCustomizationPreferences(): StashUiConfiguration {
+        return stashUIConfiguration
     }
 
     @SuppressLint("ApplySharedPref")
     private fun storePreference() {
-        val preferenceJson = gson.toJson(paymentUIConfiguration)
+        val preferenceJson = gson.toJson(stashUIConfiguration)
         sharedPreferences.edit().putString(CUSTOMIZATION_KEY, preferenceJson).commit()
     }
 
     private fun loadPreference() {
         val customizationJson = sharedPreferences.getString(CUSTOMIZATION_KEY, "")!!
-        paymentUIConfiguration = if (customizationJson.isEmpty()) {
-            PaymentUiConfiguration()
+        stashUIConfiguration = if (customizationJson.isEmpty()) {
+            StashUiConfiguration()
         } else {
-            gson.fromJson(customizationJson, PaymentUiConfiguration::class.java)
+            gson.fromJson(customizationJson, StashUiConfiguration::class.java)
         }
     }
 }
@@ -171,54 +171,54 @@ object CustomizationExtensions {
     /**
      * Apply customizations on any edit text view
      */
-    fun EditText.applyEditTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
-        applyOnTextView(paymentUIConfiguration)
+    fun EditText.applyEditTextCustomization(stashUIConfiguration: StashUiConfiguration) {
+        applyOnTextView(stashUIConfiguration)
     }
 
     /**
      * Make the text view look like customized edit text. This is useful for fields that
      * actually open dialogs like expiry date and country selector
      */
-    fun TextView.applyFakeEditTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
-        applyOnTextView(paymentUIConfiguration)
+    fun TextView.applyFakeEditTextCustomization(stashUIConfiguration: StashUiConfiguration) {
+        applyOnTextView(stashUIConfiguration)
     }
 
     /**
      * Apply text view background customizations
      */
-    private fun TextView.applyOnTextView(paymentUIConfiguration: PaymentUiConfiguration) {
+    private fun TextView.applyOnTextView(stashUIConfiguration: StashUiConfiguration) {
         background = if (error == null) {
             val backgroundDrawable = ContextCompat.getDrawable(context, R.drawable.edit_text_selector)
             val textFieldDrawableContainerState = (backgroundDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
             val textFieldDrawableStates = textFieldDrawableContainerState.children.filterNotNull().map { it as GradientDrawable }
             textFieldDrawableStates[0].setStroke(1.px, CustomizationExtensions.CustomizationUtil.darken(ContextCompat.getColor(context, R.color.cool_gray)))
             textFieldDrawableStates[1].setStroke(1.px, ContextCompat.getColor(context, R.color.cool_gray))
-            textFieldDrawableStates[0].setColor(ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor))
-            textFieldDrawableStates[1].setColor(ContextCompat.getColor(context, paymentUIConfiguration.mediumEmphasisColor))
+            textFieldDrawableStates[0].setColor(ContextCompat.getColor(context, stashUIConfiguration.mediumEmphasisColor))
+            textFieldDrawableStates[1].setColor(ContextCompat.getColor(context, stashUIConfiguration.mediumEmphasisColor))
             backgroundDrawable
         } else {
             resources.getDrawable(R.drawable.edit_text_frame_error)
         }
-        this.applyTextCustomization(paymentUIConfiguration)
+        this.applyTextCustomization(stashUIConfiguration)
     }
 
     /**
      * Customize text color
      */
-    fun TextView.applyTextCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
-        setTextColor(ContextCompat.getColor(context, paymentUIConfiguration.textColor))
+    fun TextView.applyTextCustomization(stashUIConfiguration: StashUiConfiguration) {
+        setTextColor(ContextCompat.getColor(context, stashUIConfiguration.textColor))
     }
 
     /**
      * Apply button customizations
      */
-    fun Button.applyCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
+    fun Button.applyCustomization(stashUIConfiguration: StashUiConfiguration) {
         background = if (isEnabled) {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector)
             val buttonBackgroundDrawableContainterStates = (buttonColorDrawable as StateListDrawable).constantState as DrawableContainer.DrawableContainerState
             val states = buttonBackgroundDrawableContainterStates.children.filterNotNull().map { it as GradientDrawable }
-            states[0].setColor(CustomizationExtensions.CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonColor)))
-            states[1].setColor(ContextCompat.getColor(context, paymentUIConfiguration.buttonColor))
+            states[0].setColor(CustomizationExtensions.CustomizationUtil.lighten(ContextCompat.getColor(context, stashUIConfiguration.buttonColor)))
+            states[1].setColor(ContextCompat.getColor(context, stashUIConfiguration.buttonColor))
             buttonColorDrawable
         } else {
             val buttonColorDrawable = ContextCompat.getDrawable(context, R.drawable.rounded_corner_button_selector_disabled)
@@ -228,23 +228,23 @@ object CustomizationExtensions {
             states[1].setColor(ContextCompat.getColor(context, R.color.cool_gray))
             buttonColorDrawable
         }
-        setTextColor(CustomizationExtensions.CustomizationUtil.lighten(ContextCompat.getColor(context, paymentUIConfiguration.buttonTextColor)))
+        setTextColor(CustomizationExtensions.CustomizationUtil.lighten(ContextCompat.getColor(context, stashUIConfiguration.buttonTextColor)))
     }
 
     /**
      * Apply background customization on any view that has ColorDrawable background
      */
-    fun View.applyBackgroundCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
+    fun View.applyBackgroundCustomization(stashUIConfiguration: StashUiConfiguration) {
         val backgroundColorDrawable = background as ColorDrawable
-        backgroundColorDrawable.color = ContextCompat.getColor(context, paymentUIConfiguration.backgroundColor)
+        backgroundColorDrawable.color = ContextCompat.getColor(context, stashUIConfiguration.backgroundColor)
         background = backgroundColorDrawable
     }
     /**
      * Apply cell background customization on any view that has ColorDrawable background
      */
-    fun View.applyCellBackgroundCustomization(paymentUIConfiguration: PaymentUiConfiguration) {
+    fun View.applyCellBackgroundCustomization(stashUIConfiguration: StashUiConfiguration) {
         val backgroundColorDrawable = background as GradientDrawable
-        backgroundColorDrawable.setColor(ContextCompat.getColor(context, paymentUIConfiguration.cellBackgroundColor))
+        backgroundColorDrawable.setColor(ContextCompat.getColor(context, stashUIConfiguration.cellBackgroundColor))
         background = backgroundColorDrawable
     }
 

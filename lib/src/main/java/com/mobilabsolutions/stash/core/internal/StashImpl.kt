@@ -8,7 +8,7 @@ import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.stash.core.BuildConfig
 import com.mobilabsolutions.stash.core.PaymentMethodType
-import com.mobilabsolutions.stash.core.PaymentUiConfiguration
+import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.RegistrationManager
 import com.mobilabsolutions.stash.core.StashConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
@@ -160,8 +160,8 @@ class StashImpl(
                             .build()))
                     .build())
                 // UI customization
-                if (configuration.paymentUiConfiguration != null) {
-                    configureUi(configuration.paymentUiConfiguration)
+                if (configuration.stashUiConfiguration != null) {
+                    configureUi(configuration.stashUiConfiguration)
                 }
             }
         }
@@ -170,9 +170,9 @@ class StashImpl(
          * Update the UI configurations, effects will be applied only after the screen is recreated
          */
         @JvmStatic
-        fun configureUi(paymentUIConfiguration: PaymentUiConfiguration) {
+        fun configureUi(stashUIConfiguration: StashUiConfiguration) {
             assertInitialized()
-            instance!!.uiCustomizationManager.setCustomizationPreferences(paymentUIConfiguration)
+            instance!!.uiCustomizationManager.setCustomizationPreferences(stashUIConfiguration)
         }
 
         /**

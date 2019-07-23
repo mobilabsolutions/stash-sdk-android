@@ -16,7 +16,7 @@ import javax.net.ssl.X509TrustManager
  * * Integration - If you are using single integration for all payment methods you can use this parameter
  * * Integration List - If you are using several integrations, you need to provide pairs of integration to
  * payment method type
- * * [Payment Ui Configuration](PaymentUiConfiguration) - Styling for payment registration UI components so they blend better with your application
+ * * [Payment Ui Configuration](StashUiConfiguration) - Styling for payment registration UI components so they blend better with your application
  * * Test mode - boolean flag to determine are you working in test mode or production mode
  * * sslFactory and x509TrustManager - If you need to provide specific SSL handling for lower android versions who don't support TLS 1.2 natively
  * you can do that by providing SslFactory and x509TrustManager
@@ -28,7 +28,7 @@ data class StashConfiguration(
     val endpoint: String,
     val integration: IntegrationCompanion? = null,
     val integrationList: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null,
-    val paymentUiConfiguration: PaymentUiConfiguration? = null,
+    val stashUiConfiguration: StashUiConfiguration? = null,
     val testMode: Boolean = false,
     val sslFactory: SSLSocketFactory? = null,
     val x509TrustManager: X509TrustManager? = null
@@ -41,7 +41,7 @@ data class StashConfiguration(
         private var endpoint: String? = null
         private var integration: IntegrationCompanion? = null
         private var integrations: List<Pair<IntegrationCompanion, PaymentMethodType>>? = null
-        private var paymentUIConfiguration: PaymentUiConfiguration? = null
+        private var stashUIConfiguration: StashUiConfiguration? = null
         private var testMode: Boolean = false
         private var sslFactory: SSLSocketFactory? = null
         private var x509TrustManager: X509TrustManager? = null
@@ -84,10 +84,10 @@ data class StashConfiguration(
         }
 
         /**
-         *  [Payment Ui Configuration](PaymentUiConfiguration) - Styling for payment registration UI components so they blend better with your application
+         *  [Payment Ui Configuration](StashUiConfiguration) - Styling for payment registration UI components so they blend better with your application
          */
-        fun setCustomization(paymentUIConfiguration: PaymentUiConfiguration?): Builder {
-            this.paymentUIConfiguration = paymentUIConfiguration
+        fun setCustomization(stashUIConfiguration: StashUiConfiguration?): Builder {
+            this.stashUIConfiguration = stashUIConfiguration
             return this
         }
 
@@ -126,7 +126,7 @@ data class StashConfiguration(
                 endpoint!!,
                 integration,
                 integrations,
-                paymentUIConfiguration,
+                stashUIConfiguration,
                 testMode,
                 sslFactory,
                 x509TrustManager

@@ -157,8 +157,8 @@ tasks {
             suppress = true
         }
         includes = listOf(
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/model/model-package-description.md",
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/payment-sdk-package-description.md"
+            "src/main/java/com/mobilabsolutions/stash/core/model/model-package-description.md",
+            "src/main/java/com/mobilabsolutions/stash/core/payment-sdk-package-description.md"
         )
     }
 
@@ -177,8 +177,8 @@ tasks {
             suppress = true
         }
         includes = listOf(
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/model/model-package-description.md",
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/payment-sdk-package-description.md"
+            "src/main/java/com/mobilabsolutions/stash/core/model/model-package-description.md",
+            "src/main/java/com/mobilabsolutions/stash/core/payment-sdk-package-description.md"
         )
     }
 
