@@ -14,6 +14,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -254,6 +255,13 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         creditCardNumberEditText.addTextChangedListener(CardNumberTextWatcher { resourceId ->
             creditCardNumberEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
         })
+
+        creditCardNumberEditText.setOnEditorActionListener { _, id, _ ->
+            if (id == EditorInfo.IME_ACTION_NEXT) {
+                expirationDateTextView.performClick()
+            }
+            false
+        }
 
         cvvEditText.getContentOnFocusChange { isFocusGained, value ->
             if (!isFocusGained) {
