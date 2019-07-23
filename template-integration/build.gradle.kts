@@ -13,15 +13,15 @@ kapt {
     useBuildCache = true
 }
 
-val templatePublishableKey = propOrDefWithTravis(PaymentSdkRelease.templatePublishableKey, "")
+val templatePublishableKey = propOrDefWithTravis(StashRelease.templatePublishableKey, "")
 
 android {
-    compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-    buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
+    compileSdkVersion(StashBuildConfigs.compileSdk)
+    buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
 
     defaultConfig {
-        minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-        targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
+        minSdkVersion(StashBuildConfigs.minSdk)
+        targetSdkVersion(StashBuildConfigs.targetSdk)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -49,7 +49,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Modules.paymentSdk))
+    implementation(project(Modules.stash))
     implementation(Libs.Kotlin.stdlib)
 
     implementation(Libs.AndroidX.appcompat)

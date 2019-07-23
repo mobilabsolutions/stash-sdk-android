@@ -3,4 +3,4 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mobilabsolutions.payment.android.psdk.integration.bspayone"/>
+          package="com.mobilabsolutions.stash.bspayone"/>

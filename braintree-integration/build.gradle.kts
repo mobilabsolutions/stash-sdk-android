@@ -41,17 +41,17 @@ val getCommitHash = ("git rev-parse --short HEAD").runCommand()
 
 val getCommitCount = ("git rev-list --count HEAD").runCommand()
 
-val sdkVersionCode = propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
+val sdkVersionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, getCommitCount).toInt()
 
-val sdkVersionName = propOrDefWithTravis(PaymentSdkRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
+val sdkVersionName = propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
 
 android {
-    compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-    buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
+    compileSdkVersion(StashBuildConfigs.compileSdk)
+    buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
 
     defaultConfig {
-        minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-        targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
+        minSdkVersion(StashBuildConfigs.minSdk)
+        targetSdkVersion(StashBuildConfigs.targetSdk)
 
         versionCode = sdkVersionCode
         versionName = if (isTravisTag) {
@@ -65,13 +65,13 @@ android {
 
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
         }
         getByName("release") {
             isMinifyEnabled = false
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
+            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
         }
     }
 
@@ -86,7 +86,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Modules.paymentSdk))
+    implementation(project(Modules.stash))
     implementation(Libs.Kotlin.stdlib)
 
     implementation(Libs.AndroidX.appcompat)
@@ -121,25 +121,29 @@ licenseReport {
 
 tasks {
     create<DokkaAndroidTask>("dokkaPublic") {
-        moduleName = "lib"
+        moduleName = "braintree-integration"
         outputFormat = "html"
         outputDirectory = "$buildDir/dokkaPublic"
         packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            prefix = "com.mobilabsolutions.stash.internal"
             suppress = true
         }
     }
 
     dokka {
-        moduleName = "lib"
+        moduleName = "braintree-integration"
         outputFormat = "html"
         outputDirectory = "$buildDir/dokka"
     }
 
     val dokkaJavadoc = create<DokkaAndroidTask>("dokkaJavadoc") {
-        moduleName = "lib"
+        moduleName = "braintree-integration"
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokkaJavadoc"
+        packageOptions {
+            prefix = "com.mobilabsolutions.stash.internal"
+            suppress = true
+        }
     }
 
     create<Jar>("javadocJar") {
@@ -165,14 +169,12 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("braintree") {
-            groupId = "com.mobilabsolutions.payment.android.psdk.integration.braintree"
-            artifactId = "payment-sdk-braintree"
+            groupId = "com.mobilabsolutions.stash"
+            artifactId = "braintree"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/braintree-integration-release.aar")
-
             artifact(tasks["javadocJar"])
-
             artifact(tasks["sourcesJar"])
 
             versionMapping {
@@ -185,8 +187,8 @@ publishing {
             }
 
             pom {
-                name.set("Android Payment SDK - Braintree")
-                description.set("The payment SDK simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
+                name.set("Stash - Braintree")
+                description.set("The Braintree Integration for the Stash SDK")
                 url.set("https://mobilabsolutions.com/")
                 licenses {
                     license {
@@ -208,7 +210,7 @@ publishing {
                     developer {
                         id.set("Biju")
                         name.set("Biju Parvathy")
-                        email.set("Biju@mobilabsolutions.com")
+                        email.set("biju@mobilabsolutions.com")
                     }
                 }
                 scm {
@@ -222,10 +224,10 @@ publishing {
                     configurations.implementation.get().allDependencies.forEach {
                         if (it.group == "payment-sdk-android-open") { // Core lib
                             with(dependenciesNode.appendNode("dependency")) {
-                                appendNode("groupId", "com.mobilabsolutions.payment.android.psdk")
-                                appendNode("artifactId", "payment-sdk-lib")
+                                appendNode("groupId", "com.mobilabsolutions.stash")
+                                appendNode("artifactId", "core")
                                 appendNode("version", android.defaultConfig.versionName)
-                                appendNode("scope", "compile")
+                                appendNode("scope", "runtime")
                             }
                         } else if (it.group != null && it.name != "unspecified" && it.version != null) {
                             with(dependenciesNode.appendNode("dependency")) {
@@ -262,8 +264,8 @@ publishing {
             url = uri(if (isTravisTag) releasesRepoUrl else snapshotsRepoUrl)
 
             credentials {
-                username = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusUsername, "")
-                password = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusPassword, "")
+                username = propOrDefWithTravis(StashRelease.MobilabNexusUsername, "")
+                password = propOrDefWithTravis(StashRelease.MobilabNexusPassword, "")
             }
         }
     }
