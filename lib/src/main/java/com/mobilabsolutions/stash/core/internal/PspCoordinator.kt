@@ -4,7 +4,6 @@
 
 package com.mobilabsolutions.stash.core.internal
 
-
 import android.app.Activity
 import android.content.Context
 

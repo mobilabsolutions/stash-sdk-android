@@ -14,7 +14,6 @@ import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotlinx.android.synthetic.main.registration_host_activity.*
 import javax.inject.Inject
 
-
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
