@@ -20,6 +20,7 @@ import com.mobilabsolutions.payment.android.psdk.internal.psphandler.Integration
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.PayPalRegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.payment.android.psdk.internal.psphandler.SepaRegistrationRequest
+import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.RegistrationProcessHostActivity
 import com.mobilabsolutions.payment.android.psdk.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.payment.android.psdk.model.BillingData
 import com.mobilabsolutions.payment.android.psdk.model.CreditCardData
@@ -235,14 +236,17 @@ internal class PspCoordinator @Inject constructor(
 
     /**
      * PayPal is different from other payment methods like SEPA and Credit Card, as it only allows registration using
-     * flow external to the SDK. For that reason we don't offer a possiblity of creating a specific 3rd party
-     * UI, but just a request to register using prebuild components.
+     * flow external to the SDK. For that reason we don't offer a possibility of creating a specific 3rd party
+     * UI, but just a request to register using pre-build components.
      *
      * This method will similarly to SEPA and Credit Card create the alias by calling the backend endpoint, processes additional data, and upon PayPal flow
      * completion create the PaymentMethodAlias object that is returned to 3rd party developer.
      */
     private fun registerPayPalUsingUIComponent(activity: Activity?, requestId: Int): Single<PaymentMethodAlias> {
-
+        val hostActivity = uiRequestHandler.hostActivityProvider.value
+        if (hostActivity != null && hostActivity is RegistrationProcessHostActivity) {
+            hostActivity.showPaypalLoading()
+        }
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.PAYPAL)
         }.keys.first()

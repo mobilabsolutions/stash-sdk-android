@@ -104,6 +104,11 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         pointOfNoReturnReached = true
     }
 
+    override fun onStart() {
+        super.onStart()
+        overridePendingTransition(0, 0)
+    }
+
     // We want to disable back press once the request has been sent out, because otherwise it will
     // go back to the main screen and then launch braintree activity
     override fun onBackPressed() {
