@@ -13,8 +13,7 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.paymentSdk))
-
+    implementation(project(Modules.stash))
     implementation(Libs.Adyen.base)
     implementation(Libs.Adyen.ui)
     implementation(Libs.Adyen.core)
@@ -25,6 +24,7 @@ dependencies {
     testImplementation(Libs.AndroidX.Test.core)
     kaptTest(Libs.Dagger.compiler)
 
+    androidTestImplementation(project(Modules.stash))
     androidTestImplementation(Libs.junit)
     androidTestImplementation(Libs.mockitoCore)
     androidTestImplementation(Libs.AndroidX.Test.runner)
@@ -35,25 +35,29 @@ dependencies {
 
 tasks {
     create<DokkaAndroidTask>("dokkaPublic") {
-        moduleName = "lib"
+        moduleName = "adyen-integration"
         outputFormat = "html"
         outputDirectory = "$buildDir/dokkaPublic"
         packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            prefix = "com.mobilabsolutions.stash.internal"
             suppress = true
         }
     }
 
     dokka {
-        moduleName = "lib"
+        moduleName = "adyen-integration"
         outputFormat = "html"
         outputDirectory = "$buildDir/dokka"
     }
 
     val dokkaJavadoc = create<DokkaAndroidTask>("dokkaJavadoc") {
-        moduleName = "lib"
+        moduleName = "adyen-integration"
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokkaJavadoc"
+        packageOptions {
+            prefix = "com.mobilabsolutions.stash.internal"
+            suppress = true
+        }
     }
 
     create<Jar>("javadocJar") {
@@ -79,14 +83,12 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("adyen") {
-            groupId = "com.mobilabsolutions.payment.android.psdk.integration.adyen"
-            artifactId = "payment-sdk-adyen"
+            groupId = "com.mobilabsolutions.stash"
+            artifactId = "adyen"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/adyen-integration-release.aar")
-
             artifact(tasks["javadocJar"])
-
             artifact(tasks["sourcesJar"])
 
             versionMapping {
@@ -99,8 +101,8 @@ publishing {
             }
 
             pom {
-                name.set("Android Payment SDK - Adyen")
-                description.set("The payment SDK simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
+                name.set("Stash - Adyen")
+                description.set("The Adyen Integration for the Stash SDK")
                 url.set("https://mobilabsolutions.com/")
                 licenses {
                     license {
@@ -122,7 +124,7 @@ publishing {
                     developer {
                         id.set("Biju")
                         name.set("Biju Parvathy")
-                        email.set("Biju@mobilabsolutions.com")
+                        email.set("biju@mobilabsolutions.com")
                     }
                 }
                 scm {
@@ -136,10 +138,10 @@ publishing {
                     configurations.implementation.get().allDependencies.forEach {
                         if (it.group == "payment-sdk-android-open") { // Core lib
                             with(dependenciesNode.appendNode("dependency")) {
-                                appendNode("groupId", "com.mobilabsolutions.payment.android.psdk")
-                                appendNode("artifactId", "payment-sdk-lib")
+                                appendNode("groupId", "com.mobilabsolutions.stash")
+                                appendNode("artifactId", "core")
                                 appendNode("version", android.defaultConfig.versionName)
-                                appendNode("scope", "compile")
+                                appendNode("scope", "runtime")
                             }
                         } else if (it.group != null && it.name != "unspecified" && it.version != null) {
                             with(dependenciesNode.appendNode("dependency")) {
@@ -176,8 +178,8 @@ publishing {
             url = uri(if (isTravisTag) releasesRepoUrl else snapshotsRepoUrl)
 
             credentials {
-                username = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusUsername, "")
-                password = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusPassword, "")
+                username = propOrDefWithTravis(StashRelease.MobilabNexusUsername, "")
+                password = propOrDefWithTravis(StashRelease.MobilabNexusPassword, "")
             }
         }
     }

@@ -1,33 +1,23 @@
-import PaymentSdkRelease.templatePublishableKey
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
-import com.jaredsburrows.license.LicensePlugin
 import com.jaredsburrows.license.LicenseReportExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.api.publish.PublicationContainer
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.tasks.bundling.Jar
 import org.gradle.api.tasks.testing.Test
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.gradle.kotlin.dsl.KotlinClosure1
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.dependencies
-import org.gradle.kotlin.dsl.get
 import org.gradle.kotlin.dsl.getByType
-import org.gradle.kotlin.dsl.invoke
-import org.gradle.plugins.signing.SigningExtension
-import org.jetbrains.dokka.gradle.DokkaAndroidTask
 import org.jetbrains.kotlin.gradle.internal.AndroidExtensionsExtension
 import org.jetbrains.kotlin.gradle.plugin.KaptExtension
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 19-07-2019.
  */
+@Suppress("unused")
 class PaymentSdkPlugin : Plugin<Project> {
     override fun apply(project: Project) {
         project.configureKotlin()
@@ -63,14 +53,15 @@ class PaymentSdkPlugin : Plugin<Project> {
         val getCommitHash = ("git rev-parse --short HEAD").runCommand(project)
         val getCommitCount = ("git rev-list --count HEAD").runCommand(project)
 
-        val sdkVersionCode = project.propOrDefWithTravis(PaymentSdkRelease.travisBuildNumber, getCommitCount).toInt()
-        val sdkVersionName = project.propOrDefWithTravis(PaymentSdkRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
+        val sdkVersionCode = project.propOrDefWithTravis(StashRelease.travisBuildNumber, getCommitCount).toInt()
+        val sdkVersionName =
+            project.propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
 
-        compileSdkVersion(PaymentSdkBuildConfigs.compileSdk)
-        buildToolsVersion(PaymentSdkBuildConfigs.buildtoolsVersion)
+        compileSdkVersion(StashBuildConfigs.compileSdk)
+        buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
         defaultConfig.apply {
-            minSdkVersion(PaymentSdkBuildConfigs.minSdk)
-            targetSdkVersion(PaymentSdkBuildConfigs.targetSdk)
+            minSdkVersion(StashBuildConfigs.minSdk)
+            targetSdkVersion(StashBuildConfigs.targetSdk)
             versionName = if (isTravisTag) sdkVersionName else "$sdkVersionName-SNAPSHOT"
             versionCode = sdkVersionCode
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -83,16 +74,44 @@ class PaymentSdkPlugin : Plugin<Project> {
 
         buildTypes {
             getByName("debug") {
-                resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
-                buildConfigField("String", "newBsApiUrl", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-                buildConfigField("String", "mobilabBackendUrl", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-                buildConfigField("String", "testPublishableKey", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+                resValue(
+                    "string",
+                    "template_public_key",
+                    "\"" + project.propOrDefWithTravis(StashRelease.templatePublishableKey, "") + "\""
+                )
+                buildConfigField(
+                    "String",
+                    "newBsApiUrl",
+                    "\"" + project.propOrDefWithTravis(StashRelease.newBsApiUrl, "") + "\""
+                )
+                buildConfigField(
+                    "String",
+                    "mobilabBackendUrl",
+                    "\"" + project.propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\""
+                )
+                buildConfigField(
+                    "String",
+                    "testPublishableKey",
+                    "\"" + project.propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\""
+                )
             }
             getByName("release") {
                 isMinifyEnabled = false
-                buildConfigField("String", "newBsApiUrl", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.newBsApiUrl, "") + "\"")
-                buildConfigField("String", "mobilabBackendUrl", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.mobilabBackendUrl, "") + "\"")
-                buildConfigField("String", "testPublishableKey", "\"" + project.propOrDefWithTravis(PaymentSdkRelease.testPublishableKey, "") + "\"")
+                buildConfigField(
+                    "String",
+                    "newBsApiUrl",
+                    "\"" + project.propOrDefWithTravis(StashRelease.newBsApiUrl, "") + "\""
+                )
+                buildConfigField(
+                    "String",
+                    "mobilabBackendUrl",
+                    "\"" + project.propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\""
+                )
+                buildConfigField(
+                    "String",
+                    "testPublishableKey",
+                    "\"" + project.propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\""
+                )
             }
         }
 

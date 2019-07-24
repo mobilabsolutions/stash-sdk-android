@@ -12,7 +12,7 @@
 
         <variable
             name="state"
-            type="com.mobilabsolutions.payment.sample.payments.selectpayment.SelectPaymentViewState" />
+            type="com.mobilabsolutions.stash.sample.payments.selectpayment.SelectPaymentViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

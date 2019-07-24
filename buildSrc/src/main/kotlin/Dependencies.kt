@@ -6,7 +6,7 @@ import org.gradle.api.Project
 import java.io.ByteArrayOutputStream
 import java.util.*
 
-object PaymentSdkRelease {
+object StashRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
     val travisTag = "TRAVIS_TAG"
     val templatePublishableKey = "TEMPLATE_PUBLIC_KEY"
@@ -17,7 +17,7 @@ object PaymentSdkRelease {
     val MobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
 }
 
-object PaymentSdkBuildConfigs {
+object StashBuildConfigs {
     val compileSdk = 28
     val minSdk = 21
     val targetSdk = 28
@@ -39,7 +39,7 @@ object Modules {
     val bsPayoneIntegration = ":bspayone-integration"
     val braintreeIntegration = ":braintree-integration"
     val adyenIntegration = ":adyen-integration"
-    val paymentSdk = ":lib"
+    val stash = ":lib"
 }
 
 object Libs {
@@ -47,12 +47,11 @@ object Libs {
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
     val timber = "com.jakewharton.timber:timber:4.7.1"
     val junit = "junit:junit:4.12"
-    val mockitoCore = "org.mockito:mockito-core:2.28.2"
+    val mockitoCore = "org.mockito:mockito-core:3.0.0"
     val robolectric = "org.robolectric:robolectric:4.3"
     val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.1"
-    val mockwebserver = "com.squareup.okhttp3:mockwebserver:3.12.0"
     val iban4j = "org.iban4j:iban4j:3.2.1"
-    val braintree = "com.braintreepayments.api:braintree:3.1.0"
+    val braintree = "com.braintreepayments.api:braintree:3.3.0"
     val mvrx = "com.airbnb.android:mvrx:1.0.2"
     val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     val viewPump = "io.github.inflationx:viewpump:2.0.3"
@@ -60,7 +59,7 @@ object Libs {
     val dokkaPlugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
 
     object Adyen {
-        private const val version = "2.4.5"
+        private const val version = "2.4.7"
         val base = "com.adyen.checkout:base:$version"
         val ui = "com.adyen.checkout:ui:$version"
         val core = "com.adyen.checkout:core:$version"
@@ -68,9 +67,9 @@ object Libs {
     }
 
     object Google {
-        val material = "com.google.android.material:material:1.1.0-alpha07"
+        val material = "com.google.android.material:material:1.1.0-alpha08"
         val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
-        val fabricPlugin = "io.fabric.tools:gradle:1.29.0"
+        val fabricPlugin = "io.fabric.tools:gradle:1.30.0"
     }
 
     object Kotlin {
@@ -82,32 +81,32 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.2.1"
+        private const val version = "1.3.0-RC"
         val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         val rx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$version"
         val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
     }
 
     object AndroidX {
-        val appcompat = "androidx.appcompat:appcompat:1.1.0-beta01"
-        val recyclerview = "androidx.recyclerview:recyclerview:1.1.0-alpha06"
+        val appcompat = "androidx.appcompat:appcompat:1.1.0-rc01"
+        val recyclerview = "androidx.recyclerview:recyclerview:1.1.0-beta01"
         val cardview = "androidx.cardview:cardview:1.0.0"
         val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
         val coreKtx = "androidx.core:core-ktx:1.2.0-alpha02"
 
         object Navigation {
-            private const val version = "2.1.0-alpha05"
+            private const val version = "2.1.0-beta02"
             val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             val ui = "androidx.navigation:navigation-ui-ktx:$version"
             val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
         }
 
         object Test {
-            val core = "androidx.test:core:1.2.1-alpha01"
+            val core = "androidx.test:core:1.2.1-alpha02"
             val coreKtx = "androidx.test:core:1.2.0"
-            val ext = "androidx.test.ext:junit-ktx:1.1.2-alpha01"
-            val runner = "androidx.test:runner:1.3.0-alpha01"
-            val rules = "androidx.test:rules:1.3.0-alpha01"
+            val ext = "androidx.test.ext:junit-ktx:1.1.2-alpha02"
+            val runner = "androidx.test:runner:1.3.0-alpha02"
+            val rules = "androidx.test:rules:1.3.0-alpha02"
 
             val espressoCore = "androidx.test.espresso:espresso-core:3.3.0-alpha01"
             val espressoIntents = "androidx.test.espresso:espresso-intents:3.3.0-alpha01"
@@ -116,14 +115,14 @@ object Libs {
         }
 
         object Lifecycle {
-            private const val version = "2.2.0-alpha01"
+            private const val version = "2.2.0-alpha02"
             val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
             val reactivestreams = "androidx.lifecycle:lifecycle-reactivestreams:$version"
             val compiler = "androidx.lifecycle:lifecycle-compiler:$version"
         }
 
         object Room {
-            private const val version = "2.1.0-alpha06"
+            private const val version = "2.2.0-alpha01"
             val common = "androidx.room:room-common:$version"
             val runtime = "androidx.room:room-runtime:$version"
             val rxjava2 = "androidx.room:room-rxjava2:$version"
@@ -134,7 +133,7 @@ object Libs {
 
     object RxJava {
         val rxJava = "io.reactivex.rxjava2:rxjava:2.2.10"
-        val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.3.0"
+        val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0-RC3"
         val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
 
@@ -155,9 +154,10 @@ object Libs {
     }
 
     object OkHttp {
-        private const val version = "4.0.0-alpha02"
+        private const val version = "4.0.1"
         val okhttp = "com.squareup.okhttp3:okhttp:$version"
         val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
+        val mockwebserver = "com.squareup.okhttp3:mockwebserver:$version"
     }
 
     object Stetho {
@@ -179,7 +179,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.6.0"
+        private const val version = "3.7.0"
         val epoxy = "com.airbnb.android:epoxy:$version"
         val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         val processor = "com.airbnb.android:epoxy-processor:$version"

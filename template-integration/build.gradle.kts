@@ -8,8 +8,12 @@ plugins {
 }
 
 dependencies {
-    implementation(project(Modules.paymentSdk))
+    implementation(project(Modules.stash))
+}
 
+
+dependencies {
+    implementation(project(Modules.stash))
     testImplementation(Libs.junit)
     kaptTest(Libs.Dagger.compiler)
 

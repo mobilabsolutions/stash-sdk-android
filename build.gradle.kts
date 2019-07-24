@@ -51,6 +51,9 @@ subprojects {
             ktlint("0.31.0")
         }
     }
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
+        kotlinOptions.jvmTarget = "1.8"
+    }
 }
 
 configurations.all {

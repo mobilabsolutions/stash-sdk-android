@@ -3,10 +3,10 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.mobilabsolutions.payment.android.psdk.integration.braintree">
+          package="com.mobilabsolutions.stash.braintree">
     <application>
 
-        <activity android:name=".BraintreePayPalActivity"
+        <activity android:name="com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreePayPalActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"

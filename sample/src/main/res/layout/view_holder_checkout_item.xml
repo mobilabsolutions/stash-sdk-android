@@ -15,7 +15,7 @@
 
         <variable
             name="product"
-            type="com.mobilabsolutions.payment.sample.data.entities.Product" />
+            type="com.mobilabsolutions.stash.sample.data.entities.Product" />
 
         <variable
             name="quantity"

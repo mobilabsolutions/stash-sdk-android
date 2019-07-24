@@ -49,12 +49,12 @@ dependencies {
 
     testImplementation(Libs.junit)
     testImplementation(Libs.mockitoCore)
-    testImplementation(Libs.mockwebserver)
+    testImplementation(Libs.OkHttp.mockwebserver)
     testImplementation(Libs.PowerMock.module)
     testImplementation(Libs.PowerMock.api)
     kaptTest(Libs.Dagger.compiler)
 
-    androidTestImplementation(Libs.mockwebserver)
+    androidTestImplementation(Libs.OkHttp.mockwebserver)
     androidTestImplementation(Libs.AndroidX.Test.runner)
     androidTestImplementation(Libs.AndroidX.Test.core)
     androidTestImplementation(Libs.AndroidX.Test.coreKtx)
@@ -76,12 +76,12 @@ tasks {
         outputFormat = "html"
         outputDirectory = "$buildDir/dokkaPublic"
         packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            prefix = "com.mobilabsolutions.stash.internal"
             suppress = true
         }
         includes = listOf(
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/model/model-package-description.md",
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/payment-sdk-package-description.md"
+            "src/main/java/com/mobilabsolutions/stash/core/model/model-package-description.md",
+            "src/main/java/com/mobilabsolutions/stash/core/payment-sdk-package-description.md"
         )
     }
 
@@ -96,12 +96,12 @@ tasks {
         outputFormat = "javadoc"
         outputDirectory = "$buildDir/dokkaJavadoc"
         packageOptions {
-            prefix = "com.mobilabsolutions.payment.android.psdk.internal"
+            prefix = "com.mobilabsolutions.stash.internal"
             suppress = true
         }
         includes = listOf(
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/model/model-package-description.md",
-            "src/main/java/com/mobilabsolutions/payment/android/psdk/payment-sdk-package-description.md"
+            "src/main/java/com/mobilabsolutions/stash/core/model/model-package-description.md",
+            "src/main/java/com/mobilabsolutions/stash/core/payment-sdk-package-description.md"
         )
     }
 
@@ -128,14 +128,12 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("lib") {
-            groupId = "com.mobilabsolutions.payment.android.psdk"
-            artifactId = "payment-sdk-lib"
+            groupId = "com.mobilabsolutions.stash"
+            artifactId = "core"
             version = android.defaultConfig.versionName
 
             artifact("$buildDir/outputs/aar/lib-release.aar")
-
             artifact(tasks["javadocJar"])
-
             artifact(tasks["sourcesJar"])
 
             versionMapping {
@@ -148,8 +146,8 @@ publishing {
             }
 
             pom {
-                name.set("Android Payment SDK")
-                description.set("The payment SDK simplifies the integration of payments into our applications and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
+                name.set("Stash")
+                description.set("The Stash SDK simplifies the integration of the payment process into your mobile application and abstracts away a lot of the internal complexity that different payment service providers' solutions have.")
                 url.set("https://mobilabsolutions.com/")
                 licenses {
                     license {
@@ -171,7 +169,7 @@ publishing {
                     developer {
                         id.set("Biju")
                         name.set("Biju Parvathy")
-                        email.set("Biju@mobilabsolutions.com")
+                        email.set("biju@mobilabsolutions.com")
                     }
                 }
                 scm {
@@ -218,8 +216,8 @@ publishing {
             url = uri(if (isTravisTag) releasesRepoUrl else snapshotsRepoUrl)
 
             credentials {
-                username = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusUsername, "")
-                password = propOrDefWithTravis(PaymentSdkRelease.MobilabNexusPassword, "")
+                username = propOrDefWithTravis(StashRelease.MobilabNexusUsername, "")
+                password = propOrDefWithTravis(StashRelease.MobilabNexusPassword, "")
             }
         }
     }
