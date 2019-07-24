@@ -34,7 +34,7 @@ import javax.inject.Inject
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
-        PaymentMethodNonceCreatedListener, BraintreeErrorListener, BraintreeCancelListener {
+    PaymentMethodNonceCreatedListener, BraintreeErrorListener, BraintreeCancelListener {
 
     @Inject
     lateinit var braintreeHandler: BraintreeHandler
@@ -54,9 +54,9 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         }
         val braintreeFragment = BraintreeFragment.newInstance(this, token)
 
-        DataCollector.collectDeviceData(braintreeFragment) { t ->
-            if (t != null) {
-                deviceFingerprintSubject.onNext(t)
+        DataCollector.collectDeviceData(braintreeFragment) {
+            if (it != null) {
+                deviceFingerprintSubject.onNext(it)
             } else {
                 deviceFingerprintSubject.onError(OtherException("Couldn't get Braintree device data"))
             }
@@ -98,22 +98,22 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         Timber.d("Payment nonce create")
         if (paymentMethodNonce is PayPalAccountNonce) {
             disposables += deviceFingerprintSubject.firstOrError().subscribeBy(
-                    onSuccess = {
-                        braintreeHandler.resultSubject.onNext(
-                                Triple(
-                                        paymentMethodNonce.email
-                                                ?: paymentMethodNonce.typeLabel ?: "",
-                                        paymentMethodNonce.nonce
-                                                ?: throw RuntimeException("Nonce was null in created method"),
-                                        it
-                                )
+                onSuccess = {
+                    braintreeHandler.resultSubject.onNext(
+                        Triple(
+                            paymentMethodNonce.email
+                                ?: paymentMethodNonce.typeLabel ?: "",
+                            paymentMethodNonce.nonce
+                                ?: throw RuntimeException("Nonce was null in created method"),
+                            it
                         )
-                        braintreeHandler.resultSubject.onComplete()
-                    },
-                    onError = {
-                        braintreeHandler.resultSubject.onError(it)
-                        braintreeHandler.resultSubject.onComplete()
-                    }
+                    )
+                    braintreeHandler.resultSubject.onComplete()
+                },
+                onError = {
+                    braintreeHandler.resultSubject.onError(it)
+                    braintreeHandler.resultSubject.onComplete()
+                }
             )
         }
 
