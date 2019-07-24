@@ -4,7 +4,7 @@
 
 plugins {
     id("com.android.library")
-    id("PaymentSdkPlugin")
+    id("StashPlugin")
 }
 
 dependencies {

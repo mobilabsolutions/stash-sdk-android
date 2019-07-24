@@ -26,9 +26,9 @@ dependencies {
 
 gradlePlugin {
     plugins {
-        register("PaymentSdkPlugin") {
-            id = "PaymentSdkPlugin"
-            implementationClass = "PaymentSdkPlugin"
+        register("StashPlugin") {
+            id = "StashPlugin"
+            implementationClass = "StashPlugin"
         }
     }
 }

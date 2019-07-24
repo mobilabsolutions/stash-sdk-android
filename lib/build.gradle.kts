@@ -6,7 +6,7 @@ import org.jetbrains.dokka.gradle.DokkaAndroidTask
 
 plugins {
     id("com.android.library")
-    id("PaymentSdkPlugin")
+    id("StashPlugin")
     id("org.jetbrains.dokka-android")
     id("maven-publish")
     signing
@@ -225,4 +225,9 @@ publishing {
 
 signing {
     sign(publishing.publications["lib"])
+}
+
+stash {
+    name = "libs"
+    description = "The Stash SDK simplifies the integration of the payment process into your mobile application and abstracts away a lot of the internal complexity that different payment service providers' solutions have."
 }

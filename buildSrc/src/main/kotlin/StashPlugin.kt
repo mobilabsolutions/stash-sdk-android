@@ -18,14 +18,17 @@ import org.jetbrains.kotlin.gradle.plugin.KaptExtension
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 19-07-2019.
  */
 @Suppress("unused")
-class PaymentSdkPlugin : Plugin<Project> {
+class StashPlugin : Plugin<Project> {
     override fun apply(project: Project) {
+        val stashExtension =
+            project.extensions.create("stash", StashExtension::class.java, project)
+
         project.configureKotlin()
         project.plugins.all { plugin: Plugin<*>? ->
             when (plugin) {
                 is LibraryPlugin -> {
                     project.extensions.getByType<LibraryExtension>().apply {
-                        configureAndroidLibraryOptions(project)
+                        configureAndroidLibraryOptions(project, stashExtension)
                     }
                 }
             }
@@ -48,7 +51,10 @@ class PaymentSdkPlugin : Plugin<Project> {
         }
     }
 
-    private fun LibraryExtension.configureAndroidLibraryOptions(project: Project) {
+    private fun LibraryExtension.configureAndroidLibraryOptions(
+        project: Project,
+        stashExtension: StashExtension
+    ) {
         val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand(project)
         val getCommitHash = ("git rev-parse --short HEAD").runCommand(project)
         val getCommitCount = ("git rev-list --count HEAD").runCommand(project)
@@ -116,7 +122,7 @@ class PaymentSdkPlugin : Plugin<Project> {
         }
 
         lintOptions {
-            isAbortOnError = false
+            isAbortOnError = true
         }
 
         testOptions {

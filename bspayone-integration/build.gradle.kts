@@ -6,7 +6,7 @@ import org.jetbrains.dokka.gradle.DokkaAndroidTask
 
 plugins {
     id("com.android.library")
-    id("PaymentSdkPlugin")
+    id("StashPlugin")
     id("org.jetbrains.dokka-android")
     id("maven-publish")
     signing

@@ -9,7 +9,7 @@ plugins {
     id("org.jetbrains.dokka-android")
     id("maven-publish")
     signing
-    id("PaymentSdkPlugin")
+    id("StashPlugin")
 }
 
 dependencies {
