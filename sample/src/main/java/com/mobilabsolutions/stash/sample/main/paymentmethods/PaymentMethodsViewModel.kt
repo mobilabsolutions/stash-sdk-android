@@ -6,6 +6,7 @@ package com.mobilabsolutions.stash.sample.main.paymentmethods
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -40,7 +41,6 @@ class PaymentMethodsViewModel @AssistedInject constructor(
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
 
     private val _error = MutableLiveData<Throwable>()
-
     val error: LiveData<Throwable>
         get() = _error
 
@@ -57,14 +57,27 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     init {
+        disposables += deletePaymentMethod.errorSubject
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.main)
+            .subscribe(this::onError)
+
+        disposables += addPaymentMethod.errorSubject
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.main)
+            .subscribe(this::onError)
+
+        disposables += updatePaymentMethods.errorSubject
+            .subscribeOn(schedulers.io)
+            .observeOn(schedulers.main)
+            .subscribe(this::onError)
+
         updateUser.observe()
             .subscribeOn(schedulers.io)
             .doOnNext {
-                disposables += updatePaymentMethods.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
-
                 // Prevent the first time payment method list update, with an invalid user id.
                 if (it.userId != User.EMPTY_USER.userId) {
-                    scope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
+                    viewModelScope.launchInteractor(updatePaymentMethods, UpdatePaymentMethods.ExecuteParams(userId = it.userId))
                 }
             }
             .execute {
@@ -81,15 +94,14 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     fun onAddBtnClicked() {
-        disposables += Stash.getRegistrationManager().registerPaymentMethodUsingUi(/* idempotencyKey = UUID.randomUUID() */)
+        disposables += Stash.getRegistrationManager().registerPaymentMethodUsingUi()
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.main)
             .subscribe(this::onRegisterPaymentSuccess, this::onError)
     }
 
     fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {
-        disposables += deletePaymentMethod.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
-        scope.launchInteractor(deletePaymentMethod, DeletePaymentMethod.ExecuteParams(paymentMethod))
+        viewModelScope.launchInteractor(deletePaymentMethod, DeletePaymentMethod.ExecuteParams(paymentMethod))
     }
 
     private fun onRegisterPaymentSuccess(paymentMethodAlias: PaymentMethodAlias) {
@@ -113,8 +125,7 @@ class PaymentMethodsViewModel @AssistedInject constructor(
                     email = aliasInfo.email
                 )
             }
-            disposables += addPaymentMethod.errorSubject.observeOn(schedulers.main).subscribe(this::onError)
-            scope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, aliasId = paymentMethodAlias.alias, paymentMethod = paymentMethod))
+            viewModelScope.launchInteractor(addPaymentMethod, AddPaymentMethod.ExecuteParams(userId = it.user.userId, aliasId = paymentMethodAlias.alias, paymentMethod = paymentMethod))
         }
     }
 

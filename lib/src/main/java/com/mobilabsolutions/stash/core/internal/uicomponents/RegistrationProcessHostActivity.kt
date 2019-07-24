@@ -6,10 +6,12 @@ package com.mobilabsolutions.stash.core.internal.uicomponents
 
 import android.content.Context
 import android.os.Bundle
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.internal.StashImpl
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
+import kotlinx.android.synthetic.main.registration_host_activity.*
 import javax.inject.Inject
 
 /**
@@ -34,6 +36,11 @@ class RegistrationProcessHostActivity : AppCompatActivity() {
         setContentView(R.layout.registration_host_activity)
     }
 
+    override fun onPause() {
+        super.onPause()
+        overridePendingTransition(0, 0)
+    }
+
     override fun onBackPressed() {
         when (currentState) {
             CurrentState.CHOOSER -> {
@@ -48,6 +55,10 @@ class RegistrationProcessHostActivity : AppCompatActivity() {
 
     fun setState(state: CurrentState) {
         currentState = state
+    }
+
+    fun showPaypalLoading() {
+        paypal_loading.visibility = VISIBLE
     }
 
     override fun attachBaseContext(newBase: Context) {

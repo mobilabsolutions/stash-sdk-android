@@ -66,6 +66,11 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         pointOfNoReturnReached = true
     }
 
+    override fun onStart() {
+        super.onStart()
+        overridePendingTransition(0, 0)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         disposables.dispose()

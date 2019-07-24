@@ -6,6 +6,7 @@ package com.mobilabsolutions.stash.core.internal
 
 import android.app.Activity
 import android.content.Context
+
 import com.mobilabsolutions.stash.core.CreditCardTypeWithRegex
 import com.mobilabsolutions.stash.core.ExtraAliasInfo
 import com.mobilabsolutions.stash.core.PaymentMethodAlias
@@ -20,6 +21,7 @@ import com.mobilabsolutions.stash.core.internal.psphandler.Integration
 import com.mobilabsolutions.stash.core.internal.psphandler.PayPalRegistrationRequest
 import com.mobilabsolutions.stash.core.internal.psphandler.RegistrationRequest
 import com.mobilabsolutions.stash.core.internal.psphandler.SepaRegistrationRequest
+import com.mobilabsolutions.stash.core.internal.uicomponents.RegistrationProcessHostActivity
 import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.stash.core.model.BillingData
 import com.mobilabsolutions.stash.core.model.CreditCardData
@@ -235,14 +237,17 @@ internal class PspCoordinator @Inject constructor(
 
     /**
      * PayPal is different from other payment methods like SEPA and Credit Card, as it only allows registration using
-     * flow external to the SDK. For that reason we don't offer a possiblity of creating a specific 3rd party
-     * UI, but just a request to register using prebuild components.
+     * flow external to the SDK. For that reason we don't offer a possibility of creating a specific 3rd party
+     * UI, but just a request to register using pre-build components.
      *
      * This method will similarly to SEPA and Credit Card create the alias by calling the backend endpoint, processes additional data, and upon PayPal flow
      * completion create the PaymentMethodAlias object that is returned to 3rd party developer.
      */
     private fun registerPayPalUsingUIComponent(activity: Activity?, requestId: Int): Single<PaymentMethodAlias> {
-
+        val hostActivity = uiRequestHandler.hostActivityProvider.value
+        if (hostActivity != null && hostActivity is RegistrationProcessHostActivity) {
+            hostActivity.showPaypalLoading()
+        }
         val chosenIntegration = integrations.filter {
             it.value.contains(PaymentMethodType.PAYPAL)
         }.keys.first()

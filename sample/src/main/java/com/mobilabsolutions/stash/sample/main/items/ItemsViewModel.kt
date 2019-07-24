@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.sample.main.items
 
+import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
@@ -48,6 +49,6 @@ class ItemsViewModel @AssistedInject constructor(
     }
 
     fun onClick(product: Product) {
-        scope.launchInteractor(addCart, AddCart.ExecuteParams(product))
+        viewModelScope.launchInteractor(addCart, AddCart.ExecuteParams(product))
     }
 }
