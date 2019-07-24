@@ -23,6 +23,8 @@ import com.mobilabsolutions.stash.braintree.R
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.exceptions.base.OtherException
 import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.subjects.ReplaySubject
 import timber.log.Timber
@@ -34,9 +36,54 @@ import javax.inject.Inject
 class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         PaymentMethodNonceCreatedListener, BraintreeErrorListener, BraintreeCancelListener {
 
-    private val deviceFingerprintSubject = ReplaySubject.create<String>()
+    @Inject
+    lateinit var braintreeHandler: BraintreeHandler
 
+    private val disposables = CompositeDisposable()
+    private val deviceFingerprintSubject = ReplaySubject.create<String>()
     private var pointOfNoReturnReached: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
+        val token = intent.getStringExtra(BraintreeIntegration.CLIENT_TOKEN)
+        setContentView(R.layout.activity_braintree_paypal)
+
+        if (token == null) {
+            finish()
+        }
+        val braintreeFragment = BraintreeFragment.newInstance(this, token)
+
+        DataCollector.collectDeviceData(braintreeFragment) { t ->
+            if (t != null) {
+                deviceFingerprintSubject.onNext(t)
+            } else {
+                deviceFingerprintSubject.onError(OtherException("Couldn't get Braintree device data"))
+            }
+        }
+        val payment = PayPalRequest()
+        PayPal.requestBillingAgreement(braintreeFragment, payment)
+        pointOfNoReturnReached = true
+    }
+
+    override fun onStart() {
+        super.onStart()
+        overridePendingTransition(0, 0)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        disposables.dispose()
+    }
+
+    // We want to disable back press once the request has been sent out, because otherwise it will
+    // go back to the main screen and then launch braintree activity
+    override fun onBackPressed() {
+        if (!pointOfNoReturnReached) {
+            super.onBackPressed()
+            braintreeHandler.resultSubject.onError(UiRequestHandler.UserCancelled())
+        }
+    }
 
     override fun onCancel(requestCode: Int) {
         braintreeHandler.resultSubject.onError(UiRequestHandler.UserCancelled())
@@ -47,13 +94,10 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         Timber.d("Got configuration")
     }
 
-    @Inject
-    lateinit var braintreeHandler: BraintreeHandler
-
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
         Timber.d("Payment nonce create")
         if (paymentMethodNonce is PayPalAccountNonce) {
-            val disposable = deviceFingerprintSubject.firstOrError().subscribeBy(
+            disposables += deviceFingerprintSubject.firstOrError().subscribeBy(
                     onSuccess = {
                         braintreeHandler.resultSubject.onNext(
                                 Triple(
@@ -62,7 +106,7 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
                                         paymentMethodNonce.nonce
                                                 ?: throw RuntimeException("Nonce was null in created method"),
                                         it
-                                        )
+                                )
                         )
                         braintreeHandler.resultSubject.onComplete()
                     },
@@ -83,41 +127,5 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
         }
         braintreeHandler.resultSubject.onError(wrappedException)
         this.finish()
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
-
-        val token = intent.getStringExtra(BraintreeIntegration.CLIENT_TOKEN)
-
-        setContentView(R.layout.activity_braintree_paypal)
-
-        val braintreeFragment = BraintreeFragment.newInstance(this, token)
-
-        DataCollector.collectDeviceData(braintreeFragment) { t ->
-            if (t != null) {
-                deviceFingerprintSubject.onNext(t)
-            } else {
-                deviceFingerprintSubject.onError(OtherException("Couldn't get Braintree device data"))
-            }
-        }
-        val payment = PayPalRequest()
-        PayPal.requestBillingAgreement(braintreeFragment, payment)
-        pointOfNoReturnReached = true
-    }
-
-    override fun onStart() {
-        super.onStart()
-        overridePendingTransition(0, 0)
-    }
-
-    // We want to disable back press once the request has been sent out, because otherwise it will
-    // go back to the main screen and then launch braintree activity
-    override fun onBackPressed() {
-        if (!pointOfNoReturnReached) {
-            super.onBackPressed()
-            braintreeHandler.resultSubject.onError(UiRequestHandler.UserCancelled())
-        }
     }
 }

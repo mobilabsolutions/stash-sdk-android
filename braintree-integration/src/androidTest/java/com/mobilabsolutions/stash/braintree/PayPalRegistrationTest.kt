@@ -30,7 +30,7 @@ import javax.inject.Singleton
  */
 class PayPalRegistrationTest {
     val MOBILAB_BACKEND_URL = BuildConfig.mobilabBackendUrl
-    val MOBILAB_TEST_PUBLISHABLE_KEY = BuildConfig.newBsTestKey
+    val MOBILAB_TEST_PUBLISHABLE_KEY = BuildConfig.testPublishableKey
 
     @get:Rule
     val activityRule = object : ActivityTestRule<BraintreePayPalActivity>(BraintreePayPalActivity::class.java, true, false) {
