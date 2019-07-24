@@ -57,7 +57,11 @@ data class StashUiConfiguration(
     /**
      * Color of the text inside edit text fields
      */
-    @ColorRes val mediumEmphasisColor: Int = R.color.white
+    @ColorRes val mediumEmphasisColor: Int = R.color.white,
+    /**
+     * Background color of error snackBar
+     */
+    @ColorRes val snackBarBackground: Int = R.color.carnation
 
 ) {
     class Builder {
@@ -69,6 +73,7 @@ data class StashUiConfiguration(
             preference = preference.copy(textColor = resourceId)
             return this
         }
+
         /**
          * Background color
          */
@@ -76,6 +81,7 @@ data class StashUiConfiguration(
             preference = preference.copy(backgroundColor = resourceId)
             return this
         }
+
         /**
          * Button color
          */
@@ -83,6 +89,7 @@ data class StashUiConfiguration(
             preference = preference.copy(buttonColor = resourceId)
             return this
         }
+
         /**
          * Button text color
          */
@@ -90,6 +97,7 @@ data class StashUiConfiguration(
             preference = preference.copy(buttonTextColor = resourceId)
             return this
         }
+
         /**
          * Background color of box containing entry edit text views
          */
@@ -97,11 +105,20 @@ data class StashUiConfiguration(
             preference = preference.copy(cellBackgroundColor = resourceId)
             return this
         }
+
         /**
          * Color of the text inside edit text fields
          */
         fun setMediumEmphasisColor(@ColorRes resourceId: Int): Builder {
             preference = preference.copy(mediumEmphasisColor = resourceId)
+            return this
+        }
+
+        /**
+         * Background color of the error snackBar
+         */
+        fun setSnackBarBackground(@ColorRes resourceId: Int): Builder {
+            preference = preference.copy(snackBarBackground = resourceId)
             return this
         }
 
@@ -197,7 +214,7 @@ object CustomizationExtensions {
             textFieldDrawableStates[1].setColor(ContextCompat.getColor(context, stashUIConfiguration.mediumEmphasisColor))
             backgroundDrawable
         } else {
-            resources.getDrawable(R.drawable.edit_text_frame_error)
+            ContextCompat.getDrawable(context, R.drawable.edit_text_frame_error)
         }
         this.applyTextCustomization(stashUIConfiguration)
     }
@@ -239,6 +256,7 @@ object CustomizationExtensions {
         backgroundColorDrawable.color = ContextCompat.getColor(context, stashUIConfiguration.backgroundColor)
         background = backgroundColorDrawable
     }
+
     /**
      * Apply cell background customization on any view that has ColorDrawable background
      */
