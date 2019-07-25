@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.bspayone.internal.uicomponents
 
+/* ktlint-disable no-wildcard-imports */
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -16,11 +17,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.mobilabsolutions.stash.bspayone.BsPayoneIntegration
+import com.mobilabsolutions.stash.bspayone.R
 import com.mobilabsolutions.stash.core.CustomizationExtensions
 import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
-import com.mobilabsolutions.stash.bspayone.BsPayoneIntegration
-import com.mobilabsolutions.stash.bspayone.R
 import com.mobilabsolutions.stash.core.internal.uicomponents.Country
 import com.mobilabsolutions.stash.core.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.stash.core.internal.uicomponents.IbanTextWatcher
@@ -39,25 +40,9 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.back
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.bsPayoneSepaEntrySwipeRefresh
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryText
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.countryTitleTextView
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorIban
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorSepaFirstName
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.errorSepaLastName
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameEditText
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.firstNameTitleTextView
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.ibanNumberEditText
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.ibanTitleTextView
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.lastNameEditText
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.lastNameTitleTextView
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.saveButton
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenCellLayout
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenMainLayout
-import kotlinx.android.synthetic.main.sepa_data_entry_fragment.sepaScreenTitle
+import kotlinx.android.synthetic.main.sepa_data_entry_fragment.*
 import timber.log.Timber
-import java.util.Locale
+import java.util.*
 import javax.inject.Inject
 
 /**
@@ -141,48 +126,48 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
         }
 
         disposables += Observables.combineLatest(
-            firstNameTextChangedSubject,
-            lastNameTextChangedSubject,
-            ibanTextChangedSubject,
-            countrySubject,
-            BsPayoneSepaDataEntryFragment::SepaDataEntryViewState)
-            .subscribe(this::onViewStateNext)
+                firstNameTextChangedSubject,
+                lastNameTextChangedSubject,
+                ibanTextChangedSubject,
+                countrySubject,
+                BsPayoneSepaDataEntryFragment::SepaDataEntryViewState)
+                .subscribe(this::onViewStateNext)
 
         disposables += firstNameFocusSubject
-            .doOnNext {
-                validateFirstNameAndUpdateUI(it, false)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateFirstNameAndUpdateUI(it, false)
+                }
+                .subscribe()
 
         disposables += firstNameTextChangedSubject
-            .doOnNext {
-                validateFirstNameAndUpdateUI(it, true)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateFirstNameAndUpdateUI(it, true)
+                }
+                .subscribe()
 
         disposables += lastNameFocusSubject
-            .doOnNext {
-                validateLastNameAndUpdateUI(it, false)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateLastNameAndUpdateUI(it, false)
+                }
+                .subscribe()
 
         disposables += lastNameTextChangedSubject
-            .doOnNext {
-                validateLastNameAndUpdateUI(it, true)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateLastNameAndUpdateUI(it, true)
+                }
+                .subscribe()
 
         disposables += ibanFocusSubject
-            .doOnNext {
-                validateIbanAndUpdateUI(it, false)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateIbanAndUpdateUI(it, false)
+                }
+                .subscribe()
 
         disposables += ibanTextChangedSubject
-            .doOnNext {
-                validateIbanAndUpdateUI(it, true)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateIbanAndUpdateUI(it, true)
+                }
+                .subscribe()
 
         firstNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) firstNameFocusSubject.onNext(value.trim()) }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
@@ -206,8 +191,8 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
 
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
-                .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
-                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
+                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
+                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
 
             // Check for the previous field's validations
             firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
@@ -241,10 +226,8 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
                         bsPayoneSepaEntrySwipeRefresh.isRefreshing = false
-                        currentSnackbar?.let { snackbar ->
-                            snackbar.dismissWithoutAnimating()
-                        }
-                        currentSnackbar = it.throwable.getErrorSnackBar(sepaScreenMainLayout)
+                        currentSnackbar?.let { it.dismissWithoutAnimating() }
+                        currentSnackbar = it.throwable.getErrorSnackBar(sepaScreenMainLayout, stashUIConfiguration)
                         currentSnackbar?.show()
                     }
                 }

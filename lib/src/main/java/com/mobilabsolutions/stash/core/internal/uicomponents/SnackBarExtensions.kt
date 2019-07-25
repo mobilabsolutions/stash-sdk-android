@@ -12,26 +12,25 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.core.R
+import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.exceptions.base.BasePaymentException
 import com.mobilabsolutions.stash.core.px
-import kotlinx.android.synthetic.main.snackbar_layout.view.close
-import kotlinx.android.synthetic.main.snackbar_layout.view.snackbar_text
-import kotlinx.android.synthetic.main.snackbar_layout.view.snackbar_title
+import kotlinx.android.synthetic.main.snackbar_layout.view.*
 
 object SnackBarExtensions {
 
     operator fun invoke(body: SnackBarExtensions.() -> Unit): Unit = body.invoke(this)
 
-    val TOP_MARGIN = 0.px
-    val WIDTH = 64.px
+    private val TOP_MARGIN = 0.px
+    private val WIDTH = 64.px
 
-    fun Throwable.getErrorSnackBar(view: View): Snackbar {
+    fun Throwable.getErrorSnackBar(view: View, stashUIConfiguration: StashUiConfiguration? = null): Snackbar {
         val snackBar = Snackbar.make(view, "", Snackbar.LENGTH_INDEFINITE)
-        snackBar.view.setBackgroundColor(ContextCompat.getColor(view.context, R.color.carnation))
-
         val snackBarView = snackBar.view as Snackbar.SnackbarLayout
         snackBarView.setPadding(0, 0, 0, 0)
         val snackView = LayoutInflater.from(view.context).inflate(R.layout.snackbar_layout, snackBarView, false)
+        val backgroundColor: Int = stashUIConfiguration?.snackBarBackground ?: R.color.carnation
+        snackView.setBackgroundColor(ContextCompat.getColor(view.context, backgroundColor))
 
         if (this is BasePaymentException && this.errorTitle != null) {
             snackView.snackbar_title.text = this.errorTitle
@@ -65,16 +64,16 @@ object SnackBarExtensions {
         snackBar.view.elevation = 0f
 
         snackBarView.addView(snackView, 0)
-        // We don't want to show snackbar showing animation, because it looks broken, since our
+        // We don't want to show snackBar showing animation, because it looks broken, since our
         // snackbar is on top
         snackBar.view.visibility = View.INVISIBLE
         snackBar.addCallback(
-            object : Snackbar.Callback() {
-                override fun onShown(snackbar: Snackbar?) {
-                    super.onShown(snackbar)
-                    snackbar!!.view.visibility = View.VISIBLE
+                object : Snackbar.Callback() {
+                    override fun onShown(snackbar: Snackbar?) {
+                        super.onShown(snackbar)
+                        snackbar!!.view.visibility = View.VISIBLE
+                    }
                 }
-            }
         )
 
         return snackBar
