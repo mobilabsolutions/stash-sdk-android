@@ -7,6 +7,7 @@ package com.mobilabsolutions.stash.braintree
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.stash.braintree.internal.uicomponents.UiComponentHandler
+import com.mobilabsolutions.stash.core.CreditCardTypeWithRegex
 import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.exceptions.registration.RegistrationFailedException
@@ -16,6 +17,7 @@ import com.mobilabsolutions.stash.core.internal.StashComponent
 import com.mobilabsolutions.stash.core.internal.api.backend.MobilabApi
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasExtra
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasUpdateRequest
+import com.mobilabsolutions.stash.core.internal.api.backend.v1.CreditCardConfig
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.PayPalConfig
 import com.mobilabsolutions.stash.core.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.stash.core.internal.psphandler.CreditCardRegistrationRequest
@@ -114,29 +116,50 @@ class BraintreeIntegration(stashComponent: StashComponent) : Integration {
 
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
-//                if (idempotencyKey.isUserSupplied) {
-//                    Timber.w(applicationContext.getString(R.string.idempotency_message))
-//                }
-                braintreeHandler.registerCreditCard(standardizedData, additionalData)
-            }
-            is PayPalRegistrationRequest -> mobilabApi
-                .updateAlias(
+                val creditCardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
+                val data = braintreeHandler.registerCreditCard(standardizedData, additionalData)
+                    .subscribeOn(Schedulers.io()).blockingGet()
+                mobilabApi.updateAlias(
                     registrationRequest.standardizedData.aliasId,
                     AliasUpdateRequest(
                         extra = AliasExtra(
-                            payPalConfig = PayPalConfig(
-                                nonce = registrationRequest.additionalData.extraData[NONCE]
-                                    ?: error("Missing nonce"),
-                                deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]
-                                    ?: error("Missing device fingerprint")
-                            ),
-                            paymentMethod = "PAY_PAL",
-                            personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])
+//                            payPalConfig = PayPalConfig(
+//                                nonce = data.second,
+//                                  //  ?: error("Missing nonce"),
+//                                deviceData = data.third
+//                                   // ?: error("Missing device fingerprint")
+//                            ),
+                            paymentMethod = "CC",
+                            creditCardConfig = CreditCardConfig(
+                                ccExpiry =  "${standardizedData.creditCardData.expiryMonth}/${standardizedData.creditCardData.expiryYear.toString().takeLast(2)}",
+                                ccMask = standardizedData.creditCardData.number.takeLast(4),
+                                ccType = creditCardType.name,
+                                ccHolderName = standardizedData.creditCardData.billingData?.fullName()
+                            )
                         )
                     )
                 ).subscribeOn(Schedulers.io()).andThen(
                     Single.just(registrationRequest.standardizedData.aliasId)
                 )
+            }
+
+            is PayPalRegistrationRequest -> mobilabApi.updateAlias(
+                registrationRequest.standardizedData.aliasId,
+                AliasUpdateRequest(
+                    extra = AliasExtra(
+                        payPalConfig = PayPalConfig(
+                            nonce = registrationRequest.additionalData.extraData[NONCE]
+                                ?: error("Missing nonce"),
+                            deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]
+                                ?: error("Missing device fingerprint")
+                        ),
+                        paymentMethod = "PAY_PAL",
+                        personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])
+                    )
+                )
+            ).subscribeOn(Schedulers.io()).andThen(
+                Single.just(registrationRequest.standardizedData.aliasId)
+            )
             else -> throw RegistrationFailedException("Unsupported payment method")
         }
     }

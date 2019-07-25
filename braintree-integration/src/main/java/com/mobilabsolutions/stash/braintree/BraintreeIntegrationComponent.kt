@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.braintree
 
+import com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreeCreditCardActivity
 import com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreeCreditCardDataEntryFragment
 import com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreePayPalActivity
 import com.mobilabsolutions.stash.core.internal.IntegrationScope
@@ -19,6 +20,8 @@ interface BraintreeIntegrationComponent {
     fun inject(integration: BraintreeIntegration)
 
     fun inject(payPalActivity: BraintreePayPalActivity)
+
+    fun inject(creditCardActivity: BraintreeCreditCardActivity)
 
     fun inject(braintreeCreditCardDataEntryFragment: BraintreeCreditCardDataEntryFragment)
 }

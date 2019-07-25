@@ -232,7 +232,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             countryText.applyFakeEditTextCustomization(stashUIConfiguration)
             creditCardScreenMainLayout.applyBackgroundCustomization(stashUIConfiguration)
             creditCardScreenCellLayout.applyCellBackgroundCustomization(stashUIConfiguration)
-
+            saveButton.applyCustomization(stashUIConfiguration)
             firstNameEditText.showKeyboardAndFocus()
         }
 
@@ -348,9 +348,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
                         bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = false
-                        currentSnackbar?.let { snackbar ->
-                            snackbar.dismissWithoutAnimating()
-                        }
+                        currentSnackbar?.dismissWithoutAnimating()
                         currentSnackbar = it.throwable.getErrorSnackBar(bsPayoneCreditCardEntrySwipeRefresh)
                         currentSnackbar?.show()
                     }

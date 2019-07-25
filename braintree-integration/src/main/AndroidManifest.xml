@@ -9,6 +9,9 @@
         <activity android:name="com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreePayPalActivity"
                   android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             />
+        <activity android:name="com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreeCreditCardActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
         <activity android:name="com.braintreepayments.api.BraintreeBrowserSwitchActivity"
                   android:launchMode="singleTask">
             <intent-filter>
