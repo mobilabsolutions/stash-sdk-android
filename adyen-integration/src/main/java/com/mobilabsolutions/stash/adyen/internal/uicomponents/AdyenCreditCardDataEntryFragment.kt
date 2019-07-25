@@ -133,7 +133,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             cardNumberTextChangedSubject,
             expirationDateSubject,
             ccvTextChangedSubject,
-            AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState)
+            AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState
+        )
             .subscribe(this::onViewState)
 
         disposables += firstNameFocusSubject
@@ -214,10 +215,18 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             firstNameEditText.showKeyboardAndFocus()
         }
 
-        firstNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) firstNameFocusSubject.onNext(value.trim()) }
+        firstNameEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) firstNameFocusSubject.onNext(
+                value.trim()
+            )
+        }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
-        lastNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) lastNameFocusSubject.onNext(value.trim()) }
+        lastNameEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) lastNameFocusSubject.onNext(
+                value.trim()
+            )
+        }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
         creditCardNumberEditText.getContentOnFocusChange { isFocusGained, value ->
@@ -309,7 +318,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                     SnackBarExtensions {
                         adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
                         currentSnackbar?.dismissWithoutAnimating()
-                        currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout)
+                        currentSnackbar =
+                            it.throwable.getErrorSnackBar(creditCardScreenMainLayout, stashUIConfiguration)
                         currentSnackbar?.show()
                     }
                 }

@@ -126,47 +126,47 @@ class AdyenSepaDataEntryFragment : Fragment() {
         }
 
         disposables += Observables.combineLatest(
-            firstNameTextChangedSubject,
-            lastNameTextChangedSubject,
-            ibanTextChangedSubject,
-            AdyenSepaDataEntryFragment::SepaDataEntryViewState)
-            .subscribe(this::onViewStateNext)
+                firstNameTextChangedSubject,
+                lastNameTextChangedSubject,
+                ibanTextChangedSubject,
+                AdyenSepaDataEntryFragment::SepaDataEntryViewState)
+                .subscribe(this::onViewStateNext)
 
         disposables += firstNameFocusSubject
-            .doOnNext {
-                validateFirstNameAndUpdateUI(it, false)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateFirstNameAndUpdateUI(it, false)
+                }
+                .subscribe()
 
         disposables += firstNameTextChangedSubject
-            .doOnNext {
-                validateFirstNameAndUpdateUI(it, true)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateFirstNameAndUpdateUI(it, true)
+                }
+                .subscribe()
 
         disposables += lastNameFocusSubject
-            .doOnNext {
-                validateLastNameAndUpdateUI(it, false)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateLastNameAndUpdateUI(it, false)
+                }
+                .subscribe()
 
         disposables += lastNameTextChangedSubject
-            .doOnNext {
-                validateLastNameAndUpdateUI(it, true)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateLastNameAndUpdateUI(it, true)
+                }
+                .subscribe()
 
         disposables += ibanFocusSubject
-            .doOnNext {
-                validateIbanAndUpdateUI(it, false)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateIbanAndUpdateUI(it, false)
+                }
+                .subscribe()
 
         disposables += ibanTextChangedSubject
-            .doOnNext {
-                validateIbanAndUpdateUI(it, true)
-            }
-            .subscribe()
+                .doOnNext {
+                    validateIbanAndUpdateUI(it, true)
+                }
+                .subscribe()
 
         firstNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) firstNameFocusSubject.onNext(value.trim()) }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
@@ -213,7 +213,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
                     SnackBarExtensions {
                         adyenSepaEntrySwipeRefresh.isRefreshing = false
                         currentSnackbar?.dismissWithoutAnimating()
-                        currentSnackbar = it.throwable.getErrorSnackBar(adyenSepaEntrySwipeRefresh)
+                        currentSnackbar = it.throwable.getErrorSnackBar(adyenSepaEntrySwipeRefresh, stashUIConfiguration)
                         currentSnackbar?.show()
                     }
                 }
