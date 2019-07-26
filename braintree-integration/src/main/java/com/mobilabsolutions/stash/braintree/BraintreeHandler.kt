@@ -12,6 +12,7 @@ import com.mobilabsolutions.stash.braintree.internal.uicomponents.BraintreePayPa
 import com.mobilabsolutions.stash.core.internal.IntegrationScope
 import com.mobilabsolutions.stash.core.internal.psphandler.AdditionalRegistrationData
 import com.mobilabsolutions.stash.core.internal.psphandler.CreditCardRegistrationRequest
+import com.mobilabsolutions.stash.core.model.BillingData
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import timber.log.Timber
@@ -30,6 +31,18 @@ class BraintreeHandler @Inject constructor() {
     private val processing = AtomicBoolean(false)
     internal var resultSubject = PublishSubject.create<Triple<String, String, String>>()
 
+    companion object  {
+        const val CARD_DATA = "CARD_DATA"
+        const val CLIENT_TOKEN = "clientToken"
+        const val CARD_NUMBER = "CARD_NUMBER"
+        const val CARD_EXPIRY_MONTH = "CARD_EXPIRY_MONTH"
+        const val CARD_EXPIRY_YEAR = "CARD_EXPIRY_YEAR"
+        const val CARD_CVV = "CARD_CVV"
+        const val CARD_FIRST_NAME = "CARD_FIRST_NAME"
+        const val CARD_LAST_NAME = "CARD_LAST_NAME"
+        const val CARD_COUNTRY = "CARD_COUNTRY"
+    }
+
     fun tokenizePaymentMethods(
         activity: AppCompatActivity,
         additionalRegistrationData: AdditionalRegistrationData
@@ -38,7 +51,7 @@ class BraintreeHandler @Inject constructor() {
             resultSubject = PublishSubject.create()
             val payPalActivityIntent = Intent(activity, BraintreePayPalActivity::class.java)
             payPalActivityIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
-            payPalActivityIntent.putExtra(BraintreeIntegration.CLIENT_TOKEN, additionalRegistrationData.extraData[BraintreeIntegration.CLIENT_TOKEN])
+            payPalActivityIntent.putExtra(CLIENT_TOKEN, additionalRegistrationData.extraData[CLIENT_TOKEN])
             activity.startActivity(payPalActivityIntent)
             return resultSubject
                 .doOnEach {
@@ -58,13 +71,24 @@ class BraintreeHandler @Inject constructor() {
         standardizedData: CreditCardRegistrationRequest,
         additionalData: AdditionalRegistrationData
     ): Single<Triple<String, String, String>> {
-
         return if (processing.compareAndSet(false, true)) {
             resultSubject = PublishSubject.create()
             val intent = Intent(applicationContext, BraintreeCreditCardActivity::class.java)
             intent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra(BraintreeIntegration.CLIENT_TOKEN, additionalData.extraData[BraintreeIntegration.CLIENT_TOKEN])
+            intent.putExtra(CLIENT_TOKEN, additionalData.extraData[CLIENT_TOKEN])
             // Pass Data
+            intent.putExtra(CARD_DATA, hashMapOf(
+                CLIENT_TOKEN to additionalData.extraData[CLIENT_TOKEN],
+                CARD_NUMBER to standardizedData.creditCardData.number,
+                CARD_EXPIRY_MONTH to standardizedData.creditCardData.expiryMonth,
+                CARD_EXPIRY_YEAR to standardizedData.creditCardData.expiryYear,
+                CARD_EXPIRY_YEAR to standardizedData.creditCardData.expiryYear,
+                CARD_CVV to standardizedData.creditCardData.cvv,
+                CARD_FIRST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME],
+                CARD_LAST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME],
+                CARD_COUNTRY to additionalData.extraData[BillingData.ADDITIONAL_DATA_COUNTRY]
+            ))
+
             applicationContext.startActivity(intent)
             resultSubject
                 .doOnEach {
@@ -78,51 +102,5 @@ class BraintreeHandler @Inject constructor() {
         } else {
             Single.error(RuntimeException("Braintree CC activity already shown!"))
         }
-//        return Single.create {
-//            val braintreeFragment = BraintreeFragment.newInstance(applicationContext as AppCompatActivity, additionalData.extraData[BraintreeIntegration.CLIENT_TOKEN])
-//            braintreeFragment.addListener(
-//                object : PaymentMethodNonceCreatedListener {
-//                    override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce) {
-//                        resultSubject.onNext(
-//                            Triple(
-//                                paymentMethodNonce.description
-//                                    ?: paymentMethodNonce.typeLabel ?: "",
-//                                paymentMethodNonce.nonce
-//                                    ?: throw RuntimeException("Nonce was null in created method"),
-//                                ""
-//                            )
-//                        )
-//                    }
-//                }
-//            )
-//            braintreeFragment.addListener(
-//                object : BraintreeCancelListener {
-//                    override fun onCancel(requestCode: Int) {
-//                        resultSubject.onError(UiRequestHandler.UserCancelled())
-//                    }
-//                }
-//            )
-//            braintreeFragment.addListener(
-//                object : BraintreeErrorListener {
-//                    override fun onError(error: Exception) {
-//                        val wrappedException = when (error) {
-//                            is com.braintreepayments.api.exceptions.ConfigurationException -> ConfigurationException(originalException = error)
-//                            else -> OtherException(originalException = error)
-//                        }
-//                        resultSubject.onError(wrappedException)
-//                    }
-//                }
-//            )
-//            val cardBuilder = CardBuilder()
-//                .cardNumber(standardizedData.creditCardData.number)
-//                .expirationDate("${standardizedData.creditCardData.expiryMonth}/${standardizedData.creditCardData.expiryYear}")
-//                .cvv(standardizedData.creditCardData.cvv)
-//                .firstName(additionalData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME])
-//                .lastName(additionalData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME])
-//                .countryCode("DE")
-//
-//            Card.tokenize(braintreeFragment, cardBuilder)
-//        }
-
     }
 }

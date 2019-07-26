@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.braintreepayments.api.BraintreeFragment
 import com.braintreepayments.api.Card
 import com.braintreepayments.api.DataCollector
-import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.interfaces.BraintreeCancelListener
 import com.braintreepayments.api.interfaces.BraintreeErrorListener
 import com.braintreepayments.api.interfaces.ConfigurationListener
@@ -17,8 +16,6 @@ import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
 import com.braintreepayments.api.models.CardBuilder
 import com.braintreepayments.api.models.CardNonce
 import com.braintreepayments.api.models.Configuration
-import com.braintreepayments.api.models.PayPalAccountNonce
-import com.braintreepayments.api.models.PayPalRequest
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.mobilabsolutions.stash.braintree.BraintreeHandler
 import com.mobilabsolutions.stash.braintree.BraintreeIntegration
@@ -26,7 +23,6 @@ import com.mobilabsolutions.stash.braintree.R
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.exceptions.base.OtherException
 import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler
-import com.mobilabsolutions.stash.core.model.BillingData
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.subscribeBy
@@ -50,7 +46,8 @@ class BraintreeCreditCardActivity : AppCompatActivity(), ConfigurationListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
-        val token = intent.getStringExtra(BraintreeIntegration.CLIENT_TOKEN)
+        val cardData: HashMap<String, String> = intent.getSerializableExtra(BraintreeHandler.CARD_DATA) as HashMap<String, String>
+        val token = cardData[BraintreeHandler.CLIENT_TOKEN]
         setContentView(R.layout.activity_braintree_creedit_card)
 
         if (token == null) {
@@ -67,16 +64,15 @@ class BraintreeCreditCardActivity : AppCompatActivity(), ConfigurationListener,
         }
 
         val cardBuilder = CardBuilder()
-            .cardNumber("4111111111111111")
-            .expirationDate("09/2018")
-//                .cardNumber(standardizedData.creditCardData.number)
-//                .expirationDate("${standardizedData.creditCardData.expiryMonth}/${standardizedData.creditCardData.expiryYear}")
-//                .cvv(standardizedData.creditCardData.cvv)
-//                .firstName(additionalData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME])
-//                .lastName(additionalData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME])
-               // .countryCode("DE")
+            .cardNumber(cardData[BraintreeHandler.CARD_NUMBER])
+            .expirationDate("${cardData[BraintreeHandler.CARD_EXPIRY_MONTH]}/${cardData[BraintreeHandler.CARD_EXPIRY_YEAR]}")
+            .cvv(cardData[BraintreeHandler.CARD_CVV])
+            .cardholderName("${cardData[BraintreeHandler.CARD_FIRST_NAME]} ${cardData[BraintreeHandler.CARD_LAST_NAME]}")
+            .firstName(cardData[BraintreeHandler.CARD_FIRST_NAME])
+            .lastName(cardData[BraintreeHandler.CARD_FIRST_NAME])
+            //.countryCode(cardData[BraintreeHandler.CARD_COUNTRY])
 
-            Card.tokenize(braintreeFragment, cardBuilder)
+        Card.tokenize(braintreeFragment, cardBuilder)
         pointOfNoReturnReached = true
     }
 

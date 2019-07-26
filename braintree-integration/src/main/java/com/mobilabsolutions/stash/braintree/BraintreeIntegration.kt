@@ -59,8 +59,6 @@ class BraintreeIntegration(stashComponent: StashComponent) : Integration {
 
     companion object : IntegrationCompanion {
 
-        const val CLIENT_TOKEN = "clientToken"
-
         const val NONCE = "NONCE"
 
         const val DEVICE_FINGERPRINT = "DEVICE_FINGERPRINT"
@@ -123,18 +121,14 @@ class BraintreeIntegration(stashComponent: StashComponent) : Integration {
                     registrationRequest.standardizedData.aliasId,
                     AliasUpdateRequest(
                         extra = AliasExtra(
-//                            payPalConfig = PayPalConfig(
-//                                nonce = data.second,
-//                                  //  ?: error("Missing nonce"),
-//                                deviceData = data.third
-//                                   // ?: error("Missing device fingerprint")
-//                            ),
                             paymentMethod = "CC",
                             creditCardConfig = CreditCardConfig(
-                                ccExpiry =  "${standardizedData.creditCardData.expiryMonth}/${standardizedData.creditCardData.expiryYear.toString().takeLast(2)}",
+                                ccExpiry = "${standardizedData.creditCardData.expiryMonth}/${standardizedData.creditCardData.expiryYear.toString().takeLast(2)}",
                                 ccMask = standardizedData.creditCardData.number.takeLast(4),
                                 ccType = creditCardType.name,
-                                ccHolderName = standardizedData.creditCardData.billingData?.fullName()
+                                ccHolderName = standardizedData.creditCardData.billingData?.fullName(),
+                                nonce = data.second,
+                                deviceData = data.third
                             )
                         )
                     )

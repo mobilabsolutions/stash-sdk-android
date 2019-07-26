@@ -46,7 +46,7 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
-        val token = intent.getStringExtra(BraintreeIntegration.CLIENT_TOKEN)
+        val token = intent.getStringExtra(BraintreeHandler.CLIENT_TOKEN)
         setContentView(R.layout.activity_braintree_paypal)
 
         if (token == null) {
