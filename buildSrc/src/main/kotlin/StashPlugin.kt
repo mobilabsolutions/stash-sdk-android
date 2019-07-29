@@ -1,3 +1,5 @@
+import Dokka.configureAndroidProjectForDokka
+import MavenPublish.configureMavenPublish
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.LibraryPlugin
 import com.jaredsburrows.license.LicenseReportExtension
@@ -35,7 +37,9 @@ class StashPlugin : Plugin<Project> {
             true
         }
         project.configureLicenseReport()
-        project.configureDependencies()
+        project.configureCommonDependencies()
+        project.configureAndroidProjectForDokka()
+        project.configureMavenPublish(stashExtension)
     }
 
     private fun Project.configureKotlin() {
@@ -62,6 +66,9 @@ class StashPlugin : Plugin<Project> {
         val sdkVersionCode = project.propOrDefWithTravis(StashRelease.travisBuildNumber, getCommitCount).toInt()
         val sdkVersionName =
             project.propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
+
+        stashExtension.versionCode = sdkVersionCode
+        stashExtension.versionName = sdkVersionName
 
         compileSdkVersion(StashBuildConfigs.compileSdk)
         buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
@@ -122,7 +129,7 @@ class StashPlugin : Plugin<Project> {
         }
 
         lintOptions {
-            isAbortOnError = true
+            isAbortOnError = false
         }
 
         testOptions {
@@ -150,7 +157,7 @@ class StashPlugin : Plugin<Project> {
         }
     }
 
-    private fun Project.configureDependencies() {
+    private fun Project.configureCommonDependencies() {
         dependencies {
             "implementation"(Libs.Kotlin.stdlib)
             "implementation"(Libs.Dagger.dagger)

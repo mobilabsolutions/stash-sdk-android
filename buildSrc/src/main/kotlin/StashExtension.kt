@@ -6,7 +6,9 @@ import org.gradle.api.Project
 open class StashExtension(
     val project: Project
 ) {
-    var name: String? = null
+    var name: String = project.name
     var description: String? = null
+    var versionName: String = ""
+    var versionCode: Int = 0
 
 }

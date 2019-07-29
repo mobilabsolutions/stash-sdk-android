@@ -5,6 +5,8 @@
 
 plugins {
     `kotlin-dsl`
+    id("maven-publish")
+    signing
 }
 
 kotlinDslPluginOptions {

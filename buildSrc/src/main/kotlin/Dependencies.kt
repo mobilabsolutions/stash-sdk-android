@@ -27,7 +27,7 @@ object StashBuildConfigs {
 object DemoRelease {
     val fabricApiKey = "FABRIC_API_KEY"
     val versionCode = "1"
-    val versionName = "0.11" // 0.<Sprint number>
+    val versionName = "0.12" // 0.<Sprint number>
 }
 
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
