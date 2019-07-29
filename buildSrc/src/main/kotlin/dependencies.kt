@@ -50,7 +50,7 @@ object Libs {
     val robolectric = "org.robolectric:robolectric:4.3"
     val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.1"
     val iban4j = "org.iban4j:iban4j:3.2.1"
-    val braintree = "com.braintreepayments.api:braintree:3.3.0"
+    val braintree = "com.braintreepayments.api:braintree:3.4.0"
     val mvrx = "com.airbnb.android:mvrx:1.0.2"
     val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     val viewPump = "io.github.inflationx:viewpump:2.0.3"
@@ -132,12 +132,12 @@ object Libs {
 
     object RxJava {
         val rxJava = "io.reactivex.rxjava2:rxjava:2.2.10"
-        val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0-RC3"
+        val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
         val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
 
     object Dagger {
-        private const val version = "2.23.2"
+        private const val version = "2.24"
         val dagger = "com.google.dagger:dagger:$version"
         val daggerAndroid = "com.google.dagger:dagger-android:$version"
         val androidSupport = "com.google.dagger:dagger-android-support:$version"
