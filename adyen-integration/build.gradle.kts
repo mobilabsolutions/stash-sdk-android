@@ -191,6 +191,6 @@ dependencies {
 //
 
 stash {
-    name = "adeyn"
+    name = "adyen"
 
 }

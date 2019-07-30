@@ -226,6 +226,6 @@ configurations.all {
 //}
 
 stash {
-    name = "libs"
+    name = "core"
     description = "The Stash SDK simplifies the integration of the payment process into your mobile application and abstracts away a lot of the internal complexity that different payment service providers' solutions have."
 }

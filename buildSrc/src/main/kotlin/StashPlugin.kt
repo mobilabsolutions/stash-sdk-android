@@ -1,3 +1,4 @@
+
 import Dokka.configureAndroidProjectForDokka
 import MavenPublish.configureMavenPublish
 import com.android.build.gradle.LibraryExtension
@@ -31,6 +32,7 @@ class StashPlugin : Plugin<Project> {
                 is LibraryPlugin -> {
                     project.extensions.getByType<LibraryExtension>().apply {
                         configureAndroidLibraryOptions(project, stashExtension)
+
                     }
                 }
             }
@@ -38,8 +40,6 @@ class StashPlugin : Plugin<Project> {
         }
         project.configureLicenseReport()
         project.configureCommonDependencies()
-        project.configureAndroidProjectForDokka()
-        project.configureMavenPublish(stashExtension)
     }
 
     private fun Project.configureKotlin() {
@@ -145,6 +145,8 @@ class StashPlugin : Plugin<Project> {
                 }, this))
             }
         }
+        project.configureAndroidProjectForDokka()
+        project.configureMavenPublish(stashExtension)
     }
 
     private fun Project.configureLicenseReport() {

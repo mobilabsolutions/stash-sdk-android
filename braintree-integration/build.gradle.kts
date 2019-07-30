@@ -189,6 +189,6 @@ dependencies {
 //}
 
 stash {
-    name = "braintree"
-
+    name = "Braintree"
+    description = "The Braintree Integration for the Stash SDK"
 }

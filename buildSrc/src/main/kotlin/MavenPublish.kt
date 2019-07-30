@@ -17,13 +17,18 @@ object MavenPublish {
         apply(plugin = "maven-publish")
         configure<PublishingExtension> {
             publications {
-                create<MavenPublication>(stashExtension.name) {
+                println("name: ${stashExtension.name}")
+                println("name: ${stashExtension.versionName}")
+                println("name: ${stashExtension.versionCode}")
+                if (stashExtension.name == "template") {
+                    return@publications
+                }
+
+                create<MavenPublication>(stashExtension.name.toLowerCase()) {
                     groupId = "com.mobilabsolutions.stash"
-                    artifactId = stashExtension.name
+                    artifactId = stashExtension.name.toLowerCase()
                     version = stashExtension.versionName
 
-//                    from(components["android"])
-//                    artifact(tasks[Dokka.DOKKA_PUBLIC])
                     artifact("$buildDir/outputs/aar/${stashExtension.name}-release.aar")
                     artifact(tasks[Dokka.JAVADOC_TASK])
                     artifact(tasks[Dokka.SOURCES_JAR_TASK])
@@ -38,8 +43,8 @@ object MavenPublish {
                     }
 
                     pom {
-                        name.set("Stash - Adyen")
-                        description.set("The Adyen Integration for the Stash SDK")
+                        name.set("Stash - ${stashExtension.name}")
+                        description.set(stashExtension.description)
                         url.set("https://mobilabsolutions.com/")
                         licenses {
                             license {
@@ -124,7 +129,7 @@ object MavenPublish {
             }
             apply(plugin = "signing")
             configure<SigningExtension> {
-                sign(publications[stashExtension.name])
+                sign(publications[stashExtension.name.toLowerCase()])
             }
         }
     }
