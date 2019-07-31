@@ -344,7 +344,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
                     SnackBarExtensions {
                         braintreeCreditCardEntrySwipeRefreshLayout.isRefreshing = false
                         currentSnackbar?.dismissWithoutAnimating()
-                        currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout)
+                        currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout, stashUIConfiguration)
                         currentSnackbar?.show()
                     }
                 }

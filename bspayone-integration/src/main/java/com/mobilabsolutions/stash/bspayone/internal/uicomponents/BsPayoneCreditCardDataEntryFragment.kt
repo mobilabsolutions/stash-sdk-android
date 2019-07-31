@@ -328,7 +328,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                     SnackBarExtensions {
                         bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = false
                         currentSnackbar?.dismissWithoutAnimating()
-                        currentSnackbar = it.throwable.getErrorSnackBar(bsPayoneCreditCardEntrySwipeRefresh)
+                        currentSnackbar = it.throwable.getErrorSnackBar(bsPayoneCreditCardEntrySwipeRefresh, stashUIConfiguration)
                         currentSnackbar?.show()
                     }
                 }
