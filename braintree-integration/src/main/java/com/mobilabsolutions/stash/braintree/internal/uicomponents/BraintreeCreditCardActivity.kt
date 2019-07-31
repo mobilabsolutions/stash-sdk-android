@@ -22,6 +22,7 @@ import com.mobilabsolutions.stash.braintree.BraintreeIntegration
 import com.mobilabsolutions.stash.braintree.R
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.exceptions.base.OtherException
+import com.mobilabsolutions.stash.core.exceptions.base.PspException
 import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -46,7 +47,7 @@ class BraintreeCreditCardActivity : AppCompatActivity(), ConfigurationListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
-        val cardData: HashMap<String, String> = intent.getSerializableExtra(BraintreeHandler.CARD_DATA) as HashMap<String, String>
+        val cardData: HashMap<String, String> = @Suppress("UNCHECKED_CAST") (intent.getSerializableExtra(BraintreeHandler.CARD_DATA) as HashMap<String, String>)
         val token = cardData[BraintreeHandler.CLIENT_TOKEN]
         setContentView(R.layout.activity_braintree_creedit_card)
 
@@ -70,7 +71,7 @@ class BraintreeCreditCardActivity : AppCompatActivity(), ConfigurationListener,
             .cardholderName("${cardData[BraintreeHandler.CARD_FIRST_NAME]} ${cardData[BraintreeHandler.CARD_LAST_NAME]}")
             .firstName(cardData[BraintreeHandler.CARD_FIRST_NAME])
             .lastName(cardData[BraintreeHandler.CARD_FIRST_NAME])
-            //.countryCode(cardData[BraintreeHandler.CARD_COUNTRY])
+            .countryCode(cardData[BraintreeHandler.CARD_COUNTRY])
 
         Card.tokenize(braintreeFragment, cardBuilder)
         pointOfNoReturnReached = true
@@ -135,6 +136,7 @@ class BraintreeCreditCardActivity : AppCompatActivity(), ConfigurationListener,
         error?.printStackTrace()
         val wrappedException = when (error) {
             is com.braintreepayments.api.exceptions.ConfigurationException -> ConfigurationException(originalException = error)
+            is com.braintreepayments.api.exceptions.ErrorWithResponse -> PspException(message = error.localizedMessage, code = error.statusCode, originalException = error)
             else -> OtherException(originalException = error)
         }
         braintreeHandler.resultSubject.onError(wrappedException)

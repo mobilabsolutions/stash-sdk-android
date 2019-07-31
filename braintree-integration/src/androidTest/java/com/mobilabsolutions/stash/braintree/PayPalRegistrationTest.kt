@@ -5,6 +5,7 @@
 package com.mobilabsolutions.stash.braintree
 
 import android.app.Application
+import android.content.Intent
 import android.graphics.Point
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -18,11 +19,15 @@ import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.internal.SslSupportModule
 import com.mobilabsolutions.stash.core.internal.StashComponent
 import com.mobilabsolutions.stash.core.internal.StashModule
+import com.mobilabsolutions.stash.core.internal.api.backend.MobilabApi
 import dagger.Component
+import io.reactivex.schedulers.Schedulers
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
+import java.util.UUID
+import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
@@ -32,21 +37,28 @@ class PayPalRegistrationTest {
     val MOBILAB_BACKEND_URL = BuildConfig.mobilabBackendUrl
     val MOBILAB_TEST_PUBLISHABLE_KEY = BuildConfig.testPublishableKey
 
+    @Inject
+    lateinit var mobilabApi: MobilabApi
+
+    val context = InstrumentationRegistry.getInstrumentation().context
+    val methods = setOf(PaymentMethodType.PAYPAL)
+    val initialization = BraintreeIntegration.create(methods)
+    internal val component = DaggerTestPayPalRegistrationComponent.builder()
+        .stashModule(StashModule(
+            MOBILAB_TEST_PUBLISHABLE_KEY,
+            MOBILAB_BACKEND_URL,
+            context.applicationContext as Application,
+            mapOf(initialization to methods), true))
+        .build()
+
+    init {
+        component.injectTest(this)
+    }
+
     @get:Rule
     val activityRule = object : ActivityTestRule<BraintreePayPalActivity>(BraintreePayPalActivity::class.java, true, false) {
-
         override fun beforeActivityLaunched() {
             super.beforeActivityLaunched()
-            val context = InstrumentationRegistry.getInstrumentation().context
-            val methods = setOf(PaymentMethodType.PAYPAL)
-            val initialization = BraintreeIntegration.create(methods)
-            val component = DaggerTestPayPalRegistrationComponent.builder()
-                .stashModule(StashModule(
-                    MOBILAB_TEST_PUBLISHABLE_KEY,
-                    MOBILAB_BACKEND_URL,
-                    context.applicationContext as Application,
-                    mapOf(initialization to methods), true))
-                .build()
             initialization.initialize(component)
         }
     }
@@ -69,7 +81,12 @@ class PayPalRegistrationTest {
     @Ignore("Failing on travis, seems that emulator screen goes to sleep")
     @Test
     fun checkLoading() {
-        activityRule.launchActivity(null)
+        val intent = Intent()
+        val response = mobilabApi.createAlias("BRAINTREE", UUID.randomUUID().toString(), emptyMap())
+            .subscribeOn(Schedulers.io())
+            .blockingGet()
+        intent.putExtra(BraintreeHandler.CLIENT_TOKEN, response.pspExtra[BraintreeHandler.CLIENT_TOKEN])
+        activityRule.launchActivity(intent)
         onView(withId(R.id.paypal_progress)).check(matches(isDisplayed()))
     }
 }

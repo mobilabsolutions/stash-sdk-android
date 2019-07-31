@@ -31,7 +31,7 @@ class BraintreeHandler @Inject constructor() {
     private val processing = AtomicBoolean(false)
     internal var resultSubject = PublishSubject.create<Triple<String, String, String>>()
 
-    companion object  {
+    companion object {
         const val CARD_DATA = "CARD_DATA"
         const val CLIENT_TOKEN = "clientToken"
         const val CARD_NUMBER = "CARD_NUMBER"
@@ -75,13 +75,11 @@ class BraintreeHandler @Inject constructor() {
             resultSubject = PublishSubject.create()
             val intent = Intent(applicationContext, BraintreeCreditCardActivity::class.java)
             intent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
-            intent.putExtra(CLIENT_TOKEN, additionalData.extraData[CLIENT_TOKEN])
             // Pass Data
             intent.putExtra(CARD_DATA, hashMapOf(
                 CLIENT_TOKEN to additionalData.extraData[CLIENT_TOKEN],
                 CARD_NUMBER to standardizedData.creditCardData.number,
                 CARD_EXPIRY_MONTH to standardizedData.creditCardData.expiryMonth,
-                CARD_EXPIRY_YEAR to standardizedData.creditCardData.expiryYear,
                 CARD_EXPIRY_YEAR to standardizedData.creditCardData.expiryYear,
                 CARD_CVV to standardizedData.creditCardData.cvv,
                 CARD_FIRST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME],
