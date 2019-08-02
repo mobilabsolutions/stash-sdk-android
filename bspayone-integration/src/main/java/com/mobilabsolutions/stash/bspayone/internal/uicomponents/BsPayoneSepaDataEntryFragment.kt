@@ -226,7 +226,7 @@ class BsPayoneSepaDataEntryFragment : Fragment() {
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
                         bsPayoneSepaEntrySwipeRefresh.isRefreshing = false
-                        currentSnackbar?.let { it.dismissWithoutAnimating() }
+                        currentSnackbar?.dismissWithoutAnimating()
                         currentSnackbar = it.throwable.getErrorSnackBar(sepaScreenMainLayout, stashUIConfiguration)
                         currentSnackbar?.show()
                     }

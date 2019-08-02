@@ -318,8 +318,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                     SnackBarExtensions {
                         adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
                         currentSnackbar?.dismissWithoutAnimating()
-                        currentSnackbar =
-                            it.throwable.getErrorSnackBar(creditCardScreenMainLayout, stashUIConfiguration)
+                        currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout, stashUIConfiguration)
                         currentSnackbar?.show()
                     }
                 }

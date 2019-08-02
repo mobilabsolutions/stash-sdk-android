@@ -36,7 +36,7 @@ This repository contains multiple modules:
 
 At the moment, the Stash Android SDK supports the following PSPs:
 - BSPayone - Credit Cards / SEPA
-- Braintree - PayPal
+- Braintree - Credit Cards / PayPal
 - Adyen - Credit Cards / SEPA
 
 ### Including the SDK in your project

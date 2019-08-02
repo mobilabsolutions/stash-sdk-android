@@ -22,7 +22,9 @@ data class CreditCardConfig(
     val ccExpiry: String,
     val ccMask: String,
     val ccType: String,
-    val ccHolderName: String?
+    val ccHolderName: String?,
+    val nonce: String = "",
+    val deviceData: String = ""
 )
 
 data class SepaConfig(

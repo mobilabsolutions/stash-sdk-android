@@ -7,21 +7,22 @@ package com.mobilabsolutions.stash.braintree.internal.uicomponents
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.braintreepayments.api.BraintreeFragment
+import com.braintreepayments.api.Card
 import com.braintreepayments.api.DataCollector
-import com.braintreepayments.api.PayPal
 import com.braintreepayments.api.interfaces.BraintreeCancelListener
 import com.braintreepayments.api.interfaces.BraintreeErrorListener
 import com.braintreepayments.api.interfaces.ConfigurationListener
 import com.braintreepayments.api.interfaces.PaymentMethodNonceCreatedListener
+import com.braintreepayments.api.models.CardBuilder
+import com.braintreepayments.api.models.CardNonce
 import com.braintreepayments.api.models.Configuration
-import com.braintreepayments.api.models.PayPalAccountNonce
-import com.braintreepayments.api.models.PayPalRequest
 import com.braintreepayments.api.models.PaymentMethodNonce
 import com.mobilabsolutions.stash.braintree.BraintreeHandler
 import com.mobilabsolutions.stash.braintree.BraintreeIntegration
 import com.mobilabsolutions.stash.braintree.R
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.exceptions.base.OtherException
+import com.mobilabsolutions.stash.core.exceptions.base.PspException
 import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.plusAssign
@@ -33,7 +34,7 @@ import javax.inject.Inject
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
+class BraintreeCreditCardActivity : AppCompatActivity(), ConfigurationListener,
     PaymentMethodNonceCreatedListener, BraintreeErrorListener, BraintreeCancelListener {
 
     @Inject
@@ -46,8 +47,9 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
-        val token = intent.getStringExtra(BraintreeHandler.CLIENT_TOKEN)
-        setContentView(R.layout.activity_braintree_paypal)
+        val cardData: HashMap<String, String> = @Suppress("UNCHECKED_CAST") (intent.getSerializableExtra(BraintreeHandler.CARD_DATA) as HashMap<String, String>)
+        val token = cardData[BraintreeHandler.CLIENT_TOKEN]
+        setContentView(R.layout.activity_braintree_creedit_card)
 
         if (token == null) {
             finish()
@@ -61,8 +63,17 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
                 deviceFingerprintSubject.onError(OtherException("Couldn't get Braintree device data"))
             }
         }
-        val payment = PayPalRequest()
-        PayPal.requestBillingAgreement(braintreeFragment, payment)
+
+        val cardBuilder = CardBuilder()
+            .cardNumber(cardData[BraintreeHandler.CARD_NUMBER])
+            .expirationDate("${cardData[BraintreeHandler.CARD_EXPIRY_MONTH]}/${cardData[BraintreeHandler.CARD_EXPIRY_YEAR]}")
+            .cvv(cardData[BraintreeHandler.CARD_CVV])
+            .cardholderName("${cardData[BraintreeHandler.CARD_FIRST_NAME]} ${cardData[BraintreeHandler.CARD_LAST_NAME]}")
+            .firstName(cardData[BraintreeHandler.CARD_FIRST_NAME])
+            .lastName(cardData[BraintreeHandler.CARD_FIRST_NAME])
+            .countryCode(cardData[BraintreeHandler.CARD_COUNTRY])
+
+        Card.tokenize(braintreeFragment, cardBuilder)
         pointOfNoReturnReached = true
     }
 
@@ -96,12 +107,13 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
 
     override fun onPaymentMethodNonceCreated(paymentMethodNonce: PaymentMethodNonce?) {
         Timber.d("Payment nonce create")
-        if (paymentMethodNonce is PayPalAccountNonce) {
+        Timber.d("Type - ${paymentMethodNonce?.javaClass}")
+        if (paymentMethodNonce is CardNonce) {
             disposables += deviceFingerprintSubject.firstOrError().subscribeBy(
                 onSuccess = {
                     braintreeHandler.resultSubject.onNext(
                         Triple(
-                            paymentMethodNonce.email
+                            paymentMethodNonce.lastFour
                                 ?: paymentMethodNonce.typeLabel ?: "",
                             paymentMethodNonce.nonce
                                 ?: throw RuntimeException("Nonce was null in created method"),
@@ -121,8 +133,10 @@ class BraintreePayPalActivity : AppCompatActivity(), ConfigurationListener,
     }
 
     override fun onError(error: Exception?) {
+        error?.printStackTrace()
         val wrappedException = when (error) {
             is com.braintreepayments.api.exceptions.ConfigurationException -> ConfigurationException(originalException = error)
+            is com.braintreepayments.api.exceptions.ErrorWithResponse -> PspException(message = error.localizedMessage, code = error.statusCode, originalException = error)
             else -> OtherException(originalException = error)
         }
         braintreeHandler.resultSubject.onError(wrappedException)

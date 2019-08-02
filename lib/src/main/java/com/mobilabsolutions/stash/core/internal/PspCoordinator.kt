@@ -6,7 +6,6 @@ package com.mobilabsolutions.stash.core.internal
 
 import android.app.Activity
 import android.content.Context
-
 import com.mobilabsolutions.stash.core.CreditCardTypeWithRegex
 import com.mobilabsolutions.stash.core.ExtraAliasInfo
 import com.mobilabsolutions.stash.core.PaymentMethodAlias

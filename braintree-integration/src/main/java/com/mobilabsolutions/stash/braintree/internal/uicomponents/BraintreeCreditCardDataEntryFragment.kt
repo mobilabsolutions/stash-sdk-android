@@ -2,9 +2,8 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.bspayone.internal.uicomponents
+package com.mobilabsolutions.stash.braintree.internal.uicomponents
 
-/* ktlint-disable no-wildcard-imports */
 import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
 import android.content.Intent
@@ -21,11 +20,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import com.mobilabsolutions.stash.bspayone.BsPayoneIntegration
-import com.mobilabsolutions.stash.bspayone.R
+import com.mobilabsolutions.stash.braintree.BraintreeIntegration
+import com.mobilabsolutions.stash.braintree.R
 import com.mobilabsolutions.stash.core.CustomizationExtensions
-import com.mobilabsolutions.stash.core.CustomizationExtensions.applyEditTextCustomization
-import com.mobilabsolutions.stash.core.CustomizationExtensions.applyFakeEditTextCustomization
 import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
 import com.mobilabsolutions.stash.core.internal.uicomponents.CardNumberTextWatcher
@@ -47,17 +44,36 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.*
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.back
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.braintreeCreditCardEntrySwipeRefreshLayout
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.creditCardNumberEditText
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.creditCardNumberTitleTextView
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.creditCardScreenCellLayout
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.creditCardScreenMainLayout
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.creditCardScreenTitle
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.cvvEditText
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.cvvTitleTextView
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.errorCreditCardCVV
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.errorCreditCardExp
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.errorCreditCardFirstName
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.errorCreditCardLastName
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.errorCreditCardNumber
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.expirationDateTextView
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.expirationDateTitleTextView
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.firstNameEditText
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.lastNameEditText
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.lastNameTitleTextView
+import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.saveButton
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import java.util.*
+import java.util.Locale
 import javax.inject.Inject
 
-/**
- * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
- */
-class BsPayoneCreditCardDataEntryFragment : Fragment() {
+class BraintreeCreditCardDataEntryFragment : Fragment() {
 
     companion object {
         private const val COUNTRY_REQUEST_CODE = 1
@@ -109,14 +125,14 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BsPayoneIntegration.integration?.bsPayoneIntegrationComponent?.inject(this)
+        BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
         suggestedCountry = CountryDetectorUtil.getBestGuessAtCurrentCountry(requireContext())
         selectedCountry = Country(suggestedCountry.displayName, suggestedCountry.country, suggestedCountry.isO3Country)
         Timber.d("Created")
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.credit_card_data_entry_fragment, container, false)
+        return inflater.inflate(R.layout.braintree_credit_card_data_entry_fragment, container, false)
     }
 
     override fun onDestroyView() {
@@ -128,68 +144,68 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         disposables += Observables.combineLatest(
-                firstNameTextChangedSubject,
-                lastNameTextChangedSubject,
-                cardNumberTextChangedSubject,
-                expirationDateSubject,
-                ccvTextChangedSubject,
-                countrySubject,
-                BsPayoneCreditCardDataEntryFragment::CreditCardDataEntryViewState)
-                .subscribe(this::onViewState)
+            firstNameTextChangedSubject,
+            lastNameTextChangedSubject,
+            cardNumberTextChangedSubject,
+            expirationDateSubject,
+            ccvTextChangedSubject,
+            countrySubject,
+            BraintreeCreditCardDataEntryFragment::CreditCardDataEntryViewState)
+            .subscribe(this::onViewState)
 
         disposables += firstNameFocusSubject
-                .doOnNext {
-                    validateFirstNameAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstNameAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += firstNameTextChangedSubject
-                .doOnNext {
-                    validateFirstNameAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstNameAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += lastNameFocusSubject
-                .doOnNext {
-                    validateLastNameAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastNameAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += lastNameTextChangedSubject
-                .doOnNext {
-                    validateLastNameAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastNameAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += cardNumberFocusSubject
-                .doOnNext {
-                    validateCardNumberAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCardNumberAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += cardNumberTextChangedSubject
-                .doOnNext {
-                    validateCardNumberAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCardNumberAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += expirationDateSubject
-                .doOnNext {
-                    validateExpirationDateAndUpdateUI(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateExpirationDateAndUpdateUI(it)
+            }
+            .subscribe()
 
         disposables += ccvFocusSubject
-                .doOnNext {
-                    validateCvvAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCvvAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += ccvTextChangedSubject
-                .doOnNext {
-                    validateCvvAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCvvAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         stashUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
@@ -260,8 +276,8 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
-                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
-                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
 
             // Check for the previous field's validations
             firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
@@ -276,24 +292,24 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
-                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = selectedCountry.alpha2Code
+                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = selectedCountry.alpha3Code
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue
-                        ?: throw RuntimeException("Month was null")).toString()
+                    ?: throw RuntimeException("Month was null")).toString()
                 dataMap[CreditCardData.EXPIRY_YEAR] = (selectedExpiryDate?.year
-                        ?: throw RuntimeException("Year was null")).toString()
+                    ?: throw RuntimeException("Year was null")).toString()
                 uiComponentHandler.submitData(dataMap)
             }
         }
 
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(),
-                    stashUIConfiguration = stashUIConfiguration,
-                    selectedDate = selectedExpiryDate,
-                    onCancelListener = DialogInterface.OnCancelListener {
-                        expirationDateSubject.onNext(LocalDate.MIN)
-                    }) {
+                stashUIConfiguration = stashUIConfiguration,
+                selectedDate = selectedExpiryDate,
+                onCancelListener = DialogInterface.OnCancelListener {
+                    expirationDateSubject.onNext(LocalDate.MIN)
+                }) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
                 val selectedExpiry = LocalDate.of(it.second, it.first, lastDay)
@@ -314,21 +330,21 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             requireActivity().onBackPressed()
         }
 
-        bsPayoneCreditCardEntrySwipeRefresh.isEnabled = false
+        braintreeCreditCardEntrySwipeRefreshLayout.isEnabled = false
 
         disposables += uiComponentHandler.getResultObservable().subscribe {
             when (it) {
                 is UiRequestHandler.DataEntryResult.Success -> {
-                    bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = false
+                    braintreeCreditCardEntrySwipeRefreshLayout.isRefreshing = false
                 }
                 is UiRequestHandler.DataEntryResult.Processing -> {
-                    bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = true
+                    braintreeCreditCardEntrySwipeRefreshLayout.isRefreshing = true
                 }
                 is UiRequestHandler.DataEntryResult.Failure -> {
                     SnackBarExtensions {
-                        bsPayoneCreditCardEntrySwipeRefresh.isRefreshing = false
+                        braintreeCreditCardEntrySwipeRefreshLayout.isRefreshing = false
                         currentSnackbar?.dismissWithoutAnimating()
-                        currentSnackbar = it.throwable.getErrorSnackBar(bsPayoneCreditCardEntrySwipeRefresh, stashUIConfiguration)
+                        currentSnackbar = it.throwable.getErrorSnackBar(creditCardScreenMainLayout, stashUIConfiguration)
                         currentSnackbar?.show()
                     }
                 }
@@ -484,9 +500,11 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
     }
 
     private fun hideError(sourceView: View, errorView: TextView) {
-        when (sourceView) {
-            is EditText -> sourceView.applyEditTextCustomization(stashUIConfiguration)
-            is TextView -> sourceView.applyFakeEditTextCustomization(stashUIConfiguration)
+        CustomizationExtensions {
+            when (sourceView) {
+                is EditText -> sourceView.applyEditTextCustomization(stashUIConfiguration)
+                is TextView -> sourceView.applyFakeEditTextCustomization(stashUIConfiguration)
+            }
         }
         errorView.visibility = View.GONE
     }
