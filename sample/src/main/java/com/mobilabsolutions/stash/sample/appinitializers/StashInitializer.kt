@@ -30,7 +30,7 @@ class StashInitializer @Inject constructor() : AppInitializer {
             ),
             testMode = true,
             stashUiConfiguration = StashUiConfiguration.Builder()
-                .setSnackBarBackground(R.color.aquaMarine).build()
+                .setSnackBarBackground(R.color.carnation).build()
         )
         Stash.initialize(
             application,
