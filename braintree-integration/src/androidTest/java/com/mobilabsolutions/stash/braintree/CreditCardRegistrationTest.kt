@@ -93,8 +93,7 @@ class CreditCardRegistrationTest {
             BraintreeHandler.CARD_EXPIRY_YEAR to "2019",
             BraintreeHandler.CARD_CVV to "123",
             BraintreeHandler.CARD_FIRST_NAME to "First",
-            BraintreeHandler.CARD_LAST_NAME to "Last",
-            BraintreeHandler.CARD_COUNTRY to "DEU"
+            BraintreeHandler.CARD_LAST_NAME to "Last"
         ))
         activityRule.launchActivity(intent)
         onView(withId(R.id.credit_card_progress)).check(matches(isDisplayed()))
