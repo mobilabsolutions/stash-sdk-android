@@ -133,8 +133,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
             cardNumberTextChangedSubject,
             expirationDateSubject,
             ccvTextChangedSubject,
-            AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState
-        )
+            AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState)
             .subscribe(this::onViewState)
 
         disposables += firstNameFocusSubject

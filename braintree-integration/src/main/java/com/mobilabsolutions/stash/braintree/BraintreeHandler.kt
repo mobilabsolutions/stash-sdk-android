@@ -40,7 +40,6 @@ class BraintreeHandler @Inject constructor() {
         const val CARD_CVV = "CARD_CVV"
         const val CARD_FIRST_NAME = "CARD_FIRST_NAME"
         const val CARD_LAST_NAME = "CARD_LAST_NAME"
-        const val CARD_COUNTRY = "CARD_COUNTRY"
     }
 
     fun tokenizePaymentMethods(
@@ -83,8 +82,7 @@ class BraintreeHandler @Inject constructor() {
                 CARD_EXPIRY_YEAR to standardizedData.creditCardData.expiryYear,
                 CARD_CVV to standardizedData.creditCardData.cvv,
                 CARD_FIRST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME],
-                CARD_LAST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME],
-                CARD_COUNTRY to additionalData.extraData[BillingData.ADDITIONAL_DATA_COUNTRY]
+                CARD_LAST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME]
             ))
 
             applicationContext.startActivity(intent)

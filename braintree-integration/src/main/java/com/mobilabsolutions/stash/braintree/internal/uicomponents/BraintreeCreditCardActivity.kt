@@ -64,7 +64,7 @@ class BraintreeCreditCardActivity : AppCompatActivity(), ConfigurationListener,
             }
         }
 
-        val expirationDate = String.format("%s/%s",cardData[BraintreeHandler.CARD_EXPIRY_MONTH],cardData[BraintreeHandler.CARD_EXPIRY_YEAR])
+        val expirationDate = String.format("%s/%s", cardData[BraintreeHandler.CARD_EXPIRY_MONTH], cardData[BraintreeHandler.CARD_EXPIRY_YEAR])
 
         val cardBuilder = CardBuilder()
             .cardNumber(cardData[BraintreeHandler.CARD_NUMBER])
@@ -73,7 +73,6 @@ class BraintreeCreditCardActivity : AppCompatActivity(), ConfigurationListener,
             .cardholderName("${cardData[BraintreeHandler.CARD_FIRST_NAME]} ${cardData[BraintreeHandler.CARD_LAST_NAME]}")
             .firstName(cardData[BraintreeHandler.CARD_FIRST_NAME])
             .lastName(cardData[BraintreeHandler.CARD_FIRST_NAME])
-            .countryCode(cardData[BraintreeHandler.CARD_COUNTRY])
 
         Card.tokenize(braintreeFragment, cardBuilder)
         pointOfNoReturnReached = true
