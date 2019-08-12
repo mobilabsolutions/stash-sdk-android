@@ -104,10 +104,11 @@ dependencies {
     implementation(project(Modules.stash))
     implementation(Libs.Kotlin.stdlib)
 
-    implementation(Libs.Adyen.base)
-    implementation(Libs.Adyen.ui)
-    implementation(Libs.Adyen.core)
-    implementation(Libs.Adyen.coreCard)
+//    implementation(Libs.Adyen.base)
+//    implementation(Libs.Adyen.ui)
+//    implementation(Libs.Adyen.core)
+    implementation(Libs.Adyen.thressDs2)
+    implementation(Libs.Adyen.card)
 
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)

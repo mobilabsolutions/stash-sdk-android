@@ -63,6 +63,8 @@ object Libs {
         val ui = "com.adyen.checkout:ui:$version"
         val core = "com.adyen.checkout:core:$version"
         val coreCard = "com.adyen.checkout:core-card:$version"
+        val thressDs2 = "com.adyen.checkout:3ds2:3.0.0"
+        val card = "com.adyen.checkout:card-ui:3.1.1"
     }
 
     object Google {
@@ -187,7 +189,6 @@ object Libs {
     object Utils {
         val commonsValidator = "commons-validator:commons-validator:1.6"
     }
-
 }
 
 fun Project.propOrDefWithTravis(propertyName: String, defaultValue: String): String {

@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.core.internal.api.backend
 
+import com.mobilabsolutions.stash.core.internal.api.backend.model.UpdateAliasResponseDto
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasResponse
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasUpdateRequest
 import io.reactivex.Completable
@@ -20,8 +21,27 @@ import retrofit2.http.Path
 
 interface MobilabApi {
     @POST("v1/alias")
-    fun createAlias(@Header("PSP-Type") psp: String, @Header("Idempotent-Key") idempotencyKey: String, @Body dynamicPspConfig: Map<String, String>): Single<AliasResponse>
+    fun createAlias(
+        @Header("PSP-Type") psp: String,
+        @Header("Idempotent-Key") idempotencyKey: String,
+        @Body dynamicPspConfig: Map<String, String>
+    ): Single<AliasResponse>
 
     @PUT("v1/alias/{aliasId}")
-    fun updateAlias(@Path("aliasId") aliasId: String, @Body aliasUpdateRequest: AliasUpdateRequest): Completable
+    fun updateAlias(
+        @Path("aliasId") aliasId: String,
+        @Body aliasUpdateRequest: AliasUpdateRequest
+    ): Completable
+
+    @POST("v1/alias")
+    fun testcreateAlias(
+        @Header("PSP-Type") psp: String,
+        @Header("Idempotent-Key") idempotencyKey: String
+    ): Single<AliasResponse>
+
+    @PUT("v1/alias/{aliasId}")
+    fun testupdateAlias(
+        @Path("aliasId") aliasId: String,
+        @Body aliasUpdateRequest: AliasUpdateRequest
+    ): Single<UpdateAliasResponseDto>
 }

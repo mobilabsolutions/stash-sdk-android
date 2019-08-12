@@ -4,7 +4,6 @@
 
 package com.mobilabsolutions.stash.adyen
 
-import com.adyen.checkout.core.internal.PaymentHandlerImpl
 import org.junit.Test
 
 /**
@@ -14,8 +13,8 @@ class ReflectionDebug {
 
     @Test
     fun constructorInspection() {
-        PaymentHandlerImpl::class.java.declaredConstructors.forEach {
-            println("Constructor ${it.parameterTypes.contentToString()}")
-        }
+//        PaymentHandlerImpl::class.java.declaredConstructors.forEach {
+//            println("Constructor ${it.parameterTypes.contentToString()}")
+//        }
     }
 }

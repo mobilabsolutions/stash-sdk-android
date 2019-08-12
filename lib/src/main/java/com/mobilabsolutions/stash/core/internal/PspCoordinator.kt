@@ -119,29 +119,56 @@ internal class PspCoordinator @Inject constructor(
         additionalUIData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME]?.let { billingData.lastName = it }
 
         // TODO Validate in case data is being sent from custom UI before starting the communication with the backend
+
         return chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
-            mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey.key, preparationData)
-                .subscribeOn(Schedulers.io())
-                .flatMap {
-                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
-                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
-                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+            mobilabApi.testcreateAlias(chosenIntegration.identifier, idempotencyKey.key)
+                    .subscribeOn(Schedulers.io())
+                    .flatMap {
+                        val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
+                        val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
+                        val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
-                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest, idempotencyKey)
+                        val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest, idempotencyKey)
 
-                    pspAliasSingle.map { alias ->
-                        val cardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
-                        val lastDigits = standardizedData.creditCardData.number.takeLast(4)
-                        val creditCardExtraInfo = ExtraAliasInfo.CreditCardExtraInfo(
-                            creditCardType = cardType,
-                            creditCardMask = lastDigits,
-                            expiryMonth = standardizedData.creditCardData.expiryMonth,
-                            expiryYear = standardizedData.creditCardData.expiryYear
-                        )
-                        PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
-                    }
-                }.processErrors()
+                        pspAliasSingle.map { alias ->
+                            val cardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
+                            val lastDigits = standardizedData.creditCardData.number.takeLast(4)
+                            val creditCardExtraInfo = ExtraAliasInfo.CreditCardExtraInfo(
+                                    creditCardType = cardType,
+                                    creditCardMask = lastDigits,
+                                    expiryMonth = standardizedData.creditCardData.expiryMonth,
+                                    expiryYear = standardizedData.creditCardData.expiryYear
+                            )
+                            PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
+                        }
+                    }.processErrors()
         }
+
+
+
+//        return chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
+//            mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey.key, preparationData)
+//                .subscribeOn(Schedulers.io())
+//                .flatMap {
+//                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
+//                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
+//                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
+//
+//                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest, idempotencyKey)
+//
+//                    pspAliasSingle.map { alias ->
+//                        val cardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
+//                        val lastDigits = standardizedData.creditCardData.number.takeLast(4)
+//                        val creditCardExtraInfo = ExtraAliasInfo.CreditCardExtraInfo(
+//                            creditCardType = cardType,
+//                            creditCardMask = lastDigits,
+//                            expiryMonth = standardizedData.creditCardData.expiryMonth,
+//                            expiryYear = standardizedData.creditCardData.expiryYear
+//                        )
+//                        PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
+//                    }
+//                }.processErrors()
+//        }
     }
 
     /**

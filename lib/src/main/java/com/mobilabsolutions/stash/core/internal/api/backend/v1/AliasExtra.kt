@@ -14,8 +14,8 @@ data class AliasExtra(
     val paymentMethod: String,
     val payPalConfig: PayPalConfig? = null,
     val personalData: BillingData? = null,
-    val payload: String? = null
-
+    val payload: String? = null,
+    val channel: String = "Android"
 )
 
 data class CreditCardConfig(

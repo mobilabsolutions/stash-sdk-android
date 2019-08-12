@@ -10,5 +10,4 @@ package com.mobilabsolutions.stash.core.internal.api.backend.v1
 data class AliasUpdateRequest(
     val pspAlias: String? = null,
     val extra: AliasExtra? = null
-
 )
