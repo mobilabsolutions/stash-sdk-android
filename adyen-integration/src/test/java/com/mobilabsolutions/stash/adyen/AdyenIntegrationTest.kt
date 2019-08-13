@@ -42,7 +42,7 @@ class AdyenIntegrationTest {
 
     private val validVisaCreditCardData =
             CreditCardData(
-                    number = "371449635398431",
+                    number = "4917610000000000",
                     expiryMonth = 10,
                     expiryYear = 2020,
                     cvv = "737",

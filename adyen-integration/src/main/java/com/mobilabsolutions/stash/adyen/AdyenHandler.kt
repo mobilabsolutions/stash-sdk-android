@@ -5,6 +5,7 @@
 package com.mobilabsolutions.stash.adyen
 
 import android.app.Application
+import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.cse.Card
 import com.adyen.checkout.cse.internal.CardEncryptorImpl
@@ -73,7 +74,11 @@ class AdyenHandler @Inject constructor(
                                             ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear.toString().takeLast(2),
                                             ccMask = creditCardData.number.takeLast(4),
                                             ccType = creditCardTypeName,
-                                            ccHolderName = creditCardData.billingData?.fullName()
+                                            ccHolderName = creditCardData.billingData?.fullName(),
+                                            encryptedCardNumber = encryptCard.encryptedNumber,
+                                            encryptedExpiryMonth = encryptCard.encryptedExpiryMonth,
+                                            encryptedExpiryYear = encryptCard.encryptedExpiryYear,
+                                            encryptedSecurityCode = encryptCard.encryptedSecurityCode
                                     ),
                                     paymentMethod = PaymentMethodType.CC.name,
                                     personalData = creditCardRegistrationRequest.billingData
@@ -84,6 +89,21 @@ class AdyenHandler @Inject constructor(
                     .subscribeOn(Schedulers.io())
                     .subscribe({
                         Timber.e("onSuccess: $it")
+                        val action = Threeds2FingerprintAction()
+                        action.token = it.authenticationToken
+                        action.paymentData = it.paymentData
+                        action.type = it.actionType
+
+                        application.startActivity(ThreeDsHandleActivity.createIntent(
+                                application, action
+                        ))
+//                        threedsComponent.handleAction()
+//                        application.applicationContext.startActivity(
+//                                Intent(
+//                                        application.applicationContext,
+//                                        ThreeDsHandleActivity::class.java
+//                                ))
+
                     }, {
                         Timber.e(it)
                     })
