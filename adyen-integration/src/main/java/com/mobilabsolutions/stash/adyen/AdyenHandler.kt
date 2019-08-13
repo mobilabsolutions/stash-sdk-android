@@ -95,7 +95,8 @@ class AdyenHandler @Inject constructor(
                         action.type = it.actionType
 
                         application.startActivity(ThreeDsHandleActivity.createIntent(
-                                application, action
+                                application, action,
+                                creditCardRegistrationRequest.aliasId
                         ))
 //                        threedsComponent.handleAction()
 //                        application.applicationContext.startActivity(

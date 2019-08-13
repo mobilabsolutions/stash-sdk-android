@@ -5,6 +5,7 @@
 package com.mobilabsolutions.stash.core.internal.api.backend
 
 import com.mobilabsolutions.stash.core.internal.api.backend.model.UpdateAliasResponseDto
+import com.mobilabsolutions.stash.core.internal.api.backend.model.VerifyAliasRequestDto
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasResponse
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasUpdateRequest
 import io.reactivex.Completable
@@ -43,5 +44,11 @@ interface MobilabApi {
     fun testupdateAlias(
         @Path("aliasId") aliasId: String,
         @Body aliasUpdateRequest: AliasUpdateRequest
+    ): Single<UpdateAliasResponseDto>
+
+    @POST("v1/alias/{aliasId}/verify")
+    fun verify(
+        @Path("aliasId") aliasId: String,
+        @Body verifyAliasRequest: VerifyAliasRequestDto
     ): Single<UpdateAliasResponseDto>
 }

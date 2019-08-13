@@ -21,4 +21,6 @@ interface AdyenIntegrationComponent {
     fun inject(creditCardFragment: AdyenCreditCardDataEntryFragment)
 
     fun inject(adyenSepaDataEntryFragment: AdyenSepaDataEntryFragment)
+
+    fun inject(threeDsHandleActivity: ThreeDsHandleActivity)
 }
