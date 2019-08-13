@@ -107,7 +107,7 @@ internal class PspCoordinator @Inject constructor(
      * Handler method that creates the alias by calling the backend endpoint, processes additional data, and upon PSP Integration flow
      * completion creates the PaymentMethodAlias object that is returned to 3rd party developer.
      */
-    fun handleRegisterCreditCard(
+    private fun handleRegisterCreditCard(
         creditCardData: CreditCardData,
         additionalUIData: AdditionalRegistrationData,
         chosenIntegration: Integration,
@@ -143,32 +143,6 @@ internal class PspCoordinator @Inject constructor(
                         }
                     }.processErrors()
         }
-
-
-
-//        return chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
-//            mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey.key, preparationData)
-//                .subscribeOn(Schedulers.io())
-//                .flatMap {
-//                    val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
-//                    val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
-//                    val registrationRequest = RegistrationRequest(standardizedData, additionalData)
-//
-//                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest, idempotencyKey)
-//
-//                    pspAliasSingle.map { alias ->
-//                        val cardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
-//                        val lastDigits = standardizedData.creditCardData.number.takeLast(4)
-//                        val creditCardExtraInfo = ExtraAliasInfo.CreditCardExtraInfo(
-//                            creditCardType = cardType,
-//                            creditCardMask = lastDigits,
-//                            expiryMonth = standardizedData.creditCardData.expiryMonth,
-//                            expiryYear = standardizedData.creditCardData.expiryYear
-//                        )
-//                        PaymentMethodAlias(alias, PaymentMethodType.CC, extraAliasInfo = creditCardExtraInfo)
-//                    }
-//                }.processErrors()
-//        }
     }
 
     /**

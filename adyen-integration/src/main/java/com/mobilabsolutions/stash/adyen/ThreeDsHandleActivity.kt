@@ -35,6 +35,9 @@ class ThreeDsHandleActivity : AppCompatActivity() {
     }
 
     @Inject
+    lateinit var adyenHandler: AdyenHandler
+
+    @Inject
     lateinit var mobilabApi: MobilabApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,6 +67,8 @@ class ThreeDsHandleActivity : AppCompatActivity() {
                     ).subscribeOn(Schedulers.io())
                         .subscribe({
                             Timber.e("success: $it")
+                            adyenHandler.test(aliasId)
+                            finish()
                         }, {
                             Timber.e(it)
                         })
