@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.sample.main.paymentmethods
 
+import android.app.Activity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
@@ -93,8 +94,9 @@ class PaymentMethodsViewModel @AssistedInject constructor(
         updatePaymentMethods.setParams(Unit)
     }
 
-    fun onAddBtnClicked() {
-        disposables += Stash.getRegistrationManager().registerPaymentMethodUsingUi()
+    fun onAddBtnClicked(activity: Activity) {
+        disposables += Stash.getRegistrationManager()
+                .registerPaymentMethodUsingUi(activity)
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.main)
             .subscribe(this::onRegisterPaymentSuccess, this::onError)

@@ -22,19 +22,35 @@ class RegistrationManagerImpl @Inject internal constructor(
 
 ) : RegistrationManager {
 
-    override fun registerCreditCard(creditCardData: CreditCardData, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
-        return pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, idempotencyKey = IdempotencyKey(idempotencyKey))
+    override fun registerCreditCard(
+        activity: Activity,
+        creditCardData: CreditCardData,
+        idempotencyKey: UUID?
+    ): Single<PaymentMethodAlias> {
+        return pspCoordinator.handleRegisterCreditCard(
+                activity = activity,
+                creditCardData = creditCardData,
+                idempotencyKey = IdempotencyKey(idempotencyKey)
+        )
     }
 
-    override fun registerSepaAccount(sepaData: SepaData, idempotencyKey: UUID?): Single<PaymentMethodAlias> {
-        return pspCoordinator.handleRegisterSepa(sepaData = sepaData, idempotencyKey = IdempotencyKey(idempotencyKey))
+    override fun registerSepaAccount(
+        activity: Activity,
+        sepaData: SepaData,
+        idempotencyKey: UUID?
+    ): Single<PaymentMethodAlias> {
+        return pspCoordinator.handleRegisterSepa(
+                activity = activity,
+                sepaData = sepaData,
+                idempotencyKey = IdempotencyKey(idempotencyKey)
+        )
     }
 
     override fun getAvailablePaymentMethodsTypes(): Set<PaymentMethodType> {
         return pspCoordinator.getAvailablePaymentMethods()
     }
 
-    override fun registerPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?): Single<PaymentMethodAlias> {
+    override fun registerPaymentMethodUsingUi(activity: Activity, specificPaymentMethodType: PaymentMethodType?): Single<PaymentMethodAlias> {
         return pspCoordinator.handleRegisterPaymentMethodUsingUi(activity, specificPaymentMethodType)
     }
 }
@@ -44,7 +60,7 @@ data class IdempotencyKey(
     val isUserSupplied: Boolean
 ) {
     constructor(key: UUID?) : this(
-        (key ?: UUID.randomUUID()).toString(),
-        key != null
+            (key ?: UUID.randomUUID()).toString(),
+            key != null
     )
 }

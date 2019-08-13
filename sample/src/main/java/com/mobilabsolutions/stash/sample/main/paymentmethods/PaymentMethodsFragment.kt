@@ -45,7 +45,7 @@ class PaymentMethodsFragment : BaseFragment() {
         controller = PaymentMethodsEpoxyController(object : PaymentMethodsEpoxyController.Callbacks {
             override fun onAddBtnClicked() {
                 clearSnackBar()
-                viewModel.onAddBtnClicked()
+                viewModel.onAddBtnClicked(requireActivity())
             }
 
             override fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {

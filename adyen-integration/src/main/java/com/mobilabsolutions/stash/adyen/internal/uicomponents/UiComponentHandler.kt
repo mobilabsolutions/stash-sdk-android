@@ -28,8 +28,8 @@ class UiComponentHandler @Inject constructor() {
         dataSubject.onNext(AdditionalRegistrationData(data))
     }
 
-    fun getResultObservable(): Observable<UiRequestHandler.DataEntryResult> {
-        return resultObservable!!
+    fun getResultObservable(): Observable<UiRequestHandler.DataEntryResult>? {
+        return resultObservable
     }
 
     fun handleSepaDataEntryRequest(activity: AppCompatActivity, resultObservable: Observable<UiRequestHandler.DataEntryResult>): Observable<AdditionalRegistrationData> {
@@ -37,7 +37,7 @@ class UiComponentHandler @Inject constructor() {
         val sepaDataEntryFragment = AdyenSepaDataEntryFragment()
         this.resultObservable = resultObservable.doOnNext {
             if (it is UiRequestHandler.DataEntryResult.Success) {
-                activity.supportFragmentManager.beginTransaction().remove(sepaDataEntryFragment).commitNow()
+//                activity.supportFragmentManager.beginTransaction().remove(sepaDataEntryFragment).commitNow()
             }
         }
         Timber.d("Current thread: ${Thread.currentThread().name}")
@@ -50,7 +50,7 @@ class UiComponentHandler @Inject constructor() {
         val creditCardDataEntryFragment = AdyenCreditCardDataEntryFragment()
         this.resultObservable = resultObservable.doOnNext {
             if (it is UiRequestHandler.DataEntryResult.Success) {
-                activity.supportFragmentManager.beginTransaction().remove(creditCardDataEntryFragment).commitNow()
+//                activity.supportFragmentManager.beginTransaction().remove(creditCardDataEntryFragment).commitNow()
             }
         }
         activity.supportFragmentManager.beginTransaction().add(R.id.host_activity_fragment, creditCardDataEntryFragment).commitNow()

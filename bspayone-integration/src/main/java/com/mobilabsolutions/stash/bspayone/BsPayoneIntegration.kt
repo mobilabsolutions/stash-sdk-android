@@ -4,11 +4,12 @@
 
 package com.mobilabsolutions.stash.bspayone
 
+import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.stash.bspayone.internal.BsPayoneRegistrationRequest
-import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.bspayone.internal.uicomponents.UiComponentHandler
+import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.internal.IdempotencyKey
 import com.mobilabsolutions.stash.core.internal.IntegrationInitialization
 import com.mobilabsolutions.stash.core.internal.StashComponent
@@ -29,7 +30,7 @@ import javax.inject.Inject
  */
 class BsPayoneIntegration private constructor(
     stashComponent: StashComponent,
-    val url: String = BuildConfig.newBsApiUrl
+    url: String = BuildConfig.newBsApiUrl
 ) : Integration {
     override val identifier = name
 
@@ -76,9 +77,9 @@ class BsPayoneIntegration private constructor(
 
     init {
         bsPayoneIntegrationComponent = DaggerBsPayoneIntegrationComponent.builder()
-            .stashComponent(stashComponent)
-            .bsPayoneModule(BsPayoneModule(url))
-            .build()
+                .stashComponent(stashComponent)
+                .bsPayoneModule(BsPayoneModule(url))
+                .build()
 
         bsPayoneIntegrationComponent.inject(this)
     }
@@ -88,6 +89,7 @@ class BsPayoneIntegration private constructor(
     }
 
     override fun handleRegistrationRequest(
+        activity: Activity,
         registrationRequest: RegistrationRequest,
         idempotencyKey: IdempotencyKey
     ): Single<String> {
@@ -99,13 +101,13 @@ class BsPayoneIntegration private constructor(
                     Timber.w(applicationContext.getString(R.string.idempotency_message))
                 }
                 bsPayoneHandler.registerCreditCard(
-                    standardizedData,
-                    BsPayoneRegistrationRequest.fromMap(additionalData.extraData)
+                        standardizedData,
+                        BsPayoneRegistrationRequest.fromMap(additionalData.extraData)
                 )
             }
             is SepaRegistrationRequest -> {
                 bsPayoneHandler.registerSepa(
-                    standardizedData
+                        standardizedData
                 )
             }
             else -> {

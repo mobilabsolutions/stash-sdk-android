@@ -14,7 +14,10 @@ import dagger.Component
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @IntegrationScope
-@Component(dependencies = [StashComponent::class], modules = [AdyenModule::class])
+@Component(
+        dependencies = [StashComponent::class],
+        modules = [AdyenModule::class]
+)
 interface AdyenIntegrationComponent {
     fun inject(integration: AdyenIntegration)
 

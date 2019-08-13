@@ -4,10 +4,11 @@
 
 package com.mobilabsolutions.stash.template
 
+import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
-import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.PaymentMethodType
+import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.internal.IdempotencyKey
 import com.mobilabsolutions.stash.core.internal.IntegrationInitialization
 import com.mobilabsolutions.stash.core.internal.StashComponent
@@ -66,8 +67,8 @@ class TemplateIntegration(stashComponent: StashComponent) : Integration {
 
     init {
         templateIntegrationComponent = DaggerTemplateIntegrationComponent.builder()
-            .stashComponent(stashComponent)
-            .build()
+                .stashComponent(stashComponent)
+                .build()
     }
 
     override fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>> {
@@ -75,6 +76,7 @@ class TemplateIntegration(stashComponent: StashComponent) : Integration {
     }
 
     override fun handleRegistrationRequest(
+        activity: Activity,
         registrationRequest: RegistrationRequest,
         idempotencyKey: IdempotencyKey
     ): Single<String> {

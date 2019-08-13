@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.core.internal.psphandler
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.internal.IdempotencyKey
@@ -23,6 +24,7 @@ interface Integration {
     fun getPreparationData(method: PaymentMethodType): Single<Map<String, String>>
 
     fun handleRegistrationRequest(
+        activity: Activity,
         registrationRequest: RegistrationRequest,
         idempotencyKey: IdempotencyKey
     ): Single<String>
