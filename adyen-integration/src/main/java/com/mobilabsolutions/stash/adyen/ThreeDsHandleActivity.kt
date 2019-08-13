@@ -64,7 +64,7 @@ class ThreeDsHandleActivity : AppCompatActivity() {
                     ).subscribeOn(Schedulers.io())
                         .subscribe({
                             Timber.e("success: $it")
-                        },{
+                        }, {
                             Timber.e(it)
                         })
                     return@Observer
@@ -82,7 +82,7 @@ class ThreeDsHandleActivity : AppCompatActivity() {
 
                         if (response.actionType == "threeDS2Challenge") {
                             val challengeAction = Threeds2ChallengeAction()
-                            challengeAction.token = response.challengeToken
+                            challengeAction.token = response.token
                             challengeAction.type = response.actionType
                             challengeAction.paymentData = response.paymentData
                             threedsComponent.handleAction(this, challengeAction)

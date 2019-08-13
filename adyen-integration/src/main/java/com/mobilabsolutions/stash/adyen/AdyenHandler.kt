@@ -90,7 +90,7 @@ class AdyenHandler @Inject constructor(
                     .subscribe({
                         Timber.e("onSuccess: $it")
                         val action = Threeds2FingerprintAction()
-                        action.token = it.authenticationToken
+                        action.token = it.token
                         action.paymentData = it.paymentData
                         action.type = it.actionType
 

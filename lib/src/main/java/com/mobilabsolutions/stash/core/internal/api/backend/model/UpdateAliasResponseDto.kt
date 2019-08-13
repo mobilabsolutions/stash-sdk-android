@@ -5,9 +5,8 @@ package com.mobilabsolutions.stash.core.internal.api.backend.model
  */
 data class UpdateAliasResponseDto(
     val actionType: String,
-    val authenticationToken: String,
     val paymentData: String,
     val paymentMethodType: String,
     val resultCode: String,
-    val challengeToken: String
+    val token: String
 )
