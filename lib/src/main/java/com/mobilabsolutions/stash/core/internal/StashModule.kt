@@ -7,6 +7,7 @@ package com.mobilabsolutions.stash.core.internal
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.facebook.stetho.okhttp3.StethoInterceptor
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mobilabsolutions.stash.core.BuildConfig
@@ -102,6 +103,7 @@ open class StashModule(
                 chain.proceed(request)
             }
             .addInterceptor(httpLoggingInterceptor)
+            .addNetworkInterceptor(StethoInterceptor())
             .connectTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
             .readTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
             .writeTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)

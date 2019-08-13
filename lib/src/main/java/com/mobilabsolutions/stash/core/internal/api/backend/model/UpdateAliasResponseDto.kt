@@ -8,5 +8,6 @@ data class UpdateAliasResponseDto(
     val authenticationToken: String,
     val paymentData: String,
     val paymentMethodType: String,
-    val resultCode: String
+    val resultCode: String,
+    val challengeToken: String
 )

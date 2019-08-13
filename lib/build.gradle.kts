@@ -110,6 +110,9 @@ dependencies {
     api(Libs.threetenabp)
     implementation(Libs.iban4j)
 
+    implementation(Libs.Stetho.stetho)
+    implementation(Libs.Stetho.stethoOkhttp33)
+
     testImplementation(project(Modules.bsPayoneIntegration))
     testImplementation(project(Modules.adyenIntegration))
     testImplementation(project(Modules.braintreeIntegration))
