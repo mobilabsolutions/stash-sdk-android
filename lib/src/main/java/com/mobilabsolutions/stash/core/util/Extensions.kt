@@ -4,6 +4,9 @@
 
 package com.mobilabsolutions.stash.core.util
 
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import org.threeten.bp.LocalDate
 
 /**
@@ -11,4 +14,12 @@ import org.threeten.bp.LocalDate
  */
 fun LocalDate.withLastDayOfMonth(): LocalDate {
     return LocalDate.of(year, month, month.length(isLeapYear))
+}
+
+fun EditText.showKeyboard() {
+    postDelayed({
+        requestFocus()
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    }, 500)
 }

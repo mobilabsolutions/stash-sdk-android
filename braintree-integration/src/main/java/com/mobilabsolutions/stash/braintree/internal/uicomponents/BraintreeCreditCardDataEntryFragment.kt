@@ -63,6 +63,8 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
 import javax.inject.Inject
+import com.mobilabsolutions.stash.core.util.showKeyboard
+
 
 class BraintreeCreditCardDataEntryFragment : Fragment() {
 
@@ -232,6 +234,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
         })
 
         creditCardNumberEditText.setOnEditorActionListener { _, id, _ ->
+            selectedExpiryDate = LocalDate.now() // To skip immediate validation
             if (id == EditorInfo.IME_ACTION_NEXT) {
                 expirationDateTextView.performClick()
             }
@@ -271,6 +274,8 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
                 selectedDate = selectedExpiryDate,
                 onCancelListener = DialogInterface.OnCancelListener {
                     expirationDateSubject.onNext(LocalDate.MIN)
+                    selectedExpiryDate = LocalDate.MIN
+                    cvvEditText.showKeyboard()
                 }) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
@@ -279,6 +284,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
                 expirationDateSubject.onNext(selectedExpiry)
                 val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
                 expirationDateTextView.text = expDate
+                cvvEditText.showKeyboard()
             }
             monthYearPicker.show()
 
@@ -406,7 +412,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
 
     private fun validateExpirationDateAndUpdateUI(expiryDate: LocalDate?): Boolean {
         val validationResult = validateExpirationDate(expiryDate)
-        if (!validationResult.success) {
+        if ((!validationResult.success) && expirationDateTextView.text.isNullOrBlank()) {
             showError(expirationDateTextView, errorCreditCardExp, validationResult)
         } else {
             hideError(expirationDateTextView, errorCreditCardExp)
