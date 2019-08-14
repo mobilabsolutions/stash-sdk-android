@@ -32,6 +32,7 @@ import com.mobilabsolutions.stash.core.internal.uicomponents.getContentOnFocusCh
 import com.mobilabsolutions.stash.core.internal.uicomponents.observeText
 import com.mobilabsolutions.stash.core.model.BillingData
 import com.mobilabsolutions.stash.core.model.CreditCardData
+import com.mobilabsolutions.stash.core.util.showKeyboard
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -63,8 +64,6 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
 import javax.inject.Inject
-import com.mobilabsolutions.stash.core.util.showKeyboard
-
 
 class BraintreeCreditCardDataEntryFragment : Fragment() {
 
@@ -105,6 +104,8 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
     private var currentSnackbar: Snackbar? = null
 
     private var selectedExpiryDate: LocalDate? = null
+
+    private var isKeyboardActionNext = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -213,10 +214,14 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
             firstNameEditText.showKeyboardAndFocus()
         }
 
-        firstNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) firstNameFocusSubject.onNext(value.trim()) }
+        firstNameEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) firstNameFocusSubject.onNext(value.trim())
+        }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
-        lastNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) lastNameFocusSubject.onNext(value.trim()) }
+        lastNameEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) lastNameFocusSubject.onNext(value.trim())
+        }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
         creditCardNumberEditText.getContentOnFocusChange { isFocusGained, value ->
@@ -234,8 +239,8 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
         })
 
         creditCardNumberEditText.setOnEditorActionListener { _, id, _ ->
-            selectedExpiryDate = LocalDate.now() // To skip immediate validation
             if (id == EditorInfo.IME_ACTION_NEXT) {
+                isKeyboardActionNext = true
                 expirationDateTextView.performClick()
             }
             false
@@ -248,7 +253,11 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
                 firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
                 lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
                 cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
-                expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+                if (!isKeyboardActionNext) {
+                    expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+                } else {
+                    isKeyboardActionNext = false
+                }
             }
         }
         cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
@@ -274,7 +283,6 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
                 selectedDate = selectedExpiryDate,
                 onCancelListener = DialogInterface.OnCancelListener {
                     expirationDateSubject.onNext(LocalDate.MIN)
-                    selectedExpiryDate = LocalDate.MIN
                     cvvEditText.showKeyboard()
                 }) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)

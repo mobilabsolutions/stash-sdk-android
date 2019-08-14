@@ -43,11 +43,34 @@ import com.mobilabsolutions.stash.core.internal.uicomponents.observeText
 import com.mobilabsolutions.stash.core.model.BillingData
 import com.mobilabsolutions.stash.core.model.CreditCardData
 import com.mobilabsolutions.stash.core.util.CountryDetectorUtil
+import com.mobilabsolutions.stash.core.util.showKeyboard
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.*
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.back
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.bsPayoneCreditCardEntrySwipeRefresh
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.countryTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardNumberEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardNumberTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenCellLayout
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenMainLayout
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.creditCardScreenTitle
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.cvvEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.cvvTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardCVV
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardExp
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardFirstName
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardLastName
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.errorCreditCardNumber
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.expirationDateTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.expirationDateTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.firstNameTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameEditText
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.lastNameTitleTextView
+import kotlinx.android.synthetic.main.credit_card_data_entry_fragment.saveButton
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
@@ -105,6 +128,8 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
     private var selectedExpiryDate: LocalDate? = null
 
+    private var isKeyboardActionNext = false
+
     private lateinit var selectedCountry: Country
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -128,68 +153,68 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         disposables += Observables.combineLatest(
-                firstNameTextChangedSubject,
-                lastNameTextChangedSubject,
-                cardNumberTextChangedSubject,
-                expirationDateSubject,
-                ccvTextChangedSubject,
-                countrySubject,
-                BsPayoneCreditCardDataEntryFragment::CreditCardDataEntryViewState)
-                .subscribe(this::onViewState)
+            firstNameTextChangedSubject,
+            lastNameTextChangedSubject,
+            cardNumberTextChangedSubject,
+            expirationDateSubject,
+            ccvTextChangedSubject,
+            countrySubject,
+            BsPayoneCreditCardDataEntryFragment::CreditCardDataEntryViewState)
+            .subscribe(this::onViewState)
 
         disposables += firstNameFocusSubject
-                .doOnNext {
-                    validateFirstNameAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstNameAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += firstNameTextChangedSubject
-                .doOnNext {
-                    validateFirstNameAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstNameAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += lastNameFocusSubject
-                .doOnNext {
-                    validateLastNameAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastNameAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += lastNameTextChangedSubject
-                .doOnNext {
-                    validateLastNameAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastNameAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += cardNumberFocusSubject
-                .doOnNext {
-                    validateCardNumberAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCardNumberAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += cardNumberTextChangedSubject
-                .doOnNext {
-                    validateCardNumberAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCardNumberAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += expirationDateSubject
-                .doOnNext {
-                    validateExpirationDateAndUpdateUI(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateExpirationDateAndUpdateUI(it)
+            }
+            .subscribe()
 
         disposables += ccvFocusSubject
-                .doOnNext {
-                    validateCvvAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCvvAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += ccvTextChangedSubject
-                .doOnNext {
-                    validateCvvAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCvvAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         stashUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
@@ -215,10 +240,14 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
             firstNameEditText.showKeyboardAndFocus()
         }
 
-        firstNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) firstNameFocusSubject.onNext(value.trim()) }
+        firstNameEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) firstNameFocusSubject.onNext(value.trim())
+        }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
-        lastNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) lastNameFocusSubject.onNext(value.trim()) }
+        lastNameEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) lastNameFocusSubject.onNext(value.trim())
+        }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
         creditCardNumberEditText.getContentOnFocusChange { isFocusGained, value ->
@@ -237,6 +266,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
         creditCardNumberEditText.setOnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_NEXT) {
+                isKeyboardActionNext = true
                 expirationDateTextView.performClick()
             }
             false
@@ -249,7 +279,11 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
                 lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
                 cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
-                expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+                if (!isKeyboardActionNext) {
+                    expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+                } else {
+                    isKeyboardActionNext = false
+                }
             }
         }
         cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
@@ -260,8 +294,8 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
         countryText.setOnClickListener {
             startActivityForResult(Intent(context, CountryChooserActivity::class.java)
-                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
-                    .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
+                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
 
             // Check for the previous field's validations
             firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
@@ -280,20 +314,21 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue
-                        ?: throw RuntimeException("Month was null")).toString()
+                    ?: throw RuntimeException("Month was null")).toString()
                 dataMap[CreditCardData.EXPIRY_YEAR] = (selectedExpiryDate?.year
-                        ?: throw RuntimeException("Year was null")).toString()
+                    ?: throw RuntimeException("Year was null")).toString()
                 uiComponentHandler.submitData(dataMap)
             }
         }
 
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(),
-                    stashUIConfiguration = stashUIConfiguration,
-                    selectedDate = selectedExpiryDate,
-                    onCancelListener = DialogInterface.OnCancelListener {
-                        expirationDateSubject.onNext(LocalDate.MIN)
-                    }) {
+                stashUIConfiguration = stashUIConfiguration,
+                selectedDate = selectedExpiryDate,
+                onCancelListener = DialogInterface.OnCancelListener {
+                    expirationDateSubject.onNext(LocalDate.MIN)
+                    cvvEditText.showKeyboard()
+                }) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
                 val selectedExpiry = LocalDate.of(it.second, it.first, lastDay)
@@ -301,6 +336,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
                 expirationDateSubject.onNext(selectedExpiry)
                 val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
                 expirationDateTextView.text = expDate
+                cvvEditText.showKeyboard()
             }
             monthYearPicker.show()
 
@@ -447,7 +483,7 @@ class BsPayoneCreditCardDataEntryFragment : Fragment() {
 
     private fun validateExpirationDateAndUpdateUI(expiryDate: LocalDate?): Boolean {
         val validationResult = validateExpirationDate(expiryDate)
-        if (!validationResult.success) {
+        if ((!validationResult.success) && expirationDateTextView.text.isNullOrBlank()) {
             showError(expirationDateTextView, errorCreditCardExp, validationResult)
         } else {
             hideError(expirationDateTextView, errorCreditCardExp)
