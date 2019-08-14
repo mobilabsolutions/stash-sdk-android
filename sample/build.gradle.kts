@@ -96,6 +96,7 @@ android {
 
     lintOptions {
         isAbortOnError = false
+        disable("GradleDependency")
     }
     packagingOptions {
         pickFirst("META-INF/atomicfu.kotlin_module")
@@ -184,14 +185,13 @@ dependencies {
         isTransitive = true
     }
 
-
 }
 
 tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
     resolutionStrategy {
         componentSelection {
             all {
-                val rejected = listOf("alpha", "beta", "rc", "cr", "m", "preview")
+                val rejected = listOf("alpha", "beta", "rc")
                         .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*") }
                         .any { it.matches(candidate.version) }
                 if (rejected) {

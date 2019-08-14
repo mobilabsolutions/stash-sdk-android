@@ -3,7 +3,7 @@
  */
 
 import org.gradle.api.Project
-import java.util.*
+import java.util.Properties
 
 object StashRelease {
     val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
@@ -68,7 +68,7 @@ object Libs {
     object Google {
         val material = "com.google.android.material:material:1.1.0-alpha08"
         val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
-        val fabricPlugin = "io.fabric.tools:gradle:1.30.0"
+        val fabricPlugin = "io.fabric.tools:gradle:1.31.0"
     }
 
     object Kotlin {
@@ -80,7 +80,7 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.3.0-RC"
+        private const val version = "1.3.0-RC2"
         val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         val rx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$version"
         val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
@@ -131,7 +131,7 @@ object Libs {
     }
 
     object RxJava {
-        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.10"
+        val rxJava = "io.reactivex.rxjava2:rxjava:2.2.11"
         val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
         val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
@@ -146,14 +146,14 @@ object Libs {
     }
 
     object Retrofit {
-        private const val version = "2.6.0"
+        private const val version = "2.6.1"
         val retrofit = "com.squareup.retrofit2:retrofit:$version"
         val retrofit_rxjava_adapter = "com.squareup.retrofit2:adapter-rxjava2:$version"
         val gsonConverter = "com.squareup.retrofit2:converter-gson:$version"
     }
 
     object OkHttp {
-        private const val version = "4.0.1"
+        private const val version = "4.1.0"
         val okhttp = "com.squareup.okhttp3:okhttp:$version"
         val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
         val mockwebserver = "com.squareup.okhttp3:mockwebserver:$version"
@@ -172,7 +172,7 @@ object Libs {
     }
 
     object AssistedInject {
-        private const val version = "0.4.0"
+        private const val version = "0.5.0"
         val annotationDagger2 = "com.squareup.inject:assisted-inject-annotations-dagger2:$version"
         val processorDagger2 = "com.squareup.inject:assisted-inject-processor-dagger2:$version"
     }
