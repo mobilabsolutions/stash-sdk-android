@@ -6,7 +6,6 @@ package com.mobilabsolutions.stash.adyen
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Application
 import com.adyen.checkout.base.ActionComponentData
 import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.core.exeption.CheckoutException
@@ -33,6 +32,7 @@ import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 /**
@@ -40,9 +40,10 @@ import javax.inject.Inject
  */
 @IntegrationScope
 class AdyenHandler @Inject constructor(
-    private val application: Application,
     private val mobilabApi: MobilabApi
 ) {
+    private var threeDsCompletedSubject: Subject<Unit> = PublishSubject.create()
+    private var threeDsErrorSubject: Subject<CheckoutException> = PublishSubject.create()
     private val clientEncryptionKey = "clientEncryptionKey"
     private val gson = Gson()
 
@@ -101,27 +102,39 @@ class AdyenHandler @Inject constructor(
                     action.paymentData = exchangeAlias.paymentData
                     action.type = exchangeAlias.actionType
 
-                    activity.startActivity(ThreeDsHandleActivity.createIntent(
-                            activity, action,
-                            creditCardRegistrationRequest.aliasId
-                    ))
-                    testsubject
+                    if (threeDsCompletedSubject.hasComplete()) {
+                        threeDsCompletedSubject = PublishSubject.create()
+                    }
+
+                    threeDsCompletedSubject
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ alias ->
-                                it.onSuccess(alias)
+                            .subscribe({ _ ->
+                                it.onSuccess(creditCardRegistrationRequest.aliasId)
                             }, {
 
                             })
+                    if (threeDsErrorSubject.hasComplete()) {
+                        threeDsErrorSubject = PublishSubject.create()
+                    }
+
+                    threeDsErrorSubject
+                            .subscribeOn(Schedulers.io())
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe({ checkoutError ->
+                                it.onError(checkoutError)
+                            }, {
+
+                            })
+                    activity.startActivity(
+                            ThreeDsHandleActivity.createIntent(
+                                    activity, action,
+                                    creditCardRegistrationRequest.aliasId
+                            )
+                    )
                 }
             }
         }
-    }
-
-    private val testsubject = PublishSubject.create<String>()
-
-    fun test(alias: String) {
-        testsubject.onNext(alias)
     }
 
     fun registerSepa(
@@ -171,7 +184,11 @@ class AdyenHandler @Inject constructor(
     }
 
     @SuppressLint("CheckResult")
-    fun handleAdyenThreeDsResult(activity: Activity, data: ActionComponentData, aliasId: String): Single<VerifyThreeDsDto> {
+    fun handleAdyenThreeDsResult(
+        activity: Activity,
+        data: ActionComponentData,
+        aliasId: String
+    ): Single<VerifyThreeDsDto> {
         return Single.create {
             val jsonString = gson.toJson(data.details)
             val result: AdyenThreeDsResult = gson.fromJson(jsonString, AdyenThreeDsResult::class.java)
@@ -187,8 +204,8 @@ class AdyenHandler @Inject constructor(
                 ).subscribeOn(Schedulers.io())
                         .subscribe({
                             if (it.resultCode == "Authorised") {
-                                testsubject.onNext(aliasId)
-                                testsubject.onComplete()
+                                threeDsCompletedSubject.onNext(Unit)
+                                threeDsCompletedSubject.onComplete()
                                 activity.finish()
                             }
                         }, {
@@ -208,9 +225,9 @@ class AdyenHandler @Inject constructor(
         }
     }
 
-    fun verifyFingerprintResult(actionComponentData: ActionComponentData) {
-    }
-
-    fun verifyChallengeResult(actionComponentData: ActionComponentData) {
+    fun onThreeDsError(activity: Activity, checkoutException: CheckoutException) {
+        threeDsErrorSubject.onNext(checkoutException)
+        threeDsErrorSubject.onComplete()
+        activity.finish()
     }
 }

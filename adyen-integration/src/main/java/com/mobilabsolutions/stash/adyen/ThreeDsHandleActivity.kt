@@ -33,13 +33,15 @@ class ThreeDsHandleActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         AdyenIntegration.integration?.adyenIntegrationComponent?.inject(this)
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_three_ds)
 
         val aliasId = intent.getStringExtra(KEY_ALIAS)
         val action = intent.getParcelableExtra<Threeds2FingerprintAction>(KEY_ACTION)
         if (action != null) {
             val threedsComponent = Adyen3DS2Component(application)
             threedsComponent.handleAction(this, action)
+            threedsComponent.observeErrors(this, Observer {
+                adyenHandler.onThreeDsError(this, it.exception)
+            })
             threedsComponent.observe(this, Observer {
                 adyenHandler.handleAdyenThreeDsResult(this, it, aliasId)
                         .subscribeOn(Schedulers.io())
@@ -53,8 +55,8 @@ class ThreeDsHandleActivity : AppCompatActivity() {
                                 threedsComponent.handleAction(this, challengeAction)
                             }
                         }, {
-                        }
-                        )
+
+                        })
             })
         }
     }

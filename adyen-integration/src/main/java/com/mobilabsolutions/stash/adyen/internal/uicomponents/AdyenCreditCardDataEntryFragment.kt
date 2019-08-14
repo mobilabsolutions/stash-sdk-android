@@ -102,6 +102,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
         countryText.visibility = View.GONE
         countryTitleTextView.visibility = View.GONE
 
@@ -313,7 +314,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         success = validateCardNumber(state.cardNumber).success && success
         success = validateExpirationDate(state.expirationDate).success && success
         success = validateCVV(state.cvv).success && success
-        saveButton.isEnabled = true
+        saveButton.isEnabled = success
         CustomizationExtensions {
             saveButton.applyCustomization(stashUIConfiguration)
         }
