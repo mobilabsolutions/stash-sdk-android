@@ -9,11 +9,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@master
-    - name: set up JDK 1.8
-      uses: actions/setup-java@v1
-      with:
-        version: 1.8
-
+    
     - name: Gradle Build
       uses: vgaidarji/android-github-actions/build@v1.0.0
       with:
