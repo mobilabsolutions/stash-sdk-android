@@ -15,5 +15,5 @@ jobs:
         version: 1.8
 
     - name: Gradle Build
-        uses: vgaidarji/android-github-actions/build@v1.0.0
-            args: "./gradlew clean"
+      uses: vgaidarji/android-github-actions/build@v1.0.0
+      
