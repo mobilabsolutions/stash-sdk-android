@@ -3,4 +3,3 @@
  */
 
 package com.mobilabsolutions.stash.sample.util
-
