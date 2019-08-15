@@ -112,7 +112,6 @@ class AdyenHandler @Inject constructor(
                             .subscribe({ _ ->
                                 it.onSuccess(creditCardRegistrationRequest.aliasId)
                             }, {
-
                             })
                     if (threeDsErrorSubject.hasComplete()) {
                         threeDsErrorSubject = PublishSubject.create()
@@ -124,7 +123,6 @@ class AdyenHandler @Inject constructor(
                             .subscribe({ checkoutError ->
                                 it.onError(checkoutError)
                             }, {
-
                             })
                     activity.startActivity(
                             ThreeDsHandleActivity.createIntent(

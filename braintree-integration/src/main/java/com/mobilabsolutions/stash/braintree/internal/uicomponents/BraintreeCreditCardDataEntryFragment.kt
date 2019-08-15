@@ -4,20 +4,15 @@
 
 package com.mobilabsolutions.stash.braintree.internal.uicomponents
 
-import android.app.Activity.RESULT_OK
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.braintree.BraintreeIntegration
@@ -26,8 +21,6 @@ import com.mobilabsolutions.stash.core.CustomizationExtensions
 import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
 import com.mobilabsolutions.stash.core.internal.uicomponents.CardNumberTextWatcher
-import com.mobilabsolutions.stash.core.internal.uicomponents.Country
-import com.mobilabsolutions.stash.core.internal.uicomponents.CountryChooserActivity
 import com.mobilabsolutions.stash.core.internal.uicomponents.CreditCardDataValidator
 import com.mobilabsolutions.stash.core.internal.uicomponents.MonthYearPicker
 import com.mobilabsolutions.stash.core.internal.uicomponents.PersonalDataValidator
@@ -39,7 +32,7 @@ import com.mobilabsolutions.stash.core.internal.uicomponents.getContentOnFocusCh
 import com.mobilabsolutions.stash.core.internal.uicomponents.observeText
 import com.mobilabsolutions.stash.core.model.BillingData
 import com.mobilabsolutions.stash.core.model.CreditCardData
-import com.mobilabsolutions.stash.core.util.CountryDetectorUtil
+import com.mobilabsolutions.stash.core.util.showKeyboard
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -70,14 +63,9 @@ import kotlinx.android.synthetic.main.braintree_credit_card_data_entry_fragment.
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import timber.log.Timber
-import java.util.Locale
 import javax.inject.Inject
 
 class BraintreeCreditCardDataEntryFragment : Fragment() {
-
-    companion object {
-        private const val COUNTRY_REQUEST_CODE = 1
-    }
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
@@ -109,11 +97,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
     private val ccvFocusSubject: BehaviorSubject<String> = BehaviorSubject.create()
     private val ccvTextChangedSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
-    private val countrySubject: BehaviorSubject<String> = BehaviorSubject.create()
-
     private var viewState: CreditCardDataEntryViewState? = null
-
-    private lateinit var suggestedCountry: Locale
 
     private var waitTimer: CountDownTimer? = null
 
@@ -121,13 +105,11 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
 
     private var selectedExpiryDate: LocalDate? = null
 
-    private lateinit var selectedCountry: Country
+    private var isKeyboardActionNext = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BraintreeIntegration.integration?.braintreeIntegrationComponent?.inject(this)
-        suggestedCountry = CountryDetectorUtil.getBestGuessAtCurrentCountry(requireContext())
-        selectedCountry = Country(suggestedCountry.displayName, suggestedCountry.country, suggestedCountry.isO3Country)
         Timber.d("Created")
     }
 
@@ -142,6 +124,8 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        countryText.visibility = View.GONE
+        countryTitleTextView.visibility = View.GONE
 
         disposables += Observables.combineLatest(
             firstNameTextChangedSubject,
@@ -149,7 +133,6 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
             cardNumberTextChangedSubject,
             expirationDateSubject,
             ccvTextChangedSubject,
-            countrySubject,
             BraintreeCreditCardDataEntryFragment::CreditCardDataEntryViewState)
             .subscribe(this::onViewState)
 
@@ -231,10 +214,14 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
             firstNameEditText.showKeyboardAndFocus()
         }
 
-        firstNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) firstNameFocusSubject.onNext(value.trim()) }
+        firstNameEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) firstNameFocusSubject.onNext(value.trim())
+        }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
-        lastNameEditText.getContentOnFocusChange { isFocusGained, value -> if (!isFocusGained) lastNameFocusSubject.onNext(value.trim()) }
+        lastNameEditText.getContentOnFocusChange { isFocusGained, value ->
+            if (!isFocusGained) lastNameFocusSubject.onNext(value.trim())
+        }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
         creditCardNumberEditText.getContentOnFocusChange { isFocusGained, value ->
@@ -253,6 +240,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
 
         creditCardNumberEditText.setOnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_NEXT) {
+                isKeyboardActionNext = true
                 expirationDateTextView.performClick()
             }
             false
@@ -265,34 +253,20 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
                 firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
                 lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
                 cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
-                expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+                if (!isKeyboardActionNext) {
+                    expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+                } else {
+                    isKeyboardActionNext = false
+                }
             }
         }
         cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
-
-        countryText.onTextChanged { countrySubject.onNext(it.toString().trim()) }
-
-        countryText.text = suggestedCountry.displayCountry
-
-        countryText.setOnClickListener {
-            startActivityForResult(Intent(context, CountryChooserActivity::class.java)
-                .putExtra(CountryChooserActivity.CURRENT_LOCATION_ENABLE_EXTRA, true)
-                .putExtra(CountryChooserActivity.CURRENT_LOCATION_CUSTOM_EXTRA, suggestedCountry.country), COUNTRY_REQUEST_CODE)
-
-            // Check for the previous field's validations
-            firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
-            lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
-            cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
-            expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
-            ccvFocusSubject.onNext(cvvEditText.text.toString().trim())
-        }
 
         saveButton.setOnClickListener {
             viewState?.let {
                 val dataMap: MutableMap<String, String> = mutableMapOf()
                 dataMap[BillingData.ADDITIONAL_DATA_FIRST_NAME] = it.firstName
                 dataMap[BillingData.ADDITIONAL_DATA_LAST_NAME] = it.lastName
-                dataMap[BillingData.ADDITIONAL_DATA_COUNTRY] = selectedCountry.alpha3Code
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue
@@ -309,6 +283,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
                 selectedDate = selectedExpiryDate,
                 onCancelListener = DialogInterface.OnCancelListener {
                     expirationDateSubject.onNext(LocalDate.MIN)
+                    cvvEditText.showKeyboard()
                 }) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
@@ -317,6 +292,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
                 expirationDateSubject.onNext(selectedExpiry)
                 val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
                 expirationDateTextView.text = expDate
+                cvvEditText.showKeyboard()
             }
             monthYearPicker.show()
 
@@ -352,20 +328,6 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        try {
-            if (requestCode == COUNTRY_REQUEST_CODE && resultCode == RESULT_OK) {
-                data?.getParcelableExtra<Country>(CountryChooserActivity.SELECTED_COUNTRY)?.let {
-                    selectedCountry = it
-                    countryText.text = it.displayName
-                }
-            }
-        } catch (ex: Exception) {
-            Toast.makeText(activity, ex.toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
-
     private fun onViewState(state: CreditCardDataEntryViewState) {
         this.viewState = state
         var success = true
@@ -374,7 +336,6 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
         success = validateCardNumber(state.cardNumber).success && success
         success = validateExpirationDate(state.expirationDate).success && success
         success = validateCVV(state.cvv).success && success
-        success = validateCountry(state.country).success && success
         saveButton.isEnabled = success
         CustomizationExtensions {
             saveButton.applyCustomization(stashUIConfiguration)
@@ -437,10 +398,6 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
         return creditCardDataValidator.validateCreditCardNumber(number)
     }
 
-    private fun validateCountry(country: String): ValidationResult {
-        return ValidationResult(success = country.isNotEmpty())
-    }
-
     private fun validateCvvAndUpdateUI(cvv: String, isDelayed: Boolean): Boolean {
         val validationResult = validateCVV(cvv)
         if (!validationResult.success) {
@@ -463,7 +420,7 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
 
     private fun validateExpirationDateAndUpdateUI(expiryDate: LocalDate?): Boolean {
         val validationResult = validateExpirationDate(expiryDate)
-        if (!validationResult.success) {
+        if ((!validationResult.success) && expirationDateTextView.text.isNullOrBlank()) {
             showError(expirationDateTextView, errorCreditCardExp, validationResult)
         } else {
             hideError(expirationDateTextView, errorCreditCardExp)
@@ -519,17 +476,6 @@ class BraintreeCreditCardDataEntryFragment : Fragment() {
         val lastName: String = "",
         val cardNumber: String = "",
         val expirationDate: LocalDate? = null,
-        val cvv: String = "",
-        val country: String = "Germany"
+        val cvv: String = ""
     )
-}
-
-inline fun TextView.onTextChanged(crossinline body: (text: CharSequence) -> Unit): TextWatcher {
-    val watcher = object : TextWatcher {
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
-        override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) = body(s)
-        override fun afterTextChanged(s: Editable?) = Unit
-    }
-    addTextChangedListener(watcher)
-    return watcher
 }

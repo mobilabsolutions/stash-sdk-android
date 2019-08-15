@@ -55,7 +55,6 @@ class ThreeDsHandleActivity : AppCompatActivity() {
                                 threedsComponent.handleAction(this, challengeAction)
                             }
                         }, {
-
                         })
             })
         }

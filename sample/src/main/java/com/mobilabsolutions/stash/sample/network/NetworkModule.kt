@@ -23,14 +23,13 @@ import javax.inject.Singleton
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 26-04-2019.
  */
 @Module
-class NetworkModule {
-    companion object {
-        private const val BASE_URL = "https://payment-dev.mblb.net/"
-        private const val DISK_CACHE_SIZE = (10 * 1024 * 1024).toLong()
-        private const val READ_TIME_OUT = 15.toLong()
-        private const val CONNECT_TIME_OUT = 30.toLong()
-    }
+object NetworkModule {
+    private const val BASE_URL = "https://payment-dev.mblb.net/"
+    private const val DISK_CACHE_SIZE = (10 * 1024 * 1024).toLong()
+    private const val READ_TIME_OUT = 15.toLong()
+    private const val CONNECT_TIME_OUT = 30.toLong()
 
+    @JvmStatic
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -39,8 +38,10 @@ class NetworkModule {
         val builder = OkHttpClient().newBuilder()
         builder.apply {
             if (BuildConfig.DEBUG) {
-                addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
                 addNetworkInterceptor(StethoInterceptor())
+                addInterceptor(HttpLoggingInterceptor().apply {
+                    level = HttpLoggingInterceptor.Level.BODY
+                })
             }
             readTimeout(READ_TIME_OUT, TimeUnit.SECONDS)
             connectTimeout(CONNECT_TIME_OUT, TimeUnit.SECONDS)
@@ -49,18 +50,20 @@ class NetworkModule {
         return builder.build()
     }
 
+    @JvmStatic
     @Provides
     @Singleton
     fun provideRetrofit(
         okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .client(okHttpClient)
-            .baseUrl(BASE_URL)
-            .build()
+                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+                .client(okHttpClient)
+                .baseUrl(BASE_URL)
+                .build()
     }
 
+    @JvmStatic
     @Provides
     fun provideSampleMerchantService(retrofit: Retrofit): SampleMerchantService = retrofit.create(SampleMerchantService::class.java)
 }

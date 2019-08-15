@@ -32,6 +32,7 @@ import com.mobilabsolutions.stash.core.internal.uicomponents.getContentOnFocusCh
 import com.mobilabsolutions.stash.core.internal.uicomponents.observeText
 import com.mobilabsolutions.stash.core.model.BillingData
 import com.mobilabsolutions.stash.core.model.CreditCardData
+import com.mobilabsolutions.stash.core.util.showKeyboard
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
@@ -85,6 +86,8 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     private var selectedExpiryDate: LocalDate? = null
 
+    private var isKeyboardActionNext = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AdyenIntegration.integration?.adyenIntegrationComponent?.inject(this)
@@ -112,8 +115,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 cardNumberTextChangedSubject,
                 expirationDateSubject,
                 ccvTextChangedSubject,
-                AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState
-        )
+                AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState)
                 .subscribe(this::onViewState)
 
         disposables += firstNameFocusSubject
@@ -195,16 +197,12 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         }
 
         firstNameEditText.getContentOnFocusChange { isFocusGained, value ->
-            if (!isFocusGained) firstNameFocusSubject.onNext(
-                    value.trim()
-            )
+            if (!isFocusGained) firstNameFocusSubject.onNext(value.trim())
         }
         firstNameEditText.observeText { firstNameTextChangedSubject.onNext(it.trim()) }
 
         lastNameEditText.getContentOnFocusChange { isFocusGained, value ->
-            if (!isFocusGained) lastNameFocusSubject.onNext(
-                    value.trim()
-            )
+            if (!isFocusGained) lastNameFocusSubject.onNext(value.trim())
         }
         lastNameEditText.observeText { lastNameTextChangedSubject.onNext(it.trim()) }
 
@@ -224,6 +222,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
         creditCardNumberEditText.setOnEditorActionListener { _, id, _ ->
             if (id == EditorInfo.IME_ACTION_NEXT) {
+                isKeyboardActionNext = true
                 expirationDateTextView.performClick()
             }
             false
@@ -236,7 +235,11 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 firstNameFocusSubject.onNext(firstNameEditText.text.toString().trim())
                 lastNameFocusSubject.onNext(lastNameEditText.text.toString().trim())
                 cardNumberFocusSubject.onNext(creditCardNumberEditText.text.toString().getCardNumberStringUnformatted())
-                expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+                if (!isKeyboardActionNext) {
+                    expirationDateSubject.onNext(selectedExpiryDate ?: LocalDate.MIN)
+                } else {
+                    isKeyboardActionNext = false
+                }
             }
         }
         cvvEditText.observeText { ccvTextChangedSubject.onNext(it.trim()) }
@@ -262,6 +265,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                     selectedDate = selectedExpiryDate,
                     onCancelListener = DialogInterface.OnCancelListener {
                         expirationDateSubject.onNext(LocalDate.MIN)
+                        cvvEditText.showKeyboard()
                     }) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
@@ -270,6 +274,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 expirationDateSubject.onNext(selectedExpiry)
                 val expDate = selectedExpiry.format(DateTimeFormatter.ofPattern("MM/yy"))
                 expirationDateTextView.text = expDate
+                cvvEditText.showKeyboard()
             }
             monthYearPicker.show()
 
@@ -398,7 +403,7 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
 
     private fun validateExpirationDateAndUpdateUI(expiryDate: LocalDate?): Boolean {
         val validationResult = validateExpirationDate(expiryDate)
-        if (!validationResult.success) {
+        if ((!validationResult.success) && expirationDateTextView.text.isNullOrBlank()) {
             showError(expirationDateTextView, errorCreditCardExp, validationResult)
         } else {
             hideError(expirationDateTextView, errorCreditCardExp)

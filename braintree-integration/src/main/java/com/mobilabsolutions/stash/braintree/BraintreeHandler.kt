@@ -40,7 +40,6 @@ class BraintreeHandler @Inject constructor() {
         const val CARD_CVV = "CARD_CVV"
         const val CARD_FIRST_NAME = "CARD_FIRST_NAME"
         const val CARD_LAST_NAME = "CARD_LAST_NAME"
-        const val CARD_COUNTRY = "CARD_COUNTRY"
     }
 
     fun tokenizePaymentMethods(
@@ -54,14 +53,14 @@ class BraintreeHandler @Inject constructor() {
             payPalActivityIntent.putExtra(CLIENT_TOKEN, additionalRegistrationData.extraData[CLIENT_TOKEN])
             activity.startActivity(payPalActivityIntent)
             return resultSubject
-                .doOnEach {
-                    Timber.d("Event from PayPal activity $it")
-                }
-                .doFinally {
-                    Timber.d("Finalizing")
-                    processing.set(false)
-                }
-                .firstOrError()
+                    .doOnEach {
+                        Timber.d("Event from PayPal activity $it")
+                    }
+                    .doFinally {
+                        Timber.d("Finalizing")
+                        processing.set(false)
+                    }
+                    .firstOrError()
         } else {
             Single.error(RuntimeException("Braintree PayPal activity already shown!"))
         }
@@ -77,26 +76,25 @@ class BraintreeHandler @Inject constructor() {
             intent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
             // Pass Data
             intent.putExtra(CARD_DATA, hashMapOf(
-                CLIENT_TOKEN to additionalData.extraData[CLIENT_TOKEN],
-                CARD_NUMBER to standardizedData.creditCardData.number,
-                CARD_EXPIRY_MONTH to standardizedData.creditCardData.expiryMonth,
-                CARD_EXPIRY_YEAR to standardizedData.creditCardData.expiryYear,
-                CARD_CVV to standardizedData.creditCardData.cvv,
-                CARD_FIRST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME],
-                CARD_LAST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME],
-                CARD_COUNTRY to additionalData.extraData[BillingData.ADDITIONAL_DATA_COUNTRY]
+                    CLIENT_TOKEN to additionalData.extraData[CLIENT_TOKEN],
+                    CARD_NUMBER to standardizedData.creditCardData.number,
+                    CARD_EXPIRY_MONTH to standardizedData.creditCardData.expiryMonth,
+                    CARD_EXPIRY_YEAR to standardizedData.creditCardData.expiryYear,
+                    CARD_CVV to standardizedData.creditCardData.cvv,
+                    CARD_FIRST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_FIRST_NAME],
+                    CARD_LAST_NAME to additionalData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME]
             ))
 
             applicationContext.startActivity(intent)
             resultSubject
-                .doOnEach {
-                    Timber.d("Event from CC activity $it")
-                }
-                .doFinally {
-                    Timber.d("Finalizing")
-                    processing.set(false)
-                }
-                .firstOrError()
+                    .doOnEach {
+                        Timber.d("Event from CC activity $it")
+                    }
+                    .doFinally {
+                        Timber.d("Finalizing")
+                        processing.set(false)
+                    }
+                    .firstOrError()
         } else {
             Single.error(RuntimeException("Braintree CC activity already shown!"))
         }
