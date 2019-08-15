@@ -15,4 +15,4 @@ jobs:
         version: 1.8
 
     - uses: vgaidarji/android-github-actions/build@v1.0.0
-       args: "./gradlew assembleDebug"
+    - run: ./gradlew assembleDebug
