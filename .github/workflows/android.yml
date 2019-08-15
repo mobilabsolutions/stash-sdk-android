@@ -16,4 +16,6 @@ jobs:
 
     - name: Gradle Build
       uses: vgaidarji/android-github-actions/build@v1.0.0
-      
+      with:
+        entrypoint: ./entrypoint.sh
+        args: ./gradlew assembleDebug
