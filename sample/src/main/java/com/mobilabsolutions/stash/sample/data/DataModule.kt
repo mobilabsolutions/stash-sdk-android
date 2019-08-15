@@ -24,7 +24,8 @@ import javax.inject.Singleton
     PaymentMethodModule::class,
     UserModule::class
 ])
-class DataModule {
+object DataModule {
+    @JvmStatic
     @Singleton
     @Provides
     fun provideDatabase(context: Context): SampleDatabase {
@@ -36,19 +37,24 @@ class DataModule {
         return builder.build()
     }
 
+    @JvmStatic
     @Singleton
     @Provides
     fun provideDatabaseTransactionRunner(db: SampleDatabase): DatabaseTransactionRunner = RoomTransactionRunner(db)
 
+    @JvmStatic
     @Provides
     fun provideProductDao(db: SampleDatabase) = db.productDao()
 
+    @JvmStatic
     @Provides
     fun provideCartDao(db: SampleDatabase) = db.cartDao()
 
+    @JvmStatic
     @Provides
     fun providePaymentMethodDao(db: SampleDatabase) = db.paymentMethodDao()
 
+    @JvmStatic
     @Provides
     fun provideUserDao(db: SampleDatabase) = db.userDao()
 }
