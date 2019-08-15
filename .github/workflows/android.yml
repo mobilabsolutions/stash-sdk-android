@@ -14,7 +14,7 @@ jobs:
       with:
         version: 1.8
     - name: Clean Project
-      run: ./gradlew clean
+      run: ./gradlew build
       
     - name: Spotless Check
       run: ./gradlew spotlessCheck  
