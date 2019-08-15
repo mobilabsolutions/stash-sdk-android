@@ -23,14 +23,13 @@ import javax.inject.Singleton
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 26-04-2019.
  */
 @Module
-class NetworkModule {
-    companion object {
-        private const val BASE_URL = "https://payment-dev.mblb.net/"
-        private const val DISK_CACHE_SIZE = (10 * 1024 * 1024).toLong()
-        private const val READ_TIME_OUT = 15.toLong()
-        private const val CONNECT_TIME_OUT = 30.toLong()
-    }
+object NetworkModule {
+    private const val BASE_URL = "https://payment-dev.mblb.net/"
+    private const val DISK_CACHE_SIZE = (10 * 1024 * 1024).toLong()
+    private const val READ_TIME_OUT = 15.toLong()
+    private const val CONNECT_TIME_OUT = 30.toLong()
 
+    @JvmStatic
     @Provides
     @Singleton
     fun provideOkHttpClient(
@@ -51,6 +50,7 @@ class NetworkModule {
         return builder.build()
     }
 
+    @JvmStatic
     @Provides
     @Singleton
     fun provideRetrofit(
@@ -63,6 +63,7 @@ class NetworkModule {
                 .build()
     }
 
+    @JvmStatic
     @Provides
     fun provideSampleMerchantService(retrofit: Retrofit): SampleMerchantService = retrofit.create(SampleMerchantService::class.java)
 }

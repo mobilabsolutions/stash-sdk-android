@@ -24,11 +24,13 @@ import javax.inject.Singleton
 @Module(includes = [
     AppModuleBinds::class
 ])
-class AppModule {
+object AppModule {
 
+    @JvmStatic
     @Provides
     fun provideContext(application: SampleApplication): Context = application.applicationContext
 
+    @JvmStatic
     @Singleton
     @Provides
     fun provideRxSchedulers(): AppRxSchedulers = AppRxSchedulers(
@@ -37,6 +39,7 @@ class AppModule {
         main = AndroidSchedulers.mainThread()
     )
 
+    @JvmStatic
     @Singleton
     @Provides
     fun provideCoroutineDispatchers(schedulers: AppRxSchedulers) = AppCoroutineDispatchers(
@@ -45,6 +48,7 @@ class AppModule {
         main = Dispatchers.Main
     )
 
+    @JvmStatic
     @Provides
     @Singleton
     @Named("cache")
