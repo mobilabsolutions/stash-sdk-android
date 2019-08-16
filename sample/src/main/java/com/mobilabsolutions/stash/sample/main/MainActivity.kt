@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.sample.main
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.LiveData
@@ -27,6 +28,9 @@ class MainActivity : BaseActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         if (savedInstanceState == null) {
             setupBottomNavigationBar()
+        }
+        Intent(this, HomeActivity::class.java).also {
+            startActivity(it)
         }
     }
 

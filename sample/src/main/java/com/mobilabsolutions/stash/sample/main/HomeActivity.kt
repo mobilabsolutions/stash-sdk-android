@@ -32,8 +32,11 @@ class HomeActivity : SampleActivity() {
 
         NavigationUI.setupWithNavController(binding.bottomNavigationView, navController)
         navController.addOnDestinationChangedListener { _, destination, _ ->
-
+            if (navController.currentDestination?.id != destination.id) {
+                navController.navigate(destination.id)
+            }
         }
+
     }
 
     override fun onStart() {

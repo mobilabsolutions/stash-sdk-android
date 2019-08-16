@@ -6,6 +6,7 @@ package com.mobilabsolutions.stash.sample.inject
 
 import com.mobilabsolutions.stash.sample.SampleApplication
 import com.mobilabsolutions.stash.sample.data.DataModule
+import com.mobilabsolutions.stash.sample.main.HomeBuilder
 import com.mobilabsolutions.stash.sample.main.MainBuilder
 import com.mobilabsolutions.stash.sample.network.NetworkModule
 import com.mobilabsolutions.stash.sample.payments.PaymentBuilder
@@ -25,7 +26,8 @@ import javax.inject.Singleton
     DataModule::class,
     NetworkModule::class,
     MainBuilder::class,
-    PaymentBuilder::class
+    PaymentBuilder::class,
+    HomeBuilder::class
 ])
 interface AppComponent : AndroidInjector<SampleApplication> {
     @Component.Factory
