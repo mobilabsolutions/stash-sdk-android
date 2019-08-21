@@ -13,11 +13,9 @@ jobs:
       uses: actions/setup-java@v1
       with:
         version: 1.8
-    - name: Clean Project
-      run: ./gradlew clean
-      
+
     - name: Spotless Check
       run: ./gradlew spotlessCheck  
       
-    - name: Unit Test
-      run: ./gradlew check -x :template-integration:check
+    - name: Assemble
+      run: ./gradlew assembleDebug
