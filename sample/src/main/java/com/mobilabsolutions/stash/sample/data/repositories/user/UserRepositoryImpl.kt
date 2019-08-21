@@ -6,7 +6,6 @@ package com.mobilabsolutions.stash.sample.data.repositories.user
 
 import com.mobilabsolutions.stash.sample.data.entities.ErrorResult
 import com.mobilabsolutions.stash.sample.data.entities.Success
-import com.mobilabsolutions.stash.sample.data.entities.User
 import com.mobilabsolutions.stash.sample.util.AppCoroutineDispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -40,18 +39,10 @@ class UserRepositoryImpl @Inject constructor(
     }
 
     private suspend fun createUser() = coroutineScope {
-        val localJob = async(dispatchers.io) { localUserStore.createUser() }
         val remoteJob = async(dispatchers.io) { remoteUserDataSource.createUser() }
-        val localUser = localJob.await()
         when (val result = remoteJob.await()) {
-            is Success -> localUserStore.saveUser(mergeUser(local = localUser, remote = result.data))
+            is Success -> localUserStore.saveUser(result.data)
             is ErrorResult -> throw result.exception
         }
-    }
-
-    private fun mergeUser(local: User, remote: User): User {
-        return local.copy(
-                userId = remote.userId
-        )
     }
 }

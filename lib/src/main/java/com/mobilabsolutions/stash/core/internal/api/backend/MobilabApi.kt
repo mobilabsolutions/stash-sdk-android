@@ -19,9 +19,9 @@ import retrofit2.http.Path
  */
 
 interface MobilabApi {
-    @POST("v1/alias")
+    @POST("alias")
     fun createAlias(@Header("PSP-Type") psp: String, @Header("Idempotent-Key") idempotencyKey: String, @Body dynamicPspConfig: Map<String, String>): Single<AliasResponse>
 
-    @PUT("v1/alias/{aliasId}")
+    @PUT("alias/{aliasId}")
     fun updateAlias(@Path("aliasId") aliasId: String, @Body aliasUpdateRequest: AliasUpdateRequest): Completable
 }

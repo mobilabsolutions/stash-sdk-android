@@ -25,6 +25,7 @@ import javax.inject.Singleton
 @Module
 object NetworkModule {
     private const val BASE_URL = "https://payment-dev.mblb.net/"
+    private const val DEMO_BASE_URL = "https://payment-demo.mblb.net/"
     private const val DISK_CACHE_SIZE = (10 * 1024 * 1024).toLong()
     private const val READ_TIME_OUT = 15.toLong()
     private const val CONNECT_TIME_OUT = 30.toLong()
@@ -57,10 +58,10 @@ object NetworkModule {
         okHttpClient: OkHttpClient
     ): Retrofit {
         return Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-                .client(okHttpClient)
-                .baseUrl(BASE_URL)
-                .build()
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .client(okHttpClient)
+            .baseUrl(DEMO_BASE_URL)
+            .build()
     }
 
     @JvmStatic
