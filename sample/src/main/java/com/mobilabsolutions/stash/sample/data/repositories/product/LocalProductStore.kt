@@ -22,7 +22,7 @@ class LocalProductStore @Inject constructor(
         private val mobilabTShirt = Product(
             image = "image_card_01",
             name = "MobiLab",
-            description = "T-Shirt print",
+            description = "T-Shirt Print",
             price = 2385
         )
 
@@ -36,7 +36,7 @@ class LocalProductStore @Inject constructor(
         private val sticker = Product(
             image = "image_card_03",
             name = "MobiLab Sticker",
-            description = "12 sticker sheets",
+            description = "12 Sticker Sheets",
             price = 1099
         )
 
