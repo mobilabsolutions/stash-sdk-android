@@ -25,18 +25,18 @@ import retrofit2.http.Path
  */
 interface SampleMerchantService {
 
-    @POST("merchant/user")
+    @POST("merchant/v1/user")
     fun createUser(): Call<CreateUserResponse>
 
-    @POST("merchant/payment-method")
+    @POST("merchant/v1/payment-method")
     fun createPaymentMethod(@Body request: CreatePaymentMethodRequest): Call<CreatePaymentMethodResponse>
 
-    @DELETE("merchant/payment-method/{Payment-Method-Id}")
+    @DELETE("merchant/v1/payment-method/{Payment-Method-Id}")
     fun deletePaymentMethod(@Path("Payment-Method-Id") paymentMethodId: String): Call<ResponseBody>
 
-    @GET("merchant/payment-method/{User-Id}")
+    @GET("merchant/v1/payment-method/{User-Id}")
     fun getPaymentMethods(@Path("User-Id") userId: String): Call<PaymentMethodListResponse>
 
-    @PUT("merchant/authorization")
+    @PUT("merchant/v1/authorization")
     fun authorizePayment(@Header("Idempotent-Key") idempotencyKey: String, @Body request: AuthorizePaymentRequest): Call<AuthorizePaymentResponse>
 }
