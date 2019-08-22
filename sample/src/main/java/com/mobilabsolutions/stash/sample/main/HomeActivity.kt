@@ -36,7 +36,6 @@ class HomeActivity : SampleActivity() {
                 navController.navigate(destination.id)
             }
         }
-
     }
 
     override fun onStart() {
@@ -45,8 +44,8 @@ class HomeActivity : SampleActivity() {
     }
 
     override fun invalidate() {
-        withState(viewModel) { state ->
-            binding.state = state
+        withState(viewModel) {
+            binding.state = it
         }
     }
 }

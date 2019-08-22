@@ -42,7 +42,7 @@ object Modules {
 }
 
 object Libs {
-    val androidGradlePlugin = "com.android.tools.build:gradle:3.4.2"
+    val androidGradlePlugin = "com.android.tools.build:gradle:3.5.0"
     val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
     val timber = "com.jakewharton.timber:timber:4.7.1"
     val junit = "junit:junit:4.12"

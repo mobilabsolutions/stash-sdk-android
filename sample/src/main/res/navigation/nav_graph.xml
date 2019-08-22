@@ -5,11 +5,16 @@
     android:id="@+id/nav_graph"
     app:startDestination="@+id/navigation_items">
 
-    <fragment
-        android:id="@+id/navigation_items"
-        android:name="com.mobilabsolutions.stash.sample.main.items.ItemsFragment"
-        android:label="@string/items"
-        tools:layout="@layout/fragment_items" />
+    <activity
+        android:id="@+id/activity_payment"
+        android:name="com.mobilabsolutions.stash.sample.payments.PaymentActivity"
+        android:label="activity_payment"
+        tools:layout="@layout/activity_payment">
+        <argument
+            android:name="pay_amount"
+            android:defaultValue="0"
+            app:argType="integer" />
+    </activity>
 
     <fragment
         android:id="@+id/navigation_checkout"
@@ -22,5 +27,11 @@
         android:name="com.mobilabsolutions.stash.sample.main.paymentmethods.PaymentMethodsFragment"
         android:label="@string/payment"
         tools:layout="@layout/fragment_payment_methods" />
+
+    <fragment
+        android:id="@+id/navigation_items"
+        android:name="com.mobilabsolutions.stash.sample.main.items.ItemsFragment"
+        android:label="@string/items"
+        tools:layout="@layout/fragment_items" />
 
 </navigation>

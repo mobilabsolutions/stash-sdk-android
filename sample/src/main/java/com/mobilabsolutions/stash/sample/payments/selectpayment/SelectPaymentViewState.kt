@@ -8,7 +8,9 @@ import com.airbnb.mvrx.MvRxState
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 
 data class SelectPaymentViewState(
+    val amount: Int,
     val loading: Boolean = false,
-    val paymentMethods: List<PaymentMethod> = emptyList(),
-    val amount: Int = 0
-) : MvRxState
+    val paymentMethods: List<PaymentMethod> = emptyList()
+) : MvRxState{
+    constructor(args: SelectPaymentFragment.Arguments) : this(args.payAmount)
+}

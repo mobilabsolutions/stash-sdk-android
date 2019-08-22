@@ -63,10 +63,6 @@ class SelectPaymentViewModel @AssistedInject constructor(
         updatePaymentMethods.setParams(Unit)
     }
 
-    fun setAmount(amount: Int) {
-        setState { copy(amount = amount) }
-    }
-
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
         lastSelectedPaymentMethod = paymentMethod
     }

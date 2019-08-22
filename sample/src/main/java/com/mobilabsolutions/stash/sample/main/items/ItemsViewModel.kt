@@ -40,15 +40,15 @@ class ItemsViewModel @AssistedInject constructor(
 
     init {
         loadProducts.observe()
-                .subscribeOn(schedulers.io)
-                .execute {
-                    copy(products = it)
-                }
+            .subscribeOn(schedulers.io)
+            .execute {
+                copy(products = it)
+            }
 
         loadProducts.setParams(Unit)
     }
 
-    fun onClick(product: Product) {
+    fun onProductClicked(product: Product) {
         viewModelScope.launchInteractor(addCart, AddCart.ExecuteParams(product))
     }
 }

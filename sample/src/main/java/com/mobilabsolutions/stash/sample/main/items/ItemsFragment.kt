@@ -14,9 +14,9 @@ import com.airbnb.mvrx.withState
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.sample.R
 import com.mobilabsolutions.stash.sample.core.BaseFragment
-import com.mobilabsolutions.stash.sample.productItem
-import kotlinx.android.synthetic.main.fragment_items.itemsRecyclerView
-import kotlinx.android.synthetic.main.fragment_items.version_text
+import com.mobilabsolutions.stash.sample.data.entities.Product
+import com.mobilabsolutions.stash.sample.databinding.FragmentItemsBinding
+import kotlinx.android.synthetic.main.fragment_items.*
 import javax.inject.Inject
 
 /**
@@ -28,30 +28,35 @@ class ItemsFragment : BaseFragment() {
     lateinit var itemsViewModelFactory: ItemsViewModel.Factory
 
     private val viewModel: ItemsViewModel by fragmentViewModel()
+    private lateinit var binding: FragmentItemsBinding
+    private lateinit var controller: ItemsEpoxyController
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_items, container, false)
+        binding = FragmentItemsBinding.inflate(inflater, container, false)
+        binding.lifecycleOwner = viewLifecycleOwner
+        return binding.root
     }
 
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        controller = ItemsEpoxyController(object : ItemsEpoxyController.Callbacks {
+            override fun onProductClicked(product: Product) {
+                viewModel.onProductClicked(product)
+                view.let { Snackbar.make(it, getString(R.string.message, product.name), Snackbar.LENGTH_SHORT).show() }
+            }
+        })
+        binding.itemsRecyclerView.setController(controller)
+
         version_text.text = "App - v${com.mobilabsolutions.stash.sample.BuildConfig.VERSION_NAME} \n" +
             "Lib - v${com.mobilabsolutions.stash.core.BuildConfig.VERSION_NAME}"
     }
 
-    override fun invalidate() = withState(viewModel) { state ->
-        itemsRecyclerView.withModels {
-            state.products()?.forEach { product ->
-                productItem {
-                    id(product.id)
-                    product(product)
-                    clickListener { _ ->
-                        viewModel.onClick(product)
-                        view?.let { Snackbar.make(it, getString(R.string.message, product.name), Snackbar.LENGTH_SHORT).show() }
-                    }
-                }
-            }
+    override fun invalidate() {
+        withState(viewModel) {
+            binding.state = it
+            controller.setData(it)
         }
     }
 }
