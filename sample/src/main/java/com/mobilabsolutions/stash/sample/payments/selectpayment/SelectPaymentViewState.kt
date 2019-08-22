@@ -11,6 +11,6 @@ data class SelectPaymentViewState(
     val amount: Int,
     val loading: Boolean = false,
     val paymentMethods: List<PaymentMethod> = emptyList()
-) : MvRxState{
+) : MvRxState {
     constructor(args: SelectPaymentFragment.Arguments) : this(args.payAmount)
 }
