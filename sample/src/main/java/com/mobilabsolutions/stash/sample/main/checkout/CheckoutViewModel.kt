@@ -13,7 +13,6 @@ import com.mobilabsolutions.stash.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.stash.sample.domain.interactors.ChangeCartQuantity
 import com.mobilabsolutions.stash.sample.domain.launchObserve
 import com.mobilabsolutions.stash.sample.domain.observers.ObserveCarts
-import com.mobilabsolutions.stash.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -23,7 +22,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  */
 class CheckoutViewModel @AssistedInject constructor(
     @Assisted initialState: CheckoutViewState,
-    schedulers: AppRxSchedulers,
     observeCarts: ObserveCarts,
     private val changeCartQuantity: ChangeCartQuantity
 ) : BaseViewModel<CheckoutViewState>(initialState) {
@@ -40,7 +38,6 @@ class CheckoutViewModel @AssistedInject constructor(
     }
 
     init {
-        observeCarts(Unit)
         viewModelScope.launchObserve(observeCarts) { flow ->
             flow.distinctUntilChanged().execute {
                 val cartItems = it().orEmpty()
@@ -53,6 +50,7 @@ class CheckoutViewModel @AssistedInject constructor(
                 )
             }
         }
+        observeCarts(Unit)
     }
 
     fun onAddButtonClicked(cartWithProduct: CartWithProduct) {

@@ -9,11 +9,10 @@ import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.stash.sample.core.BaseViewModel
-import com.mobilabsolutions.stash.sample.core.launchInteractor
 import com.mobilabsolutions.stash.sample.data.entities.Product
-import com.mobilabsolutions.stash.sample.data.interactors.AddCart
-import com.mobilabsolutions.stash.sample.data.interactors.LoadProducts
-import com.mobilabsolutions.stash.sample.util.AppRxSchedulers
+import com.mobilabsolutions.stash.sample.domain.interactors.AddProductToCart
+import com.mobilabsolutions.stash.sample.domain.launchObserve
+import com.mobilabsolutions.stash.sample.domain.observers.ObserveProducts
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 
@@ -22,9 +21,8 @@ import com.squareup.inject.assisted.AssistedInject
  */
 class ItemsViewModel @AssistedInject constructor(
     @Assisted initialState: ItemsViewState,
-    schedulers: AppRxSchedulers,
-    loadProducts: LoadProducts,
-    private val addCart: AddCart
+    observeProducts: ObserveProducts,
+    private val addProductToCart: AddProductToCart
 ) : BaseViewModel<ItemsViewState>(initialState) {
     @AssistedInject.Factory
     interface Factory {
@@ -39,16 +37,13 @@ class ItemsViewModel @AssistedInject constructor(
     }
 
     init {
-        loadProducts.observe()
-            .subscribeOn(schedulers.io)
-            .execute {
-                copy(products = it)
-            }
-
-        loadProducts.setParams(Unit)
+        viewModelScope.launchObserve(observeProducts) {
+            it.execute { result -> copy(products = result) }
+        }
+        observeProducts(Unit)
     }
 
     fun onProductClicked(product: Product) {
-        viewModelScope.launchInteractor(addCart, AddCart.ExecuteParams(product))
+        addProductToCart(AddProductToCart.Params(productId = product.id))
     }
 }

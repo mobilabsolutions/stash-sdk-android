@@ -18,8 +18,6 @@ class CartRepositoryImpl @Inject constructor(
 ) : CartRepository {
     override fun observeCartsFlow(): Flow<List<CartWithProduct>> = localCartStore.observerCartsFlow()
 
-    override fun observeCarts() = localCartStore.observeCarts()
-
     override suspend fun changeCartQuantity(add: Boolean, cartWithProduct: CartWithProduct) {
         if (add) {
             addCartQuantity(cartWithProduct)

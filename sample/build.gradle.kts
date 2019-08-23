@@ -42,7 +42,11 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = mapOf("room.schemaLocation" to "$projectDir/schemas")
+                arguments = mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true",
+                    "room.expandProjection" to "true"
+                )
             }
         }
 
@@ -193,8 +197,8 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
         componentSelection {
             all {
                 val rejected = listOf("alpha", "beta", "rc")
-                        .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*") }
-                        .any { it.matches(candidate.version) }
+                    .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*") }
+                    .any { it.matches(candidate.version) }
                 if (rejected) {
                     reject("Release candidate")
                 }

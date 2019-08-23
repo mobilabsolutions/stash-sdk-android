@@ -5,11 +5,11 @@
 package com.mobilabsolutions.stash.sample.data.repositories.product
 
 import com.mobilabsolutions.stash.sample.data.entities.Product
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
  */
 interface ProductRepository {
-    fun observerProducts(): Observable<List<Product>>
+    fun observerProducts(): Flow<List<Product>>
 }

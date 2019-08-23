@@ -31,7 +31,11 @@ class ItemsFragment : BaseFragment() {
     private lateinit var binding: FragmentItemsBinding
     private lateinit var controller: ItemsEpoxyController
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentItemsBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
