@@ -7,7 +7,7 @@ package com.mobilabsolutions.stash.sample.data.daos
 import androidx.room.Dao
 import androidx.room.Query
 import com.mobilabsolutions.stash.sample.data.entities.User
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 26-04-2019.
@@ -18,7 +18,7 @@ abstract class UserDao : EntityDao<User> {
     abstract suspend fun userCount(): Int
 
     @Query("SELECT * FROM user")
-    abstract fun entryObservable(): Observable<User>
+    abstract fun entryObservable(): Flow<User>
 
     @Query("SELECT * FROM user")
     abstract suspend fun getUser(): User

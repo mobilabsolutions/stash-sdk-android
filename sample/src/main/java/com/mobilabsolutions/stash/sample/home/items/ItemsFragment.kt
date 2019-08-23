@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.sample.main.items
+package com.mobilabsolutions.stash.sample.home.items
 
 import android.annotation.SuppressLint
 import android.os.Bundle

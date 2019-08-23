@@ -1,4 +1,4 @@
-package com.mobilabsolutions.stash.sample.main
+package com.mobilabsolutions.stash.sample.home
 
 import android.os.Bundle
 import androidx.databinding.DataBindingUtil

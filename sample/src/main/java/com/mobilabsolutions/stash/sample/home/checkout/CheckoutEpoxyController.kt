@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.sample.main.checkout
+package com.mobilabsolutions.stash.sample.home.checkout
 
 import com.airbnb.epoxy.TypedEpoxyController
 import com.mobilabsolutions.stash.sample.checkoutItem

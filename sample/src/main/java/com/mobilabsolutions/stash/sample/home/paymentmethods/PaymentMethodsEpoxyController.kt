@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.sample.main.paymentmethods
+package com.mobilabsolutions.stash.sample.home.paymentmethods
 
 import com.airbnb.epoxy.TypedEpoxyController
 import com.mobilabsolutions.stash.sample.addPayment

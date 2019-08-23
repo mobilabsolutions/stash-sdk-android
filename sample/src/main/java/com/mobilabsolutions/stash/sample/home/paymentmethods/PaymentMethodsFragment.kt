@@ -2,14 +2,14 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.sample.main.paymentmethods
+package com.mobilabsolutions.stash.sample.home.paymentmethods
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +19,8 @@ import com.mobilabsolutions.stash.sample.R
 import com.mobilabsolutions.stash.sample.core.BaseFragment
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.databinding.FragmentPaymentMethodsBinding
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 /**
@@ -62,25 +64,17 @@ class PaymentMethodsFragment : BaseFragment() {
             }
         })
 
-        viewModel.error.observe(viewLifecycleOwner, Observer<Throwable> { throwable ->
-            this.view?.let { view ->
-                throwable?.let {
-                    when (throwable) {
-                        is UiRequestHandler.UserCancelled -> {
-                            // Do nothing, user probably know that he cancelled.
-                        }
-                        else -> {
-                            SnackBarExtensions {
-                                currentSnackBar = throwable.getErrorSnackBar(view)
-                                currentSnackBar?.show()
-                            }
-                            viewModel.clearError()
-                        }
+        binding.paymentMethodsRv.setController(controller)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.errorMsg.collect {
+                if (it !is UiRequestHandler.UserCancelled) {
+                    SnackBarExtensions {
+                        currentSnackBar = it.getErrorSnackBar(view)
+                        currentSnackBar?.show()
                     }
                 }
             }
-        })
-        binding.paymentMethodsRv.setController(controller)
+        }
     }
 
     private fun clearSnackBar() {

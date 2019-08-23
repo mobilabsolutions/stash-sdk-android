@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.sample.main.checkout
+package com.mobilabsolutions.stash.sample.home.checkout
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent

@@ -11,7 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
@@ -20,6 +20,8 @@ import com.mobilabsolutions.stash.sample.core.BaseFragment
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.databinding.FragmentSelectPaymentBinding
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class SelectPaymentFragment : BaseFragment() {
@@ -59,7 +61,7 @@ class SelectPaymentFragment : BaseFragment() {
         })
         binding.paymentMethodsRv.setController(controller)
         binding.back.setOnClickListener {
-            activity?.onBackPressed()
+            requireActivity().onBackPressed()
         }
         binding.btnPay.setOnClickListener {
             viewModel.onPayClicked()
@@ -69,13 +71,13 @@ class SelectPaymentFragment : BaseFragment() {
             }
         }
 
-        viewModel.error.observe(viewLifecycleOwner, Observer<Throwable> { throwable ->
-            this.view?.let {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.errorMsg.collect {
                 SnackBarExtensions {
-                    throwable.getErrorSnackBar(it).show()
+                    it.getErrorSnackBar(binding.root).show()
                 }
             }
-        })
+        }
     }
 
     override fun invalidate() {

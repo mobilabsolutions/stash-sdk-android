@@ -13,7 +13,9 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.Success
 import com.mobilabsolutions.stash.sample.BuildConfig
 import io.reactivex.disposables.CompositeDisposable
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
@@ -52,5 +54,10 @@ open class BaseViewModel<S : MvRxState>(
                 emit(Fail(it))
             }
             .collect { setState { stateReducer(it) } }
+    }
+
+    protected val errorChannel = ConflatedBroadcastChannel<Throwable>()
+    val errorMsg: Flow<Throwable> by lazy(LazyThreadSafetyMode.NONE) {
+        errorChannel.asFlow()
     }
 }

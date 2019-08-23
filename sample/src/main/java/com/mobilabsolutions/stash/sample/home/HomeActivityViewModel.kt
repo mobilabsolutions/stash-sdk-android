@@ -1,4 +1,4 @@
-package com.mobilabsolutions.stash.sample.main
+package com.mobilabsolutions.stash.sample.home
 
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext

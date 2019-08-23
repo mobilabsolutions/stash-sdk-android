@@ -11,21 +11,22 @@ import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.stash.sample.core.BaseViewModel
-import com.mobilabsolutions.stash.sample.core.launchInteractor
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
-import com.mobilabsolutions.stash.sample.data.interactors.AuthorizePayment
-import com.mobilabsolutions.stash.sample.data.interactors.UpdatePaymentMethods
+import com.mobilabsolutions.stash.sample.domain.interactors.AuthorisePayment
+import com.mobilabsolutions.stash.sample.domain.invoke
+import com.mobilabsolutions.stash.sample.domain.launchObserve
+import com.mobilabsolutions.stash.sample.domain.observers.ObservePaymentMethods
 import com.mobilabsolutions.stash.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.stash.sample.util.AppRxSchedulers
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
-import io.reactivex.rxkotlin.plusAssign
+import kotlinx.coroutines.flow.catch
 
 class SelectPaymentViewModel @AssistedInject constructor(
     @Assisted initialStateMethods: SelectPaymentViewState,
     val schedulers: AppRxSchedulers,
-    updatePaymentMethods: UpdatePaymentMethods,
-    private val authorizePayment: AuthorizePayment
+    observePaymentMethods: ObservePaymentMethods,
+    private val authorisePayment: AuthorisePayment
 ) : BaseViewModel<SelectPaymentViewState>(initialStateMethods) {
 
     private var lastSelectedPaymentMethod: PaymentMethod? = null
@@ -48,19 +49,10 @@ class SelectPaymentViewModel @AssistedInject constructor(
     }
 
     init {
-
-        disposables += authorizePayment.errorSubject
-                .subscribeOn(schedulers.io)
-                .observeOn(schedulers.main)
-                .subscribe(_error::setValue)
-
-        updatePaymentMethods.observe()
-                .subscribeOn(schedulers.io)
-                .execute {
-                    copy(paymentMethods = it() ?: emptyList())
-                }
-
-        updatePaymentMethods.setParams(Unit)
+        viewModelScope.launchObserve(observePaymentMethods) {
+            it.execute { result -> copy(paymentMethods = result().orEmpty()) }
+        }
+        observePaymentMethods()
     }
 
     fun onPaymentMethodSelected(paymentMethod: PaymentMethod) {
@@ -71,12 +63,15 @@ class SelectPaymentViewModel @AssistedInject constructor(
         lastSelectedPaymentMethod?.run {
             withState {
                 val authorizePaymentRequest = AuthorizePaymentRequest(
-                        amount = it.amount,
-                        currency = "EUR",
-                        paymentMethodId = this.paymentMethodId,
-                        reason = "Nothing"
+                    amount = it.amount,
+                    currency = "EUR",
+                    paymentMethodId = this.paymentMethodId,
+                    reason = "Nothing"
                 )
-                viewModelScope.launchInteractor(authorizePayment, AuthorizePayment.ExecuteParams(authorizePaymentRequest = authorizePaymentRequest))
+                authorisePayment(AuthorisePayment.Params(authorizePaymentRequest))
+                    .also {
+                        it.catch { errorChannel.offer(it) }
+                    }
             }
         }
     }

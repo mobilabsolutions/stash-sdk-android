@@ -1,8 +1,8 @@
-package com.mobilabsolutions.stash.sample.main
+package com.mobilabsolutions.stash.sample.home
 
-import com.mobilabsolutions.stash.sample.main.checkout.CheckoutBuilder
-import com.mobilabsolutions.stash.sample.main.items.ItemsBuilder
-import com.mobilabsolutions.stash.sample.main.paymentmethods.PaymentMethodsBuilder
+import com.mobilabsolutions.stash.sample.home.checkout.CheckoutBuilder
+import com.mobilabsolutions.stash.sample.home.items.ItemsBuilder
+import com.mobilabsolutions.stash.sample.home.paymentmethods.PaymentMethodsBuilder
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 

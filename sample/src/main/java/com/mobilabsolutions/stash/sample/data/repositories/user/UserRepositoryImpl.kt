@@ -34,10 +34,6 @@ class UserRepositoryImpl @Inject constructor(
 
     override fun observerUser() = localUserStore.observerUser()
 
-    override suspend fun updateUser() = coroutineScope {
-        // do nothing for now.
-    }
-
     private suspend fun createUser() = coroutineScope {
         val remoteJob = async(dispatchers.io) { remoteUserDataSource.createUser() }
         when (val result = remoteJob.await()) {

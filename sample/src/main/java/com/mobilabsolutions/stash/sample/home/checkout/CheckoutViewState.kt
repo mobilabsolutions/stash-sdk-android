@@ -2,7 +2,7 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-package com.mobilabsolutions.stash.sample.main.checkout
+package com.mobilabsolutions.stash.sample.home.checkout
 
 import com.airbnb.mvrx.MvRxState
 import com.mobilabsolutions.stash.sample.data.resultentities.CartWithProduct

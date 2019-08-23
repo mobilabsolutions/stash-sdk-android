@@ -1,4 +1,4 @@
-package com.mobilabsolutions.stash.sample.main.items
+package com.mobilabsolutions.stash.sample.home.items
 
 import com.airbnb.epoxy.TypedEpoxyController
 import com.airbnb.mvrx.Success

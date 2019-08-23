@@ -27,6 +27,8 @@ abstract class Interactor<in P> {
                 }
             } catch (t: TimeoutCancellationException) {
                 channel.send(InvokeTimeout)
+            } catch (e: Throwable) {
+                channel.close(e)
             }
         }
         return channel.asFlow()

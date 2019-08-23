@@ -9,7 +9,7 @@ import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.stash.sample.R
-import com.mobilabsolutions.stash.sample.main.HomeActivity
+import com.mobilabsolutions.stash.sample.home.HomeActivity
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 08-04-2019.
