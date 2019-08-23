@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © MobiLab Solutions GmbH
   -->
 
@@ -94,4 +93,3 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
-

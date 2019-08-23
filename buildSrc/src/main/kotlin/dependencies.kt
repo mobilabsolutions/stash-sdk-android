@@ -114,14 +114,15 @@ object Libs {
         }
 
         object Lifecycle {
-            private const val version = "2.2.0-alpha02"
-            val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
-            val reactivestreams = "androidx.lifecycle:lifecycle-reactivestreams:$version"
-            val compiler = "androidx.lifecycle:lifecycle-compiler:$version"
+            private const val version = "2.2.0-alpha03"
+            const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
+            const val compiler = "androidx.lifecycle:lifecycle-compiler:$version"
+            const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
+            const val runtime = "androidx.lifecycle:lifecycle-runtime-ktx:$version"
         }
 
         object Room {
-            private const val version = "2.2.0-alpha01"
+            private const val version = "2.2.0-SNAPSHOT"
             val common = "androidx.room:room-common:$version"
             val runtime = "androidx.room:room-runtime:$version"
             val rxjava2 = "androidx.room:room-rxjava2:$version"

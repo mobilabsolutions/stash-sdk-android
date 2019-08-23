@@ -10,7 +10,6 @@ import io.reactivex.subjects.BehaviorSubject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.rx2.asObservable
@@ -50,7 +49,6 @@ abstract class ChannelInteractor<P, T : Any> : Interactor<P> {
         }
     }
 
-    @UseExperimental(ObsoleteCoroutinesApi::class)
     fun observe(): Observable<T> = channel.asObservable(dispatcher)
 
     protected abstract suspend fun execute(executeParams: P): T

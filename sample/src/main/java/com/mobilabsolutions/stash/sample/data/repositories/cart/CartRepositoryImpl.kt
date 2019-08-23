@@ -5,6 +5,7 @@
 package com.mobilabsolutions.stash.sample.data.repositories.cart
 
 import com.mobilabsolutions.stash.sample.data.resultentities.CartWithProduct
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -15,6 +16,7 @@ import javax.inject.Singleton
 class CartRepositoryImpl @Inject constructor(
     private val localCartStore: LocalCartStore
 ) : CartRepository {
+    override fun observeCartsFlow(): Flow<List<CartWithProduct>> = localCartStore.observerCartsFlow()
 
     override fun observeCarts() = localCartStore.observeCarts()
 

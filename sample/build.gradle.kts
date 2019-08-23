@@ -152,7 +152,8 @@ dependencies {
     implementation(Libs.Retrofit.retrofit_rxjava_adapter)
 
     implementation(Libs.AndroidX.Lifecycle.extensions)
-    implementation(Libs.AndroidX.Lifecycle.reactivestreams)
+    implementation(Libs.AndroidX.Lifecycle.viewmodel)
+    implementation(Libs.AndroidX.Lifecycle.runtime)
     kapt(Libs.AndroidX.Lifecycle.compiler)
 
     implementation(Libs.Coroutines.core)

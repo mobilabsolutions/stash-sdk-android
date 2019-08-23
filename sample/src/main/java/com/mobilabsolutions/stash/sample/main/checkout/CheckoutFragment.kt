@@ -62,12 +62,6 @@ class CheckoutFragment : BaseFragment() {
                 R.id.activity_payment,
                 bundleOf("pay_amount" to binding.state?.totalAmount)
             )
-
-            // startActivityForResult(
-            //     Intent(context, PaymentActivity::class.java)
-            //         .putExtra(PaymentActivity.PAY_AMOUNT_EXTRA, binding.state?.totalAmount),
-            //     1
-            // )
         }
     }
 
