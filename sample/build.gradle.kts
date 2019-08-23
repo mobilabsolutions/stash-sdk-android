@@ -99,13 +99,8 @@ android {
     }
 
     lintOptions {
-        isAbortOnError = false
         disable("GradleDependency")
     }
-    packagingOptions {
-        pickFirst("META-INF/atomicfu.kotlin_module")
-    }
-
 }
 
 dependencies {
@@ -113,12 +108,6 @@ dependencies {
 
     androidTestImplementation(Libs.AndroidX.appcompat)
     androidTestImplementation(Libs.AndroidX.constraintlayout)
-
-    androidTestImplementation(Libs.AndroidX.Test.runner)
-    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
-    androidTestImplementation(Libs.AndroidX.Test.espressoIntents)
-    androidTestImplementation(Libs.AndroidX.Test.rules)
-    androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
 
     implementation(project(Modules.stash)) //Core
     implementation(project(Modules.adyenIntegration))
@@ -136,7 +125,7 @@ dependencies {
 
     implementation(Libs.timber)
     implementation(Libs.Stetho.stetho)
-    implementation(Libs.Stetho.stethoOkhttp33)
+    implementation(Libs.Stetho.okhttp3)
 
     implementation(Libs.Dagger.dagger)
     implementation(Libs.Dagger.daggerAndroid)
