@@ -109,7 +109,7 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.appcompat)
     androidTestImplementation(Libs.AndroidX.constraintlayout)
 
-    implementation(project(Modules.stash)) //Core
+    implementation(project(Modules.stash))
     implementation(project(Modules.adyenIntegration))
     implementation(project(Modules.bsPayoneIntegration))
     implementation(project(Modules.braintreeIntegration))

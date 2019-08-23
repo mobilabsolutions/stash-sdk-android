@@ -9,7 +9,6 @@ import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 
 data class SelectPaymentViewState(
     val amount: Int,
-    val loading: Boolean = false,
     val paymentMethods: List<PaymentMethod> = emptyList()
 ) : MvRxState {
     constructor(args: SelectPaymentFragment.Arguments) : this(args.payAmount)

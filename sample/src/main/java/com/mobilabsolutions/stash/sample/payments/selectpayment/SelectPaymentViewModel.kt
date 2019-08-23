@@ -31,11 +31,6 @@ class SelectPaymentViewModel @AssistedInject constructor(
 
     private var lastSelectedPaymentMethod: PaymentMethod? = null
 
-    private val _error = MutableLiveData<Throwable>()
-
-    val error: LiveData<Throwable>
-        get() = _error
-
     @AssistedInject.Factory
     interface Factory {
         fun create(initialStateMethods: SelectPaymentViewState): SelectPaymentViewModel
