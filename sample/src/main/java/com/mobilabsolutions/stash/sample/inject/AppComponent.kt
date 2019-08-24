@@ -6,9 +6,9 @@ package com.mobilabsolutions.stash.sample.inject
 
 import com.mobilabsolutions.stash.sample.SampleApplication
 import com.mobilabsolutions.stash.sample.data.DataModule
-import com.mobilabsolutions.stash.sample.home.HomeBuilder
+import com.mobilabsolutions.stash.sample.features.home.HomeBuilder
+import com.mobilabsolutions.stash.sample.features.payments.PaymentBuilder
 import com.mobilabsolutions.stash.sample.network.NetworkModule
-import com.mobilabsolutions.stash.sample.payments.PaymentBuilder
 import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.support.AndroidSupportInjectionModule

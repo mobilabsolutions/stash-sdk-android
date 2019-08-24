@@ -5,9 +5,9 @@
 package com.mobilabsolutions.stash.sample.network.request
 
 import com.google.gson.annotations.SerializedName
-import com.mobilabsolutions.stash.sample.network.CreditCardAliasData
-import com.mobilabsolutions.stash.sample.network.PayPalAliasData
-import com.mobilabsolutions.stash.sample.network.SepaAliasData
+import com.mobilabsolutions.stash.sample.network.data.CreditCardAliasData
+import com.mobilabsolutions.stash.sample.network.data.PayPalAliasData
+import com.mobilabsolutions.stash.sample.network.data.SepaAliasData
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 26-04-2019.

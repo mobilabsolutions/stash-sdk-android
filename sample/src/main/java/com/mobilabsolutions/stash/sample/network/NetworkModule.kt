@@ -66,5 +66,6 @@ object NetworkModule {
 
     @JvmStatic
     @Provides
-    fun provideSampleMerchantService(retrofit: Retrofit): SampleMerchantService = retrofit.create(SampleMerchantService::class.java)
+    fun provideSampleMerchantService(retrofit: Retrofit): SampleMerchantService =
+        retrofit.create(SampleMerchantService::class.java)
 }

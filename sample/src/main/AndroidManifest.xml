@@ -21,7 +21,7 @@
             android:value="${fabric-api-key}" />
 
         <activity
-            android:name="com.mobilabsolutions.stash.sample.launcher.LauncherActivity"
+            android:name="com.mobilabsolutions.stash.sample.features.launcher.LauncherActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Launcher">
             <intent-filter>
@@ -34,9 +34,9 @@
 
 
         <activity
-            android:name="com.mobilabsolutions.stash.sample.payments.PaymentActivity"
+            android:name="com.mobilabsolutions.stash.sample.features.payments.PaymentActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".home.HomeActivity" />
+        <activity android:name="com.mobilabsolutions.stash.sample.features.home.HomeActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

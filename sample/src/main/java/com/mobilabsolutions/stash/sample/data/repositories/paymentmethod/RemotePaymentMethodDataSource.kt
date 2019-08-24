@@ -9,10 +9,10 @@ import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.data.entities.PaymentType
 import com.mobilabsolutions.stash.sample.data.entities.Result
 import com.mobilabsolutions.stash.sample.data.mappers.PaymentMethodListResponseToEntity
-import com.mobilabsolutions.stash.sample.network.CreditCardAliasData
-import com.mobilabsolutions.stash.sample.network.PayPalAliasData
 import com.mobilabsolutions.stash.sample.network.SampleMerchantService
-import com.mobilabsolutions.stash.sample.network.SepaAliasData
+import com.mobilabsolutions.stash.sample.network.data.CreditCardAliasData
+import com.mobilabsolutions.stash.sample.network.data.PayPalAliasData
+import com.mobilabsolutions.stash.sample.network.data.SepaAliasData
 import com.mobilabsolutions.stash.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.stash.sample.network.request.CreatePaymentMethodRequest
 import com.mobilabsolutions.stash.sample.network.response.AuthorizePaymentResponse

@@ -27,8 +27,8 @@ abstract class Interactor<in P> {
                 }
             } catch (t: TimeoutCancellationException) {
                 channel.send(InvokeTimeout)
-            } catch (e: Throwable) {
-                channel.close(e)
+            } catch (error: Throwable) {
+                channel.send(InvokeError(error))
             }
         }
         return channel.asFlow()
@@ -89,3 +89,4 @@ object InvokeIdle : InvokeStatus()
 object InvokeStarted : InvokeStatus()
 object InvokeFinished : InvokeStatus()
 object InvokeTimeout : InvokeStatus()
+data class InvokeError(val throwable: Throwable) : InvokeStatus()

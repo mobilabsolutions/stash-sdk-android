@@ -10,7 +10,7 @@
 
         <variable
             name="state"
-            type="com.mobilabsolutions.stash.sample.home.checkout.CheckoutViewState" />
+            type="com.mobilabsolutions.stash.sample.features.home.checkout.CheckoutViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

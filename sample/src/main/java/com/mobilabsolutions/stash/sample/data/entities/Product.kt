@@ -24,7 +24,6 @@ data class Product(
 ) : SampleEntity {
     @delegate:Ignore
     val productType by lazy(LazyThreadSafetyMode.NONE) {
-        ProductType.fromProductName(name
-            ?: "")
+        ProductType.fromProductName(name ?: "")
     }
 }

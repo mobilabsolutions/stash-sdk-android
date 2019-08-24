@@ -11,7 +11,7 @@
 
         <variable
             name="state"
-            type="com.mobilabsolutions.stash.sample.payments.selectpayment.SelectPaymentViewState" />
+            type="com.mobilabsolutions.stash.sample.features.payments.selectpayment.SelectPaymentViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
