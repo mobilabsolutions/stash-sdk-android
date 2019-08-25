@@ -17,10 +17,10 @@ object StashRelease {
 }
 
 object StashBuildConfigs {
-    const val compileSdk = 28
+    const val compileSdk = 29
     const val minSdk = 21
-    const val targetSdk = 28
-    const val buildtoolsVersion = "29.0.0"
+    const val targetSdk = 29
+    const val buildtoolsVersion = "29.0.2"
 }
 
 object DemoRelease {
@@ -132,7 +132,7 @@ object Libs {
     }
 
     object RxJava {
-        const val rxJava = "io.reactivex.rxjava2:rxjava:2.2.11"
+        const val rxJava = "io.reactivex.rxjava2:rxjava:2.2.12"
         const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
         const val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
