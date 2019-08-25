@@ -4,17 +4,14 @@
 
 package com.mobilabsolutions.stash.sample.extensions
 
+import com.mobilabsolutions.stash.sample.data.entities.ErrorResult
+import com.mobilabsolutions.stash.sample.data.entities.Result
+import com.mobilabsolutions.stash.sample.data.entities.Success
 import kotlinx.coroutines.delay
 import retrofit2.Call
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
-
-/**
- * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 26-04-2019.
- */
-
-fun <T> Call<T>.fetchBody(): T = execute().bodyOrThrow()
 
 fun <T> Response<T>.bodyOrThrow(): T {
     if (!isSuccessful) throw HttpException(this)
@@ -24,12 +21,13 @@ fun <T> Response<T>.bodyOrThrow(): T {
 fun <T> Response<T>.toException() = HttpException(this)
 
 suspend inline fun <T> Call<T>.executeWithRetry(
-    firstDelay: Long = 100,
+    defaultDelay: Long = 100,
     maxAttempts: Int = 3,
     shouldRetry: (Exception) -> Boolean = ::defaultShouldRetry
 ): Response<T> {
-    var nextDelay = firstDelay
-    repeat(maxAttempts - 1) { attempt ->
+    repeat(maxAttempts) { attempt ->
+        var nextDelay = attempt * attempt * defaultDelay
+
         try {
             // Clone a new ready call if needed
             val call = if (isExecuted) clone() else this
@@ -39,11 +37,23 @@ suspend inline fun <T> Call<T>.executeWithRetry(
             if (attempt == (maxAttempts - 1) || !shouldRetry(e)) {
                 throw e
             }
+
+            if (e is HttpException) {
+                // If we have a HttpException, check whether we have a Retry-After
+                // header to decide how long to delay
+                val retryAfterHeader = e.response()?.headers()?.get("Retry-After")
+                if (retryAfterHeader != null && retryAfterHeader.isNotEmpty()) {
+                    // Got a Retry-After value, try and parse it to an long
+                    try {
+                        nextDelay = (retryAfterHeader.toLong() + 10).coerceAtLeast(defaultDelay)
+                    } catch (nfe: NumberFormatException) {
+                        // Probably won't happen, ignore the value and use the generated default above
+                    }
+                }
+            }
         }
-        // Delay to implement exp. backoff
+
         delay(nextDelay)
-        // Increase the next delay
-        nextDelay *= 2
     }
 
     // We should never hit here
@@ -60,4 +70,31 @@ fun defaultShouldRetry(exception: Exception) = when (exception) {
     is HttpException -> exception.code() == 429
     is IOException -> true
     else -> false
+}
+
+fun <T> Response<T>.isFromNetwork(): Boolean {
+    return raw().cacheResponse == null
+}
+
+fun <T> Response<T>.isFromCache(): Boolean {
+    return raw().cacheResponse != null
+}
+
+@Suppress("REDUNDANT_INLINE_SUSPEND_FUNCTION_TYPE")
+suspend fun <T> Response<T>.toResultUnit(): Result<Unit> = toResult { Unit }
+
+@Suppress("REDUNDANT_INLINE_SUSPEND_FUNCTION_TYPE")
+suspend fun <T> Response<T>.toResult(): Result<T> = toResult { it }
+
+@Suppress("REDUNDANT_INLINE_SUSPEND_FUNCTION_TYPE")
+suspend fun <T, E> Response<T>.toResult(mapper: suspend (T) -> E): Result<E> {
+    return try {
+        if (isSuccessful) {
+            Success(data = mapper(bodyOrThrow()))
+        } else {
+            ErrorResult(toException())
+        }
+    } catch (e: Exception) {
+        ErrorResult(e)
+    }
 }

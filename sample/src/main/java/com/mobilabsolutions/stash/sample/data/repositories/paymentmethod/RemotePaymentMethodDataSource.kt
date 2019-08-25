@@ -28,7 +28,11 @@ class RemotePaymentMethodDataSource @Inject constructor(
     private val sampleMerchantService: SampleMerchantService,
     private val paymentMethodListResponseToEntity: PaymentMethodListResponseToEntity
 ) {
-    suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod): Result<CreatePaymentMethodResponse> {
+    suspend fun addPaymentMethod(
+        userId: String,
+        aliasId: String,
+        paymentMethod: PaymentMethod
+    ): Result<CreatePaymentMethodResponse> {
         var request = CreatePaymentMethodRequest(
             aliasId = aliasId,
             type = paymentMethod._type,
