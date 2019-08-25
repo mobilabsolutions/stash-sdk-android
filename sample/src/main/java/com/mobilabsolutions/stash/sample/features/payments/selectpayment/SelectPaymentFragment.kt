@@ -79,6 +79,9 @@ class SelectPaymentFragment : BaseFragment() {
             binding.state = it
             controller.setData(it)
             binding.btnPay.isEnabled = it.selectedMethod != null
+            if (it.paymentCompleted) {
+                requireActivity().finish()
+            }
         }
     }
 }

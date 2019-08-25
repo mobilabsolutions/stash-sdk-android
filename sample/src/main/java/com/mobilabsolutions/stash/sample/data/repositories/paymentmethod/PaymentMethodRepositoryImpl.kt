@@ -12,6 +12,9 @@ import com.mobilabsolutions.stash.sample.extensions.launchOrJoin
 import com.mobilabsolutions.stash.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.stash.sample.util.AppCoroutineDispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.supervisorScope
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -26,6 +29,10 @@ class PaymentMethodRepositoryImpl @Inject constructor(
     private val localCartStore: LocalCartStore,
     private val remotePaymentMethodDataSource: RemotePaymentMethodDataSource
 ) : PaymentMethodRepository {
+    private val paymentCompletedChannel = ConflatedBroadcastChannel<Boolean>()
+    override fun observePaymentCompleted(): Flow<Boolean> {
+        return paymentCompletedChannel.asFlow()
+    }
 
     override fun observePaymentMethods() = localPaymentMethodStore.observePaymentMethods()
 
@@ -60,7 +67,10 @@ class PaymentMethodRepositoryImpl @Inject constructor(
         launchOrJoin("authorize_payment_${authorizePaymentRequest.paymentMethodId}") {
             val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.authorizePayment(authorizePaymentRequest) }
             when (val result = remoteJob.await()) {
-                is Success -> localCartStore.emptyCart()
+                is Success -> {
+                    localCartStore.emptyCart()
+                    paymentCompletedChannel.offer(true)
+                }
                 is ErrorResult -> throw result.exception
             }
         }

@@ -14,5 +14,6 @@ data class CheckoutViewState(
     val loading: Boolean = false,
     val cartItems: List<CartWithProduct> = emptyList(),
     val totalAmount: Int = 0,
-    val showEmptyView: Boolean = false
+    val showEmptyView: Boolean = false,
+    val paymentCompleted: Boolean = false
 ) : MvRxState

@@ -10,6 +10,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.domain.InvokeError
+import com.mobilabsolutions.stash.sample.domain.InvokeFinished
 import com.mobilabsolutions.stash.sample.domain.interactors.AuthorisePayment
 import com.mobilabsolutions.stash.sample.domain.invoke
 import com.mobilabsolutions.stash.sample.domain.launchObserve
@@ -76,6 +77,9 @@ class SelectPaymentViewModel @AssistedInject constructor(
                             when (it) {
                                 is InvokeError -> {
                                     errorChannel.offer(it.throwable)
+                                }
+                                is InvokeFinished -> {
+                                    setState { copy(paymentCompleted = true) }
                                 }
                             }
                         }

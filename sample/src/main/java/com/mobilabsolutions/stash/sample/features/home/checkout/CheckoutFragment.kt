@@ -18,9 +18,9 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.sample.R
-import com.mobilabsolutions.stash.sample.shared.BaseFragment
 import com.mobilabsolutions.stash.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.stash.sample.databinding.FragmentCheckoutBinding
+import com.mobilabsolutions.stash.sample.shared.BaseFragment
 import javax.inject.Inject
 
 /**
@@ -72,6 +72,12 @@ class CheckoutFragment : BaseFragment() {
             binding.labelTotalAmount.isVisible = !it.showEmptyView
             binding.totalPriceText.isVisible = !it.showEmptyView
             controller.setData(it)
+            if (it.paymentCompleted) {
+                Snackbar
+                    .make(binding.root, R.string.payment_success, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.action_ok) { /* Nothing to do for dismissal */ }
+                    .show()
+            }
         }
     }
 

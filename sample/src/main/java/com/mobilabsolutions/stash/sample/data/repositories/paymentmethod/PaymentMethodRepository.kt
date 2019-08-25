@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.Flow
  */
 interface PaymentMethodRepository {
     fun observePaymentMethods(): Flow<List<PaymentMethod>>
+    fun observePaymentCompleted(): Flow<Boolean>
     suspend fun updatePaymentMethods(userId: String)
     suspend fun deletePaymentMethod(paymentMethod: PaymentMethod)
     suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod)

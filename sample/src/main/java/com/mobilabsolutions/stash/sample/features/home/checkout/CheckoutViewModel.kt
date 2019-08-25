@@ -8,11 +8,13 @@ import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
-import com.mobilabsolutions.stash.sample.shared.BaseViewModel
 import com.mobilabsolutions.stash.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.stash.sample.domain.interactors.ChangeCartQuantity
+import com.mobilabsolutions.stash.sample.domain.invoke
 import com.mobilabsolutions.stash.sample.domain.launchObserve
 import com.mobilabsolutions.stash.sample.domain.observers.ObserveCarts
+import com.mobilabsolutions.stash.sample.domain.observers.ObservePaymentCompleted
+import com.mobilabsolutions.stash.sample.shared.BaseViewModel
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 class CheckoutViewModel @AssistedInject constructor(
     @Assisted initialState: CheckoutViewState,
     observeCarts: ObserveCarts,
+    observePaymentCompleted: ObservePaymentCompleted,
     private val changeCartQuantity: ChangeCartQuantity
 ) : BaseViewModel<CheckoutViewState>(initialState) {
     @AssistedInject.Factory
@@ -50,7 +53,13 @@ class CheckoutViewModel @AssistedInject constructor(
                 )
             }
         }
-        observeCarts(Unit)
+        observeCarts()
+        viewModelScope.launchObserve(observePaymentCompleted) {
+            it.execute {
+                copy(paymentCompleted = it() ?: false)
+            }
+        }
+        observePaymentCompleted()
     }
 
     fun onAddButtonClicked(cartWithProduct: CartWithProduct) {
