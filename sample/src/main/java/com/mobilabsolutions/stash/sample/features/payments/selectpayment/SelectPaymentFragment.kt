@@ -9,16 +9,15 @@ import android.os.Parcelable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.lifecycle.lifecycleScope
 import com.airbnb.mvrx.MvRx
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.mobilabsolutions.stash.core.internal.uicomponents.SnackBarExtensions
-import com.mobilabsolutions.stash.sample.shared.BaseFragment
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.databinding.FragmentSelectPaymentBinding
+import com.mobilabsolutions.stash.sample.shared.BaseFragment
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -53,22 +52,17 @@ class SelectPaymentFragment : BaseFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        controller = SelectPaymentEpoxyController(object : SelectPaymentEpoxyController.Callbacks {
-            override fun onSelection(paymentMethod: PaymentMethod) {
-                viewModel.onPaymentMethodSelected(paymentMethod)
-                binding.btnPay.isEnabled = true
-            }
-        })
-        binding.paymentMethodsRv.setController(controller)
         binding.back.setOnClickListener {
             requireActivity().onBackPressed()
         }
+        controller = SelectPaymentEpoxyController(object : SelectPaymentEpoxyController.Callbacks {
+            override fun onSelection(paymentMethod: PaymentMethod) {
+                viewModel.onPaymentMethodSelected(paymentMethod)
+            }
+        })
+        binding.paymentMethodsRv.setController(controller)
         binding.btnPay.setOnClickListener {
             viewModel.onPayClicked()
-            activity?.apply {
-                setResult(AppCompatActivity.RESULT_OK)
-                finish()
-            }
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -84,6 +78,7 @@ class SelectPaymentFragment : BaseFragment() {
         withState(viewModel) {
             binding.state = it
             controller.setData(it)
+            binding.btnPay.isEnabled = it.selectedMethod != null
         }
     }
 }

@@ -4,7 +4,6 @@
 
 package com.mobilabsolutions.stash.sample.features.payments.selectpayment
 
-import android.view.View
 import com.airbnb.epoxy.TypedEpoxyController
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.selectPaymentItem
@@ -16,8 +15,6 @@ class SelectPaymentEpoxyController(
     private val callbacks: Callbacks
 ) : TypedEpoxyController<SelectPaymentViewState>() {
 
-    private var lastSelectedView: View? = null
-
     interface Callbacks {
         fun onSelection(paymentMethod: PaymentMethod)
     }
@@ -27,21 +24,9 @@ class SelectPaymentEpoxyController(
             selectPaymentItem {
                 id(it.id)
                 paymentMethod(it)
-                selectListener { view ->
-                    callbacks.onSelection(it)
-                    updateSelection(view)
-                }
+                isSelected((it.isSelectedPaymentMethod(state.selectedMethod)))
+                selectListener { _ -> callbacks.onSelection(it) }
             }
-        }
-    }
-
-    private fun updateSelection(view: View) {
-        view.isSelected = true
-        if (lastSelectedView !== view) {
-            lastSelectedView?.let {
-                it.isSelected = false
-            }
-            lastSelectedView = view
         }
     }
 }

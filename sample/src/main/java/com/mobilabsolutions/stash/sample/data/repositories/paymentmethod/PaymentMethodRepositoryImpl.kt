@@ -8,6 +8,7 @@ import com.mobilabsolutions.stash.sample.data.entities.ErrorResult
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.data.entities.Success
 import com.mobilabsolutions.stash.sample.data.repositories.cart.LocalCartStore
+import com.mobilabsolutions.stash.sample.extensions.launchOrJoin
 import com.mobilabsolutions.stash.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.stash.sample.util.AppCoroutineDispatchers
 import kotlinx.coroutines.async
@@ -55,13 +56,13 @@ class PaymentMethodRepositoryImpl @Inject constructor(
         Unit
     }
 
-    override suspend fun authorizePayment(authorizePaymentRequest: AuthorizePaymentRequest) = supervisorScope {
-        val localJob = async(dispatchers.io) { localCartStore.emptyCart() }
-        val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.authorizePayment(authorizePaymentRequest) }
-        when (val result = remoteJob.await()) {
-            is Success -> localJob.await()
-            is ErrorResult -> throw result.exception
+    override suspend fun authorizePayment(authorizePaymentRequest: AuthorizePaymentRequest) {
+        launchOrJoin("authorize_payment_${authorizePaymentRequest.paymentMethodId}") {
+            val remoteJob = async(dispatchers.io) { remotePaymentMethodDataSource.authorizePayment(authorizePaymentRequest) }
+            when (val result = remoteJob.await()) {
+                is Success -> localCartStore.emptyCart()
+                is ErrorResult -> throw result.exception
+            }
         }
-        Unit
     }
 }

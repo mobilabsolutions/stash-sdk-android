@@ -67,4 +67,11 @@ data class PaymentMethod(
     companion object {
         const val DELIMITER = " • "
     }
+
+    fun isSelectedPaymentMethod(selectedMethod: PaymentMethod?): Boolean {
+        selectedMethod?.let {
+            return it.paymentMethodId == this.paymentMethodId
+        }
+        return false
+    }
 }
