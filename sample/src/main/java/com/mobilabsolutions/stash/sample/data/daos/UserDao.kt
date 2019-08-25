@@ -19,7 +19,4 @@ abstract class UserDao : EntityDao<User> {
 
     @Query("SELECT * FROM user")
     abstract fun entryObservable(): Flow<User>
-
-    @Query("SELECT * FROM user")
-    abstract suspend fun getUser(): User
 }

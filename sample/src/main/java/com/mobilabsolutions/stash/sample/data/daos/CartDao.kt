@@ -9,7 +9,6 @@ import androidx.room.Query
 import androidx.room.Transaction
 import com.mobilabsolutions.stash.sample.data.entities.Cart
 import com.mobilabsolutions.stash.sample.data.resultentities.CartWithProduct
-import io.reactivex.Observable
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -17,11 +16,6 @@ import kotlinx.coroutines.flow.Flow
  */
 @Dao
 abstract class CartDao : EntityDao<Cart> {
-
-    @Transaction
-    @Query("SELECT * FROM cart")
-    abstract fun entriesObservable(): Observable<List<CartWithProduct>>
-
     @Transaction
     @Query("SELECT * FROM cart")
     abstract fun entriesFlow(): Flow<List<CartWithProduct>>

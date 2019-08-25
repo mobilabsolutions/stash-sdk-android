@@ -16,7 +16,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.rx2.asCoroutineDispatcher
 import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
@@ -45,9 +44,9 @@ object AppModule {
     @JvmStatic
     @Singleton
     @Provides
-    fun provideCoroutineDispatchers(schedulers: AppRxSchedulers) = AppCoroutineDispatchers(
-        io = schedulers.io.asCoroutineDispatcher(),
-        computation = schedulers.computation.asCoroutineDispatcher(),
+    fun provideCoroutineDispatchers() = AppCoroutineDispatchers(
+        io = Dispatchers.IO,
+        computation = Dispatchers.Default,
         main = Dispatchers.Main
     )
 
