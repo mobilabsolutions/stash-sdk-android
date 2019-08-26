@@ -8,7 +8,7 @@ import java.util.Properties
 object StashRelease {
     const val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
     const val travisTag = "TRAVIS_TAG"
-    const val mobilabBackendUrl = "DEV_BACKEND_DEVELOPMENT"
+    const val mobilabBackendUrl = "DEV_BACKEND_URL"
     const val newBsApiUrl = "NEW_BS_API_URL"
     const val testPublishableKey = "DEV_PUBLISHABLE_KEY"
     const val MobilabNexusUsername = "MOBILAB_NEXUS_USER"

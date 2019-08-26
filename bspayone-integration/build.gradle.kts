@@ -21,8 +21,6 @@ kapt {
     useBuildCache = true
 }
 
-val templatePublishableKey = propOrDefWithTravis(StashRelease.templatePublishableKey, "")
-
 androidExtensions {
     isExperimental = true
 }
