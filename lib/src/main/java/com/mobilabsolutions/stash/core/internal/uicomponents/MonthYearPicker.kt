@@ -7,21 +7,16 @@ package com.mobilabsolutions.stash.core.internal.uicomponents
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.os.Bundle
-import com.mobilabsolutions.stash.core.R
-import com.mobilabsolutions.stash.core.StashUiConfiguration
-import kotlinx.android.synthetic.main.month_year_picker.monthNumberPicker
-import kotlinx.android.synthetic.main.month_year_picker.monthYearPickerRoot
-import kotlinx.android.synthetic.main.month_year_picker.okButton
-import kotlinx.android.synthetic.main.month_year_picker.yearNumberPicker
-import org.threeten.bp.LocalDate
 import android.graphics.Paint
+import android.os.Bundle
+import android.widget.EditText
 import android.widget.NumberPicker
 import androidx.core.content.ContextCompat
-import android.widget.EditText
 import com.mobilabsolutions.stash.core.CustomizationExtensions
-import kotlinx.android.synthetic.main.month_year_picker.monthTitle
-import kotlinx.android.synthetic.main.month_year_picker.yearTitle
+import com.mobilabsolutions.stash.core.R
+import com.mobilabsolutions.stash.core.StashUiConfiguration
+import kotlinx.android.synthetic.main.month_year_picker.*
+import org.threeten.bp.LocalDate
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
@@ -93,7 +88,7 @@ class MonthYearPicker(
             }
         }
 
-        yearNumberPicker.setOnValueChangedListener { _, oldVal, newVal ->
+        yearNumberPicker.setOnValueChangedListener { _, _, newVal ->
             if (newVal > today.year) {
                 monthNumberPicker.minValue = 1
             } else {

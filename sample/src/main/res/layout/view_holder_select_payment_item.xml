@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © MobiLab Solutions GmbH
   -->
 
@@ -18,6 +17,10 @@
             type="com.mobilabsolutions.stash.sample.data.entities.PaymentMethod" />
 
         <variable
+            name="isSelected"
+            type="Boolean" />
+
+        <variable
             name="selectListener"
             type="android.view.View.OnClickListener" />
 
@@ -27,13 +30,14 @@
         android:layout_width="match_parent"
         android:layout_height="86dp"
         android:layout_marginBottom="8dp"
+        android:foreground="?attr/selectableItemBackground"
+        android:onClick="@{selectListener}"
         app:cardCornerRadius="8dp"
         app:cardElevation="1dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:onClick="@{selectListener}"
             android:padding="8dp">
 
             <ImageView
@@ -75,19 +79,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/payment_name"
                 tools:text="@string/payment_type_alias_placeholder" />
 
-            <ImageView
+            <com.mobilabsolutions.stash.sample.util.CheckableImageView
                 android:id="@+id/btn_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="5dp"
-                android:contentDescription="@string/image_description"
                 android:padding="8dp"
+                android:layout_marginEnd="5dp"
+                android:checked="@{isSelected}"
                 android:src="@drawable/payment_selection_icon_selector"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/payment_selection_icon_selector" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

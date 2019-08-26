@@ -14,7 +14,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class CreateUserResponseToUser @Inject constructor() : Mapper<CreateUserResponse, User> {
-    override fun map(from: CreateUserResponse): User {
+    override suspend fun map(from: CreateUserResponse): User {
         return User(userId = from.userId)
     }
 }

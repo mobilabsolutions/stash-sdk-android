@@ -29,14 +29,23 @@ interface SampleMerchantService {
     fun createUser(): Call<CreateUserResponse>
 
     @POST("merchant/v1/payment-method")
-    fun createPaymentMethod(@Body request: CreatePaymentMethodRequest): Call<CreatePaymentMethodResponse>
+    fun createPaymentMethod(
+        @Body request: CreatePaymentMethodRequest
+    ): Call<CreatePaymentMethodResponse>
 
     @DELETE("merchant/v1/payment-method/{Payment-Method-Id}")
-    fun deletePaymentMethod(@Path("Payment-Method-Id") paymentMethodId: String): Call<ResponseBody>
+    fun deletePaymentMethod(
+        @Path("Payment-Method-Id") paymentMethodId: String
+    ): Call<ResponseBody>
 
     @GET("merchant/v1/payment-method/{User-Id}")
-    fun getPaymentMethods(@Path("User-Id") userId: String): Call<PaymentMethodListResponse>
+    fun getPaymentMethods(
+        @Path("User-Id") userId: String
+    ): Call<PaymentMethodListResponse>
 
     @PUT("merchant/v1/authorization")
-    fun authorizePayment(@Header("Idempotent-Key") idempotencyKey: String, @Body request: AuthorizePaymentRequest): Call<AuthorizePaymentResponse>
+    fun authorizePayment(
+        @Header("Idempotent-Key") idempotencyKey: String,
+        @Body request: AuthorizePaymentRequest
+    ): Call<AuthorizePaymentResponse>
 }

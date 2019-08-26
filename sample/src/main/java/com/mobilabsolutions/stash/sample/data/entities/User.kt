@@ -21,8 +21,4 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey(autoGenerate = true) @ColumnInfo override val id: Long = 0,
     @ColumnInfo(name = "server_user_id") val userId: String
-) : SampleEntity {
-    companion object {
-        val EMPTY_USER = User(userId = "empty_user_id")
-    }
-}
+) : SampleEntity

@@ -5,7 +5,6 @@
 package com.mobilabsolutions.stash.sample.data.repositories.product
 
 import com.mobilabsolutions.stash.sample.data.DatabaseTransactionRunner
-import com.mobilabsolutions.stash.sample.data.daos.EntityInserter
 import com.mobilabsolutions.stash.sample.data.daos.ProductDao
 import com.mobilabsolutions.stash.sample.data.entities.Product
 import javax.inject.Inject
@@ -14,7 +13,6 @@ import javax.inject.Inject
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
  */
 class LocalProductStore @Inject constructor(
-    private val entityInserter: EntityInserter,
     private val transactionRunner: DatabaseTransactionRunner,
     private val productDao: ProductDao
 ) {

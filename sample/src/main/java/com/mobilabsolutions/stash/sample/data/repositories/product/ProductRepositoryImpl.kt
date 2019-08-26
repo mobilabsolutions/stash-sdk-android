@@ -15,7 +15,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class ProductRepositoryImpl @Inject constructor(
-    private val dispatchers: AppCoroutineDispatchers,
+    dispatchers: AppCoroutineDispatchers,
     private val localProductStore: LocalProductStore
 ) : ProductRepository {
     init {

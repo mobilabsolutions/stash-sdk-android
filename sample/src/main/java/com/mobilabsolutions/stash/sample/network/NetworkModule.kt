@@ -60,11 +60,12 @@ object NetworkModule {
         return Retrofit.Builder()
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .client(okHttpClient)
-            .baseUrl(DEMO_BASE_URL)
+            .baseUrl(BASE_URL)
             .build()
     }
 
     @JvmStatic
     @Provides
-    fun provideSampleMerchantService(retrofit: Retrofit): SampleMerchantService = retrofit.create(SampleMerchantService::class.java)
+    fun provideSampleMerchantService(retrofit: Retrofit): SampleMerchantService =
+        retrofit.create(SampleMerchantService::class.java)
 }

@@ -42,7 +42,11 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = mapOf("room.schemaLocation" to "$projectDir/schemas")
+                arguments = mapOf(
+                    "room.schemaLocation" to "$projectDir/schemas",
+                    "room.incremental" to "true",
+                    "room.expandProjection" to "true"
+                )
             }
         }
 
@@ -95,13 +99,8 @@ android {
     }
 
     lintOptions {
-        isAbortOnError = false
         disable("GradleDependency")
     }
-    packagingOptions {
-        pickFirst("META-INF/atomicfu.kotlin_module")
-    }
-
 }
 
 dependencies {
@@ -110,13 +109,7 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.appcompat)
     androidTestImplementation(Libs.AndroidX.constraintlayout)
 
-    androidTestImplementation(Libs.AndroidX.Test.runner)
-    androidTestImplementation(Libs.AndroidX.Test.espressoCore)
-    androidTestImplementation(Libs.AndroidX.Test.espressoIntents)
-    androidTestImplementation(Libs.AndroidX.Test.rules)
-    androidTestImplementation(Libs.AndroidX.Test.uiAutomator)
-
-    implementation(project(Modules.stash)) //Core
+    implementation(project(Modules.stash))
     implementation(project(Modules.adyenIntegration))
     implementation(project(Modules.bsPayoneIntegration))
     implementation(project(Modules.braintreeIntegration))
@@ -132,7 +125,7 @@ dependencies {
 
     implementation(Libs.timber)
     implementation(Libs.Stetho.stetho)
-    implementation(Libs.Stetho.stethoOkhttp33)
+    implementation(Libs.Stetho.okhttp3)
 
     implementation(Libs.Dagger.dagger)
     implementation(Libs.Dagger.daggerAndroid)
@@ -152,7 +145,8 @@ dependencies {
     implementation(Libs.Retrofit.retrofit_rxjava_adapter)
 
     implementation(Libs.AndroidX.Lifecycle.extensions)
-    implementation(Libs.AndroidX.Lifecycle.reactivestreams)
+    implementation(Libs.AndroidX.Lifecycle.viewmodel)
+    implementation(Libs.AndroidX.Lifecycle.runtime)
     kapt(Libs.AndroidX.Lifecycle.compiler)
 
     implementation(Libs.Coroutines.core)
@@ -192,8 +186,8 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
         componentSelection {
             all {
                 val rejected = listOf("alpha", "beta", "rc")
-                        .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*") }
-                        .any { it.matches(candidate.version) }
+                    .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*") }
+                    .any { it.matches(candidate.version) }
                 if (rejected) {
                     reject("Release candidate")
                 }

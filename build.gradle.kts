@@ -43,6 +43,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven(url = "https://ci.android.com/builds/submitted/5799541/androidx_snapshot/latest/repository")
     }
 }
 
@@ -56,7 +57,13 @@ subprojects {
         }
     }
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().all {
-        kotlinOptions.jvmTarget = "1.8"
+        kotlinOptions {
+            jvmTarget = "1.8"
+            freeCompilerArgs = listOf(
+                "-Xuse-experimental=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-Xuse-experimental=kotlinx.coroutines.FlowPreview"
+            )
+        }
     }
 }
 
