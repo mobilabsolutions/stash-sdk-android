@@ -18,4 +18,5 @@ interface PaymentMethodRepository {
     suspend fun deletePaymentMethod(paymentMethod: PaymentMethod)
     suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod)
     suspend fun authorizePayment(authorizePaymentRequest: AuthorizePaymentRequest)
+    suspend fun completePayment()
 }

@@ -10,6 +10,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.mobilabsolutions.stash.sample.data.resultentities.CartWithProduct
 import com.mobilabsolutions.stash.sample.domain.interactors.ChangeCartQuantity
+import com.mobilabsolutions.stash.sample.domain.interactors.CompletePayment
 import com.mobilabsolutions.stash.sample.domain.invoke
 import com.mobilabsolutions.stash.sample.domain.launchObserve
 import com.mobilabsolutions.stash.sample.domain.observers.ObserveCarts
@@ -26,7 +27,8 @@ class CheckoutViewModel @AssistedInject constructor(
     @Assisted initialState: CheckoutViewState,
     observeCarts: ObserveCarts,
     observePaymentCompleted: ObservePaymentCompleted,
-    private val changeCartQuantity: ChangeCartQuantity
+    private val changeCartQuantity: ChangeCartQuantity,
+    private val completePayment: CompletePayment
 ) : BaseViewModel<CheckoutViewState>(initialState) {
     @AssistedInject.Factory
     interface Factory {
@@ -55,7 +57,7 @@ class CheckoutViewModel @AssistedInject constructor(
         }
         observeCarts()
         viewModelScope.launchObserve(observePaymentCompleted) {
-            it.execute {
+            it.distinctUntilChanged().execute {
                 copy(paymentCompleted = it() ?: false)
             }
         }
@@ -68,5 +70,9 @@ class CheckoutViewModel @AssistedInject constructor(
 
     fun onRemoveButtonClicked(cartWithProduct: CartWithProduct) {
         changeCartQuantity(ChangeCartQuantity.Params(false, cartWithProduct))
+    }
+
+    fun closeSnackBar() {
+        completePayment()
     }
 }

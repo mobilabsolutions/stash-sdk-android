@@ -4,10 +4,7 @@
 
 package com.mobilabsolutions.stash.sample.features.home.checkout
 
-import android.app.Activity.RESULT_OK
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -77,21 +74,7 @@ class CheckoutFragment : BaseFragment() {
                     .make(binding.root, R.string.payment_success, Snackbar.LENGTH_LONG)
                     .setAction(R.string.action_ok) { /* Nothing to do for dismissal */ }
                     .show()
-            }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-            view?.let {
-                // TODO: Navigation.findNavController(it).navigate()
-                Handler().postDelayed({
-                    Snackbar
-                        .make(it, R.string.payment_success, Snackbar.LENGTH_LONG)
-                        .setAction(R.string.action_ok) { /* Nothing to do for dismissal */ }
-                        .show()
-                }, 1000)
+                viewModel.closeSnackBar()
             }
         }
     }

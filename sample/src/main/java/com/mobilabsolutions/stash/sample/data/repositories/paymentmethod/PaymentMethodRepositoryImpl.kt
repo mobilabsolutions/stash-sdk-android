@@ -29,9 +29,14 @@ class PaymentMethodRepositoryImpl @Inject constructor(
     private val localCartStore: LocalCartStore,
     private val remotePaymentMethodDataSource: RemotePaymentMethodDataSource
 ) : PaymentMethodRepository {
-    private val paymentCompletedChannel = ConflatedBroadcastChannel<Boolean>()
+    private val _paymentCompletedChannel = ConflatedBroadcastChannel<Boolean>()
+
     override fun observePaymentCompleted(): Flow<Boolean> {
-        return paymentCompletedChannel.asFlow()
+        return _paymentCompletedChannel.asFlow()
+    }
+
+    override suspend fun completePayment() {
+        _paymentCompletedChannel.offer(false)
     }
 
     override fun observePaymentMethods() = localPaymentMethodStore.observePaymentMethods()
@@ -69,7 +74,7 @@ class PaymentMethodRepositoryImpl @Inject constructor(
             when (val result = remoteJob.await()) {
                 is Success -> {
                     localCartStore.emptyCart()
-                    paymentCompletedChannel.offer(true)
+                    _paymentCompletedChannel.offer(true)
                 }
                 is ErrorResult -> throw result.exception
             }
