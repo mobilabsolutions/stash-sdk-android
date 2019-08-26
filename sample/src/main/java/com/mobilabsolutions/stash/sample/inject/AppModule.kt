@@ -7,6 +7,7 @@ package com.mobilabsolutions.stash.sample.inject
 import android.content.Context
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.coroutineScope
+import com.mobilabsolutions.stash.sample.BuildConfig
 import com.mobilabsolutions.stash.sample.SampleApplication
 import com.mobilabsolutions.stash.sample.util.AppCoroutineDispatchers
 import com.mobilabsolutions.stash.sample.util.AppRxSchedulers
@@ -61,5 +62,21 @@ object AppModule {
     @ProcessLifetime
     fun provideLongLifetimeScope(): CoroutineScope {
         return ProcessLifecycleOwner.get().lifecycle.coroutineScope
+    }
+
+    @JvmStatic
+    @Provides
+    @Singleton
+    @Named("app_version")
+    fun provideAppVersion(): String {
+        return BuildConfig.VERSION_NAME
+    }
+
+    @JvmStatic
+    @Provides
+    @Singleton
+    @Named("sdk_version")
+    fun provideLibVersion(): String {
+        return com.mobilabsolutions.stash.core.BuildConfig.VERSION_NAME
     }
 }

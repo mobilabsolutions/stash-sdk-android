@@ -18,4 +18,9 @@
         android:id="@+id/navigation_payment"
         android:icon="@drawable/ic_card"
         android:title="@string/payment" />
+
+    <item
+        android:id="@+id/navigation_info"
+        android:icon="@drawable/ic_info"
+        android:title="@string/info" />
 </menu>
