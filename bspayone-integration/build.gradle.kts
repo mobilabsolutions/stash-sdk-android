@@ -21,8 +21,6 @@ kapt {
     useBuildCache = true
 }
 
-val templatePublishableKey = propOrDefWithTravis(StashRelease.templatePublishableKey, "")
-
 androidExtensions {
     isExperimental = true
 }
@@ -77,7 +75,6 @@ android {
 
     buildTypes {
         getByName("debug") {
-            resValue("string", "template_public_key", "\"" + templatePublishableKey + "\"")
             buildConfigField("String", "newBsApiUrl", "\"" + propOrDefWithTravis(StashRelease.newBsApiUrl, "") + "\"")
             buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
             buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
