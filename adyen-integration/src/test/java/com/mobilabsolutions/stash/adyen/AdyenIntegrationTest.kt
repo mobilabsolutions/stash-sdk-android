@@ -6,6 +6,7 @@ package com.mobilabsolutions.stash.adyen
 
 import android.app.Application
 import androidx.test.core.app.ApplicationProvider
+import androidx.test.espresso.intent.rule.IntentsTestRule
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.exceptions.base.ValidationException
@@ -19,8 +20,10 @@ import io.reactivex.android.plugins.RxAndroidPlugins
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.rxkotlin.subscribeBy
 import io.reactivex.schedulers.Schedulers
-import org.junit.Assert
+import org.junit.Assert.assertTrue
+import org.junit.Assert.fail
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -34,21 +37,35 @@ import javax.inject.Inject
 @RunWith(RobolectricTestRunner::class)
 class AdyenIntegrationTest {
 
+    @Rule
+    @JvmField
+    val intentsTestRule = IntentsTestRule(AdyenTestActivity::class.java)
+
     val testPublishableKey = BuildConfig.testPublishableKey
     val MOBILAB_BE_URL: String = BuildConfig.mobilabBackendUrl
 
     @Inject
     lateinit var registrationManager: RegistrationManagerImpl
 
-    lateinit var validVisaCreditCardData: CreditCardData
+    private val validVisaCreditCardData =
+            CreditCardData(
+                    number = "4917610000000000",
+                    expiryMonth = 10,
+                    expiryYear = 2020,
+                    cvv = "737",
+                    billingData = BillingData("Holder", "Holdermann")
+            )
     lateinit var invalidVisaCreditCardData: CreditCardData
     lateinit var validMastercardCreditCardData: CreditCardData
     lateinit var validAmexCreditCardData: CreditCardData
 
     lateinit var validSepaData: SepaData
 
+    private lateinit var adyenTestActivity: AdyenTestActivity
+
     @Before
     fun setUp() {
+        adyenTestActivity = intentsTestRule.activity
         val context = ApplicationProvider.getApplicationContext() as Application
         val methods = setOf(PaymentMethodType.SEPA, PaymentMethodType.CC)
         val integration = AdyenIntegration.create(methods)
@@ -56,9 +73,9 @@ class AdyenIntegrationTest {
         RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
         RxAndroidPlugins.setInitMainThreadSchedulerHandler { Schedulers.trampoline() }
         val graph = DaggerAdyenIntegrationTestComponent.builder()
-            .sslSupportModule(SslSupportModule(null, null))
-            .stashModule(StashModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
-            .build()
+                .sslSupportModule(SslSupportModule(null, null))
+                .stashModule(StashModule(testPublishableKey, MOBILAB_BE_URL, context, mapOf(integration to methods), true))
+                .build()
 
         integration.initialize(graph)
 
@@ -66,41 +83,33 @@ class AdyenIntegrationTest {
 
         graph.injectTest(this)
 
-        validVisaCreditCardData = CreditCardData(
-            number = "4111111111111111",
-            expiryMonth = 10,
-            expiryYear = 2020,
-            cvv = "737",
-            billingData = BillingData("Holder", "Holdermann")
-        )
-
         invalidVisaCreditCardData = CreditCardData(
-            number = "4111111111111111",
-            expiryMonth = 10,
-            expiryYear = 2020,
-            cvv = "7372",
-            billingData = BillingData("Holder", "Holdermann")
+                number = "4111111111111111",
+                expiryMonth = 10,
+                expiryYear = 2020,
+                cvv = "7372",
+                billingData = BillingData("Holder", "Holdermann")
         )
 
         validMastercardCreditCardData = CreditCardData(
-            number = "5555 3412 4444 1115",
-            expiryMonth = 10,
-            expiryYear = 2020,
-            cvv = "737",
-            billingData = BillingData("Holder", "Holdermann")
+                number = "5555 3412 4444 1115",
+                expiryMonth = 10,
+                expiryYear = 2020,
+                cvv = "737",
+                billingData = BillingData("Holder", "Holdermann")
         )
 
         validAmexCreditCardData = CreditCardData(
-            number = "370000000000002",
-            expiryMonth = 10,
-            expiryYear = 2020,
-            cvv = "7373",
-            billingData = BillingData("Holder", "Holdermann")
+                number = "370000000000002",
+                expiryMonth = 10,
+                expiryYear = 2020,
+                cvv = "7373",
+                billingData = BillingData("Holder", "Holdermann")
         )
 
         validSepaData = SepaData(
-            billingData = BillingData("Holder", "Holdermann"),
-            iban = "DE63123456791212121212"
+                billingData = BillingData("Holder", "Holdermann"),
+                iban = "DE63123456791212121212"
         )
 
         ShadowLog.stream = System.out
@@ -108,69 +117,82 @@ class AdyenIntegrationTest {
 
     @Test
     fun testVisaRegistration() {
-        registrationManager.registerCreditCard(validVisaCreditCardData)
-            .subscribeBy(
-                onSuccess = {
-                    println("Got result ${it.alias}")
-                    Assert.assertTrue(it.alias.isNotEmpty())
-                },
-                onError = {
-                    Timber.e(it, "Error")
-                    Assert.fail(it.message)
-                }
-            )
+        registrationManager.registerCreditCard(
+                activity = adyenTestActivity,
+                creditCardData = validVisaCreditCardData
+        )
+                .subscribeBy(
+                        onSuccess = {
+                            println("Got result ${it.alias}")
+                            assertTrue(it.alias.isNotEmpty())
+                        },
+                        onError = {
+                            Timber.e(it, "Error")
+                            fail(it.message)
+                        }
+                )
     }
 
     @Test
     fun testVisaRegistrationFailure() {
-        registrationManager.registerCreditCard(invalidVisaCreditCardData).subscribeBy(
-            onSuccess = {
-                Assert.fail("Expected validation throwable")
-            },
-            onError = {
-                Timber.e(it, "Error")
-                Assert.assertTrue(it is ValidationException)
-            }
+        registrationManager.registerCreditCard(
+                adyenTestActivity,
+                invalidVisaCreditCardData
+        ).subscribeBy(
+                onSuccess = {
+                    fail("Expected validation throwable")
+                },
+                onError = {
+                    Timber.e(it, "Error")
+                    assertTrue(it is ValidationException)
+                }
         )
     }
 
     @Test
     fun testMastercardRegistration() {
-        registrationManager.registerCreditCard(validMastercardCreditCardData).subscribeBy(
-            onSuccess = {
-                Assert.assertTrue(it.alias.isNotEmpty())
-            },
-            onError = {
-                Timber.e(it, "Error")
-                Assert.fail(it.message)
-            }
+        registrationManager.registerCreditCard(
+                adyenTestActivity,
+                validMastercardCreditCardData
+        ).subscribeBy(
+                onSuccess = {
+                    assertTrue(it.alias.isNotEmpty())
+                },
+                onError = {
+                    Timber.e(it, "Error")
+                    fail(it.message)
+                }
         )
     }
 
     @Test
     fun testAmexRegistration() {
-        registrationManager.registerCreditCard(validAmexCreditCardData).subscribeBy(
-            onSuccess = {
-                Assert.assertTrue(it.alias.isNotEmpty())
-            },
-            onError = {
-                Timber.e(it, "Error")
-                Assert.fail(it.message)
-            }
+        registrationManager.registerCreditCard(
+                adyenTestActivity,
+                validAmexCreditCardData).subscribeBy(
+                onSuccess = {
+                    assertTrue(it.alias.isNotEmpty())
+                },
+                onError = {
+                    Timber.e(it, "Error")
+                    fail(it.message)
+                }
         )
     }
 
     @Test
     fun testSepaRegistration() {
-        registrationManager.registerSepaAccount(validSepaData)
-            .subscribeBy(
+        registrationManager.registerSepaAccount(
+                adyenTestActivity,
+                validSepaData
+        ).subscribeBy(
                 onSuccess = {
-                    Assert.assertTrue(it.alias.isNotEmpty())
+                    assertTrue(it.alias.isNotEmpty())
                 },
                 onError = {
                     Timber.e(it, "Error")
-                    Assert.fail(it.message)
+                    fail(it.message)
                 }
-            )
+        )
     }
 }

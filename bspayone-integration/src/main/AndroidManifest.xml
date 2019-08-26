@@ -2,8 +2,12 @@
   ~ Copyright © MobiLab Solutions GmbH
   -->
 
-<manifest package="com.mobilabsolutions.stash.bspayone">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mobilabsolutions.stash.bspayone">
 
+    <application>
+        <activity android:name=".TestActivity" />
+    </application>
 </manifest>
 
 

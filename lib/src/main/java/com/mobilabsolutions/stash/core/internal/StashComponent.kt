@@ -20,7 +20,11 @@ import javax.inject.Singleton
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
 @Singleton
-@Component(modules = [AndroidSupportInjectionModule::class, SslSupportModule::class, StashModule::class])
+@Component(modules = [
+    AndroidSupportInjectionModule::class,
+    SslSupportModule::class,
+    StashModule::class
+])
 interface StashComponent {
     fun inject(stashImpl: StashImpl)
 

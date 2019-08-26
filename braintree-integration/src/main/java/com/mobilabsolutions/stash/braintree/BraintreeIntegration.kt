@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.braintree
 
+import android.app.Activity
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import com.mobilabsolutions.stash.braintree.internal.uicomponents.UiComponentHandler
@@ -89,8 +90,8 @@ class BraintreeIntegration(stashComponent: StashComponent) : Integration {
     }
 
     val braintreeIntegrationComponent: BraintreeIntegrationComponent = DaggerBraintreeIntegrationComponent.builder()
-        .stashComponent(stashComponent)
-        .build()
+            .stashComponent(stashComponent)
+            .build()
 
     init {
         braintreeIntegrationComponent.inject(this)
@@ -101,6 +102,7 @@ class BraintreeIntegration(stashComponent: StashComponent) : Integration {
     }
 
     override fun handleRegistrationRequest(
+        activity: Activity,
         registrationRequest: RegistrationRequest,
         idempotencyKey: IdempotencyKey
     ): Single<String> {
@@ -116,43 +118,43 @@ class BraintreeIntegration(stashComponent: StashComponent) : Integration {
             is CreditCardRegistrationRequest -> {
                 val creditCardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
                 val data = braintreeHandler.registerCreditCard(standardizedData, additionalData)
-                    .subscribeOn(Schedulers.io()).blockingGet()
+                        .subscribeOn(Schedulers.io()).blockingGet()
                 mobilabApi.updateAlias(
-                    registrationRequest.standardizedData.aliasId,
-                    AliasUpdateRequest(
-                        extra = AliasExtra(
-                            paymentMethod = "CC",
-                            creditCardConfig = CreditCardConfig(
-                                ccExpiry = "${standardizedData.creditCardData.expiryMonth}/${standardizedData.creditCardData.expiryYear.toString().takeLast(2)}",
-                                ccMask = standardizedData.creditCardData.number.takeLast(4),
-                                ccType = creditCardType.name,
-                                ccHolderName = standardizedData.creditCardData.billingData?.fullName(),
-                                nonce = data.second,
-                                deviceData = data.third
-                            )
+                        registrationRequest.standardizedData.aliasId,
+                        AliasUpdateRequest(
+                                extra = AliasExtra(
+                                        paymentMethod = "CC",
+                                        creditCardConfig = CreditCardConfig(
+                                                ccExpiry = "${standardizedData.creditCardData.expiryMonth}/${standardizedData.creditCardData.expiryYear.toString().takeLast(2)}",
+                                                ccMask = standardizedData.creditCardData.number.takeLast(4),
+                                                ccType = creditCardType.name,
+                                                ccHolderName = standardizedData.creditCardData.billingData?.fullName(),
+                                                nonce = data.second,
+                                                deviceData = data.third
+                                        )
+                                )
                         )
-                    )
                 ).subscribeOn(Schedulers.io()).andThen(
-                    Single.just(registrationRequest.standardizedData.aliasId)
+                        Single.just(registrationRequest.standardizedData.aliasId)
                 )
             }
 
             is PayPalRegistrationRequest -> mobilabApi.updateAlias(
-                registrationRequest.standardizedData.aliasId,
-                AliasUpdateRequest(
-                    extra = AliasExtra(
-                        payPalConfig = PayPalConfig(
-                            nonce = registrationRequest.additionalData.extraData[NONCE]
-                                ?: error("Missing nonce"),
-                            deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]
-                                ?: error("Missing device fingerprint")
-                        ),
-                        paymentMethod = "PAY_PAL",
-                        personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])
+                    registrationRequest.standardizedData.aliasId,
+                    AliasUpdateRequest(
+                            extra = AliasExtra(
+                                    payPalConfig = PayPalConfig(
+                                            nonce = registrationRequest.additionalData.extraData[NONCE]
+                                                    ?: error("Missing nonce"),
+                                            deviceData = registrationRequest.additionalData.extraData[DEVICE_FINGERPRINT]
+                                                    ?: error("Missing device fingerprint")
+                                    ),
+                                    paymentMethod = "PAY_PAL",
+                                    personalData = BillingData(email = registrationRequest.additionalData.extraData[BillingData.ADDITIONAL_DATA_EMAIL])
+                            )
                     )
-                )
             ).subscribeOn(Schedulers.io()).andThen(
-                Single.just(registrationRequest.standardizedData.aliasId)
+                    Single.just(registrationRequest.standardizedData.aliasId)
             )
             else -> throw RegistrationFailedException("Unsupported payment method")
         }
@@ -169,17 +171,17 @@ class BraintreeIntegration(stashComponent: StashComponent) : Integration {
             PaymentMethodType.CC -> uiComponentHandler.handleCreditCardDataEntryRequest(activity, additionalRegistrationData, resultObservable)
 
             PaymentMethodType.PAYPAL -> braintreeHandler.tokenizePaymentMethods(activity, additionalRegistrationData)
-                .flatMapObservable {
-                    Observable.just(
-                        AdditionalRegistrationData(
-                            mapOf(
-                                BillingData.ADDITIONAL_DATA_EMAIL to it.first,
-                                NONCE to it.second,
-                                DEVICE_FINGERPRINT to it.third
-                            )
+                    .flatMapObservable {
+                        Observable.just(
+                                AdditionalRegistrationData(
+                                        mapOf(
+                                                BillingData.ADDITIONAL_DATA_EMAIL to it.first,
+                                                NONCE to it.second,
+                                                DEVICE_FINGERPRINT to it.third
+                                        )
+                                )
                         )
-                    )
-                }
+                    }
 
             PaymentMethodType.SEPA -> throw ConfigurationException("SEPA is not supported in Braintree integration")
         }

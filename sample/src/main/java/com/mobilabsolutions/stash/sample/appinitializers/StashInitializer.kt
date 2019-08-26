@@ -24,13 +24,14 @@ class StashInitializer @Inject constructor() : AppInitializer {
             publishableKey = BuildConfig.newBsApiKey,
             endpoint = BuildConfig.mobilabBackendUrl,
             integrationList = listOf(
-                AdyenIntegration to PaymentMethodType.CC,
+                BraintreeIntegration to PaymentMethodType.CC,
                 AdyenIntegration to PaymentMethodType.SEPA,
                 BraintreeIntegration to PaymentMethodType.PAYPAL
             ),
             testMode = true,
             stashUiConfiguration = StashUiConfiguration.Builder()
                 .setSnackBarBackground(R.color.carnation).build()
+
         )
         Stash.initialize(
             application,

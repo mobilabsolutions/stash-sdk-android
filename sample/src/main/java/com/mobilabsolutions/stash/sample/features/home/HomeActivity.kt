@@ -8,8 +8,8 @@ import androidx.navigation.ui.NavigationUI
 import com.airbnb.mvrx.viewModel
 import com.airbnb.mvrx.withState
 import com.mobilabsolutions.stash.sample.R
-import com.mobilabsolutions.stash.sample.shared.SampleActivity
 import com.mobilabsolutions.stash.sample.databinding.ActivityHomeBinding
+import com.mobilabsolutions.stash.sample.shared.SampleActivity
 import javax.inject.Inject
 
 /**

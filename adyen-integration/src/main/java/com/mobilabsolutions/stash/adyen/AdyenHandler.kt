@@ -4,28 +4,23 @@
 
 package com.mobilabsolutions.stash.adyen
 
-import android.app.Application
-import com.adyen.checkout.core.CheckoutException
-import com.adyen.checkout.core.card.Card
-import com.adyen.checkout.core.card.Cards
-import com.adyen.checkout.core.internal.CheckoutApi
-import com.adyen.checkout.core.internal.PaymentHandlerImpl
-import com.adyen.checkout.core.internal.PaymentHandlerStore
-import com.adyen.checkout.core.internal.PaymentReferenceImpl
-import com.adyen.checkout.core.internal.PaymentSetupParametersImpl
-import com.adyen.checkout.core.internal.model.PaymentInitiation
-import com.adyen.checkout.core.internal.model.PaymentInitiationResponse
-import com.adyen.checkout.core.internal.model.PaymentMethodImpl
-import com.adyen.checkout.core.internal.model.PaymentSessionImpl
-import com.adyen.checkout.core.internal.persistence.PaymentRepository
-import com.adyen.checkout.core.internal.persistence.PaymentSessionEntity
-import com.adyen.checkout.core.model.CardDetails
-import com.adyen.checkout.ui.internal.card.CardCheckoutMethodFactory
+import android.annotation.SuppressLint
+import android.app.Activity
+import com.adyen.checkout.base.ActionComponentData
+import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction
+import com.adyen.checkout.core.exeption.CheckoutException
+import com.adyen.checkout.cse.Card
+import com.adyen.checkout.cse.internal.CardEncryptorImpl
+import com.google.gson.Gson
+import com.mobilabsolutions.stash.adyen.model.AdyenThreeDsResult
 import com.mobilabsolutions.stash.core.CreditCardTypeWithRegex
 import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.exceptions.base.OtherException
-import com.mobilabsolutions.stash.core.exceptions.base.ValidationException
+import com.mobilabsolutions.stash.core.internal.IntegrationScope
 import com.mobilabsolutions.stash.core.internal.api.backend.MobilabApi
+import com.mobilabsolutions.stash.core.internal.api.backend.model.VerifyChallengeRequestDto
+import com.mobilabsolutions.stash.core.internal.api.backend.model.VerifyThreeDsDto
+import com.mobilabsolutions.stash.core.internal.api.backend.model.VerifyThreeDsRequestDto
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasExtra
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasUpdateRequest
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.CreditCardConfig
@@ -36,154 +31,108 @@ import com.mobilabsolutions.stash.core.internal.psphandler.SepaRegistrationReque
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
-import timber.log.Timber
-import java.lang.reflect.Constructor
-import java.util.UUID
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import javax.inject.Inject
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
+@IntegrationScope
 class AdyenHandler @Inject constructor(
-    private val mobilabApi: MobilabApi,
-    val application: Application
+    private val mobilabApi: MobilabApi
 ) {
-    val PAYMENT_SESSION = "paymentSession"
+    private var threeDsCompletedSubject: Subject<Unit> = PublishSubject.create()
+    private var threeDsErrorSubject: Subject<CheckoutException> = PublishSubject.create()
+    private val clientEncryptionKey = "clientEncryptionKey"
+    private val gson = Gson()
 
     fun registerCreditCard(
+        activity: Activity,
         creditCardRegistrationRequest: CreditCardRegistrationRequest,
         additionalData: AdditionalRegistrationData
     ): Single<String> {
-        /*
-        Adyen SDK API requires an activity to handle registration, as it is tightly coupled
-        with lifecycle components, but to actually perform registration, application context is enough.
-        Unfortunately some of the classes needed have private constructors so we needed to use reflecton
-        to make them available, this means that we cannot easily bump up Adyen SDK versions without additional testing.
-        On  the other hand it's reasonable to expect that Adyen will support current version of
-        their SDK for a significant time period.
-         */
-
-        return Single.create<String> {
-
+        return Single.create {
             val creditCardData = creditCardRegistrationRequest.creditCardData
+            val publicKey = additionalData.extraData[clientEncryptionKey]
+                ?: error("No client encrypt key!")
 
-            // Payment session received from the SDK backend
-            val paymentSessionString = additionalData.extraData[PAYMENT_SESSION]
-                ?: throw OtherException("Missing payment session")
-
-            // Here we start accesing the flow that CheckoutController.handlePaymentSessionResponse(...) would follow
-            val paymentSession = PaymentSessionImpl.decode(paymentSessionString)
-
-            // CheckoutController.handlePaymentSessionResponse... createPaymentReference
-            val paymentSessionUuid = UUID.randomUUID().toString()
-
-            val paymentSessionEntity = PaymentSessionEntity()
-            paymentSessionEntity.uuid = paymentSessionUuid
-            paymentSessionEntity.paymentSession = paymentSession
-            paymentSessionEntity.generationTime = paymentSession.generationTime
-
-            PaymentRepository.getInstance(application).insertPaymentSessionEntity(paymentSessionEntity)
-
-            // Retrieve the payment reference implementation constructor and instantiate reference
-            val constructor = paymentReferenceImplStringConstructor()
-            constructor.isAccessible = true
-            val paymentReferenceImpl = constructor.newInstance(paymentSessionUuid)
-
-            // Retrieve the payment handler constructor and instantiate handler
-            val handlerConstructor = paymentHandlerImplConstructor()
-            handlerConstructor.isAccessible = true
-            val paymentHandlerImpl = handlerConstructor.newInstance(application.applicationContext, paymentSessionEntity, null)
-            PaymentHandlerStore.getInstance().storePaymentHandler(paymentReferenceImpl, paymentHandlerImpl)
-            // At this point we are done with creating and storing a payment reference.
-            // The rest of the calls of the handlePaymentSessionresponse are just communicating the reference
-            // back to the caller, which we already obtained
-
-            // Payment session will hold several payment methods, but these are specific VISA, Mastercard, etc. methods.
-            // While we could decode the card number and select a specific payment method, this is actually not how
-            // Adyen SDK does it itself.
-            // Adyen SDK creates a "Card" payment method (valid for all supported cards) and sends that
-            // So we will do the same here
-            val cardCheckoutMethodFactory = CardCheckoutMethodFactory(application)
-            val cardCheckoutMethod = cardCheckoutMethodFactory.initCheckoutMethods(paymentSession).call()
-            val resolvedPaymentMethod = cardCheckoutMethod.first { method ->
-                method.paymentMethod.type == "card"
-            }.paymentMethod as PaymentMethodImpl
-
-            // Now we need to use Adyens Client Side Encryption to encrypt our credit card data
-            val publishableKey = paymentSession.publicKey!!
             val card = Card.Builder()
                 .setNumber(creditCardData.number)
                 .setExpiryDate(creditCardData.expiryMonth, creditCardData.expiryYear)
                 .setSecurityCode(creditCardData.cvv)
                 .build()
-            val encryptedCard = Cards.ENCRYPTOR.encryptFields(card, paymentSession.generationTime, publishableKey).call()
-            val creditCardDetails = CardDetails.Builder()
-                .setHolderName(creditCardData.billingData?.fullName())
-                .setEncryptedCardNumber(encryptedCard.encryptedNumber)
-                .setEncryptedExpiryMonth(encryptedCard.encryptedExpiryMonth)
-                .setEncryptedExpiryYear(encryptedCard.encryptedExpiryYear)
-                .setEncryptedSecurityCode(encryptedCard.encryptedSecurityCode)
-                .build()
-            // Now we have prepared everything we need to perform PaymentController.startPayment(...)
-            // Since this is again tied to lifecycle, we will skip using observers and execute network call
-            // directly
-            val paymentInitiation = PaymentInitiation.Builder(
-                paymentSession.paymentData, resolvedPaymentMethod.paymentMethodData)
-                .setPaymentMethodDetails(creditCardDetails)
-                .build()
-            // Prepare the call
-            val paymentInitiationCallable = CheckoutApi
-                .getInstance(application.applicationContext as Application)
-                .initiatePayment(paymentSession, paymentInitiation)
-            // Execute the call. If everything wasfine we will get "COMPLETED" type
-            val paymentInitiationResult = Single.fromCallable {
-                paymentInitiationCallable.call()
-            }.subscribeOn(Schedulers.io()).blockingGet()
 
-            when (paymentInitiationResult.type) {
-                PaymentInitiationResponse.Type.COMPLETE -> {
-                    // We call the SDK backend to deliver the payload, also because Adyen will not report
-                    // if the credit card number or cvv/cvc was invalid, we rely on backend to return that
-                    // information in the exchange call, as they will get an throwable when trying to execute
-                    // a payment
-                    val creditCardType = CreditCardTypeWithRegex.resolveCreditCardType(creditCardData.number)
-                    val creditCardTypeName = creditCardType.name
-                    mobilabApi.updateAlias(creditCardRegistrationRequest.aliasId, AliasUpdateRequest(
-                        extra = AliasExtra(
-                            creditCardConfig = CreditCardConfig(
-                                ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear.toString().takeLast(2),
-                                ccMask = creditCardData.number.takeLast(4),
-                                ccType = creditCardTypeName,
-                                ccHolderName = creditCardData.billingData?.fullName()
-                            ),
-                            paymentMethod = PaymentMethodType.CC.name,
-                            payload = paymentInitiationResult.completeFields!!.payload,
-                            personalData = creditCardRegistrationRequest.billingData
+            val cardEncryptor = CardEncryptorImpl()
+            val encryptCard = cardEncryptor.encryptFields(card, publicKey)
 
-                        )
-                    )).subscribeOn(Schedulers.io()).blockingAwait()
+            val creditCardType = CreditCardTypeWithRegex.resolveCreditCardType(creditCardData.number)
+            val creditCardTypeName = creditCardType.name
+
+            val exchangeAlias = mobilabApi.exchangeAlias(
+                creditCardRegistrationRequest.aliasId,
+                AliasUpdateRequest(
+                    extra = AliasExtra(
+                        creditCardConfig = CreditCardConfig(
+                            ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear.toString().takeLast(2),
+                            ccMask = creditCardData.number.takeLast(4),
+                            ccType = creditCardTypeName,
+                            ccHolderName = creditCardData.billingData?.fullName(),
+                            encryptedCardNumber = encryptCard.encryptedNumber,
+                            encryptedExpiryMonth = encryptCard.encryptedExpiryMonth,
+                            encryptedExpiryYear = encryptCard.encryptedExpiryYear,
+                            encryptedSecurityCode = encryptCard.encryptedSecurityCode
+                        ),
+                        paymentMethod = PaymentMethodType.CC.name,
+                        personalData = creditCardRegistrationRequest.billingData
+
+                    )
+                )
+            )
+                .subscribeOn(Schedulers.io()).blockingGet()
+
+            when (exchangeAlias.resultCode) {
+                "Authorised" -> {
                     it.onSuccess(creditCardRegistrationRequest.aliasId)
                 }
-                PaymentInitiationResponse.Type.ERROR -> {
-                    it.onError(OtherException(
-                        message = paymentInitiationResult.errorFields?.errorMessage
-                            ?: "Unknown Adyen error"
-                    ))
-                }
-                PaymentInitiationResponse.Type.VALIDATION -> {
-                    it.onError(ValidationException(
-                        message = paymentInitiationResult.errorFields?.errorMessage
-                            ?: "Unknown Adyen validation error"
-                    ))
-                }
-                else -> {
-                    Timber.w("Unhandled Adyen response ${paymentInitiationResult.type.name}")
+
+                "IdentifyShopper" -> {
+                    val action = Threeds2FingerprintAction()
+                    action.token = exchangeAlias.token
+                    action.paymentData = exchangeAlias.paymentData
+                    action.type = exchangeAlias.actionType
+
+                    if (threeDsCompletedSubject.hasComplete()) {
+                        threeDsCompletedSubject = PublishSubject.create()
+                    }
+
+                    threeDsCompletedSubject
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ _ ->
+                            it.onSuccess(creditCardRegistrationRequest.aliasId)
+                        }, {
+                        })
+                    if (threeDsErrorSubject.hasComplete()) {
+                        threeDsErrorSubject = PublishSubject.create()
+                    }
+
+                    threeDsErrorSubject
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ checkoutError ->
+                            it.onError(checkoutError)
+                        }, {
+                        })
+                    activity.startActivity(
+                        ThreeDsHandleActivity.createIntent(
+                            activity, action,
+                            creditCardRegistrationRequest.aliasId
+                        )
+                    )
                 }
             }
-            // Some of these calls check if they are running on main thread as they expect to use
-            // observers tied to the lifecycle. Since all calls are internal and rather quick we can
-            // run everything on the main thread except the network calls
-        }.subscribeOn(AndroidSchedulers.mainThread())
+        }
     }
 
     fun registerSepa(
@@ -218,13 +167,13 @@ class AdyenHandler @Inject constructor(
         // Doesn't matter what the method is, token should be returned
         return Single.create {
             try {
-                val parameters = PaymentSetupParametersImpl(application)
-                val result = mapOf(
-                    "token" to parameters.sdkToken,
-                    "channel" to "Android",
-                    "returnUrl" to "app://" // We're not supporting 3ds at the moment, so return URL is never used
-                )
-                it.onSuccess(result)
+                // val parameters = PaymentSetupParametersImpl(application)
+                // val result = mapOf(
+                //         "token" to parameters.sdkToken,
+                //         "channel" to "Android",
+                //         "returnUrl" to "app://" // We're not supporting 3ds at the moment, so return URL is never used
+                // )
+                it.onSuccess(emptyMap())
             } catch (exception: CheckoutException) {
                 // This should rarely happen as it is actually just a device fingerprint
                 it.onError(OtherException("Generating token failed", originalException = exception))
@@ -232,17 +181,51 @@ class AdyenHandler @Inject constructor(
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun paymentReferenceImplStringConstructor(): Constructor<PaymentReferenceImpl> {
-        return PaymentReferenceImpl::class.java.declaredConstructors.first {
-            it.parameterTypes.contains(String::class.java)
-        } as Constructor<PaymentReferenceImpl>
+    @SuppressLint("CheckResult")
+    fun handleAdyenThreeDsResult(
+        activity: Activity,
+        data: ActionComponentData,
+        aliasId: String
+    ): Single<VerifyThreeDsDto> {
+        return Single.create {
+            val jsonString = gson.toJson(data.details)
+            val result: AdyenThreeDsResult = gson.fromJson(jsonString, AdyenThreeDsResult::class.java)
+
+            val challengeResult = result.nameValuePairs.details.nameValuePairs.challengeResult
+            val fingerprint = result.nameValuePairs.details.nameValuePairs.fingerprint
+            if (challengeResult != null) {
+                mobilabApi.verifyChallenge(
+                    aliasId = aliasId,
+                    verifyChallengeRequestDto = VerifyChallengeRequestDto(
+                        challengeResult = challengeResult
+                    )
+                ).subscribeOn(Schedulers.io())
+                    .subscribe({
+                        if (it.resultCode == "Authorised") {
+                            threeDsCompletedSubject.onNext(Unit)
+                            threeDsCompletedSubject.onComplete()
+                            activity.finish()
+                        }
+                    }, {
+                    })
+            }
+            if (fingerprint != null) {
+                it.onSuccess(
+                    mobilabApi.verifyThreeDs(
+                        aliasId = aliasId,
+                        verifyThreeDsRequestDto = VerifyThreeDsRequestDto(
+                            fingerprintResult = fingerprint
+                        )
+                    ).subscribeOn(Schedulers.io())
+                        .blockingGet()
+                )
+            }
+        }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun paymentHandlerImplConstructor(): Constructor<PaymentHandlerImpl> {
-        return PaymentHandlerImpl::class.java.declaredConstructors.first {
-            it.parameterTypes.contains(Application::class.java)
-        } as Constructor<PaymentHandlerImpl>
+    fun onThreeDsError(activity: Activity, checkoutException: CheckoutException) {
+        threeDsErrorSubject.onNext(checkoutException)
+        threeDsErrorSubject.onComplete()
+        activity.finish()
     }
 }

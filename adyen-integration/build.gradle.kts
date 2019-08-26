@@ -104,10 +104,8 @@ dependencies {
     implementation(project(Modules.stash))
     implementation(Libs.Kotlin.stdlib)
 
-    implementation(Libs.Adyen.base)
-    implementation(Libs.Adyen.ui)
-    implementation(Libs.Adyen.core)
-    implementation(Libs.Adyen.coreCard)
+    implementation(Libs.Adyen.thressDs2)
+    implementation(Libs.Adyen.card)
 
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
@@ -118,6 +116,7 @@ dependencies {
     testImplementation(Libs.junit)
     testImplementation(Libs.robolectric)
     testImplementation(Libs.AndroidX.Test.core)
+    testImplementation(Libs.AndroidX.Test.espressoIntents)
     kaptTest(Libs.Dagger.compiler)
 
     androidTestImplementation(project(Modules.stash))

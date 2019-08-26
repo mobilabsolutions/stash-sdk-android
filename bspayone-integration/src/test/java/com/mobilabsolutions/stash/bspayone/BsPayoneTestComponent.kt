@@ -1,6 +1,6 @@
 /*
- * Copyright © MobiLab Solutions GmbH
- */
+* Copyright © MobiLab Solutions GmbH
+*/
 
 package com.mobilabsolutions.stash.bspayone
 

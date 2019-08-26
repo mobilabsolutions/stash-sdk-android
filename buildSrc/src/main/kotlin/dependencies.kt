@@ -58,11 +58,8 @@ object Libs {
     const val dokkaPlugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
 
     object Adyen {
-        private const val version = "2.4.7"
-        const val base = "com.adyen.checkout:base:$version"
-        const val ui = "com.adyen.checkout:ui:$version"
-        const val core = "com.adyen.checkout:core:$version"
-        const val coreCard = "com.adyen.checkout:core-card:$version"
+        val thressDs2 = "com.adyen.checkout:3ds2:3.0.0"
+        val card = "com.adyen.checkout:card-ui:3.1.1"
     }
 
     object Google {

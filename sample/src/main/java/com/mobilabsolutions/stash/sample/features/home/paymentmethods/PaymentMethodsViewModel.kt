@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.sample.features.home.paymentmethods
 
+import android.app.Activity
 import androidx.lifecycle.viewModelScope
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
@@ -64,8 +65,8 @@ class PaymentMethodsViewModel @AssistedInject constructor(
         observePaymentMethods(Unit)
     }
 
-    fun onAddBtnClicked() {
-        disposables += Stash.getRegistrationManager().registerPaymentMethodUsingUi()
+    fun onAddBtnClicked(activity: Activity) {
+        disposables += Stash.getRegistrationManager().registerPaymentMethodUsingUi(activity)
             .subscribeOn(schedulers.io)
             .observeOn(schedulers.main)
             .subscribe(this::onRegisterPaymentSuccess) { errorChannel.offer(it) }

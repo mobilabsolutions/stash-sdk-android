@@ -9,9 +9,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.PaymentMethodAlias
 import com.mobilabsolutions.stash.core.PaymentMethodType
+import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.internal.IdempotencyKey
 import com.mobilabsolutions.stash.core.internal.PspCoordinator
 import com.mobilabsolutions.stash.core.internal.psphandler.AdditionalRegistrationData
@@ -48,9 +48,9 @@ class UiRequestHandler @Inject constructor() {
      * launched by the appropriate PSP integration module.
      */
     sealed class DataEntryResult {
-        class Success : DataEntryResult()
-        class Processing : DataEntryResult()
-        class Failure(val throwable: Throwable) : DataEntryResult()
+        object Success : DataEntryResult()
+        object Processing : DataEntryResult()
+        data class Failure(val throwable: Throwable) : DataEntryResult()
     }
 
     /**
@@ -75,10 +75,8 @@ class UiRequestHandler @Inject constructor() {
     internal val processing = AtomicBoolean(false)
     private var currentRequestId = -1
 
-    private var startedNewTask = false
-
     var hostActivityProvider: ReplaySubject<AppCompatActivity> =
-        ReplaySubject.create()
+            ReplaySubject.create()
 
     lateinit var paymentMethodTypeSubject: ReplaySubject<PaymentMethodType>
 
@@ -132,11 +130,7 @@ class UiRequestHandler @Inject constructor() {
      * Signals that flow is completed and activity should be finished
      */
     private fun flowCompleted(hostActivity: Activity) {
-        if (startedNewTask) {
-            hostActivity.finishAndRemoveTask()
-        } else {
-            hostActivity.finish()
-        }
+        hostActivity.finish()
 
         hostActivityProvider = ReplaySubject.create()
         currentRequestId = -1
@@ -168,20 +162,10 @@ class UiRequestHandler @Inject constructor() {
     /**
      * Launches host activity and returns the activity creation subject as a single
      */
-    private fun launchHostActivity(activity: Activity?): Single<AppCompatActivity> {
+    private fun launchHostActivity(activity: Activity): Single<AppCompatActivity> {
         if (!hostActivityProvider.hasValue()) {
-            if (activity != null) {
-                startedNewTask = false
-                val launchHostIntent =
-                    Intent(activity, RegistrationProcessHostActivity::class.java)
-                activity.startActivity(launchHostIntent)
-            } else {
-                startedNewTask = true
-                val launchHostIntent =
-                    Intent(applicationContext, RegistrationProcessHostActivity::class.java)
-                launchHostIntent.flags += Intent.FLAG_ACTIVITY_NEW_TASK
-                applicationContext.startActivity(launchHostIntent)
-            }
+            val launchHostIntent = Intent(activity, RegistrationProcessHostActivity::class.java)
+            activity.startActivity(launchHostIntent)
         }
         return hostActivityProvider.firstOrError()
     }
@@ -191,8 +175,8 @@ class UiRequestHandler @Inject constructor() {
      * based on response from PSP, we need some special handling to be able to process those
      * events and still return a Single<PaymentMethodAlias> as is specified by the API
      */
-    fun handleCreditCardMethodEntryRequest(
-        activity: Activity?,
+    private fun handleCreditCardMethodEntryRequest(
+        activity: Activity,
         integration: Integration,
         paymentMethodType: PaymentMethodType,
         requestId: Int,
@@ -205,42 +189,42 @@ class UiRequestHandler @Inject constructor() {
 
         return hostActivitySingle.flatMap { hostActivity ->
             (hostActivity as RegistrationProcessHostActivity).setState(
-                RegistrationProcessHostActivity.CurrentState.ENTRY
+                    RegistrationProcessHostActivity.CurrentState.ENTRY
             )
             integration.handlePaymentMethodEntryRequest(
-                hostActivity,
-                paymentMethodType,
-                AdditionalRegistrationData(),
-                resultSubject
+                    hostActivity,
+                    paymentMethodType,
+                    AdditionalRegistrationData(),
+                    resultSubject
             ).subscribeOn(AndroidSchedulers.mainThread())
-                .flatMap {
-                    val idempotencyKey = IdempotencyKey(UUID.randomUUID().toString(), false)
-                    val expiryMonth = it.extraData.getValue((CreditCardData.EXPIRY_MONTH)).toInt()
-                    val expiryYear = it.extraData.getValue(CreditCardData.EXPIRY_YEAR).toInt()
-                    val creditCardData = CreditCardData(
-                        it.extraData.getValue(CreditCardData.CREDIT_CARD_NUMBER),
-                        expiryMonth,
-                        expiryYear,
-                        it.extraData.getValue(CreditCardData.CVV),
-                        BillingData(
-                            firstName = BillingData.ADDITIONAL_DATA_FIRST_NAME,
-                            lastName = it.extraData.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME))
-                    )
-                    resultSubject.onNext(DataEntryResult.Processing())
-                    block.invoke(creditCardData, it, idempotencyKey)
-                        .toObservable()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnNext {
-                            resultSubject.onNext(DataEntryResult.Success())
-                        }
-                        .doOnError { throwable ->
-                            resultSubject.onNext(DataEntryResult.Failure(throwable))
-                        }
-                        .filterNotSuccess()
-                }
-                .firstOrError()
-                .doFinally { flowCompleted(hostActivity) }
-                .ambWith(errorSubject.firstOrError())
+                    .flatMap {
+                        val idempotencyKey = IdempotencyKey(UUID.randomUUID().toString(), false)
+                        val expiryMonth = it.extraData.getValue((CreditCardData.EXPIRY_MONTH)).toInt()
+                        val expiryYear = it.extraData.getValue(CreditCardData.EXPIRY_YEAR).toInt()
+                        val creditCardData = CreditCardData(
+                                it.extraData.getValue(CreditCardData.CREDIT_CARD_NUMBER),
+                                expiryMonth,
+                                expiryYear,
+                                it.extraData.getValue(CreditCardData.CVV),
+                                BillingData(
+                                        firstName = BillingData.ADDITIONAL_DATA_FIRST_NAME,
+                                        lastName = it.extraData.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME))
+                        )
+                        resultSubject.onNext(DataEntryResult.Processing)
+                        block.invoke(creditCardData, it, idempotencyKey)
+                                .toObservable()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .doOnNext {
+                                    resultSubject.onNext(DataEntryResult.Success)
+                                }
+                                .doOnError { throwable ->
+                                    resultSubject.onNext(DataEntryResult.Failure(throwable))
+                                }
+                                .filterNotSuccess()
+                    }
+                    .firstOrError()
+                    .doFinally { flowCompleted(hostActivity) }
+                    .ambWith(errorSubject.firstOrError())
         }
     }
 
@@ -250,7 +234,7 @@ class UiRequestHandler @Inject constructor() {
      * events and still return a Single<PaymentMethodAlias> as is specified by the API
      */
     fun handleSepaMethodEntryRequest(
-        activity: Activity?,
+        activity: Activity,
         integration: Integration,
         paymentMethodType: PaymentMethodType,
         requestId: Int,
@@ -264,39 +248,39 @@ class UiRequestHandler @Inject constructor() {
 
         return hostActivitySingle.flatMap { hostActivity ->
             (hostActivity as RegistrationProcessHostActivity).setState(
-                RegistrationProcessHostActivity.CurrentState.ENTRY
+                    RegistrationProcessHostActivity.CurrentState.ENTRY
             )
             integration.handlePaymentMethodEntryRequest(
-                hostActivity,
-                paymentMethodType,
-                AdditionalRegistrationData(),
-                resultSubject
+                    hostActivity,
+                    paymentMethodType,
+                    AdditionalRegistrationData(),
+                    resultSubject
             ).subscribeOn(AndroidSchedulers.mainThread())
-                .flatMap {
+                    .flatMap {
 
-                    val idempotencyKey = IdempotencyKey(UUID.randomUUID().toString(), false)
+                        val idempotencyKey = IdempotencyKey(UUID.randomUUID().toString(), false)
 
-                    val sepaData = SepaData(
-                        iban = it.extraData.getValue(SepaData.IBAN),
-                        billingData = BillingData(
-                            firstName = it.extraData.getValue(BillingData.ADDITIONAL_DATA_FIRST_NAME),
-                            lastName = it.extraData.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME)
+                        val sepaData = SepaData(
+                                iban = it.extraData.getValue(SepaData.IBAN),
+                                billingData = BillingData(
+                                        firstName = it.extraData.getValue(BillingData.ADDITIONAL_DATA_FIRST_NAME),
+                                        lastName = it.extraData.getValue(BillingData.ADDITIONAL_DATA_LAST_NAME)
+                                )
                         )
-                    )
-                    resultSubject.onNext(DataEntryResult.Processing())
-                    block.invoke(sepaData, it, idempotencyKey)
-                        .toObservable()
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .doOnNext {
-                            resultSubject.onNext(DataEntryResult.Success())
-                        }
-                        .doOnError { throwable ->
-                            resultSubject.onNext(DataEntryResult.Failure(throwable))
-                        }
-                        .filterNotSuccess()
-                }.firstOrError()
-                .doFinally { flowCompleted(hostActivity) }
-                .ambWith(errorSubject.firstOrError())
+                        resultSubject.onNext(DataEntryResult.Processing)
+                        block.invoke(sepaData, it, idempotencyKey)
+                                .toObservable()
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .doOnNext {
+                                    resultSubject.onNext(DataEntryResult.Success)
+                                }
+                                .doOnError { throwable ->
+                                    resultSubject.onNext(DataEntryResult.Failure(throwable))
+                                }
+                                .filterNotSuccess()
+                    }.firstOrError()
+                    .doFinally { flowCompleted(hostActivity) }
+                    .ambWith(errorSubject.firstOrError())
         }
     }
 
@@ -306,7 +290,7 @@ class UiRequestHandler @Inject constructor() {
      * events and still return a Single<PaymentMethodAlias> as is specified by the API
      */
     fun handlePaypalMethodEntryRequest(
-        activity: Activity?,
+        activity: Activity,
         integration: Integration,
         additionalRegistrationData: AdditionalRegistrationData,
         requestId: Int
@@ -315,19 +299,19 @@ class UiRequestHandler @Inject constructor() {
         val resultSubject = PublishSubject.create<DataEntryResult>()
         return launchHostActivity(activity).flatMap { hostActivity ->
             (hostActivity as RegistrationProcessHostActivity).setState(
-                RegistrationProcessHostActivity.CurrentState.ENTRY
+                    RegistrationProcessHostActivity.CurrentState.ENTRY
             )
             integration.handlePaymentMethodEntryRequest(
-                hostActivity,
-                PaymentMethodType.PAYPAL,
-                additionalRegistrationData,
-                resultSubject
+                    hostActivity,
+                    PaymentMethodType.PAYPAL,
+                    additionalRegistrationData,
+                    resultSubject
             ).firstOrError()
-                .doFinally {
-                    flowCompleted(hostActivity)
-                }.ambWith(errorSubject.map {
-                    AdditionalRegistrationData()
-                }.firstOrError())
+                    .doFinally {
+                        flowCompleted(hostActivity)
+                    }.ambWith(errorSubject.map {
+                        AdditionalRegistrationData()
+                    }.firstOrError())
         }
     }
 
@@ -335,7 +319,7 @@ class UiRequestHandler @Inject constructor() {
      * Method picker setup and handling
      */
     fun askUserToChosePaymentMethod(
-        activity: Activity? = null,
+        activity: Activity,
         requestId: Int
     ): Single<PaymentMethodType> {
         checkFlow(requestId)
@@ -343,21 +327,21 @@ class UiRequestHandler @Inject constructor() {
         return launchHostActivity(activity).flatMap { hostActivity ->
             val supportFragmentManager = hostActivity.supportFragmentManager
             (hostActivity as RegistrationProcessHostActivity).setState(
-                RegistrationProcessHostActivity.CurrentState.CHOOSER
+                    RegistrationProcessHostActivity.CurrentState.CHOOSER
             )
             paymentMethodTypeSubject = ReplaySubject.create()
             val paymentMethodChoiceFragment = PaymentMethodChoiceFragment()
             currentChooserFragment = paymentMethodChoiceFragment
             supportFragmentManager.beginTransaction()
-                .add(R.id.host_activity_fragment, paymentMethodChoiceFragment).commitNow()
+                    .add(R.id.host_activity_fragment, paymentMethodChoiceFragment).commitNow()
             paymentMethodTypeSubject
-                .doOnError {
-                    flowCompleted(hostActivity)
-                }
-                .doOnNext {
-                    supportFragmentManager.beginTransaction().remove(currentChooserFragment)
-                        .commitNow()
-                }.firstOrError()
+                    .doOnError {
+                        flowCompleted(hostActivity)
+                    }
+                    .doOnNext {
+                        supportFragmentManager.beginTransaction().remove(currentChooserFragment)
+                                .commitNow()
+                    }.firstOrError()
         }
     }
 
@@ -365,7 +349,7 @@ class UiRequestHandler @Inject constructor() {
      * Entry point for requests for CreditCard UI handling from PSP Coordinator
      */
     internal fun registerCreditCardUsingUIComponent(
-        activity: Activity?,
+        activity: Activity,
         pspCoordinator: PspCoordinator,
         requestId: Int
     ): Single<PaymentMethodAlias> {
@@ -373,12 +357,17 @@ class UiRequestHandler @Inject constructor() {
             it.value.contains(PaymentMethodType.CC)
         }.keys.first()
         return handleCreditCardMethodEntryRequest(
-            activity,
-            chosenIntegration,
-            PaymentMethodType.CC,
-            requestId
+                activity,
+                chosenIntegration,
+                PaymentMethodType.CC,
+                requestId
         ) { creditCardData, additionalUIData, idempotencyKey ->
-            pspCoordinator.handleRegisterCreditCard(creditCardData = creditCardData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
+            pspCoordinator.handleRegisterCreditCard(
+                    activity = activity,
+                    creditCardData = creditCardData,
+                    additionalUIData = additionalUIData,
+                    idempotencyKey = idempotencyKey
+            )
         }
     }
 
@@ -386,7 +375,7 @@ class UiRequestHandler @Inject constructor() {
      * Entry point for requests for SEPA UI handling from PSP Coordinator
      */
     internal fun registerSepaUsingUIComponent(
-        activity: Activity?,
+        activity: Activity,
         pspCoordinator: PspCoordinator,
         requestId: Int
     ): Single<PaymentMethodAlias> {
@@ -396,12 +385,17 @@ class UiRequestHandler @Inject constructor() {
         }.keys.first()
 
         return handleSepaMethodEntryRequest(
-            activity,
-            chosenIntegration,
-            PaymentMethodType.SEPA,
-            requestId
+                activity,
+                chosenIntegration,
+                PaymentMethodType.SEPA,
+                requestId
         ) { sepaData, additionalUIData, idempotencyKey ->
-            pspCoordinator.handleRegisterSepa(sepaData = sepaData, additionalUIData = additionalUIData, idempotencyKey = idempotencyKey)
+            pspCoordinator.handleRegisterSepa(
+                    activity = activity,
+                    sepaData = sepaData,
+                    additionalUIData = additionalUIData,
+                    idempotencyKey = idempotencyKey
+            )
         }
     }
 }
@@ -412,8 +406,8 @@ class UiRequestHandler @Inject constructor() {
  */
 private fun <T> Observable<T>.filterNotSuccess(): Observable<T> {
     return materialize()
-        .filter {
-            !it.isOnError && !it.isOnComplete
-        }
-        .map { it.value }
+            .filter {
+                !it.isOnError && !it.isOnComplete
+            }
+            .map { it.value }
 }

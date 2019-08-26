@@ -4,12 +4,12 @@
 
 package com.mobilabsolutions.stash.adyen
 
-import android.content.Context
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
+import com.mobilabsolutions.stash.adyen.internal.uicomponents.UiComponentHandler
 import com.mobilabsolutions.stash.core.PaymentMethodType
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.exceptions.registration.RegistrationFailedException
-import com.mobilabsolutions.stash.adyen.internal.uicomponents.UiComponentHandler
 import com.mobilabsolutions.stash.core.internal.IdempotencyKey
 import com.mobilabsolutions.stash.core.internal.IntegrationInitialization
 import com.mobilabsolutions.stash.core.internal.StashComponent
@@ -22,13 +22,14 @@ import com.mobilabsolutions.stash.core.internal.psphandler.SepaRegistrationReque
 import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler
 import io.reactivex.Observable
 import io.reactivex.Single
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * @author <a href="ugi@mobilabsolutions.com">Ugi</a>
  */
-class AdyenIntegration @Inject constructor(stashComponent: StashComponent) : Integration {
+class AdyenIntegration @Inject constructor(
+    stashComponent: StashComponent
+) : Integration {
     override val identifier = name
 
     @Inject
@@ -36,9 +37,6 @@ class AdyenIntegration @Inject constructor(stashComponent: StashComponent) : Int
 
     @Inject
     lateinit var uiComponentHandler: UiComponentHandler
-
-    @Inject
-    lateinit var applicationContext: Context
 
     companion object : IntegrationCompanion {
 
@@ -71,8 +69,8 @@ class AdyenIntegration @Inject constructor(stashComponent: StashComponent) : Int
     }
 
     val adyenIntegrationComponent: AdyenIntegrationComponent = DaggerAdyenIntegrationComponent.builder()
-        .stashComponent(stashComponent)
-        .build()
+            .stashComponent(stashComponent)
+            .build()
 
     init {
         adyenIntegrationComponent.inject(this)
@@ -83,6 +81,7 @@ class AdyenIntegration @Inject constructor(stashComponent: StashComponent) : Int
     }
 
     override fun handleRegistrationRequest(
+        activity: Activity,
         registrationRequest: RegistrationRequest,
         idempotencyKey: IdempotencyKey
     ): Single<String> {
@@ -92,9 +91,9 @@ class AdyenIntegration @Inject constructor(stashComponent: StashComponent) : Int
         return when (standardizedData) {
             is CreditCardRegistrationRequest -> {
                 if (idempotencyKey.isUserSupplied) {
-                    Timber.w(applicationContext.getString(R.string.idempotency_message))
+//                    Timber.w(applicationContext.getString(R.string.idempotency_message))
                 }
-                adyenHandler.registerCreditCard(standardizedData, additionalData)
+                adyenHandler.registerCreditCard(activity, standardizedData, additionalData)
             }
             is SepaRegistrationRequest -> adyenHandler.registerSepa(standardizedData)
             else -> throw RegistrationFailedException("Unsupported payment method")

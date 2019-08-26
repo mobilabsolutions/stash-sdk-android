@@ -14,7 +14,11 @@ import javax.inject.Singleton
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 30-05-2019.
  */
 @Singleton
-@Component(modules = [SslSupportModule::class, StashModule::class, AdyenModule::class])
+@Component(modules = [
+    StashModule::class,
+    AdyenModule::class,
+    SslSupportModule::class
+])
 internal interface AdyenIntegrationTestComponent : StashComponent {
     fun injectTest(test: AdyenIntegrationTest)
 }

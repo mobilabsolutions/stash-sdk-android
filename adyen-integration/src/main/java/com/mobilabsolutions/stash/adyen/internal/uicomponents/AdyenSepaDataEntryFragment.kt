@@ -13,11 +13,11 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.mobilabsolutions.stash.adyen.AdyenIntegration
+import com.mobilabsolutions.stash.adyen.R
 import com.mobilabsolutions.stash.core.CustomizationExtensions
 import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
-import com.mobilabsolutions.stash.adyen.AdyenIntegration
-import com.mobilabsolutions.stash.adyen.R
 import com.mobilabsolutions.stash.core.internal.uicomponents.IbanTextWatcher
 import com.mobilabsolutions.stash.core.internal.uicomponents.PersonalDataValidator
 import com.mobilabsolutions.stash.core.internal.uicomponents.SepaDataValidator
@@ -33,23 +33,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.subjects.BehaviorSubject
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.adyenSepaEntrySwipeRefresh
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.back
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryText
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.countryTitleTextView
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.errorIban
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.errorSepaFirstName
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.errorSepaLastName
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.firstNameEditText
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.firstNameTitleTextView
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.ibanNumberEditText
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.ibanTitleTextView
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.lastNameEditText
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.lastNameTitleTextView
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.saveButton
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenCellLayout
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenMainLayout
-import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.sepaScreenTitle
+import kotlinx.android.synthetic.main.adyen_sepa_data_entry_fragment.*
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -201,7 +185,7 @@ class AdyenSepaDataEntryFragment : Fragment() {
         }
         adyenSepaEntrySwipeRefresh.isEnabled = false
 
-        disposables += uiComponentHandler.getResultObservable().subscribe {
+        disposables += uiComponentHandler.getResultObservable()!!.subscribe {
             when (it) {
                 is UiRequestHandler.DataEntryResult.Success -> {
                     adyenSepaEntrySwipeRefresh.isRefreshing = false

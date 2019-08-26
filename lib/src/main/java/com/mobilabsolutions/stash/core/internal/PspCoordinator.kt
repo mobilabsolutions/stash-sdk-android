@@ -5,7 +5,6 @@
 package com.mobilabsolutions.stash.core.internal
 
 import android.app.Activity
-import android.content.Context
 import com.mobilabsolutions.stash.core.CreditCardTypeWithRegex
 import com.mobilabsolutions.stash.core.ExtraAliasInfo
 import com.mobilabsolutions.stash.core.PaymentMethodAlias
@@ -78,8 +77,7 @@ internal class PspCoordinator @Inject constructor(
     private val mobilabApi: MobilabApi,
     private val exceptionMapper: ExceptionMapper,
     private val integrations: Map<@JvmSuppressWildcards Integration, @JvmSuppressWildcards Set<@JvmSuppressWildcards PaymentMethodType>>,
-    private val uiRequestHandler: UiRequestHandler,
-    private val context: Context
+    private val uiRequestHandler: UiRequestHandler
 ) {
 
     /**
@@ -88,11 +86,13 @@ internal class PspCoordinator @Inject constructor(
      * payment method type (in this case CreditCard) and forwards it to [handleRegisterCreditCard]
      */
     fun handleRegisterCreditCard(
+        activity: Activity,
         creditCardData: CreditCardData,
         additionalUIData: AdditionalRegistrationData = AdditionalRegistrationData(),
         idempotencyKey: IdempotencyKey
     ): Single<PaymentMethodAlias> {
         return handleRegisterCreditCard(
+            activity,
             creditCardData,
             additionalUIData,
             integrations
@@ -107,7 +107,8 @@ internal class PspCoordinator @Inject constructor(
      * Handler method that creates the alias by calling the backend endpoint, processes additional data, and upon PSP Integration flow
      * completion creates the PaymentMethodAlias object that is returned to 3rd party developer.
      */
-    fun handleRegisterCreditCard(
+    private fun handleRegisterCreditCard(
+        activity: Activity,
         creditCardData: CreditCardData,
         additionalUIData: AdditionalRegistrationData,
         chosenIntegration: Integration,
@@ -119,15 +120,16 @@ internal class PspCoordinator @Inject constructor(
         additionalUIData.extraData[BillingData.ADDITIONAL_DATA_LAST_NAME]?.let { billingData.lastName = it }
 
         // TODO Validate in case data is being sent from custom UI before starting the communication with the backend
+
         return chosenIntegration.getPreparationData(PaymentMethodType.CC).flatMap { preparationData ->
-            mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey.key, preparationData)
+            mobilabApi.createAlias(chosenIntegration.identifier, idempotencyKey.key)
                 .subscribeOn(Schedulers.io())
                 .flatMap {
                     val standardizedData = CreditCardRegistrationRequest(creditCardData = creditCardData, billingData = billingData, aliasId = it.aliasId)
                     val additionalData = AdditionalRegistrationData(it.pspExtra + additionalUIData.extraData)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
-                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(registrationRequest, idempotencyKey)
+                    val pspAliasSingle = chosenIntegration.handleRegistrationRequest(activity, registrationRequest, idempotencyKey)
 
                     pspAliasSingle.map { alias ->
                         val cardType = CreditCardTypeWithRegex.resolveCreditCardType(standardizedData.creditCardData.number)
@@ -150,12 +152,14 @@ internal class PspCoordinator @Inject constructor(
      * payment method type (in this case Sepa) and forwards it to [handleRegisterSepa]
      */
     fun handleRegisterSepa(
+        activity: Activity,
         sepaData: SepaData,
         additionalUIData: AdditionalRegistrationData = AdditionalRegistrationData(),
         idempotencyKey: IdempotencyKey
     ): Single<PaymentMethodAlias> {
 
         return handleRegisterSepa(
+            activity,
             sepaData,
             additionalUIData,
             integrations
@@ -170,6 +174,7 @@ internal class PspCoordinator @Inject constructor(
      * completion creates the PaymentMethodAlias object that is returned to 3rd party developer.
      */
     fun handleRegisterSepa(
+        activity: Activity,
         sepaData: SepaData,
         additionalUIData: AdditionalRegistrationData,
         chosenIntegration: Integration,
@@ -190,7 +195,7 @@ internal class PspCoordinator @Inject constructor(
                     val additionalData = AdditionalRegistrationData(aliasResponse.pspExtra + additionalUIData.extraData)
                     val registrationRequest = RegistrationRequest(standardizedData, additionalData)
 
-                    chosenIntegration.handleRegistrationRequest(registrationRequest, idempotencyKey)
+                    chosenIntegration.handleRegistrationRequest(activity, registrationRequest, idempotencyKey)
                         .map {
                             val maskedIban = standardizedData.sepaData.iban
                             PaymentMethodAlias(it, PaymentMethodType.SEPA, extraAliasInfo = ExtraAliasInfo.SepaExtraInfo(maskedIban))
@@ -211,7 +216,7 @@ internal class PspCoordinator @Inject constructor(
      * A handler method that checks if the chooser needs to be shown, and
      * which screen should be shown, based on available integrations and SDK configuration
      */
-    fun handleRegisterPaymentMethodUsingUi(activity: Activity?, specificPaymentMethodType: PaymentMethodType?): Single<PaymentMethodAlias> {
+    fun handleRegisterPaymentMethodUsingUi(activity: Activity, specificPaymentMethodType: PaymentMethodType?): Single<PaymentMethodAlias> {
         val requestId = Random().nextInt(Int.MAX_VALUE)
         val resolvedPaymentMethodType = if (specificPaymentMethodType != null) {
             Single.just(specificPaymentMethodType)
@@ -242,7 +247,7 @@ internal class PspCoordinator @Inject constructor(
      * This method will similarly to SEPA and Credit Card create the alias by calling the backend endpoint, processes additional data, and upon PayPal flow
      * completion create the PaymentMethodAlias object that is returned to 3rd party developer.
      */
-    private fun registerPayPalUsingUIComponent(activity: Activity?, requestId: Int): Single<PaymentMethodAlias> {
+    private fun registerPayPalUsingUIComponent(activity: Activity, requestId: Int): Single<PaymentMethodAlias> {
         val hostActivity = uiRequestHandler.hostActivityProvider.value
         if (hostActivity != null && hostActivity is RegistrationProcessHostActivity) {
             hostActivity.showPaypalLoading()
@@ -267,7 +272,7 @@ internal class PspCoordinator @Inject constructor(
                             val additionalData = it
                             val standardizedData = PayPalRegistrationRequest(aliasResponse.aliasId)
                             val registrationRequest = RegistrationRequest(standardizedData, additionalData)
-                            chosenIntegration.handleRegistrationRequest(registrationRequest, idempotencyKey)
+                            chosenIntegration.handleRegistrationRequest(activity, registrationRequest, idempotencyKey)
                         }
                 }.map {
                     PaymentMethodAlias(it, PaymentMethodType.PAYPAL, extraAliasInfo = ExtraAliasInfo.PaypalExtraInfo(email = email))

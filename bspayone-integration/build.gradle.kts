@@ -118,6 +118,7 @@ dependencies {
     testImplementation(Libs.junit)
     testImplementation(Libs.robolectric)
     testImplementation(Libs.AndroidX.Test.core)
+    testImplementation(Libs.AndroidX.Test.espressoIntents)
     kaptTest(Libs.Dagger.compiler)
 
     androidTestImplementation(project(Modules.stash))
