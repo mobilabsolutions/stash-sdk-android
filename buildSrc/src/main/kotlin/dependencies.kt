@@ -8,7 +8,6 @@ import java.util.Properties
 object StashRelease {
     const val travisBuildNumber = "TRAVIS_BUILD_NUMBER"
     const val travisTag = "TRAVIS_TAG"
-    const val templatePublishableKey = "TEMPLATE_PUBLIC_KEY"
     const val mobilabBackendUrl = "DEV_BACKEND_DEVELOPMENT"
     const val newBsApiUrl = "NEW_BS_API_URL"
     const val testPublishableKey = "DEV_PUBLISHABLE_KEY"
@@ -34,7 +33,6 @@ val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
 val isTravisTag: Boolean = !System.getenv("TRAVIS_TAG").isNullOrBlank()
 
 object Modules {
-    const val templateIntegration = ":template-integration"
     const val bsPayoneIntegration = ":bspayone-integration"
     const val braintreeIntegration = ":braintree-integration"
     const val adyenIntegration = ":adyen-integration"
