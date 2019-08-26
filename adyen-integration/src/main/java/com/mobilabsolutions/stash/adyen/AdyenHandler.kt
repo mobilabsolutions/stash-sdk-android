@@ -167,12 +167,12 @@ class AdyenHandler @Inject constructor(
         // Doesn't matter what the method is, token should be returned
         return Single.create {
             try {
-//                val parameters = PaymentSetupParametersImpl(application)
-//                val result = mapOf(
-//                        "token" to parameters.sdkToken,
-//                        "channel" to "Android",
-//                        "returnUrl" to "app://" // We're not supporting 3ds at the moment, so return URL is never used
-//                )
+               // val parameters = PaymentSetupParametersImpl(application)
+               // val result = mapOf(
+               //         "token" to parameters.sdkToken,
+               //         "channel" to "Android",
+               //         "returnUrl" to "app://" // We're not supporting 3ds at the moment, so return URL is never used
+               // )
                 it.onSuccess(emptyMap())
             } catch (exception: CheckoutException) {
                 // This should rarely happen as it is actually just a device fingerprint

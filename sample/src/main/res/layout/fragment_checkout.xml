@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © MobiLab Solutions GmbH
   -->
 
@@ -11,7 +10,7 @@
 
         <variable
             name="state"
-            type="com.mobilabsolutions.stash.sample.main.checkout.CheckoutViewState" />
+            type="com.mobilabsolutions.stash.sample.features.home.checkout.CheckoutViewState" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -94,4 +93,3 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
-

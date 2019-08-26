@@ -9,10 +9,10 @@ import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.data.entities.PaymentType
 import com.mobilabsolutions.stash.sample.data.entities.Result
 import com.mobilabsolutions.stash.sample.data.mappers.PaymentMethodListResponseToEntity
-import com.mobilabsolutions.stash.sample.network.CreditCardAliasData
-import com.mobilabsolutions.stash.sample.network.PayPalAliasData
 import com.mobilabsolutions.stash.sample.network.SampleMerchantService
-import com.mobilabsolutions.stash.sample.network.SepaAliasData
+import com.mobilabsolutions.stash.sample.network.data.CreditCardAliasData
+import com.mobilabsolutions.stash.sample.network.data.PayPalAliasData
+import com.mobilabsolutions.stash.sample.network.data.SepaAliasData
 import com.mobilabsolutions.stash.sample.network.request.AuthorizePaymentRequest
 import com.mobilabsolutions.stash.sample.network.request.CreatePaymentMethodRequest
 import com.mobilabsolutions.stash.sample.network.response.AuthorizePaymentResponse
@@ -28,7 +28,11 @@ class RemotePaymentMethodDataSource @Inject constructor(
     private val sampleMerchantService: SampleMerchantService,
     private val paymentMethodListResponseToEntity: PaymentMethodListResponseToEntity
 ) {
-    suspend fun addPaymentMethod(userId: String, aliasId: String, paymentMethod: PaymentMethod): Result<CreatePaymentMethodResponse> {
+    suspend fun addPaymentMethod(
+        userId: String,
+        aliasId: String,
+        paymentMethod: PaymentMethod
+    ): Result<CreatePaymentMethodResponse> {
         var request = CreatePaymentMethodRequest(
             aliasId = aliasId,
             type = paymentMethod._type,

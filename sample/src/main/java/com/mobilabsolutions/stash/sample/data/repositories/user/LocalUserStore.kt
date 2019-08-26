@@ -22,11 +22,6 @@ class LocalUserStore @Inject constructor(
 
     fun observerUser() = userDao.entryObservable()
 
-    suspend fun createUser(): User = transactionRunner {
-        userDao.insert(User(userId = "empty_user_id"))
-        userDao.getUser()
-    }
-
     suspend fun saveUser(user: User) = transactionRunner {
         entityInserter.insertOrUpdate(userDao, user)
     }

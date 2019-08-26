@@ -5,6 +5,8 @@
 package com.mobilabsolutions.stash.sample.inject
 
 import android.content.Context
+import androidx.lifecycle.ProcessLifecycleOwner
+import androidx.lifecycle.coroutineScope
 import com.mobilabsolutions.stash.sample.SampleApplication
 import com.mobilabsolutions.stash.sample.util.AppCoroutineDispatchers
 import com.mobilabsolutions.stash.sample.util.AppRxSchedulers
@@ -12,8 +14,8 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.rx2.asCoroutineDispatcher
 import java.io.File
 import javax.inject.Named
 import javax.inject.Singleton
@@ -42,9 +44,9 @@ object AppModule {
     @JvmStatic
     @Singleton
     @Provides
-    fun provideCoroutineDispatchers(schedulers: AppRxSchedulers) = AppCoroutineDispatchers(
-        io = schedulers.io.asCoroutineDispatcher(),
-        computation = schedulers.computation.asCoroutineDispatcher(),
+    fun provideCoroutineDispatchers() = AppCoroutineDispatchers(
+        io = Dispatchers.IO,
+        computation = Dispatchers.Default,
         main = Dispatchers.Main
     )
 
@@ -53,4 +55,11 @@ object AppModule {
     @Singleton
     @Named("cache")
     fun provideCacheDir(application: SampleApplication): File = application.cacheDir
+
+    @JvmStatic
+    @Provides
+    @ProcessLifetime
+    fun provideLongLifetimeScope(): CoroutineScope {
+        return ProcessLifecycleOwner.get().lifecycle.coroutineScope
+    }
 }

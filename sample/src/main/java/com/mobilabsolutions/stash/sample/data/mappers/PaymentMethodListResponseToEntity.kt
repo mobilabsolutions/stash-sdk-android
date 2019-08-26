@@ -14,7 +14,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class PaymentMethodListResponseToEntity @Inject constructor() : Mapper<PaymentMethodListResponse, List<PaymentMethod>> {
-    override fun map(from: PaymentMethodListResponse): List<PaymentMethod> {
+    override suspend fun map(from: PaymentMethodListResponse): List<PaymentMethod> {
         return from.paymentMethods.map {
             PaymentMethod(
                 paymentMethodId = it.paymentMethodId,

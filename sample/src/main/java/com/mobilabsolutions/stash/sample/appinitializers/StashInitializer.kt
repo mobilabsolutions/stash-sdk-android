@@ -21,20 +21,21 @@ import javax.inject.Inject
 class StashInitializer @Inject constructor() : AppInitializer {
     override fun init(application: Application) {
         val stashConfiguration = StashConfiguration(
-                publishableKey = BuildConfig.newBsApiKey,
-                endpoint = BuildConfig.mobilabBackendUrl,
-                integrationList = listOf(
-                        BraintreeIntegration to PaymentMethodType.CC,
-                        AdyenIntegration to PaymentMethodType.SEPA,
-                        BraintreeIntegration to PaymentMethodType.PAYPAL
-                ),
-                testMode = true,
-                stashUiConfiguration = StashUiConfiguration.Builder()
-                        .setSnackBarBackground(R.color.carnation).build()
+            publishableKey = BuildConfig.newBsApiKey,
+            endpoint = BuildConfig.mobilabBackendUrl,
+            integrationList = listOf(
+                BraintreeIntegration to PaymentMethodType.CC,
+                AdyenIntegration to PaymentMethodType.SEPA,
+                BraintreeIntegration to PaymentMethodType.PAYPAL
+            ),
+            testMode = true,
+            stashUiConfiguration = StashUiConfiguration.Builder()
+                .setSnackBarBackground(R.color.carnation).build()
+
         )
         Stash.initialize(
-                application,
-                stashConfiguration
+            application,
+            stashConfiguration
         )
     }
 }

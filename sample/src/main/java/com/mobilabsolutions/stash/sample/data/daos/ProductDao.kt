@@ -7,7 +7,7 @@ package com.mobilabsolutions.stash.sample.data.daos
 import androidx.room.Dao
 import androidx.room.Query
 import com.mobilabsolutions.stash.sample.data.entities.Product
-import io.reactivex.Observable
+import kotlinx.coroutines.flow.Flow
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 12-04-2019.
@@ -18,8 +18,5 @@ abstract class ProductDao : EntityDao<Product> {
     abstract suspend fun productCount(): Int
 
     @Query("SELECT * FROM product")
-    abstract fun entriesObservable(): Observable<List<Product>>
-
-    @Query("SELECT * FROM product")
-    abstract suspend fun products(): List<Product>
+    abstract fun entriesObservable(): Flow<List<Product>>
 }

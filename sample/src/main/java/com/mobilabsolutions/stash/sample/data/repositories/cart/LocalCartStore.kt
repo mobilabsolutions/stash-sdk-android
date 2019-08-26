@@ -18,7 +18,7 @@ class LocalCartStore @Inject constructor(
     private val cartDao: CartDao
 ) {
 
-    fun observeCarts() = cartDao.entriesObservable()
+    fun observerCartsFlow() = cartDao.entriesFlow()
 
     suspend fun addCartQuantity(cartWithProduct: CartWithProduct) = transactionRunner {
         val cart = cartWithProduct.entry!!
