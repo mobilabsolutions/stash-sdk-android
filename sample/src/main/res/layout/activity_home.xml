@@ -31,6 +31,7 @@
             android:layout_height="wrap_content"
             app:itemIconTint="@color/selector_navigation_text"
             app:itemTextColor="@color/selector_navigation_text"
+            app:labelVisibilityMode="labeled"
             app:layout_constraintBottom_toBottomOf="parent"
             app:menu="@menu/home_navigation" />
 

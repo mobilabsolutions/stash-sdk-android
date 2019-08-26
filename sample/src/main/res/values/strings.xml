@@ -9,6 +9,7 @@
     <string name="checkout">Check-out</string>
     <string name="register">Register</string>
     <string name="payment">Payment</string>
+    <string name="info">Info</string>
 
     <string name="message">%1$s added to the cart</string>
     <string name="price_placeholder">0,00 €</string>
@@ -32,4 +33,8 @@
     <string name="payment_success">Payment completed Successfully</string>
     <string name="dummy_version">v 0.0.2</string>
     <string name="action_ok">OK</string>
+
+    <string name="app_version">APP Version: %1$s</string>
+    <string name="lib_version">SDK Version: %1$s</string>
+    <string name="backend_version">Backend Version: 1</string>
 </resources>

@@ -38,7 +38,7 @@ class ItemsViewModel @AssistedInject constructor(
 
     init {
         viewModelScope.launchObserve(observeProducts) {
-            it.execute { result -> copy(products = result) }
+            it.execute { result -> copy(products = result().orEmpty()) }
         }
         observeProducts(Unit)
     }

@@ -34,4 +34,10 @@
         android:label="@string/items"
         tools:layout="@layout/fragment_items" />
 
+    <fragment
+        android:id="@+id/navigation_info"
+        android:name="com.mobilabsolutions.stash.sample.features.home.info.InfoFragment"
+        android:label="@string/info"
+        tools:layout="@layout/fragment_info" />
+
 </navigation>
