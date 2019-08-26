@@ -3,6 +3,7 @@
  */
 
 import org.gradle.api.Project
+import java.io.ByteArrayOutputStream
 import java.util.Properties
 
 object StashRelease {
@@ -199,4 +200,27 @@ fun Project.propOrDefWithTravis(propertyName: String, defaultValue: String): Str
         }
     }
     return if (propertyValue == null || propertyValue.isEmpty()) defaultValue else propertyValue
+}
+
+fun Project.sdkVersionName(): String {
+    val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand(this)
+    val getCommitHash = ("git rev-parse --short HEAD").runCommand(this)
+    val sdkVersionName =
+        propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
+    return if (isTravisTag) {
+        sdkVersionName
+    } else {
+        "$sdkVersionName-SNAPSHOT"
+    }
+}
+
+fun String.runCommand(project: Project): String {
+    val command = this
+    val output = ByteArrayOutputStream()
+    project.exec {
+        workingDir = project.rootDir
+        commandLine = command.split(" ")
+        standardOutput = output
+    }
+    return String(output.toByteArray()).trim()
 }

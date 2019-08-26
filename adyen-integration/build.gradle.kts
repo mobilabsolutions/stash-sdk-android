@@ -2,102 +2,14 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.dokka.gradle.DokkaAndroidTask
-import java.io.ByteArrayOutputStream
 
 plugins {
     id("com.android.library")
     id("org.jetbrains.dokka-android")
     id("maven-publish")
-    kotlin("android")
-    kotlin("kapt")
-    kotlin("android.extensions")
     signing
-}
-
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-}
-
-androidExtensions {
-    isExperimental = true
-}
-
-fun String.runCommand(): String {
-    val command = this
-    val output = ByteArrayOutputStream()
-    project.exec {
-        this.workingDir = project.rootDir
-        this.commandLine = command.split(" ")
-        this.standardOutput = output
-    }
-    return String(output.toByteArray()).trim()
-}
-
-val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand()
-
-val getCommitHash = ("git rev-parse --short HEAD").runCommand()
-
-val getCommitCount = ("git rev-list --count HEAD").runCommand()
-
-val sdkVersionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, getCommitCount).toInt()
-
-val sdkVersionName = propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
-
-android {
-    compileSdkVersion(StashBuildConfigs.compileSdk)
-    buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
-
-    defaultConfig {
-        minSdkVersion(StashBuildConfigs.minSdk)
-        targetSdkVersion(StashBuildConfigs.targetSdk)
-
-        versionCode = sdkVersionCode
-        versionName = if (isTravisTag) {
-            sdkVersionName
-        } else {
-            "$sdkVersionName-SNAPSHOT"
-        }
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
-
-    buildTypes {
-        getByName("debug") {
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
-        }
-        getByName("release") {
-            isMinifyEnabled = false
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "testPublishableKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    lintOptions {
-        isAbortOnError = false
-    }
-
-    testOptions {
-        unitTests.apply {
-            isIncludeAndroidResources = true
-            all(KotlinClosure1<Any, Test>({
-                (this as Test).also {
-                    maxHeapSize = "1024m"
-                    testLogging {
-                        events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
-                    }
-                }
-            }, this))
-        }
-    }
+    id("CommonPlugin")
 }
 
 dependencies {
@@ -126,14 +38,6 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     androidTestImplementation(Libs.AndroidX.Test.core)
     kaptAndroidTest(Libs.Dagger.compiler)
-}
-
-licenseReport {
-    generateHtmlReport = true
-    generateJsonReport = true
-
-    copyHtmlReportToAssets = false
-    copyJsonReportToAssets = false
 }
 
 tasks {

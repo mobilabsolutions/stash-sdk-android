@@ -8,37 +8,18 @@ val haveFabricApiKey = propOrDefWithTravis(DemoRelease.fabricApiKey, "").isNotEm
 
 plugins {
     id("com.android.application")
-    kotlin("android")
-    kotlin("kapt")
-    kotlin("android.extensions")
     id("com.github.ben-manes.versions")
+    id("CommonPlugin")
     id("androidx.navigation.safeargs.kotlin")
 }
 if (haveFabricApiKey) {
     apply(plugin = "io.fabric")
 }
 
-kapt {
-    correctErrorTypes = true
-    useBuildCache = true
-}
-
-androidExtensions {
-    isExperimental = true
-}
-
 android {
-    compileSdkVersion(StashBuildConfigs.compileSdk)
-    buildToolsVersion(StashBuildConfigs.buildtoolsVersion)
     defaultConfig {
         applicationId = "com.mobilabsolutions.stash.sample"
-        minSdkVersion(StashBuildConfigs.minSdk)
-        targetSdkVersion(StashBuildConfigs.targetSdk)
-        versionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, DemoRelease.versionCode).toInt()
-        versionName = "${DemoRelease.versionName}-$versionCode"
         vectorDrawables.useSupportLibrary = true
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -64,9 +45,6 @@ android {
 
     buildTypes {
         getByName("debug") {
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
-
             applicationIdSuffix = ".debug"
             versionNameSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
@@ -79,15 +57,7 @@ android {
         }
         getByName("release") {
             signingConfig = signingConfigs.getByName("debug")
-
-            buildConfigField("String", "mobilabBackendUrl", "\"" + propOrDefWithTravis(StashRelease.mobilabBackendUrl, "") + "\"")
-            buildConfigField("String", "newBsApiKey", "\"" + propOrDefWithTravis(StashRelease.testPublishableKey, "") + "\"")
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     dataBinding {
@@ -199,12 +169,4 @@ tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
     outputFormatter = "json"
     outputDir = "build/dependencyUpdates"
     reportfileName = "report"
-}
-
-licenseReport {
-    generateHtmlReport = true
-    generateJsonReport = true
-
-    copyHtmlReportToAssets = false
-    copyJsonReportToAssets = false
 }

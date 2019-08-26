@@ -21,7 +21,7 @@ import javax.inject.Inject
 class StashInitializer @Inject constructor() : AppInitializer {
     override fun init(application: Application) {
         val stashConfiguration = StashConfiguration(
-            publishableKey = BuildConfig.newBsApiKey,
+            publishableKey = BuildConfig.testPublishableKey,
             endpoint = BuildConfig.mobilabBackendUrl,
             integrationList = listOf(
                 AdyenIntegration to PaymentMethodType.CC,

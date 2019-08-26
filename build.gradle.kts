@@ -12,19 +12,12 @@ buildscript {
 
     dependencies {
         classpath(Libs.androidGradlePlugin)
-
         classpath(Libs.Kotlin.gradlePlugin)
-
         classpath(Libs.Kotlin.extensions)
-
-        classpath(Libs.gradleVersionsPlugin)
-
         classpath(Libs.AndroidX.Navigation.safeArgs)
-
         classpath(Libs.Google.fabricPlugin)
-
+        classpath(Libs.gradleVersionsPlugin)
         classpath(Libs.licencePlugin)
-
         classpath(Libs.dokkaPlugin)
     }
 }
@@ -35,7 +28,6 @@ plugins {
 }
 
 allprojects {
-
     extra["signing.keyId"] = "CCE33870"
     extra["signing.secretKeyRingFile"] = rootProject.file("signing/secring.gpg")
     extra["signing.password"] = "android"
@@ -49,7 +41,6 @@ allprojects {
 
 subprojects {
     apply(plugin = "com.diffplug.gradle.spotless")
-    apply(plugin = "com.jaredsburrows.license")
     spotless {
         kotlin {
             target("**/*.kt")
