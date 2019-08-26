@@ -55,13 +55,13 @@ class AdyenHandler @Inject constructor(
         return Single.create {
             val creditCardData = creditCardRegistrationRequest.creditCardData
             val publicKey = additionalData.extraData[clientEncryptionKey]
-                    ?: error("No client encrypt key!")
+                ?: error("No client encrypt key!")
 
             val card = Card.Builder()
-                    .setNumber(creditCardData.number)
-                    .setExpiryDate(creditCardData.expiryMonth, creditCardData.expiryYear)
-                    .setSecurityCode(creditCardData.cvv)
-                    .build()
+                .setNumber(creditCardData.number)
+                .setExpiryDate(creditCardData.expiryMonth, creditCardData.expiryYear)
+                .setSecurityCode(creditCardData.cvv)
+                .build()
 
             val cardEncryptor = CardEncryptorImpl()
             val encryptCard = cardEncryptor.encryptFields(card, publicKey)
@@ -70,26 +70,26 @@ class AdyenHandler @Inject constructor(
             val creditCardTypeName = creditCardType.name
 
             val exchangeAlias = mobilabApi.exchangeAlias(
-                    creditCardRegistrationRequest.aliasId,
-                    AliasUpdateRequest(
-                            extra = AliasExtra(
-                                    creditCardConfig = CreditCardConfig(
-                                            ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear.toString().takeLast(2),
-                                            ccMask = creditCardData.number.takeLast(4),
-                                            ccType = creditCardTypeName,
-                                            ccHolderName = creditCardData.billingData?.fullName(),
-                                            encryptedCardNumber = encryptCard.encryptedNumber,
-                                            encryptedExpiryMonth = encryptCard.encryptedExpiryMonth,
-                                            encryptedExpiryYear = encryptCard.encryptedExpiryYear,
-                                            encryptedSecurityCode = encryptCard.encryptedSecurityCode
-                                    ),
-                                    paymentMethod = PaymentMethodType.CC.name,
-                                    personalData = creditCardRegistrationRequest.billingData
+                creditCardRegistrationRequest.aliasId,
+                AliasUpdateRequest(
+                    extra = AliasExtra(
+                        creditCardConfig = CreditCardConfig(
+                            ccExpiry = creditCardData.expiryMonth.toString() + "/" + creditCardData.expiryYear.toString().takeLast(2),
+                            ccMask = creditCardData.number.takeLast(4),
+                            ccType = creditCardTypeName,
+                            ccHolderName = creditCardData.billingData?.fullName(),
+                            encryptedCardNumber = encryptCard.encryptedNumber,
+                            encryptedExpiryMonth = encryptCard.encryptedExpiryMonth,
+                            encryptedExpiryYear = encryptCard.encryptedExpiryYear,
+                            encryptedSecurityCode = encryptCard.encryptedSecurityCode
+                        ),
+                        paymentMethod = PaymentMethodType.CC.name,
+                        personalData = creditCardRegistrationRequest.billingData
 
-                            )
                     )
+                )
             )
-                    .subscribeOn(Schedulers.io()).blockingGet()
+                .subscribeOn(Schedulers.io()).blockingGet()
 
             when (exchangeAlias.resultCode) {
                 "Authorised" -> {
@@ -107,28 +107,28 @@ class AdyenHandler @Inject constructor(
                     }
 
                     threeDsCompletedSubject
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ _ ->
-                                it.onSuccess(creditCardRegistrationRequest.aliasId)
-                            }, {
-                            })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ _ ->
+                            it.onSuccess(creditCardRegistrationRequest.aliasId)
+                        }, {
+                        })
                     if (threeDsErrorSubject.hasComplete()) {
                         threeDsErrorSubject = PublishSubject.create()
                     }
 
                     threeDsErrorSubject
-                            .subscribeOn(Schedulers.io())
-                            .observeOn(AndroidSchedulers.mainThread())
-                            .subscribe({ checkoutError ->
-                                it.onError(checkoutError)
-                            }, {
-                            })
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ checkoutError ->
+                            it.onError(checkoutError)
+                        }, {
+                        })
                     activity.startActivity(
-                            ThreeDsHandleActivity.createIntent(
-                                    activity, action,
-                                    creditCardRegistrationRequest.aliasId
-                            )
+                        ThreeDsHandleActivity.createIntent(
+                            activity, action,
+                            creditCardRegistrationRequest.aliasId
+                        )
                     )
                 }
             }
@@ -143,23 +143,23 @@ class AdyenHandler @Inject constructor(
         val billingData = sepaRegistrationRequest.billingData
 
         val sepaConfig = SepaConfig(
-                iban = sepaData.iban,
-                bic = sepaData.bic,
-                name = sepaData.billingData?.fullName(),
-                lastname = billingData.lastName,
-                street = billingData.address1,
-                zip = billingData.zip,
-                city = billingData.city,
-                country = billingData.country
+            iban = sepaData.iban,
+            bic = sepaData.bic,
+            name = sepaData.billingData?.fullName(),
+            lastname = billingData.lastName,
+            street = billingData.address1,
+            zip = billingData.zip,
+            city = billingData.city,
+            country = billingData.country
         )
         return mobilabApi.updateAlias(
-                aliasId,
-                AliasUpdateRequest(
-                        extra = AliasExtra(sepaConfig = sepaConfig,
-                                paymentMethod = PaymentMethodType.SEPA.name,
-                                personalData = sepaRegistrationRequest.billingData
-                        )
+            aliasId,
+            AliasUpdateRequest(
+                extra = AliasExtra(sepaConfig = sepaConfig,
+                    paymentMethod = PaymentMethodType.SEPA.name,
+                    personalData = sepaRegistrationRequest.billingData
                 )
+            )
         ).andThen(Single.just(aliasId))
     }
 
@@ -167,12 +167,12 @@ class AdyenHandler @Inject constructor(
         // Doesn't matter what the method is, token should be returned
         return Single.create {
             try {
-               // val parameters = PaymentSetupParametersImpl(application)
-               // val result = mapOf(
-               //         "token" to parameters.sdkToken,
-               //         "channel" to "Android",
-               //         "returnUrl" to "app://" // We're not supporting 3ds at the moment, so return URL is never used
-               // )
+                // val parameters = PaymentSetupParametersImpl(application)
+                // val result = mapOf(
+                //         "token" to parameters.sdkToken,
+                //         "channel" to "Android",
+                //         "returnUrl" to "app://" // We're not supporting 3ds at the moment, so return URL is never used
+                // )
                 it.onSuccess(emptyMap())
             } catch (exception: CheckoutException) {
                 // This should rarely happen as it is actually just a device fingerprint
@@ -195,29 +195,29 @@ class AdyenHandler @Inject constructor(
             val fingerprint = result.nameValuePairs.details.nameValuePairs.fingerprint
             if (challengeResult != null) {
                 mobilabApi.verifyChallenge(
-                        aliasId = aliasId,
-                        verifyChallengeRequestDto = VerifyChallengeRequestDto(
-                                challengeResult = challengeResult
-                        )
+                    aliasId = aliasId,
+                    verifyChallengeRequestDto = VerifyChallengeRequestDto(
+                        challengeResult = challengeResult
+                    )
                 ).subscribeOn(Schedulers.io())
-                        .subscribe({
-                            if (it.resultCode == "Authorised") {
-                                threeDsCompletedSubject.onNext(Unit)
-                                threeDsCompletedSubject.onComplete()
-                                activity.finish()
-                            }
-                        }, {
-                        })
+                    .subscribe({
+                        if (it.resultCode == "Authorised") {
+                            threeDsCompletedSubject.onNext(Unit)
+                            threeDsCompletedSubject.onComplete()
+                            activity.finish()
+                        }
+                    }, {
+                    })
             }
             if (fingerprint != null) {
                 it.onSuccess(
-                        mobilabApi.verifyThreeDs(
-                                aliasId = aliasId,
-                                verifyThreeDsRequestDto = VerifyThreeDsRequestDto(
-                                        fingerprintResult = fingerprint
-                                )
-                        ).subscribeOn(Schedulers.io())
-                                .blockingGet()
+                    mobilabApi.verifyThreeDs(
+                        aliasId = aliasId,
+                        verifyThreeDsRequestDto = VerifyThreeDsRequestDto(
+                            fingerprintResult = fingerprint
+                        )
+                    ).subscribeOn(Schedulers.io())
+                        .blockingGet()
                 )
             }
         }
