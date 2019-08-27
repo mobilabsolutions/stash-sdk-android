@@ -18,6 +18,7 @@ dependencies {
 
     implementation(Libs.Adyen.thressDs2)
     implementation(Libs.Adyen.card)
+    implementation(Libs.Adyen.redirect)
 
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)

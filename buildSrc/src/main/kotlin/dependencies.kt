@@ -59,6 +59,7 @@ object Libs {
     object Adyen {
         val thressDs2 = "com.adyen.checkout:3ds2:3.0.0"
         val card = "com.adyen.checkout:card-ui:3.1.1"
+        val redirect = "com.adyen.checkout:redirect:3.0.0"
     }
 
     object Google {

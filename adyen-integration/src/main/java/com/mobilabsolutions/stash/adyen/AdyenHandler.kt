@@ -7,6 +7,7 @@ package com.mobilabsolutions.stash.adyen
 import android.annotation.SuppressLint
 import android.app.Activity
 import com.adyen.checkout.base.ActionComponentData
+import com.adyen.checkout.base.model.payments.response.RedirectAction
 import com.adyen.checkout.base.model.payments.response.Threeds2FingerprintAction
 import com.adyen.checkout.core.exeption.CheckoutException
 import com.adyen.checkout.cse.Card
@@ -130,6 +131,11 @@ class AdyenHandler @Inject constructor(
                             creditCardRegistrationRequest.aliasId
                         )
                     )
+                }
+
+                "RedirectShopper" -> {
+                    val redirectAction= RedirectAction()
+                    redirectAction.method
                 }
             }
         }

@@ -34,6 +34,8 @@ class ThreeDsHandleActivity : AppCompatActivity() {
         AdyenIntegration.integration?.adyenIntegrationComponent?.inject(this)
         super.onCreate(savedInstanceState)
 
+
+
         val aliasId = intent.getStringExtra(KEY_ALIAS)
         val action = intent.getParcelableExtra<Threeds2FingerprintAction>(KEY_ACTION)
         if (action != null) {
