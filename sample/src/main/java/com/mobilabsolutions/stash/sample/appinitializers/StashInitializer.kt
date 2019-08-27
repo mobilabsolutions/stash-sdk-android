@@ -24,7 +24,7 @@ class StashInitializer @Inject constructor() : AppInitializer {
             publishableKey = BuildConfig.testPublishableKey,
             endpoint = BuildConfig.mobilabBackendUrl,
             integrationList = listOf(
-                BraintreeIntegration to PaymentMethodType.CC,
+                AdyenIntegration to PaymentMethodType.CC,
                 AdyenIntegration to PaymentMethodType.SEPA,
                 BraintreeIntegration to PaymentMethodType.PAYPAL
             ),
