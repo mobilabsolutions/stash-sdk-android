@@ -15,6 +15,7 @@ plugins {
 dependencies {
     implementation(project(Modules.stash))
     implementation(Libs.Kotlin.stdlib)
+    implementation("eu.livotov.labs.android:3DSView:1.1.2.9")
 
     implementation(Libs.Adyen.thressDs2)
     implementation(Libs.Adyen.card)

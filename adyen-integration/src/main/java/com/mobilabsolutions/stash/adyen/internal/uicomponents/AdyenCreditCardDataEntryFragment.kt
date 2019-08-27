@@ -32,6 +32,7 @@ import com.mobilabsolutions.stash.core.internal.uicomponents.getContentOnFocusCh
 import com.mobilabsolutions.stash.core.internal.uicomponents.observeText
 import com.mobilabsolutions.stash.core.model.BillingData
 import com.mobilabsolutions.stash.core.model.CreditCardData
+import com.mobilabsolutions.stash.core.util.hideSoftInput
 import com.mobilabsolutions.stash.core.util.showKeyboard
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
@@ -98,6 +99,11 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         return inflater.inflate(R.layout.adyen_credit_card_data_entry_fragment, container, false)
     }
 
+    override fun onResume() {
+        super.onResume()
+        adyenCreditCardEntrySwipeRefreshLayout.isRefreshing = false
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         disposables.clear()
@@ -110,67 +116,67 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
         countryTitleTextView.visibility = View.GONE
 
         disposables += Observables.combineLatest(
-                firstNameTextChangedSubject,
-                lastNameTextChangedSubject,
-                cardNumberTextChangedSubject,
-                expirationDateSubject,
-                ccvTextChangedSubject,
-                AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState)
-                .subscribe(this::onViewState)
+            firstNameTextChangedSubject,
+            lastNameTextChangedSubject,
+            cardNumberTextChangedSubject,
+            expirationDateSubject,
+            ccvTextChangedSubject,
+            AdyenCreditCardDataEntryFragment::CreditCardDataEntryViewState)
+            .subscribe(this::onViewState)
 
         disposables += firstNameFocusSubject
-                .doOnNext {
-                    validateFirstNameAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstNameAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += firstNameTextChangedSubject
-                .doOnNext {
-                    validateFirstNameAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateFirstNameAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += lastNameFocusSubject
-                .doOnNext {
-                    validateLastNameAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastNameAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += lastNameTextChangedSubject
-                .doOnNext {
-                    validateLastNameAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateLastNameAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += cardNumberFocusSubject
-                .doOnNext {
-                    validateCardNumberAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCardNumberAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += cardNumberTextChangedSubject
-                .doOnNext {
-                    validateCardNumberAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCardNumberAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         disposables += expirationDateSubject
-                .doOnNext {
-                    validateExpirationDateAndUpdateUI(it)
-                }
-                .subscribe()
+            .doOnNext {
+                validateExpirationDateAndUpdateUI(it)
+            }
+            .subscribe()
 
         disposables += ccvFocusSubject
-                .doOnNext {
-                    validateCvvAndUpdateUI(it, false)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCvvAndUpdateUI(it, false)
+            }
+            .subscribe()
 
         disposables += ccvTextChangedSubject
-                .doOnNext {
-                    validateCvvAndUpdateUI(it, true)
-                }
-                .subscribe()
+            .doOnNext {
+                validateCvvAndUpdateUI(it, true)
+            }
+            .subscribe()
 
         stashUIConfiguration = uiCustomizationManager.getCustomizationPreferences()
 
@@ -252,21 +258,22 @@ class AdyenCreditCardDataEntryFragment : Fragment() {
                 dataMap[CreditCardData.CREDIT_CARD_NUMBER] = it.cardNumber
                 dataMap[CreditCardData.CVV] = it.cvv
                 dataMap[CreditCardData.EXPIRY_MONTH] = (selectedExpiryDate?.monthValue
-                        ?: throw RuntimeException("Month was null")).toString()
+                    ?: throw RuntimeException("Month was null")).toString()
                 dataMap[CreditCardData.EXPIRY_YEAR] = (selectedExpiryDate?.year
-                        ?: throw RuntimeException("Year was null")).toString()
+                    ?: throw RuntimeException("Year was null")).toString()
                 uiComponentHandler.submitData(dataMap)
+                requireActivity().hideSoftInput()
             }
         }
 
         expirationDateTextView.setOnClickListener {
             val monthYearPicker = MonthYearPicker(requireContext(),
-                    stashUIConfiguration = stashUIConfiguration,
-                    selectedDate = selectedExpiryDate,
-                    onCancelListener = DialogInterface.OnCancelListener {
-                        expirationDateSubject.onNext(LocalDate.MIN)
-                        cvvEditText.showKeyboard()
-                    }) {
+                stashUIConfiguration = stashUIConfiguration,
+                selectedDate = selectedExpiryDate,
+                onCancelListener = DialogInterface.OnCancelListener {
+                    expirationDateSubject.onNext(LocalDate.MIN)
+                    cvvEditText.showKeyboard()
+                }) {
                 val selectedExpiryWithoutLastDay = LocalDate.of(it.second, it.first, 1)
                 val lastDay = selectedExpiryWithoutLastDay.month.length(selectedExpiryWithoutLastDay.isLeapYear)
                 val selectedExpiry = LocalDate.of(it.second, it.first, lastDay)
