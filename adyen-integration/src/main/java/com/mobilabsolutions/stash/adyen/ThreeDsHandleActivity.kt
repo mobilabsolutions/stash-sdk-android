@@ -48,7 +48,6 @@ class ThreeDsHandleActivity : AppCompatActivity() {
                 putExtra(KEY_MD, md)
                 putExtra(KEY_PAREQ, paReq)
                 putExtra(KEY_TERMS_URL, termsUrl)
-
             }
         }
     }
