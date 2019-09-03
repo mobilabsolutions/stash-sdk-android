@@ -3,7 +3,6 @@
  */
 
 import org.gradle.api.Project
-import java.io.ByteArrayOutputStream
 import java.util.Properties
 
 object StashRelease {
@@ -14,6 +13,9 @@ object StashRelease {
     const val testPublishableKey = "DEV_PUBLISHABLE_KEY"
     const val MobilabNexusUsername = "MOBILAB_NEXUS_USER"
     const val MobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
+
+    const val versionCode = "1"
+    const val versionName = "0.14"
 }
 
 object StashBuildConfigs {
@@ -26,7 +28,7 @@ object StashBuildConfigs {
 object DemoRelease {
     const val fabricApiKey = "FABRIC_API_KEY"
     const val versionCode = "1"
-    const val versionName = "0.13" // 0.<Sprint number>
+    const val versionName = "0.14" // 0.<Sprint number>
 }
 
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
@@ -203,10 +205,10 @@ fun Project.propOrDefWithTravis(propertyName: String, defaultValue: String): Str
 }
 
 fun Project.sdkVersionName(): String {
-    val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand(this)
-    val getCommitHash = ("git rev-parse --short HEAD").runCommand(this)
-    val sdkVersionName =
-        propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
+    val versionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, StashRelease.versionCode)
+    val versionName = StashRelease.versionName + "-$versionCode"
+
+    val sdkVersionName = propOrDefWithTravis(StashRelease.travisTag, versionName)
     return if (isTravisTag) {
         sdkVersionName
     } else {
@@ -214,13 +216,9 @@ fun Project.sdkVersionName(): String {
     }
 }
 
-fun String.runCommand(project: Project): String {
-    val command = this
-    val output = ByteArrayOutputStream()
-    project.exec {
-        workingDir = project.rootDir
-        commandLine = command.split(" ")
-        standardOutput = output
-    }
-    return String(output.toByteArray()).trim()
+fun Project.appVersionName(): String {
+    val versionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, StashRelease.versionCode)
+    val versionName = StashRelease.versionName + "-$versionCode"
+
+    return propOrDefWithTravis(StashRelease.travisTag, versionName)
 }

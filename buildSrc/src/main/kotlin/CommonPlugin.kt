@@ -48,7 +48,7 @@ class CommonPlugin : Plugin<Project> {
             minSdkVersion(StashBuildConfigs.minSdk)
             targetSdkVersion(StashBuildConfigs.targetSdk)
 
-            versionCode = project.propOrDefWithTravis(StashRelease.travisBuildNumber, DemoRelease.versionCode).toInt()
+            versionCode = project.propOrDefWithTravis(StashRelease.travisBuildNumber, StashRelease.versionCode).toInt()
             versionName = project.sdkVersionName()
 
             testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"

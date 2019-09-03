@@ -20,6 +20,7 @@ android {
     defaultConfig {
         applicationId = "com.mobilabsolutions.stash.sample"
         vectorDrawables.useSupportLibrary = true
+        versionName = appVersionName()
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -46,7 +47,6 @@ android {
     buildTypes {
         getByName("debug") {
             applicationIdSuffix = ".debug"
-            versionNameSuffix = ".debug"
             signingConfig = signingConfigs.getByName("debug")
             ext.set("alwaysUpdateBuildId", false)
             isCrunchPngs = false
