@@ -147,16 +147,16 @@ class UiRequestHandler @Inject constructor() {
      * Request ID makes this reentrant from the perspective of PspCoordinators
      */
     fun checkFlow(requestId: Int) {
-        if (processing.compareAndSet(false, true)) {
-            if (currentRequestId != requestId && currentRequestId != -1) {
-                throw RuntimeException("Already processing payment method entry")
-            }
-            currentRequestId = requestId
-        } else {
-            if (currentRequestId != requestId) {
-                throw RuntimeException("Already processing payment method entry")
-            }
-        }
+        // if (processing.compareAndSet(false, true)) {
+        //     if (currentRequestId != requestId && currentRequestId != -1) {
+        //         throw RuntimeException("Already processing payment method entry")
+        //     }
+        //     currentRequestId = requestId
+        // } else {
+        //     if (currentRequestId != requestId) {
+        //         throw RuntimeException("Already processing payment method entry")
+        //     }
+        // }
     }
 
     /**

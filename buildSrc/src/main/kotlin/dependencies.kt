@@ -15,7 +15,7 @@ object StashRelease {
     const val MobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
 
     const val versionCode = "1"
-    const val versionName = "0.14"
+    const val versionName = "0.15"
 }
 
 object StashBuildConfigs {
