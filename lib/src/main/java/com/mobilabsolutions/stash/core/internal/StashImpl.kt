@@ -8,9 +8,9 @@ import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.stash.core.BuildConfig
 import com.mobilabsolutions.stash.core.PaymentMethodType
-import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.RegistrationManager
 import com.mobilabsolutions.stash.core.StashConfiguration
+import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.UiCustomizationManager
 import com.mobilabsolutions.stash.core.exceptions.base.ConfigurationException
 import com.mobilabsolutions.stash.core.internal.psphandler.IntegrationCompanion
@@ -100,7 +100,7 @@ class StashImpl(
 
         private var initialized = false
 
-        private var testComponent: StashComponent? = null
+        private var stashComponent: StashComponent? = null
 
         /**
          * Initalize method verifies the configuration and invokes the creation of the singleton
@@ -202,26 +202,14 @@ class StashImpl(
             return if (instance != null) {
                 instance!!.daggerGraph
             } else {
-                if (testComponent != null) {
-                    testComponent!!
+                if (stashComponent != null) {
+                    stashComponent!!
                 } else {
                     throw RuntimeException("Stash not initialized!")
                 }
             }
         }
 
-        /**
-         * For use in tests
-         */
-        internal fun supplyTestComponent(testComponent: StashComponent) {
-            Companion.testComponent = testComponent
-        }
-
-        /**
-         * For use in testing (TODO Maybe we should remove this)
-         */
-        fun reset() {
-            initialized = false
-        }
+        fun initialized(): Boolean = initialized
     }
 }

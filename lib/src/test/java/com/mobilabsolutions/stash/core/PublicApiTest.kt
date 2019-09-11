@@ -23,7 +23,7 @@ class PublicApiTest {
 
     @Before
     fun setUp() {
-        StashImpl.reset()
+
     }
 
     @Test

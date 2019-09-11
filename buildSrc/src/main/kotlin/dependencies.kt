@@ -90,6 +90,7 @@ object Libs {
         const val cardview = "androidx.cardview:cardview:1.0.0"
         const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
         const val coreKtx = "androidx.core:core-ktx:1.2.0-alpha02"
+        const val preference = "androidx.preference:preference:1.1.0"
 
         object Navigation {
             private const val version = "2.1.0"
