@@ -52,7 +52,7 @@ object Libs {
     const val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.1"
     const val iban4j = "org.iban4j:iban4j:3.2.1"
     const val braintree = "com.braintreepayments.api:braintree:3.4.0"
-    const val mvrx = "com.airbnb.android:mvrx:1.0.2"
+    const val mvrx = "com.airbnb.android:mvrx:1.1.0"
     const val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     const val viewPump = "io.github.inflationx:viewpump:2.0.3"
     const val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
@@ -78,21 +78,21 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.3.0"
+        private const val version = "1.3.1"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         const val rx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$version"
         const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
     }
 
     object AndroidX {
-        const val appcompat = "androidx.appcompat:appcompat:1.1.0-rc01"
+        const val appcompat = "androidx.appcompat:appcompat:1.1.0"
         const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0-beta01"
         const val cardview = "androidx.cardview:cardview:1.0.0"
         const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
         const val coreKtx = "androidx.core:core-ktx:1.2.0-alpha02"
 
         object Navigation {
-            private const val version = "2.1.0-beta02"
+            private const val version = "2.1.0"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
             const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
@@ -152,7 +152,7 @@ object Libs {
     }
 
     object OkHttp {
-        private const val version = "4.1.0"
+        private const val version = "4.2.0"
         const val okhttp = "com.squareup.okhttp3:okhttp:$version"
         const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
         const val mockwebserver = "com.squareup.okhttp3:mockwebserver:$version"
