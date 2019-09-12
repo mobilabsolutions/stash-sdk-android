@@ -37,4 +37,10 @@
     <string name="app_version">APP Version: %1$s</string>
     <string name="lib_version">SDK Version: %1$s</string>
     <string name="backend_version">Backend Version: 1</string>
+
+    <string name="pref_psp_adyen">ADYEN</string>
+    <string name="pref_psp_braintree">BRAINTREE</string>
+    <string name="pref_psp_bspayone">BS_PAYONE</string>
+
+
 </resources>

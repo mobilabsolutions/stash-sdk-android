@@ -90,6 +90,7 @@ dependencies {
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.coreKtx)
     implementation(Libs.AndroidX.cardview)
+    implementation(Libs.AndroidX.preference)
 
     implementation(Libs.Google.material)
 
