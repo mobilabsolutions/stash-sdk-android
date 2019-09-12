@@ -17,5 +17,5 @@ jobs:
     - name: Spotless Check
       run: ./gradlew spotlessCheck  
       
-    - name: Check
-      run: ./gradlew check
+    - name: Clean build
+      run: ./gradlew clean build
