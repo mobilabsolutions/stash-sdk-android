@@ -5,7 +5,6 @@
 package com.mobilabsolutions.stash.core
 
 import android.util.Base64
-import com.mobilabsolutions.stash.core.internal.StashImpl
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -23,7 +22,6 @@ class PublicApiTest {
 
     @Before
     fun setUp() {
-
     }
 
     @Test

@@ -22,7 +22,7 @@ class SamplePreferenceImpl @Inject constructor(
     private val defaultPspValue = context.getString(R.string.pref_psp_adyen)
 
     override fun setup() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("not implemented") // To change body of created functions use File | Settings | File Templates.
     }
 
     override var creditCardPreference: SamplePreference.Psp

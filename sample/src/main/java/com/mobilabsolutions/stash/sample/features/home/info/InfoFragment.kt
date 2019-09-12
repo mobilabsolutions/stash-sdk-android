@@ -45,7 +45,6 @@ class InfoFragment : BaseFragment() {
             }
         }
 
-
         binding.sepaSpinner.adapter = ArrayAdapter<SamplePreference.Psp>(view.context, android.R.layout.simple_list_item_1, SamplePreference.Psp.values())
         binding.sepaSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(p0: AdapterView<*>?) {

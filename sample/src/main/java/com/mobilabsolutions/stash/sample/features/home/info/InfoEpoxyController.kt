@@ -7,6 +7,5 @@ import com.airbnb.epoxy.TypedEpoxyController
  */
 class InfoEpoxyController : TypedEpoxyController<InfoState>() {
     override fun buildModels(data: InfoState?) {
-
     }
 }
