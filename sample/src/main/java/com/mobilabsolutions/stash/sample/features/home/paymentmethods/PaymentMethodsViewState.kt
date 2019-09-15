@@ -13,5 +13,6 @@ import com.mobilabsolutions.stash.sample.data.entities.User
  */
 data class PaymentMethodsViewState(
     val user: User? = null,
-    val paymentMethods: List<PaymentMethod> = emptyList()
+    val paymentMethods: List<PaymentMethod> = emptyList(),
+    val stashInitialised: Boolean = false
 ) : MvRxState

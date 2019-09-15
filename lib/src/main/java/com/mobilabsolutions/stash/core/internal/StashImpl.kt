@@ -210,6 +210,7 @@ class StashImpl(
             }
         }
 
+        @JvmStatic
         fun initialized(): Boolean = initialized
     }
 }

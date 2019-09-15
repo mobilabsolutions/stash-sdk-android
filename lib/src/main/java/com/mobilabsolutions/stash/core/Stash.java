@@ -49,4 +49,8 @@ public final class Stash {
         return StashImpl.getRegistrationManager();
     }
 
+    public static boolean initialised(){
+        return StashImpl.initialized();
+    }
+
 }

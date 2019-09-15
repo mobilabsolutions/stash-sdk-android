@@ -3,6 +3,7 @@ package com.mobilabsolutions.stash.sample.features.home.info
 import com.airbnb.mvrx.FragmentViewModelContext
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
+import com.mobilabsolutions.stash.core.Stash
 import com.mobilabsolutions.stash.sample.data.SamplePreference
 import com.mobilabsolutions.stash.sample.domain.interactors.ChangePspPref
 import com.mobilabsolutions.stash.sample.domain.interactors.GetPspPreference
@@ -34,7 +35,8 @@ class InfoViewModel @AssistedInject constructor(
         setState {
             copy(
                 creditCardPref = getPspPreference.getCreditCardPref(),
-                sepaPref = getPspPreference.getSepaPref()
+                sepaPref = getPspPreference.getSepaPref(),
+                stashInitialized = Stash.initialised()
             )
         }
     }

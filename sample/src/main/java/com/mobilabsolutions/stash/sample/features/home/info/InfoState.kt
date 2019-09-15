@@ -8,5 +8,6 @@ import com.mobilabsolutions.stash.sample.data.SamplePreference
  */
 data class InfoState(
     val creditCardPref: SamplePreference.Psp? = null,
-    val sepaPref: SamplePreference.Psp? = null
+    val sepaPref: SamplePreference.Psp? = null,
+    val stashInitialized: Boolean = false
 ) : MvRxState

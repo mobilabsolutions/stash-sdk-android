@@ -17,6 +17,7 @@ import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.domain.InvokeError
 import com.mobilabsolutions.stash.sample.domain.interactors.AddPaymentMethod
 import com.mobilabsolutions.stash.sample.domain.interactors.DeletePaymentMethod
+import com.mobilabsolutions.stash.sample.domain.interactors.InitialiseStash
 import com.mobilabsolutions.stash.sample.domain.launchObserve
 import com.mobilabsolutions.stash.sample.domain.observers.ObservePaymentMethods
 import com.mobilabsolutions.stash.sample.domain.observers.ObserveUser
@@ -37,7 +38,8 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     observePaymentMethods: ObservePaymentMethods,
     private val deletePaymentMethod: DeletePaymentMethod,
     private val addPaymentMethod: AddPaymentMethod,
-    private val schedulers: AppRxSchedulers
+    private val schedulers: AppRxSchedulers,
+    private val initialiseStash: InitialiseStash
 ) : BaseViewModel<PaymentMethodsViewState>(initialStateMethods) {
 
     @AssistedInject.Factory
@@ -53,6 +55,12 @@ class PaymentMethodsViewModel @AssistedInject constructor(
     }
 
     init {
+        viewModelScope.launchObserve(initialiseStash) {
+            it.execute { copy(stashInitialised = it() ?: false) }
+        }
+
+        viewModelScope.launch { initialiseStash(Unit) }
+
         viewModelScope.launchObserve(observeUser) {
             it.execute { result -> copy(user = result()) }
         }
