@@ -14,7 +14,7 @@
 
     // --- Payment chooser screen ----
     <string name="payment_chooser_title_text">Payment Method</string>
-    <string name="payment_chooser_subtitle_text">Please choose a payment method</string>
+    <string name="payment_chooser_subtitle_text">Choose a payment method</string>
     <string name="payment_chooser_credit_card">Credit Card</string>
     <string name="payment_chooser_sepa">SEPA</string>
     <string name="payment_chooser_paypal">PayPal</string>

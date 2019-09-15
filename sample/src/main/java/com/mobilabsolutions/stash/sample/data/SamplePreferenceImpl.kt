@@ -38,13 +38,13 @@ class SamplePreferenceImpl @Inject constructor(
         }
 
     private fun getStorageKeyForPsp(psp: SamplePreference.Psp) = when (psp) {
-        SamplePreference.Psp.ADAYEN -> context.getString(R.string.pref_psp_adyen)
+        SamplePreference.Psp.ADYEN -> context.getString(R.string.pref_psp_adyen)
         SamplePreference.Psp.BRAINTREE -> context.getString(R.string.pref_psp_braintree)
         SamplePreference.Psp.BS_PAYONE -> context.getString(R.string.pref_psp_bspayone)
     }
 
     private fun getPspForStorageValue(value: String) = when (value) {
-        context.getString(R.string.pref_psp_adyen) -> SamplePreference.Psp.ADAYEN
+        context.getString(R.string.pref_psp_adyen) -> SamplePreference.Psp.ADYEN
         context.getString(R.string.pref_psp_braintree) -> SamplePreference.Psp.BRAINTREE
         context.getString(R.string.pref_psp_bspayone) -> SamplePreference.Psp.BS_PAYONE
         else -> throw IllegalArgumentException("Invalid creditCardPreference value for PSP")
