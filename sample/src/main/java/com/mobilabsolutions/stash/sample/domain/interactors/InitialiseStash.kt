@@ -29,13 +29,13 @@ class InitialiseStash @Inject constructor(
             return true
         }
         val ccPsp: IntegrationCompanion = when (samplePreference.creditCardPreference) {
-            SamplePreference.Psp.ADAYEN -> AdyenIntegration
+            SamplePreference.Psp.ADYEN -> AdyenIntegration
             SamplePreference.Psp.BRAINTREE -> BraintreeIntegration
             SamplePreference.Psp.BS_PAYONE -> BsPayoneIntegration
         }
 
         val sepaPsp: IntegrationCompanion = when (samplePreference.sepaPreference) {
-            SamplePreference.Psp.ADAYEN -> AdyenIntegration
+            SamplePreference.Psp.ADYEN -> AdyenIntegration
             SamplePreference.Psp.BRAINTREE -> BraintreeIntegration
             SamplePreference.Psp.BS_PAYONE -> BsPayoneIntegration
         }
