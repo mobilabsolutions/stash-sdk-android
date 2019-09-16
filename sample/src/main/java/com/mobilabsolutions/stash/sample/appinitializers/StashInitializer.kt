@@ -15,7 +15,7 @@ import com.mobilabsolutions.stash.core.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.stash.sample.BuildConfig
 import com.mobilabsolutions.stash.sample.R
 import com.mobilabsolutions.stash.sample.data.SamplePreference
-import com.mobilabsolutions.stash.sample.data.SamplePreference.Psp.ADAYEN
+import com.mobilabsolutions.stash.sample.data.SamplePreference.Psp.ADYEN
 import com.mobilabsolutions.stash.sample.data.SamplePreference.Psp.BRAINTREE
 import com.mobilabsolutions.stash.sample.data.SamplePreference.Psp.BS_PAYONE
 import javax.inject.Inject
@@ -28,13 +28,13 @@ class StashInitializer @Inject constructor(
 ) : AppInitializer {
     override fun init(application: Application) {
         val ccPsp: IntegrationCompanion = when (samplePreference.creditCardPreference) {
-            ADAYEN -> AdyenIntegration
+            ADYEN -> AdyenIntegration
             BRAINTREE -> BraintreeIntegration
             BS_PAYONE -> BsPayoneIntegration
         }
 
         val sepaPsp: IntegrationCompanion = when (samplePreference.sepaPreference) {
-            ADAYEN -> AdyenIntegration
+            ADYEN -> AdyenIntegration
             BRAINTREE -> BraintreeIntegration
             BS_PAYONE -> BsPayoneIntegration
         }

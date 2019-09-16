@@ -12,7 +12,7 @@ interface SamplePreference {
     var sepaPreference: Psp
 
     enum class Psp {
-        ADAYEN,
+        ADYEN,
         BRAINTREE,
         BS_PAYONE
     }
