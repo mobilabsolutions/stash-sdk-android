@@ -59,6 +59,9 @@ class InfoFragment : BaseFragment() {
 
     override fun invalidate() {
         withState(viewModel) { state ->
+            binding.ccSpinner.isEnabled = !state.stashInitialized
+            binding.sepaSpinner.isEnabled = !state.stashInitialized
+
             state.creditCardPref?.let {
                 binding.ccSpinner.setSelection(it.ordinal)
             }

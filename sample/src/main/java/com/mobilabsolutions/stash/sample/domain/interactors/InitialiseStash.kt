@@ -1,42 +1,43 @@
-/*
- * Copyright © MobiLab Solutions GmbH
- */
-
-package com.mobilabsolutions.stash.sample.appinitializers
+package com.mobilabsolutions.stash.sample.domain.interactors
 
 import android.app.Application
 import com.mobilabsolutions.stash.adyen.AdyenIntegration
 import com.mobilabsolutions.stash.braintree.BraintreeIntegration
 import com.mobilabsolutions.stash.bspayone.BsPayoneIntegration
 import com.mobilabsolutions.stash.core.PaymentMethodType
+import com.mobilabsolutions.stash.core.Stash
 import com.mobilabsolutions.stash.core.StashConfiguration
 import com.mobilabsolutions.stash.core.StashUiConfiguration
 import com.mobilabsolutions.stash.core.internal.psphandler.IntegrationCompanion
 import com.mobilabsolutions.stash.sample.BuildConfig
 import com.mobilabsolutions.stash.sample.R
 import com.mobilabsolutions.stash.sample.data.SamplePreference
-import com.mobilabsolutions.stash.sample.data.SamplePreference.Psp.ADAYEN
-import com.mobilabsolutions.stash.sample.data.SamplePreference.Psp.BRAINTREE
-import com.mobilabsolutions.stash.sample.data.SamplePreference.Psp.BS_PAYONE
+import com.mobilabsolutions.stash.sample.domain.SuspendingWorkInteractor
+import com.mobilabsolutions.stash.sample.util.AppCoroutineDispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
 
-/**
- * @author <a href="yisuk@mobilabsolutions.com">yisuk</a>
- */
-class StashInitializer @Inject constructor(
+class InitialiseStash @Inject constructor(
+    dispatchers: AppCoroutineDispatchers,
+    private val application: Application,
     private val samplePreference: SamplePreference
-) : AppInitializer {
-    override fun init(application: Application) {
+) : SuspendingWorkInteractor<Unit, Boolean>() {
+    override val dispatcher: CoroutineDispatcher = dispatchers.io
+
+    override suspend fun doWork(params: Unit): Boolean {
+        if (Stash.initialised()) {
+            return true
+        }
         val ccPsp: IntegrationCompanion = when (samplePreference.creditCardPreference) {
-            ADAYEN -> AdyenIntegration
-            BRAINTREE -> BraintreeIntegration
-            BS_PAYONE -> BsPayoneIntegration
+            SamplePreference.Psp.ADAYEN -> AdyenIntegration
+            SamplePreference.Psp.BRAINTREE -> BraintreeIntegration
+            SamplePreference.Psp.BS_PAYONE -> BsPayoneIntegration
         }
 
         val sepaPsp: IntegrationCompanion = when (samplePreference.sepaPreference) {
-            ADAYEN -> AdyenIntegration
-            BRAINTREE -> BraintreeIntegration
-            BS_PAYONE -> BsPayoneIntegration
+            SamplePreference.Psp.ADAYEN -> AdyenIntegration
+            SamplePreference.Psp.BRAINTREE -> BraintreeIntegration
+            SamplePreference.Psp.BS_PAYONE -> BsPayoneIntegration
         }
         val stashConfiguration = StashConfiguration(
             publishableKey = BuildConfig.testPublishableKey,
@@ -51,9 +52,10 @@ class StashInitializer @Inject constructor(
                 .setSnackBarBackground(R.color.carnation).build()
 
         )
-        // Stash.initialize(
-        //     application,
-        //     stashConfiguration
-        // )
+        Stash.initialize(
+            application,
+            stashConfiguration
+        )
+        return true
     }
 }
