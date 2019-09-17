@@ -10,6 +10,8 @@ import com.mobilabsolutions.stash.core.UiCustomizationManager
 import com.mobilabsolutions.stash.core.internal.api.backend.MobilabApi
 import com.mobilabsolutions.stash.core.internal.uicomponents.PaymentMethodChoiceFragment
 import com.mobilabsolutions.stash.core.internal.uicomponents.RegistrationProcessHostActivity
+import com.mobilabsolutions.stash.core.ui.HostInject
+import com.mobilabsolutions.stash.core.ui.StashAssistedModule
 import dagger.Component
 import dagger.android.support.AndroidSupportInjectionModule
 import okhttp3.logging.HttpLoggingInterceptor
@@ -23,7 +25,9 @@ import javax.inject.Singleton
 @Component(modules = [
     AndroidSupportInjectionModule::class,
     SslSupportModule::class,
-    StashModule::class
+    StashModule::class,
+    StashAssistedModule::class,
+    HostInject::class
 ])
 interface StashComponent {
     fun inject(stashImpl: StashImpl)

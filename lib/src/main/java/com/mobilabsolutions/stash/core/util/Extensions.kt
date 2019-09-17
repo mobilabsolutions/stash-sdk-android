@@ -33,3 +33,4 @@ fun Activity.hideSoftInput() {
         imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
     }
 }
+

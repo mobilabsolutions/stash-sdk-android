@@ -20,8 +20,11 @@ import com.mobilabsolutions.stash.core.internal.api.backend.PayoneSpecificData
 import com.mobilabsolutions.stash.core.internal.api.backend.ProviderSpecificData
 import com.mobilabsolutions.stash.core.internal.api.backend.RuntimeTypeAdapterFactory
 import com.mobilabsolutions.stash.core.internal.psphandler.Integration
+import com.mobilabsolutions.stash.core.util.AppRxSchedulers
 import dagger.Module
 import dagger.Provides
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import okhttp3.ConnectionSpec
 import okhttp3.OkHttpClient
 import okhttp3.TlsVersion
@@ -74,11 +77,11 @@ open class StashModule(
         rxJava2CallAdapterFactory: RxJava2CallAdapterFactory
     ): MobilabApi {
         val mobilabBackendRetrofit = Retrofit.Builder()
-                .addConverterFactory(gsonConverterFactory)
-                .addCallAdapterFactory(rxJava2CallAdapterFactory)
-                .client(mobilabBackendOkHttpClient)
-                .baseUrl(mobilabUrl)
-                .build()
+            .addConverterFactory(gsonConverterFactory)
+            .addCallAdapterFactory(rxJava2CallAdapterFactory)
+            .client(mobilabBackendOkHttpClient)
+            .baseUrl(mobilabUrl)
+            .build()
 
         return mobilabBackendRetrofit.create(MobilabApi::class.java)
     }
@@ -92,26 +95,26 @@ open class StashModule(
     ): OkHttpClient {
 
         val mobilabBackendOkHttpClientBuilder = OkHttpClient.Builder()
-                .addInterceptor { chain ->
-                    val requestBuilder = chain.request().newBuilder()
-                            .addHeader("Publishable-Key", publishableKey)
-                            .addHeader("User-Agent", "Android-${BuildConfig.VERSION_CODE}-${BuildConfig.VERSION_NAME}")
-                    if (testMode) {
-                        requestBuilder.addHeader("PSP-Test-Mode", "true")
-                    }
-                    val request = requestBuilder.build()
-                    chain.proceed(request)
+            .addInterceptor { chain ->
+                val requestBuilder = chain.request().newBuilder()
+                    .addHeader("Publishable-Key", publishableKey)
+                    .addHeader("User-Agent", "Android-${BuildConfig.VERSION_CODE}-${BuildConfig.VERSION_NAME}")
+                if (testMode) {
+                    requestBuilder.addHeader("PSP-Test-Mode", "true")
                 }
-                .addInterceptor(httpLoggingInterceptor)
-                .addNetworkInterceptor(StethoInterceptor())
-                .connectTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
-                .readTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
-                .writeTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+                val request = requestBuilder.build()
+                chain.proceed(request)
+            }
+            .addInterceptor(httpLoggingInterceptor)
+            .addNetworkInterceptor(StethoInterceptor())
+            .connectTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+            .readTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
+            .writeTimeout(MOBILAB_TIMEOUT, TIMEOUT_UNIT)
         if (sslSupportPackage.useCustomSslSocketFactory) {
             mobilabBackendOkHttpClientBuilder.sslSocketFactory(sslSupportPackage.sslSocketFactory!!, sslSupportPackage.x509TrustManager!!)
             val connectionSpec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
-                    .tlsVersions(TlsVersion.TLS_1_2)
-                    .build()
+                .tlsVersions(TlsVersion.TLS_1_2)
+                .build()
             mobilabBackendOkHttpClientBuilder.connectionSpecs(listOf(connectionSpec))
         }
         return mobilabBackendOkHttpClientBuilder.build()
@@ -132,12 +135,12 @@ open class StashModule(
     @Singleton
     fun provideBackendGsonConverterFactory(): GsonConverterFactory {
         val runtimeTypeAdapterFactory = RuntimeTypeAdapterFactory
-                .of(ProviderSpecificData::class.java, "psp")
-                .registerSubtype(PayoneSpecificData::class.java, "payone")
+            .of(ProviderSpecificData::class.java, "psp")
+            .registerSubtype(PayoneSpecificData::class.java, "payone")
 
         val gson = GsonBuilder()
-                .registerTypeAdapterFactory(runtimeTypeAdapterFactory)
-                .create()
+            .registerTypeAdapterFactory(runtimeTypeAdapterFactory)
+            .create()
         return GsonConverterFactory.create(gson)
     }
 
@@ -149,20 +152,20 @@ open class StashModule(
     @Singleton
     fun provideDefaultGson(): Gson {
         val extraInfoTypeAdapterFactory = RuntimeTypeAdapterFactory
-                .of(ExtraAliasInfo::class.java, "extraType")
-                .registerSubtype(ExtraAliasInfo.CreditCardExtraInfo::class.java, "CC")
-                .registerSubtype(ExtraAliasInfo.SepaExtraInfo::class.java, "SEPA")
-                .registerSubtype(ExtraAliasInfo.PaypalExtraInfo::class.java, "PAYPAL")
+            .of(ExtraAliasInfo::class.java, "extraType")
+            .registerSubtype(ExtraAliasInfo.CreditCardExtraInfo::class.java, "CC")
+            .registerSubtype(ExtraAliasInfo.SepaExtraInfo::class.java, "SEPA")
+            .registerSubtype(ExtraAliasInfo.PaypalExtraInfo::class.java, "PAYPAL")
 
         return GsonBuilder()
-                .registerTypeAdapterFactory(extraInfoTypeAdapterFactory)
-                .create()
+            .registerTypeAdapterFactory(extraInfoTypeAdapterFactory)
+            .create()
     }
 
     @Provides
     @Singleton
     fun provideDefaultSharedPreferences(): SharedPreferences = applicationContext.getSharedPreferences(
-            DEFAULT_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
+        DEFAULT_SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE
     )
 
     @Provides
@@ -196,6 +199,14 @@ open class StashModule(
     @Singleton
     fun providePspIntegrationsRegistered(): Map<Integration, Set<PaymentMethodType>> {
         return integrationInitializers.filter { it.key.initializedOrNull() != null }
-                .mapKeys { it.key.initializedOrNull() as Integration }
+            .mapKeys { it.key.initializedOrNull() as Integration }
     }
+
+    @Singleton
+    @Provides
+    fun provideRxSchedulers(): AppRxSchedulers = AppRxSchedulers(
+        io = Schedulers.io(),
+        computation = Schedulers.computation(),
+        main = AndroidSchedulers.mainThread()
+    )
 }

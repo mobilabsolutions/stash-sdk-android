@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_host_graph"
+    app:startDestination="@+id/navigation_payment_picker">
+
+    <fragment
+        android:id="@+id/navigation_payment_picker"
+        android:name="com.mobilabsolutions.stash.core.ui.picker.PaymentPickerFragment"
+        tools:layout="@layout/fragment_payment_picker" />
+
+    <fragment
+        android:id="@+id/navigation_credit_card_entry"
+        android:name="com.mobilabsolutions.stash.core.ui.creditcard.CreditCardEntryFragment" />
+
+
+
+</navigation>

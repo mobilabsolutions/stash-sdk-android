@@ -10,6 +10,17 @@ plugins {
     id("maven-publish")
     signing
     id("CommonPlugin")
+    id("androidx.navigation.safeargs.kotlin")
+}
+
+android {
+    defaultConfig {
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    dataBinding {
+        isEnabled = true
+    }
 }
 
 dependencies {
@@ -42,6 +53,7 @@ dependencies {
     implementation(Libs.Dagger.daggerAndroid)
     implementation(Libs.Dagger.androidSupport)
     kapt(Libs.Dagger.compiler)
+    kapt(Libs.Dagger.androidProcessor)
 
     implementation(Libs.caligraphy)
     implementation(Libs.viewPump)
@@ -72,6 +84,22 @@ dependencies {
     androidTestImplementation(Libs.AndroidX.Test.ext)
     androidTestImplementation(Libs.AndroidX.Test.espressoCore)
     kaptAndroidTest(Libs.Dagger.compiler)
+
+    implementation(Libs.mvrx)
+
+    implementation(Libs.Epoxy.epoxy)
+    implementation(Libs.Epoxy.dataBinding)
+    kapt(Libs.Epoxy.processor)
+
+    implementation(Libs.AndroidX.Navigation.fragment)
+    implementation(Libs.AndroidX.Navigation.ui)
+
+    implementation(Libs.Coroutines.core)
+    implementation(Libs.Coroutines.rx2)
+    implementation(Libs.Coroutines.android)
+
+    compileOnly(Libs.AssistedInject.annotationDagger2)
+    kapt(Libs.AssistedInject.processorDagger2)
 }
 
 configurations.all {
