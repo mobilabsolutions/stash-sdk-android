@@ -8,5 +8,9 @@ data class ExchangeAliasDto(
     val paymentData: String,
     val paymentMethodType: String,
     val resultCode: String,
-    val token: String
+    val token: String,
+    val md: String,
+    val paReq: String,
+    val url: String,
+    val termsUrl: String
 )

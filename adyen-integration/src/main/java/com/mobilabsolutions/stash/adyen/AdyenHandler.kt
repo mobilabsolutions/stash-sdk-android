@@ -19,6 +19,7 @@ import com.mobilabsolutions.stash.core.exceptions.base.OtherException
 import com.mobilabsolutions.stash.core.internal.IntegrationScope
 import com.mobilabsolutions.stash.core.internal.api.backend.MobilabApi
 import com.mobilabsolutions.stash.core.internal.api.backend.model.VerifyChallengeRequestDto
+import com.mobilabsolutions.stash.core.internal.api.backend.model.VerifyRedirectDto
 import com.mobilabsolutions.stash.core.internal.api.backend.model.VerifyThreeDsDto
 import com.mobilabsolutions.stash.core.internal.api.backend.model.VerifyThreeDsRequestDto
 import com.mobilabsolutions.stash.core.internal.api.backend.v1.AliasExtra
@@ -33,6 +34,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -131,6 +133,58 @@ class AdyenHandler @Inject constructor(
                         )
                     )
                 }
+
+                // 4212345678901237
+                "RedirectShopper" -> {
+
+                    if (threeDsCompletedSubject.hasComplete()) {
+                        threeDsCompletedSubject = PublishSubject.create()
+                    }
+
+                    threeDsCompletedSubject
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ _ ->
+                            it.onSuccess(creditCardRegistrationRequest.aliasId)
+                        }, {
+                        })
+                    if (threeDsErrorSubject.hasComplete()) {
+                        threeDsErrorSubject = PublishSubject.create()
+                    }
+
+                    threeDsErrorSubject
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe({ checkoutError ->
+                            it.onError(checkoutError)
+                        }, {
+                        })
+
+                    // val testUrl = Uri.parse(exchangeAlias.url)
+                    //     .buildUpon()
+                    //     .appendQueryParameter("MD", exchangeAlias.md)
+                    //     .appendQueryParameter("PaReq", exchangeAlias.paReq)
+                    //     .appendQueryParameter("TermUrl", exchangeAlias.termsUrl)
+                    //     .build().toString()
+                    //
+                    // val redirectAction = RedirectAction().apply {
+                    //     url = testUrl
+                    //     paymentData = exchangeAlias.paymentData
+                    //     type = exchangeAlias.actionType
+                    //     method = "post"
+                    // }
+
+                    ThreeDsHandleActivity.createIntent(
+                        context = activity,
+                        url = exchangeAlias.url,
+                        alias = creditCardRegistrationRequest.aliasId,
+                        md = exchangeAlias.md,
+                        paReq = exchangeAlias.paReq,
+                        termsUrl = "https://payment-dev.mblb.net"
+                    ).also { intent ->
+                        activity.startActivity(intent)
+                    }
+                }
             }
         }
     }
@@ -227,5 +281,21 @@ class AdyenHandler @Inject constructor(
         threeDsErrorSubject.onNext(checkoutException)
         threeDsErrorSubject.onComplete()
         activity.finish()
+    }
+
+    @SuppressLint("CheckResult")
+    fun handleRedirect(activity: Activity, aliasId: String, md: String, paReq: String) {
+        mobilabApi.verifyRedirect(aliasId, VerifyRedirectDto(md, paReq))
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.io())
+            .subscribe({
+                if (it.resultCode == "Authorised") {
+                    threeDsCompletedSubject.onNext(Unit)
+                    threeDsCompletedSubject.onComplete()
+                    activity.finish()
+                }
+            }, {
+                Timber.e("redirect error: $it")
+            })
     }
 }
