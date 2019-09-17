@@ -17,5 +17,5 @@ jobs:
     - name: Spotless Check
       run: ./gradlew spotlessCheck  
       
-    - name: Assemble
+    - name: Assemble Debug
       run: ./gradlew assembleDebug

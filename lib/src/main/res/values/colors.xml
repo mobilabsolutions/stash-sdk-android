@@ -15,5 +15,8 @@
     <color name="coral">#ef4e4e</color>
     <color name="grayish">#f3f3f3</color>
     <color name="carnation">#f86a6a</color>
+    <color name="background">#f5f5f9</color>
+    <color name="dark_blue">#00107b</color>
+    <color name="deep_dark_blue">#334aab</color>
 
 </resources>

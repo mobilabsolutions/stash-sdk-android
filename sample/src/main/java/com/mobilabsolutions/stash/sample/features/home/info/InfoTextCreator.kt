@@ -19,7 +19,7 @@ class InfoTextCreator @Inject constructor(
     }
 
     fun sdkVersionText(): CharSequence {
-        return context.getString(R.string.app_version, sdkVersion)
+        return context.getString(R.string.lib_version, sdkVersion)
     }
 
     fun backendVersionText(): CharSequence {

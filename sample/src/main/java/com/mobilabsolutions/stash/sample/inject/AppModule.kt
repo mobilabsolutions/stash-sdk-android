@@ -5,8 +5,10 @@
 package com.mobilabsolutions.stash.sample.inject
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.coroutineScope
+import androidx.preference.PreferenceManager
 import com.mobilabsolutions.stash.sample.BuildConfig
 import com.mobilabsolutions.stash.sample.SampleApplication
 import com.mobilabsolutions.stash.sample.util.AppCoroutineDispatchers
@@ -78,5 +80,13 @@ object AppModule {
     @Named("sdk_version")
     fun provideLibVersion(): String {
         return com.mobilabsolutions.stash.core.BuildConfig.VERSION_NAME
+    }
+
+    @JvmStatic
+    @Named("app")
+    @Provides
+    @Singleton
+    fun provideAppPreferences(application: SampleApplication): SharedPreferences {
+        return PreferenceManager.getDefaultSharedPreferences(application)
     }
 }

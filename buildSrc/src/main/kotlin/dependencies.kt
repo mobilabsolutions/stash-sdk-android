@@ -3,7 +3,6 @@
  */
 
 import org.gradle.api.Project
-import java.io.ByteArrayOutputStream
 import java.util.Properties
 
 object StashRelease {
@@ -14,6 +13,9 @@ object StashRelease {
     const val testPublishableKey = "DEV_PUBLISHABLE_KEY"
     const val MobilabNexusUsername = "MOBILAB_NEXUS_USER"
     const val MobilabNexusPassword = "MOBILAB_NEXUS_PASSWORD"
+
+    const val versionCode = "1"
+    const val versionName = "0.15"
 }
 
 object StashBuildConfigs {
@@ -26,7 +28,7 @@ object StashBuildConfigs {
 object DemoRelease {
     const val fabricApiKey = "FABRIC_API_KEY"
     const val versionCode = "1"
-    const val versionName = "0.13" // 0.<Sprint number>
+    const val versionName = "0.14" // 0.<Sprint number>
 }
 
 val isTravisBuild: Boolean = System.getenv("TRAVIS") == "true"
@@ -50,7 +52,7 @@ object Libs {
     const val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.1"
     const val iban4j = "org.iban4j:iban4j:3.2.1"
     const val braintree = "com.braintreepayments.api:braintree:3.4.0"
-    const val mvrx = "com.airbnb.android:mvrx:1.0.2"
+    const val mvrx = "com.airbnb.android:mvrx:1.1.0"
     const val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     const val viewPump = "io.github.inflationx:viewpump:2.0.3"
     const val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
@@ -77,21 +79,22 @@ object Libs {
     }
 
     object Coroutines {
-        private const val version = "1.3.0"
+        private const val version = "1.3.1"
         const val core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:$version"
         const val rx2 = "org.jetbrains.kotlinx:kotlinx-coroutines-rx2:$version"
         const val android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:$version"
     }
 
     object AndroidX {
-        const val appcompat = "androidx.appcompat:appcompat:1.1.0-rc01"
+        const val appcompat = "androidx.appcompat:appcompat:1.1.0"
         const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0-beta01"
         const val cardview = "androidx.cardview:cardview:1.0.0"
         const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
         const val coreKtx = "androidx.core:core-ktx:1.2.0-alpha02"
+        const val preference = "androidx.preference:preference:1.1.0"
 
         object Navigation {
-            private const val version = "2.1.0-beta02"
+            private const val version = "2.1.0"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
             const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
@@ -151,7 +154,7 @@ object Libs {
     }
 
     object OkHttp {
-        private const val version = "4.1.0"
+        private const val version = "4.2.0"
         const val okhttp = "com.squareup.okhttp3:okhttp:$version"
         const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
         const val mockwebserver = "com.squareup.okhttp3:mockwebserver:$version"
@@ -204,10 +207,10 @@ fun Project.propOrDefWithTravis(propertyName: String, defaultValue: String): Str
 }
 
 fun Project.sdkVersionName(): String {
-    val getBranch = ("git rev-parse --abbrev-ref HEAD").runCommand(this)
-    val getCommitHash = ("git rev-parse --short HEAD").runCommand(this)
-    val sdkVersionName =
-        propOrDefWithTravis(StashRelease.travisTag, "${DemoRelease.versionName}-$getBranch-$getCommitHash")
+    val versionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, StashRelease.versionCode)
+    val versionName = StashRelease.versionName + "-$versionCode"
+
+    val sdkVersionName = propOrDefWithTravis(StashRelease.travisTag, versionName)
     return if (isTravisTag) {
         sdkVersionName
     } else {
@@ -215,13 +218,9 @@ fun Project.sdkVersionName(): String {
     }
 }
 
-fun String.runCommand(project: Project): String {
-    val command = this
-    val output = ByteArrayOutputStream()
-    project.exec {
-        workingDir = project.rootDir
-        commandLine = command.split(" ")
-        standardOutput = output
-    }
-    return String(output.toByteArray()).trim()
+fun Project.appVersionName(): String {
+    val versionCode = propOrDefWithTravis(StashRelease.travisBuildNumber, StashRelease.versionCode)
+    val versionName = StashRelease.versionName + "-$versionCode"
+
+    return propOrDefWithTravis(StashRelease.travisTag, versionName)
 }
