@@ -14,6 +14,8 @@
         android:id="@+id/navigation_credit_card_entry"
         android:name="com.mobilabsolutions.stash.core.ui.creditcard.CreditCardEntryFragment" />
 
-
+    <fragment
+        android:id="@+id/navigation_sepa_entry"
+        android:name="com.mobilabsolutions.stash.core.ui.sepa.SepaEntryFragment" />
 
 </navigation>
