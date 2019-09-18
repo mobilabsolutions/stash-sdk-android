@@ -34,7 +34,7 @@ class SamplePreferenceImpl @Inject constructor(
     override var sepaPreference: SamplePreference.Psp
         get() = getPspForStorageValue(sharedPreferences.getString(KEY_SEPA_PSP, defaultPspValue)!!)
         set(value) = sharedPreferences.edit {
-            putString(KEY_CC_PSP, getStorageKeyForPsp(value))
+            putString(KEY_SEPA_PSP, getStorageKeyForPsp(value))
         }
 
     private fun getStorageKeyForPsp(psp: SamplePreference.Psp) = when (psp) {
