@@ -22,6 +22,7 @@ class PaymentPickerController @Inject constructor(
             paymentMethod {
                 id(it.name)
                 paymentMethodType(it)
+                textCreator(paymentPickerTextCreator)
                 clickListener { _ -> callbacks?.onPaymentMethodClicked(it) }
             }
         }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-  <!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright © MobiLab Solutions GmbH
   -->
 
@@ -15,6 +14,10 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name="com.mobilabsolutions.stash.core.internal.uicomponents.CountryChooserActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
+
+        <activity
+            android:name=".ui.HostActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
     </application>
 

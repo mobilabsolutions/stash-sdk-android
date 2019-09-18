@@ -4,6 +4,7 @@
 
 package com.mobilabsolutions.stash.sample.features.home.paymentmethods
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import com.airbnb.mvrx.withState
 import com.google.android.material.snackbar.Snackbar
 import com.mobilabsolutions.stash.core.internal.uicomponents.SnackBarExtensions
 import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler
+import com.mobilabsolutions.stash.core.ui.HostActivity
 import com.mobilabsolutions.stash.sample.R
 import com.mobilabsolutions.stash.sample.data.entities.PaymentMethod
 import com.mobilabsolutions.stash.sample.databinding.FragmentPaymentMethodsBinding
@@ -47,7 +49,12 @@ class PaymentMethodsFragment : BaseFragment() {
         controller = PaymentMethodsEpoxyController(object : PaymentMethodsEpoxyController.Callbacks {
             override fun onAddBtnClicked() {
                 clearSnackBar()
-                viewModel.onAddBtnClicked(requireActivity())
+                // viewModel.onAddBtnClicked(requireActivity())
+                val intent = Intent(requireActivity(), HostActivity::class.java)
+
+                requireActivity().startActivity(
+                    intent
+                )
             }
 
             override fun onDeleteBtnClicked(paymentMethod: PaymentMethod) {

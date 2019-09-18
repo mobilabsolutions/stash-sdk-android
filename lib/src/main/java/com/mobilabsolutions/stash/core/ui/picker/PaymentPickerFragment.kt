@@ -1,5 +1,6 @@
 package com.mobilabsolutions.stash.core.ui.picker
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
+import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.mobilabsolutions.stash.core.PaymentMethodType
@@ -15,13 +17,13 @@ import com.mobilabsolutions.stash.core.PaymentMethodType.PAYPAL
 import com.mobilabsolutions.stash.core.PaymentMethodType.SEPA
 import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.databinding.FragmentPaymentPickerBinding
-import com.mobilabsolutions.stash.core.util.BaseFragment
+import com.mobilabsolutions.stash.core.internal.StashImpl
 import javax.inject.Inject
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 17-09-2019.
  */
-class PaymentPickerFragment : BaseFragment() {
+class PaymentPickerFragment : BaseMvRxFragment() {
     @Inject
     lateinit var viewModelFactory: PaymentPickerViewModel.Factory
     @Inject
@@ -29,6 +31,11 @@ class PaymentPickerFragment : BaseFragment() {
 
     private val viewModel: PaymentPickerViewModel by fragmentViewModel()
     private lateinit var binding: FragmentPaymentPickerBinding
+
+    override fun onAttach(context: Context) {
+        StashImpl.getInjector().inject(this)
+        super.onAttach(context)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentPaymentPickerBinding.inflate(inflater, container, false)

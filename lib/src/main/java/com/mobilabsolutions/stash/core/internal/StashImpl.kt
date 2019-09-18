@@ -58,7 +58,7 @@ class StashImpl(
     @Inject
     internal lateinit var uiCustomizationManager: UiCustomizationManager
 
-    val daggerGraph: StashComponent
+    private val daggerGraph: StashComponent
 
     /**
      * Here we are building the dagger graph as described

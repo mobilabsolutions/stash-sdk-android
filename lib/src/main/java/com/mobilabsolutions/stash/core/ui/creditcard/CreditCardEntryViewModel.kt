@@ -26,4 +26,12 @@ class CreditCardEntryViewModel @AssistedInject constructor(
             return fragment.viewModelFactory.create(state)
         }
     }
+
+    enum class CreditCardTextField {
+        CARD_NUMBER,
+        NAME,
+        EXP_DATE,
+        CVV,
+        COUNTRY
+    }
 }

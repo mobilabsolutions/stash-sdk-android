@@ -6,5 +6,6 @@ import com.airbnb.mvrx.MvRxState
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 17-09-2019.
  */
 data class CreditCardEntryViewState(
-    val loading: Boolean = false
+    val loading: Boolean = false,
+    val fields: List<CreditCardEntryViewModel.CreditCardTextField> = CreditCardEntryViewModel.CreditCardTextField.values().toList()
 ) : MvRxState

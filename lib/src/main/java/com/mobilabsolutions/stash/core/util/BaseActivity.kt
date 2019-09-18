@@ -5,27 +5,17 @@ import androidx.lifecycle.LifecycleOwner
 import com.airbnb.mvrx.BaseMvRxActivity
 import com.airbnb.mvrx.MvRxView
 import com.airbnb.mvrx.MvRxViewModelStore
-import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasAndroidInjector
 import java.util.UUID
-import javax.inject.Inject
 
 /**
  * @author <a href="yisuk@mobilabsolutions.com">Yisuk Kim</a> on 17-09-2019.
  */
-abstract class BaseActivity : BaseMvRxActivity(), HasAndroidInjector, MvRxView {
+abstract class BaseActivity : BaseMvRxActivity(), MvRxView {
 
     override val mvrxViewModelStore by lazy { MvRxViewModelStore(viewModelStore) }
 
-    override fun androidInjector(): AndroidInjector<Any> = fragmentInjector
-
     final override val mvrxViewId
         get() = mvrxPersistedViewId
-
-    @Inject
-    lateinit var fragmentInjector: DispatchingAndroidInjector<Any>
 
     private lateinit var mvrxPersistedViewId: String
 
@@ -33,7 +23,6 @@ abstract class BaseActivity : BaseMvRxActivity(), HasAndroidInjector, MvRxView {
         get() = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        AndroidInjection.inject(this)
         mvrxViewModelStore.restoreViewModels(this, savedInstanceState)
         super.onCreate(savedInstanceState)
 
