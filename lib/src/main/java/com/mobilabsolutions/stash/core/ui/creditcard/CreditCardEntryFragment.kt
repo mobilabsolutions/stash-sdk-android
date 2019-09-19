@@ -119,7 +119,8 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
         }
 
         fun bind(field: CreditCardEntryViewModel.CreditCardTextField) {
-            binding.inputField.hint = field.name
+            binding.field = field
+            binding.executePendingBindings()
         }
     }
 }
