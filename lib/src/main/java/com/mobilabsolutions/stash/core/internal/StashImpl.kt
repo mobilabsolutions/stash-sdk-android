@@ -5,6 +5,10 @@
 package com.mobilabsolutions.stash.core.internal
 
 import android.app.Application
+import android.os.Handler
+import android.os.HandlerThread
+import android.os.Looper
+import com.airbnb.epoxy.EpoxyController
 import com.jakewharton.threetenabp.AndroidThreeTen
 import com.mobilabsolutions.stash.core.BuildConfig
 import com.mobilabsolutions.stash.core.PaymentMethodType
@@ -17,6 +21,8 @@ import com.mobilabsolutions.stash.core.internal.psphandler.IntegrationCompanion
 import io.github.inflationx.calligraphy3.CalligraphyConfig
 import io.github.inflationx.calligraphy3.CalligraphyInterceptor
 import io.github.inflationx.viewpump.ViewPump
+import io.reactivex.android.plugins.RxAndroidPlugins
+import io.reactivex.android.schedulers.AndroidSchedulers
 import timber.log.Timber
 import javax.inject.Inject
 import javax.net.ssl.SSLSocketFactory
@@ -89,6 +95,18 @@ class StashImpl(
         }
         // Finally we inject the dependencies
         daggerGraph.inject(this)
+
+        val handlerThread = HandlerThread("epoxy")
+        handlerThread.start()
+
+        Handler(handlerThread.looper).also {
+            EpoxyController.defaultDiffingHandler = it
+            EpoxyController.defaultModelBuildingHandler = it
+        }
+
+        RxAndroidPlugins.setInitMainThreadSchedulerHandler {
+            AndroidSchedulers.from(Looper.getMainLooper(), true)
+        }
     }
 
     /**

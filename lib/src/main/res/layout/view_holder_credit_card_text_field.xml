@@ -8,14 +8,21 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til"
-            android:layout_width="match_parent"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:gravity="center"
+            android:textColorHint="@color/bit_light_blue"
             app:boxBackgroundMode="none"
+            app:counterTextColor="@color/bit_light_blue"
+            app:errorTextColor="@color/bit_light_blue"
+            app:helperTextTextColor="@color/bit_light_blue"
+            app:hintTextColor="@color/bit_light_blue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -24,7 +31,10 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="center"
-                android:hint="CARD NUMBER" />
+                android:hint="CARD NUMBER"
+                android:paddingTop="8dp"
+                android:textColorHint="@color/bit_light_blue"
+                android:textSize="22sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
 

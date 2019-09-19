@@ -22,5 +22,7 @@
     <color name="next_button_blue">#2e7ef2</color>
     <color name="white_blue">#d8e7fd</color>
     <color name="light_blue">#0a336f</color>
+    <color name="bit_light_blue">#609df6</color>
+    <color name="blueish_white">#b7d2fb</color>
 
 </resources>

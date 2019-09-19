@@ -76,6 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="16dp"
+                    android:background="@android:color/transparent"
                     android:fontFamily="@font/lato_bold"
                     android:text="xxxx xxxxxx xxxxx"
                     android:textColor="@color/white"
@@ -95,12 +96,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/card_number_text"
                     tools:ignore="SmallSp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/name_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:alpha="0.5"
+                    android:background="@android:color/transparent"
                     android:text="name"
                     android:textColor="@color/white"
                     android:textSize="11sp"
@@ -121,12 +123,13 @@
                     app:layout_constraintTop_toBottomOf="@+id/card_number_text"
                     tools:ignore="SmallSp" />
 
-                <TextView
+                <EditText
                     android:id="@+id/exp_date_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:alpha="0.5"
+                    android:background="@android:color/transparent"
                     android:text="MM/YY"
                     android:textColor="@color/white"
                     android:textSize="11sp"
@@ -137,15 +140,34 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
 
-        <com.airbnb.epoxy.EpoxyRecyclerView
-            android:id="@+id/text_fields_rv"
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/pager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
+            android:clipChildren="false"
             android:clipToPadding="false"
             android:orientation="horizontal"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
+            tools:background="@color/toolbar_blue"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@+id/btn_next"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/card_view" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/text_fields_rv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            android:paddingStart="32dp"
+            android:paddingEnd="32dp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintBottom_toTopOf="@+id/btn_next"
             app:layout_constraintEnd_toEndOf="parent"
@@ -169,18 +191,19 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_next"
             app:layout_constraintStart_toStartOf="parent" />
 
+
         <Button
             android:id="@+id/btn_next"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:background="@color/next_button_blue"
             android:fontFamily="@font/lato_regular"
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
             android:text="NEXT"
             android:textAllCaps="true"
             android:textColor="@color/white"
             android:textSize="18sp"
-            android:foreground="?attr/selectableItemBackground"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_back" />
