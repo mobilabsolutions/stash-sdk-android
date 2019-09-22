@@ -93,6 +93,7 @@ object Libs {
         const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
         const val coreKtx = "androidx.core:core-ktx:1.2.0-alpha04"
         const val preference = "androidx.preference:preference:1.1.0"
+        const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02"
 
         object Navigation {
             private const val version = "2.2.0-alpha03"
