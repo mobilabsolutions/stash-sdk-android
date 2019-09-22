@@ -44,14 +44,14 @@ object Modules {
 
 object Libs {
     const val androidGradlePlugin = "com.android.tools.build:gradle:3.5.0"
-    const val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.21.0"
+    const val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:0.25.0"
     const val timber = "com.jakewharton.timber:timber:4.7.1"
     const val junit = "junit:junit:4.12"
     const val mockitoCore = "org.mockito:mockito-core:3.0.0"
     const val robolectric = "org.robolectric:robolectric:4.3"
     const val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.2.1"
     const val iban4j = "org.iban4j:iban4j:3.2.1"
-    const val braintree = "com.braintreepayments.api:braintree:3.4.0"
+    const val braintree = "com.braintreepayments.api:braintree:3.6.0"
     const val mvrx = "com.airbnb.android:mvrx:1.1.0"
     const val caligraphy = "io.github.inflationx:calligraphy3:3.1.1"
     const val viewPump = "io.github.inflationx:viewpump:2.0.3"
@@ -59,15 +59,16 @@ object Libs {
     const val dokkaPlugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
 
     object Adyen {
-        val thressDs2 = "com.adyen.checkout:3ds2:3.0.0"
-        val card = "com.adyen.checkout:card-ui:3.1.1"
-        val redirect = "com.adyen.checkout:redirect:3.0.0"
+        private const val version = "3.3.1"
+        val thressDs2 = "com.adyen.checkout:3ds2:$version"
+        val card = "com.adyen.checkout:card-ui:$version"
+        val redirect = "com.adyen.checkout:redirect:$version"
     }
 
     object Google {
-        const val material = "com.google.android.material:material:1.1.0-alpha08"
+        const val material = "com.google.android.material:material:1.1.0-alpha10"
         const val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
-        const val fabricPlugin = "io.fabric.tools:gradle:1.31.0"
+        const val fabricPlugin = "io.fabric.tools:gradle:1.31.1"
     }
 
     object Kotlin {
@@ -87,14 +88,14 @@ object Libs {
 
     object AndroidX {
         const val appcompat = "androidx.appcompat:appcompat:1.1.0"
-        const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0-beta01"
+        const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0-beta04"
         const val cardview = "androidx.cardview:cardview:1.0.0"
         const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
-        const val coreKtx = "androidx.core:core-ktx:1.2.0-alpha02"
+        const val coreKtx = "androidx.core:core-ktx:1.2.0-alpha04"
         const val preference = "androidx.preference:preference:1.1.0"
 
         object Navigation {
-            private const val version = "2.1.0"
+            private const val version = "2.2.0-alpha03"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
             const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
@@ -107,14 +108,14 @@ object Libs {
             const val runner = "androidx.test:runner:1.3.0-alpha02"
             const val rules = "androidx.test:rules:1.3.0-alpha02"
 
-            const val espressoCore = "androidx.test.espresso:espresso-core:3.3.0-alpha01"
-            const val espressoIntents = "androidx.test.espresso:espresso-intents:3.3.0-alpha01"
+            const val espressoCore = "androidx.test.espresso:espresso-core:3.3.0-alpha02"
+            const val espressoIntents = "androidx.test.espresso:espresso-intents:3.3.0-alpha02"
 
             const val uiAutomator = "androidx.test.uiautomator:uiautomator:2.2.0"
         }
 
         object Lifecycle {
-            private const val version = "2.2.0-alpha03"
+            private const val version = "2.2.0-alpha05"
             const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
             const val compiler = "androidx.lifecycle:lifecycle-compiler:$version"
             const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
@@ -122,7 +123,7 @@ object Libs {
         }
 
         object Room {
-            private const val version = "2.2.0-beta01"
+            private const val version = "2.2.0-rc01"
             const val common = "androidx.room:room-common:$version"
             const val runtime = "androidx.room:room-runtime:$version"
             const val rxjava2 = "androidx.room:room-rxjava2:$version"
@@ -179,7 +180,7 @@ object Libs {
     }
 
     object Epoxy {
-        private const val version = "3.7.0"
+        private const val version = "3.8.0"
         const val epoxy = "com.airbnb.android:epoxy:$version"
         const val dataBinding = "com.airbnb.android:epoxy-databinding:$version"
         const val processor = "com.airbnb.android:epoxy-processor:$version"

@@ -2,8 +2,6 @@
  * Copyright © MobiLab Solutions GmbH
  */
 
-import com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask
-
 val haveFabricApiKey = propOrDefWithTravis(DemoRelease.fabricApiKey, "").isNotEmpty()
 
 plugins {
@@ -146,28 +144,5 @@ dependencies {
     implementation(Libs.Epoxy.dataBinding)
     kapt(Libs.Epoxy.processor)
 
-    implementation(Libs.Google.crashlytics) {
-        isTransitive = true
-    }
-
-}
-
-tasks.named<DependencyUpdatesTask>("dependencyUpdates") {
-    resolutionStrategy {
-        componentSelection {
-            all {
-                val rejected = listOf("alpha", "beta", "rc")
-                    .map { qualifier -> Regex("(?i).*[.-]$qualifier[.\\d-]*") }
-                    .any { it.matches(candidate.version) }
-                if (rejected) {
-                    reject("Release candidate")
-                }
-            }
-        }
-    }
-    // optional parameters
-    checkForGradleUpdate = true
-    outputFormatter = "json"
-    outputDir = "build/dependencyUpdates"
-    reportfileName = "report"
+    implementation(Libs.Google.crashlytics)
 }
