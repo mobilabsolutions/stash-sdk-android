@@ -5,16 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager2.widget.ViewPager2
-import androidx.viewpager2.widget.ViewPager2.ORIENTATION_HORIZONTAL
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.airbnb.mvrx.BaseMvRxFragment
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
-import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.databinding.FragmentCreditCardEntryBinding
-import com.mobilabsolutions.stash.core.databinding.ViewHolderCreditCardTextFieldBinding
 import com.mobilabsolutions.stash.core.internal.StashImpl
 import javax.inject.Inject
 
@@ -27,7 +25,6 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
 
     private val viewModel: CreditCardEntryViewModel by fragmentViewModel()
     private lateinit var binding: FragmentCreditCardEntryBinding
-    private lateinit var controller: CreditCardEntryController
 
     override fun onAttach(context: Context) {
         StashImpl.getInjector().inject(this)
@@ -42,85 +39,45 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        controller = CreditCardEntryController()
-        with(binding.textFieldsRv) {
-            adapter = controller.adapter
-            val pageMarginPx = resources.getDimensionPixelOffset(R.dimen.pageMarginAndOffset)
-            val offsetPx = resources.getDimensionPixelOffset(R.dimen.pageMarginAndOffset)
-            setPageTransformer { page, position ->
-                val viewPager = page.parent.parent as ViewPager2
-                val offset = position * -(2 * offsetPx + pageMarginPx)
-                if (viewPager.orientation == ORIENTATION_HORIZONTAL) {
-                    if (ViewCompat.getLayoutDirection(viewPager) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                        page.translationX = -offset
-                    } else {
-                        page.translationX = offset
-                    }
-                } else {
-                    page.translationY = offset
-                }
+        binding.backButton.setOnClickListener { requireActivity().onBackPressed() }
+        binding.pager.apply {
+            pageMargin = 16
+            offscreenPageLimit = 2
+        }
+        binding.pager.adapter = PagerTestAdapter(childFragmentManager)
+        binding.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrollStateChanged(state: Int) {
             }
+
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            }
+
+            override fun onPageSelected(position: Int) {
+                viewModel.onPositionChanged(position)
+            }
+        })
+        binding.btnNext.setOnClickListener {
+            binding.pager.currentItem = binding.pager.currentItem + 1
         }
     }
 
     override fun invalidate() {
         withState(viewModel) {
             binding.state = it
-            controller.setData(it)
-            val pager = binding.pager
-            if (pager.adapter == null) {
-                pager.adapter = CardPagerAdapter(it.fields)
-                pager.offscreenPageLimit = it.fields.count() - 1
-
-                val pageMarginPx = resources.getDimensionPixelOffset(R.dimen.pageMarginAndOffset)
-                val offsetPx = resources.getDimensionPixelOffset(R.dimen.pageMarginAndOffset)
-                pager.setPageTransformer { page, position ->
-                    val viewPager = page.parent.parent as ViewPager2
-                    val offset = position * -(2 * offsetPx + pageMarginPx)
-                    if (viewPager.orientation == ORIENTATION_HORIZONTAL) {
-                        if (ViewCompat.getLayoutDirection(viewPager) == ViewCompat.LAYOUT_DIRECTION_RTL) {
-                            page.translationX = -offset
-                        } else {
-                            page.translationX = offset
-                        }
-                    } else {
-                        page.translationY = offset
-                    }
-                }
-            }
         }
     }
 
-    class CardPagerAdapter(
-        private val fields: List<CreditCardEntryViewModel.CreditCardTextField>
-    ) : RecyclerView.Adapter<CardViewHolder>() {
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
-            return CardViewHolder.from(parent)
+    class PagerTestAdapter(
+        fragmentManager: FragmentManager
+    ) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        private val fields = CreditCardEntryViewModel.CreditCardTextField.values()
+
+        override fun getItem(position: Int): Fragment {
+            return TextFieldFragment.create(position)
         }
 
-        override fun getItemCount(): Int {
+        override fun getCount(): Int {
             return fields.count()
-        }
-
-        override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
-            holder.bind(field = fields[position])
-        }
-    }
-
-    class CardViewHolder(
-        private val binding: ViewHolderCreditCardTextFieldBinding
-    ) : RecyclerView.ViewHolder(binding.root) {
-        companion object {
-            fun from(parent: ViewGroup): CardViewHolder {
-                val layoutInflater = LayoutInflater.from(parent.context)
-                val binding = ViewHolderCreditCardTextFieldBinding.inflate(layoutInflater, parent, false)
-                return CardViewHolder(binding)
-            }
-        }
-
-        fun bind(field: CreditCardEntryViewModel.CreditCardTextField) {
-            binding.field = field
-            binding.executePendingBindings()
         }
     }
 }

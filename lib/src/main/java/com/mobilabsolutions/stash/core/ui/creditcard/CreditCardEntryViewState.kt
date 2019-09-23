@@ -7,5 +7,6 @@ import com.airbnb.mvrx.MvRxState
  */
 data class CreditCardEntryViewState(
     val loading: Boolean = false,
-    val fields: List<CreditCardEntryViewModel.CreditCardTextField> = CreditCardEntryViewModel.CreditCardTextField.values().toList()
+    val fields: List<CreditCardEntryViewModel.CreditCardTextField> = CreditCardEntryViewModel.CreditCardTextField.values().toList(),
+    val currentPosition: Int = 0
 ) : MvRxState

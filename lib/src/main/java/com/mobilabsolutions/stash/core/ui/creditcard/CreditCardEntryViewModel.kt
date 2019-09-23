@@ -34,4 +34,14 @@ class CreditCardEntryViewModel @AssistedInject constructor(
         CVV,
         COUNTRY
     }
+
+    fun onPositionChanged(position:Int){
+        setState {
+            copy(currentPosition = position)
+        }
+    }
+
+    fun onNextBtnClicked() {
+
+    }
 }

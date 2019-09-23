@@ -19,9 +19,9 @@ object StashRelease {
 }
 
 object StashBuildConfigs {
-    const val compileSdk = 28
+    const val compileSdk = 29
     const val minSdk = 21
-    const val targetSdk = 28
+    const val targetSdk = 29
     const val buildtoolsVersion = "29.0.2"
 }
 
@@ -59,7 +59,7 @@ object Libs {
     const val dokkaPlugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
 
     object Adyen {
-        private const val version = "3.3.1"
+        private const val version = "3.4.0"
         val thressDs2 = "com.adyen.checkout:3ds2:$version"
         val card = "com.adyen.checkout:card-ui:$version"
         val redirect = "com.adyen.checkout:redirect:$version"
