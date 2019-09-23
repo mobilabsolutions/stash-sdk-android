@@ -23,8 +23,8 @@ buildscript {
 }
 
 plugins {
-    id("com.diffplug.gradle.spotless") version ("3.24.1")
-    id("com.github.ben-manes.versions") version ("0.22.0")
+    id("com.diffplug.gradle.spotless") version ("3.24.2")
+    id("com.github.ben-manes.versions") version ("0.25.0")
 }
 
 allprojects {

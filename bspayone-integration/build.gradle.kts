@@ -17,6 +17,7 @@ dependencies {
     implementation(Libs.Kotlin.stdlib)
     implementation(Libs.AndroidX.appcompat)
     implementation(Libs.AndroidX.constraintlayout)
+    implementation(Libs.AndroidX.swipeRefreshLayout)
     implementation(Libs.Google.material)
     implementation(Libs.Dagger.dagger)
     kapt(Libs.Dagger.compiler)
