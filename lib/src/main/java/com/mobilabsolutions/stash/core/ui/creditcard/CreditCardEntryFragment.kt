@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -14,6 +15,7 @@ import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.mobilabsolutions.stash.core.databinding.FragmentCreditCardEntryBinding
 import com.mobilabsolutions.stash.core.internal.StashImpl
+import com.mobilabsolutions.stash.core.ui.textfield.TextFieldFragment
 import javax.inject.Inject
 
 /**
@@ -39,10 +41,10 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.backButton.setOnClickListener { requireActivity().onBackPressed() }
+        binding.backArrow.setOnClickListener { requireActivity().onBackPressed() }
         binding.pager.apply {
             pageMargin = 16
-            offscreenPageLimit = 2
+            offscreenPageLimit = 4
         }
         binding.pager.adapter = PagerTestAdapter(childFragmentManager)
         binding.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -59,11 +61,17 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
         binding.btnNext.setOnClickListener {
             binding.pager.currentItem = binding.pager.currentItem + 1
         }
+        binding.btnBack.setOnClickListener {
+            binding.pager.currentItem = binding.pager.currentItem - 1
+        }
     }
 
     override fun invalidate() {
         withState(viewModel) {
             binding.state = it
+            binding.btnBack.isVisible = it.currentPosition != 0
+            binding.btnSave.isVisible = it.currentPosition == 4
+            binding.btnNext.isVisible = it.currentPosition != 4
         }
     }
 

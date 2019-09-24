@@ -28,6 +28,8 @@ dependencies {
 
     implementation(Libs.AndroidX.constraintlayout)
     implementation(Libs.AndroidX.appcompat)
+    implementation(Libs.AndroidX.coreKtx)
+    implementation(Libs.AndroidX.cardview)
 
     api(Libs.OkHttp.okhttp)
     api(Libs.OkHttp.loggingInterceptor)

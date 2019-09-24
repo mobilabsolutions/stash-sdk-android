@@ -7,10 +7,13 @@ package com.mobilabsolutions.stash.core.internal.uicomponents
 import android.text.Editable
 import android.text.TextWatcher
 import androidx.annotation.DrawableRes
-import com.mobilabsolutions.stash.core.R
 import com.mobilabsolutions.stash.core.CreditCardTypeWithRegex
+import com.mobilabsolutions.stash.core.R
+import timber.log.Timber
 
-class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
+class CardNumberTextWatcher(
+    val cardIconChanged: (Int) -> Unit
+) : TextWatcher {
 
     // It can be a space or a hyphen
     private var delimiter: String = DEFAULT_DELIMITER
@@ -67,7 +70,11 @@ class CardNumberTextWatcher(val cardIconChanged: (Int) -> Unit) : TextWatcher {
 
             // It's costly, don't apply it if they match
             if (currentString != processedString) {
-                editable.replace(0, currentString.length, processedString)
+                try {
+                    editable.replace(0, currentString.length, processedString)
+                } catch (e: Throwable) {
+                    Timber.e(e)
+                }
             }
         }
     }

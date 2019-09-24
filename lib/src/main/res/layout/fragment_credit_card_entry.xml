@@ -23,7 +23,7 @@
 
 
             <ImageView
-                android:id="@+id/back_button"
+                android:id="@+id/back_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -87,6 +87,7 @@
                     android:id="@+id/label_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
                     android:fontFamily="@font/lato_bold"
                     android:text="CARD HOLDER NAME"
                     android:textColor="@color/white"
@@ -119,8 +120,8 @@
                     android:textAllCaps="true"
                     android:textColor="@color/white"
                     android:textSize="7sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/label_name"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/card_number_text"
                     tools:ignore="SmallSp" />
 
                 <EditText
@@ -145,10 +146,10 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="16dp"
-            android:paddingStart="120dp"
-            android:paddingEnd="120dp"
             android:clipChildren="false"
             android:clipToPadding="false"
+            android:paddingStart="120dp"
+            android:paddingEnd="120dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_next"
             app:layout_constraintTop_toBottomOf="@+id/card_view"
             tools:background="@color/toolbar_blue" />
@@ -159,9 +160,10 @@
             android:layout_height="48dp"
             android:background="@color/white_blue"
             android:fontFamily="@font/lato_regular"
+            android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="BACK"
-            android:textAllCaps="true"
+            android:text="Back"
+            android:textAllCaps="false"
             android:textColor="@color/light_blue"
             android:textSize="18sp"
             android:visibility="gone"
@@ -174,16 +176,35 @@
             android:id="@+id/btn_next"
             android:layout_width="0dp"
             android:layout_height="48dp"
-            android:background="@color/next_button_blue"
+            android:background="@drawable/selector_next_button"
             android:fontFamily="@font/lato_regular"
             android:foreground="?attr/selectableItemBackground"
             android:gravity="center"
-            android:text="NEXT"
-            android:textAllCaps="true"
+            android:text="Next"
+            android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/btn_back" />
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:background="@drawable/selector_next_button"
+            android:fontFamily="@font/lato_regular"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/btn_back"
+            tools:visibility="visible" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -14,6 +14,7 @@ import com.mobilabsolutions.stash.core.ui.HostActivity
 import com.mobilabsolutions.stash.core.ui.StashAssistedModule
 import com.mobilabsolutions.stash.core.ui.creditcard.CreditCardEntryFragment
 import com.mobilabsolutions.stash.core.ui.picker.PaymentPickerFragment
+import com.mobilabsolutions.stash.core.ui.textfield.TextFieldFragment
 import dagger.Component
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -52,4 +53,6 @@ interface StashComponent {
     fun inject(paymentPickerFragment: PaymentPickerFragment)
 
     fun inject(creditCardEntryFragment: CreditCardEntryFragment)
+
+    fun inject(textFieldFragment: TextFieldFragment)
 }
