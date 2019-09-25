@@ -5,6 +5,7 @@
 package com.mobilabsolutions.stash.core.internal.uicomponents
 
 import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import androidx.annotation.DrawableRes
 import com.mobilabsolutions.stash.core.CreditCardTypeWithRegex
@@ -71,7 +72,8 @@ class CardNumberTextWatcher(
             // It's costly, don't apply it if they match
             if (currentString != processedString) {
                 try {
-                    editable.replace(0, currentString.length, processedString)
+                    val replace = SpannableStringBuilder(processedString)
+                    editable.replace(0, currentString.length, replace)
                 } catch (e: Throwable) {
                     Timber.e(e)
                 }
@@ -80,11 +82,7 @@ class CardNumberTextWatcher(
     }
 
     companion object {
-
         const val DEFAULT_DELIMITER = " "
-
-        @Suppress("UNUSED")
-        const val HYPHEN_DELIMITER = "-"
     }
 
     /**

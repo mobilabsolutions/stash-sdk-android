@@ -4,7 +4,11 @@ import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Parcelable
-import android.text.InputType
+import android.text.InputType.TYPE_CLASS_NUMBER
+import android.text.InputType.TYPE_CLASS_PHONE
+import android.text.InputType.TYPE_CLASS_TEXT
+import android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
+import android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,7 +23,9 @@ import com.airbnb.mvrx.withState
 import com.mobilabsolutions.stash.core.databinding.ViewHolderCreditCardTextFieldBinding
 import com.mobilabsolutions.stash.core.internal.StashImpl
 import com.mobilabsolutions.stash.core.internal.uicomponents.CardNumberTextWatcher
+import com.mobilabsolutions.stash.core.internal.uicomponents.observeText
 import com.mobilabsolutions.stash.core.ui.creditcard.CreditCardEntryViewModel
+import com.mobilabsolutions.stash.core.util.hideSoftInput
 import kotlinx.android.parcel.Parcelize
 import javax.inject.Inject
 
@@ -58,11 +64,20 @@ class TextFieldFragment : BaseMvRxFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        withState(viewModel) {
+            val field = it.field
+            if (field == CreditCardEntryViewModel.CreditCardTextField.CARD_NUMBER) {
+                binding.inputField.addTextChangedListener(CardNumberTextWatcher { resourceId ->
+                    viewModel.onCreditCardIconChanged(resourceId)
+                })
+            }
+        }
         binding.inputField.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
             }
         }
+        binding.inputField.observeText { viewModel.onTextChanged(it.trim()) }
     }
 
     override fun onResume() {
@@ -74,8 +89,9 @@ class TextFieldFragment : BaseMvRxFragment() {
         }, 500L)
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
+        requireActivity().hideSoftInput()
     }
 
     override fun invalidate() {
@@ -84,18 +100,13 @@ class TextFieldFragment : BaseMvRxFragment() {
             binding.field = field
 
             val inputType: Int = when (field) {
-                CreditCardEntryViewModel.CreditCardTextField.CARD_NUMBER -> InputType.TYPE_CLASS_NUMBER
-                CreditCardEntryViewModel.CreditCardTextField.NAME -> InputType.TYPE_CLASS_TEXT
-                CreditCardEntryViewModel.CreditCardTextField.EXP_DATE -> InputType.TYPE_CLASS_NUMBER
-                CreditCardEntryViewModel.CreditCardTextField.CVV -> InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_VARIATION_PASSWORD
-                CreditCardEntryViewModel.CreditCardTextField.COUNTRY -> InputType.TYPE_CLASS_TEXT
+                CreditCardEntryViewModel.CreditCardTextField.CARD_NUMBER -> TYPE_CLASS_PHONE + TYPE_TEXT_FLAG_NO_SUGGESTIONS
+                CreditCardEntryViewModel.CreditCardTextField.NAME -> TYPE_CLASS_TEXT
+                CreditCardEntryViewModel.CreditCardTextField.EXP_DATE -> TYPE_CLASS_NUMBER
+                CreditCardEntryViewModel.CreditCardTextField.CVV -> TYPE_CLASS_NUMBER + TYPE_NUMBER_VARIATION_PASSWORD
+                CreditCardEntryViewModel.CreditCardTextField.COUNTRY -> TYPE_CLASS_TEXT
             }
-            // binding.inputField.inputType = inputType
-            if (field == CreditCardEntryViewModel.CreditCardTextField.CARD_NUMBER) {
-                binding.inputField.addTextChangedListener(CardNumberTextWatcher { resourceId ->
-                    binding.inputField.setCompoundDrawablesWithIntrinsicBounds(0, 0, resourceId, 0)
-                })
-            }
+            binding.inputField.inputType = inputType
         }
     }
 }

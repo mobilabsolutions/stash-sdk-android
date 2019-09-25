@@ -8,7 +8,7 @@ import android.app.Activity
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import androidx.core.content.ContextCompat
+import androidx.core.content.getSystemService
 import org.threeten.bp.LocalDate
 
 /**
@@ -27,10 +27,9 @@ fun EditText.showKeyboard() {
 }
 
 fun Activity.hideSoftInput() {
-    val imm: InputMethodManager? = ContextCompat.getSystemService(this, InputMethodManager::class.java)
+    val imm: InputMethodManager? = getSystemService()
     val currentFocus = currentFocus
     if (currentFocus != null && imm != null) {
         imm.hideSoftInputFromWindow(currentFocus.windowToken, 0)
     }
 }
-

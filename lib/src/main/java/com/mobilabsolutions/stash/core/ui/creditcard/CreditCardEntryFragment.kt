@@ -41,41 +41,52 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.backArrow.setOnClickListener { requireActivity().onBackPressed() }
         binding.pager.apply {
             pageMargin = 16
             offscreenPageLimit = 4
-        }
-        binding.pager.adapter = PagerTestAdapter(childFragmentManager)
-        binding.pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrollStateChanged(state: Int) {
-            }
+            adapter = CreditCardEntryPagerAdapter(childFragmentManager)
+            addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(state: Int) {
+                    // do nothing
+                }
 
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-            }
+                override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                    // do nothing
+                }
 
-            override fun onPageSelected(position: Int) {
-                viewModel.onPositionChanged(position)
-            }
-        })
-        binding.btnNext.setOnClickListener {
-            binding.pager.currentItem = binding.pager.currentItem + 1
+                override fun onPageSelected(position: Int) {
+                    viewModel.onPositionChanged(position)
+                }
+            })
         }
-        binding.btnBack.setOnClickListener {
-            binding.pager.currentItem = binding.pager.currentItem - 1
+        with(binding) {
+            backArrow.setOnClickListener { requireActivity().onBackPressed() }
+            btnNext.setOnClickListener {
+                pager.currentItem = pager.currentItem + 1
+            }
+            btnBack.setOnClickListener {
+                pager.currentItem = pager.currentItem - 1
+            }
+            btnSave.setOnClickListener { viewModel.onSaveBtnClicked() }
+            cardNumberText.setOnClickListener { pager.currentItem = 0 }
+            nameText.setOnClickListener { pager.currentItem = 1 }
+            expDateText.setOnClickListener { pager.currentItem = 2 }
         }
     }
 
     override fun invalidate() {
-        withState(viewModel) {
-            binding.state = it
-            binding.btnBack.isVisible = it.currentPosition != 0
-            binding.btnSave.isVisible = it.currentPosition == 4
-            binding.btnNext.isVisible = it.currentPosition != 4
+        withState(viewModel) { state ->
+            binding.state = state
+            binding.btnBack.isVisible = state.currentPosition != 0
+            binding.btnSave.isVisible = state.currentPosition == 4
+            binding.btnNext.visibility = if (state.currentPosition == 4) View.INVISIBLE else View.VISIBLE
+            state.cardIconResId?.let { resId ->
+                binding.cardIc.setImageResource(resId)
+            }
         }
     }
 
-    class PagerTestAdapter(
+    class CreditCardEntryPagerAdapter(
         fragmentManager: FragmentManager
     ) : FragmentStatePagerAdapter(fragmentManager, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
         private val fields = CreditCardEntryViewModel.CreditCardTextField.values()
