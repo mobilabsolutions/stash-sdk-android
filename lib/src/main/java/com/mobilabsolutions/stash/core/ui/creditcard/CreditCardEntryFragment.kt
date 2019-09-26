@@ -72,10 +72,14 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
             nameLayout.setOnClickListener { pager.currentItem = 1 }
             extLayout.setOnClickListener { pager.currentItem = 2 }
         }
+        binding.flipView.setOnFlipListener { _, newCurrentSide -> viewModel.onCardFlipped(newCurrentSide) }
     }
 
     override fun invalidate() {
         withState(viewModel) { state ->
+            if (state.shouldFlip) {
+                binding.flipView.flipTheView()
+            }
             binding.state = state
             binding.btnBack.isVisible = state.currentPosition != 0
             binding.btnSave.isVisible = state.currentPosition == 4

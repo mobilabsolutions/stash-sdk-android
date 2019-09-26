@@ -43,121 +43,161 @@
                 android:textSize="14sp" />
         </FrameLayout>
 
-        <androidx.cardview.widget.CardView
-            android:id="@+id/card_view"
+        <com.wajahatkarim3.easyflipview.EasyFlipView
+            android:id="@+id/flip_view"
             android:layout_width="268dp"
             android:layout_height="180dp"
             android:layout_marginTop="8dp"
-            app:cardBackgroundColor="@color/toolbar_blue"
-            app:cardCornerRadius="14dp"
+            app:flipDuration="700"
+            app:flipType="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cc_toolbar">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.cardview.widget.CardView
+                android:id="@+id/back_card"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="24dp">
+                app:cardBackgroundColor="@color/toolbar_blue"
+                app:cardCornerRadius="14dp">
 
-                <ImageView
-                    android:id="@+id/ic_chip"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_chip"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/card_ic"
-                    android:layout_width="42dp"
-                    android:layout_height="28dp"
-                    android:background="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:src="@drawable/ic_chip" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="30dp"
+                    android:alpha="0.2"
+                    android:background="@color/white" />
 
                 <TextView
-                    android:id="@+id/card_number_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="80dp"
+                    android:alpha="0.55"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:text="CVV/CVC"
+                    android:textColor="@color/gable_green"
+                    android:textSize="9sp"
+                    tools:ignore="SmallSp" />
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/front_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@color/toolbar_blue"
+                app:cardCornerRadius="14dp"
+                tools:visibility="gone">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="16dp"
-                    android:fontFamily="@font/lato_bold"
-                    android:text="@{state.cardNumber}"
-                    android:textColor="@color/white"
-                    android:textSize="16sp"
-                    app:layout_constraintTop_toBottomOf="@+id/ic_chip" />
-
-                <LinearLayout
-                    android:id="@+id/name_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toStartOf="@+id/ext_layout"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/card_number_text">
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="24dp">
+
+                    <ImageView
+                        android:id="@+id/ic_chip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_chip"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/card_ic"
+                        android:layout_width="42dp"
+                        android:layout_height="28dp"
+                        android:background="@color/white"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@drawable/ic_chip" />
 
                     <TextView
-                        android:id="@+id/label_name"
+                        android:id="@+id/card_number_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginEnd="16dp"
                         android:fontFamily="@font/lato_bold"
-                        android:text="CARD HOLDER NAME"
+                        android:text="@{state.cardNumber}"
                         android:textColor="@color/white"
-                        android:textSize="7sp"
-                        tools:ignore="SmallSp" />
+                        android:textSize="16sp"
+                        app:layout_constraintTop_toBottomOf="@+id/ic_chip" />
 
-                    <TextView
-                        android:id="@+id/name_text"
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/name_layout"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:alpha="0.5"
-                        android:text="@{state.name}"
-                        android:textColor="@color/white"
-                        android:textSize="11sp"
-                        tools:ignore="SmallSp" />
-                </LinearLayout>
+                        android:layout_marginTop="24dp"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toStartOf="@+id/ext_layout"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/card_number_text">
 
-                <LinearLayout
-                    android:id="@+id/ext_layout"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/name_layout"
-                    app:layout_constraintEnd_toEndOf="parent">
+                        <TextView
+                            android:id="@+id/label_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_bold"
+                            android:text="CARD HOLDER NAME"
+                            android:textColor="@color/white"
+                            android:textSize="7sp"
+                            tools:ignore="SmallSp" />
 
-                    <TextView
-                        android:id="@+id/label_exp_date"
-                        android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/name_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:alpha="0.5"
+                            android:text="@{state.name}"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            tools:ignore="SmallSp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/ext_layout"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/lato_bold"
-                        android:text="Expiration Date"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textSize="7sp"
-                        tools:ignore="SmallSp" />
+                        android:orientation="vertical"
+                        app:layout_constraintBaseline_toBaselineOf="@+id/name_layout"
+                        app:layout_constraintEnd_toEndOf="parent">
 
-                    <TextView
-                        android:id="@+id/exp_date_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:alpha="0.5"
-                        android:text="@{state.expDate}"
-                        android:textColor="@color/white"
-                        android:textSize="11sp"
-                        tools:ignore="SmallSp" />
+                        <TextView
+                            android:id="@+id/label_exp_date"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/lato_bold"
+                            android:text="Expiration Date"
+                            android:textAllCaps="true"
+                            android:textColor="@color/white"
+                            android:textSize="7sp"
+                            tools:ignore="SmallSp" />
 
-                </LinearLayout>
+                        <TextView
+                            android:id="@+id/exp_date_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:alpha="0.5"
+                            android:text="@{state.expDate}"
+                            android:textColor="@color/white"
+                            android:textSize="11sp"
+                            tools:ignore="SmallSp" />
+
+                    </LinearLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+        </com.wajahatkarim3.easyflipview.EasyFlipView>
+
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/pager"
@@ -169,7 +209,7 @@
             android:paddingStart="120dp"
             android:paddingEnd="120dp"
             app:layout_constraintBottom_toTopOf="@+id/btn_next"
-            app:layout_constraintTop_toBottomOf="@+id/card_view"
+            app:layout_constraintTop_toBottomOf="@+id/flip_view"
             tools:background="@color/toolbar_blue" />
 
         <Button

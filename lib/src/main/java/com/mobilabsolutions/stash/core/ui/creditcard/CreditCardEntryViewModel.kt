@@ -8,6 +8,10 @@ import com.mobilabsolutions.stash.core.internal.uicomponents.UiRequestHandler
 import com.mobilabsolutions.stash.core.util.BaseViewModel
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
+import com.wajahatkarim3.easyflipview.EasyFlipView
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 
 /**
@@ -38,7 +42,18 @@ class CreditCardEntryViewModel @AssistedInject constructor(
         COUNTRY
     }
 
+    private val _flipState = ConflatedBroadcastChannel<EasyFlipView.FlipState>()
+
     init {
+        viewModelScope.launch {
+            _flipState.asFlow()
+                .distinctUntilChanged()
+                .execute {
+                    val update = it() ?: EasyFlipView.FlipState.FRONT_SIDE
+                    copy(shouldFlip = update != currentCardSide)
+                }
+        }
+
         viewModelScope.launch {
             creditCardEntryController.observeCardNumberText()
                 .execute {
@@ -76,6 +91,10 @@ class CreditCardEntryViewModel @AssistedInject constructor(
         setState {
             copy(currentPosition = position)
         }
+    }
+
+    fun onCardFlipped(newCurrentSide: EasyFlipView.FlipState) {
+        _flipState.offer(newCurrentSide)
     }
 
     fun onSaveBtnClicked() {

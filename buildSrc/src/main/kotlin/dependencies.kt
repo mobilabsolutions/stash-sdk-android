@@ -57,6 +57,7 @@ object Libs {
     const val viewPump = "io.github.inflationx:viewpump:2.0.3"
     const val licencePlugin = "com.jaredsburrows:gradle-license-plugin:0.8.5"
     const val dokkaPlugin = "org.jetbrains.dokka:dokka-android-gradle-plugin:0.9.18"
+    const val easyFlipView = "com.wajahatkarim3.EasyFlipView:EasyFlipView:2.1.2"
 
     object Adyen {
         private const val version = "3.4.0"

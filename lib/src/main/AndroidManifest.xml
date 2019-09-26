@@ -3,11 +3,14 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mobilabsolutions.stash.core">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:allowBackup="false">
+    <application
+        android:allowBackup="false"
+        tools:replace="android:allowBackup">
 
         <activity
             android:name="com.mobilabsolutions.stash.core.internal.uicomponents.RegistrationProcessHostActivity"

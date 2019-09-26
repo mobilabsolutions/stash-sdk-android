@@ -102,6 +102,8 @@ dependencies {
 
     compileOnly(Libs.AssistedInject.annotationDagger2)
     kapt(Libs.AssistedInject.processorDagger2)
+
+    implementation(Libs.easyFlipView)
 }
 
 configurations.all {
