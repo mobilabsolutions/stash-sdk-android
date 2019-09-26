@@ -69,8 +69,8 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
             }
             btnSave.setOnClickListener { viewModel.onSaveBtnClicked() }
             cardNumberText.setOnClickListener { pager.currentItem = 0 }
-            nameText.setOnClickListener { pager.currentItem = 1 }
-            expDateText.setOnClickListener { pager.currentItem = 2 }
+            nameLayout.setOnClickListener { pager.currentItem = 1 }
+            extLayout.setOnClickListener { pager.currentItem = 2 }
         }
     }
 
@@ -83,6 +83,14 @@ class CreditCardEntryFragment : BaseMvRxFragment() {
             state.cardIconResId?.let { resId ->
                 binding.cardIc.setImageResource(resId)
             }
+            binding.btnNext.isEnabled =
+                when (state.currentPosition) {
+                    0 -> state.cardNumber.isNotEmpty()
+                    1 -> state.name.isNotEmpty()
+                    2 -> state.expDate.isNotEmpty()
+                    3 -> state.cvv.isNotEmpty()
+                    else -> true
+                }
         }
     }
 

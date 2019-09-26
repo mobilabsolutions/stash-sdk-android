@@ -4,11 +4,15 @@ import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.os.Parcelable
+import android.text.Editable
+import android.text.InputFilter
 import android.text.InputType.TYPE_CLASS_NUMBER
 import android.text.InputType.TYPE_CLASS_PHONE
 import android.text.InputType.TYPE_CLASS_TEXT
 import android.text.InputType.TYPE_NUMBER_VARIATION_PASSWORD
 import android.text.InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS
+import android.text.TextUtils
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,6 +75,40 @@ class TextFieldFragment : BaseMvRxFragment() {
                     viewModel.onCreditCardIconChanged(resourceId)
                 })
             }
+            if (field == CreditCardEntryViewModel.CreditCardTextField.CVV) {
+                val filterArray = arrayOfNulls<InputFilter>(1)
+                filterArray[0] = InputFilter.LengthFilter(4)
+                binding.inputField.filters = filterArray
+            }
+
+            if (field == CreditCardEntryViewModel.CreditCardTextField.EXP_DATE) {
+                if (field == CreditCardEntryViewModel.CreditCardTextField.EXP_DATE) {
+                    val filterArray = arrayOfNulls<InputFilter>(1)
+                    filterArray[0] = InputFilter.LengthFilter(5)
+                    binding.inputField.filters = filterArray
+
+                    binding.inputField.addTextChangedListener(object : TextWatcher {
+                        override fun afterTextChanged(editable: Editable) {
+                            if (editable.isNotEmpty() && editable.length % 3 == 0) {
+                                val c = editable[editable.length - 1]
+                                if ('/' == c) {
+                                    editable.delete(editable.length - 1, editable.length)
+                                }
+                            }
+                            if (editable.isNotEmpty() && editable.length % 3 == 0) {
+                                val c = editable[editable.length - 1]
+                                if (Character.isDigit(c) && TextUtils.split(editable.toString(), "/").size <= 2) {
+                                    editable.insert(editable.length - 1, "/")
+                                }
+                            }
+                        }
+
+                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                        override fun onTextChanged(p0: CharSequence?, start: Int, removed: Int, added: Int) {}
+                    })
+                }
+            }
         }
         binding.inputField.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -98,11 +136,10 @@ class TextFieldFragment : BaseMvRxFragment() {
         withState(viewModel) { state ->
             val field = state.field
             binding.field = field
-
             val inputType: Int = when (field) {
                 CreditCardEntryViewModel.CreditCardTextField.CARD_NUMBER -> TYPE_CLASS_PHONE + TYPE_TEXT_FLAG_NO_SUGGESTIONS
                 CreditCardEntryViewModel.CreditCardTextField.NAME -> TYPE_CLASS_TEXT
-                CreditCardEntryViewModel.CreditCardTextField.EXP_DATE -> TYPE_CLASS_NUMBER
+                CreditCardEntryViewModel.CreditCardTextField.EXP_DATE -> TYPE_CLASS_PHONE
                 CreditCardEntryViewModel.CreditCardTextField.CVV -> TYPE_CLASS_NUMBER + TYPE_NUMBER_VARIATION_PASSWORD
                 CreditCardEntryViewModel.CreditCardTextField.COUNTRY -> TYPE_CLASS_TEXT
             }
