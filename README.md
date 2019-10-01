@@ -1,20 +1,20 @@
 [![Build Status](https://travis-ci.com/mobilabsolutions/payment-sdk-android-open.svg?token=FD4eibz3gzcfCVXeJm9e&branch=master)](https://travis-ci.com/mobilabsolutions/payment-sdk-android-open)
-# Stash Android SDK
+# Stash! Android SDK
 
-This repository contains the Stash Android SDK client code and a demo application.
+This repository contains the Stash! Android SDK client code and a demo application.
 
 Many applications need to process payments for digital or physical goods. Implementing payment functionality 
 can be very cumbersome though: there are many payment service providers that support or don't support various 
-types of payment methods and payment method registration and usage flows. The Stash simplifies the integration 
+types of payment methods and payment method registration and usage flows. The Stash! simplifies the integration 
 of payments into our applications and abstracts away a lot of the internal complexity that different payment 
-service providers' solutions have. With the Stash it does not matter which payment service provider one 
+service providers' solutions have. With the Stash! it does not matter which payment service provider one 
 chooses to register payment methods with - the API is standardized and works across the board.
 
 ### Additional Documentation
 
-To get familiar with the overall Stash project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
+To get familiar with the overall Stash! project please visit [Common payment wiki](https://github.com/mobilabsolutions/payment-sdk-wiki-open/wiki)
 
-To learn more about the Android Stash architecture and flows please visit [Android SDK Wiki](https://github.com/mobilabsolutions/payment-sdk-android-open/wiki)
+To learn more about the Android Stash! architecture and flows please visit [Android SDK Wiki](https://github.com/mobilabsolutions/payment-sdk-android-open/wiki)
 
 ### Requirements
 
@@ -28,13 +28,13 @@ The minimum supported Android SDK version is 21 (Android 5.0)
 
 This repository contains multiple modules:
 * `lib` - Core library module exposing SDK APIs, facilitating high level flows, and handling communication with Payment Backend.
-* `sample` - Sample application using the Stash SDK.
+* `sample` - Sample application using the Stash! SDK.
 * `*-integration` - Various PSP integration modules (Implementation in progress).
 
 
 ## Supported Payment Service Providers - PSP
 
-At the moment, the Stash Android SDK supports the following PSPs:
+At the moment, the Stash! Android SDK supports the following PSPs:
 - BSPayone - Credit Cards / SEPA
 - Braintree - Credit Cards / PayPal
 - Adyen - Credit Cards / SEPA
@@ -176,7 +176,7 @@ Note that there are no `Tree` implementations installed by default, to avoid log
 ### Initializing the SDK
 
 
-To use the Stash SDK, you need to initialize it with the following configuration data:
+To use the Stash! SDK, you need to initialize it with the following configuration data:
 
 * Publishable key - This is the publishable key provided for your merchant account.
 * Endpoint - The URL of your backend services
@@ -254,7 +254,7 @@ Stash.initalize(applicationContext, configuration);
 ``` 
 #### Using the SDK in Test Mode
 
-The Stash SDK can also be used in a so-called test mode. The transactions created in test mode are not forwarded to the production PSP, but rather to the sandboxing mode that the PSP provides. 
+The Stash! SDK can also be used in a so-called test mode. The transactions created in test mode are not forwarded to the production PSP, but rather to the sandboxing mode that the PSP provides. 
 To configure the SDK to use the test mode, set the `testMode` property on the `StashConfiguration` to true when configuring the SDK.
 
 ### Registering a Payment Method Using the Provided UI Components
@@ -394,7 +394,7 @@ StashConfiguration configuration = new StashConfiguration.Builder()
 
 ### Registering a Payment Method Using Your Own UI
 
-If you want to build your own UI and still use the Stash SDK, you should use the `registerCreditCard` or `registerSepa` methods of the `RegistrationManager`. 
+If you want to build your own UI and still use the Stash! SDK, you should use the `registerCreditCard` or `registerSepa` methods of the `RegistrationManager`. 
 
 At the moment, PayPal registration without using UI components is not supported.
 
@@ -549,7 +549,7 @@ registrationManager.registerSepa(sepaData, requestUUID)
 ```
 
 ### Idempotency
-All calls to the Stash SDK backend are idempotent, but the PSP call idempotency cannot be guaranteed as some PSP don't support idempotent calls. To use the idempotency, simply provide a UUID with any of the registration methods used.
+All calls to the Stash! SDK backend are idempotent, but the PSP call idempotency cannot be guaranteed as some PSP don't support idempotent calls. To use the idempotency, simply provide a UUID with any of the registration methods used.
 
 **Example**
 
@@ -592,9 +592,9 @@ A demo application is part of the project and is contained in `sample` module.
 
 ### Feedback
 
-The Stash Android SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) to report any issue with the SDK, or to provide feedback.
+The Stash! Android SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) to report any issue with the SDK, or to provide feedback.
 
 ### License
 
-The Stash Android SDK is open source and available under the TODO license. See the LICENSE file for more info.
+The Stash! Android SDK is open source and available under the TODO license. See the LICENSE file for more info.
 
