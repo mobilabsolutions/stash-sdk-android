@@ -32,6 +32,11 @@ class TextFieldViewModel @AssistedInject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        creditCardEntryController.clearAll()
+    }
+
     fun onTextChanged(text: String) {
         withState {
             when (it.field) {

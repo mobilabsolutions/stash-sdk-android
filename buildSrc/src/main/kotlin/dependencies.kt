@@ -67,7 +67,7 @@ object Libs {
     }
 
     object Google {
-        const val material = "com.google.android.material:material:1.1.0-alpha10"
+        const val material = "com.google.android.material:material:1.1.0-beta01"
         const val crashlytics = "com.crashlytics.sdk.android:crashlytics:2.10.1"
         const val fabricPlugin = "io.fabric.tools:gradle:1.31.1"
     }
@@ -92,12 +92,12 @@ object Libs {
         const val recyclerview = "androidx.recyclerview:recyclerview:1.1.0-beta04"
         const val cardview = "androidx.cardview:cardview:1.0.0"
         const val constraintlayout = "androidx.constraintlayout:constraintlayout:2.0.0-beta2"
-        const val coreKtx = "androidx.core:core-ktx:1.2.0-alpha04"
+        const val coreKtx = "androidx.core:core-ktx:1.2.0-beta01"
         const val preference = "androidx.preference:preference:1.1.0"
         const val swipeRefreshLayout = "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0-alpha02"
 
         object Navigation {
-            private const val version = "2.2.0-alpha03"
+            private const val version = "2.2.0-beta01"
             const val fragment = "androidx.navigation:navigation-fragment-ktx:$version"
             const val ui = "androidx.navigation:navigation-ui-ktx:$version"
             const val safeArgs = "androidx.navigation:navigation-safe-args-gradle-plugin:$version"
@@ -117,7 +117,7 @@ object Libs {
         }
 
         object Lifecycle {
-            private const val version = "2.2.0-alpha05"
+            private const val version = "2.2.0-beta01"
             const val extensions = "androidx.lifecycle:lifecycle-extensions:$version"
             const val compiler = "androidx.lifecycle:lifecycle-compiler:$version"
             const val viewmodel = "androidx.lifecycle:lifecycle-viewmodel-ktx:$version"
@@ -125,7 +125,7 @@ object Libs {
         }
 
         object Room {
-            private const val version = "2.2.0-rc01"
+            private const val version = "2.2.0"
             const val common = "androidx.room:room-common:$version"
             const val runtime = "androidx.room:room-runtime:$version"
             const val rxjava2 = "androidx.room:room-rxjava2:$version"
@@ -135,7 +135,7 @@ object Libs {
     }
 
     object RxJava {
-        const val rxJava = "io.reactivex.rxjava2:rxjava:2.2.12"
+        const val rxJava = "io.reactivex.rxjava2:rxjava:2.2.13"
         const val rxKotlin = "io.reactivex.rxjava2:rxkotlin:2.4.0"
         const val rxAndroid = "io.reactivex.rxjava2:rxandroid:2.1.1"
     }
@@ -157,7 +157,7 @@ object Libs {
     }
 
     object OkHttp {
-        private const val version = "4.2.0"
+        private const val version = "4.2.2"
         const val okhttp = "com.squareup.okhttp3:okhttp:$version"
         const val loggingInterceptor = "com.squareup.okhttp3:logging-interceptor:$version"
         const val mockwebserver = "com.squareup.okhttp3:mockwebserver:$version"

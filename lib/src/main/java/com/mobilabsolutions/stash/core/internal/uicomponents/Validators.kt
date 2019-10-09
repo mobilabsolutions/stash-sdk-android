@@ -18,9 +18,11 @@ import javax.inject.Inject
  * @author [Ugljesa Jovanovic](ugi@mobilabsolutions.com)
  */
 
-data class ValidationResult(val success: Boolean, val errorMessageResourceId: Int = R.string.general_error)
+data class ValidationResult(
+    val success: Boolean,
+    val errorMessageResourceId: Int = R.string.general_error
+)
 
-@IntegrationScope
 class CreditCardDataValidator @Inject constructor() {
     private val validator = CreditCardValidator(
         arrayOf(
@@ -77,7 +79,6 @@ class SepaDataValidator @Inject constructor() {
     }
 }
 
-@IntegrationScope
 class PersonalDataValidator @Inject constructor() {
     fun validateName(name: String): ValidationResult {
         if (name.isEmpty()) {

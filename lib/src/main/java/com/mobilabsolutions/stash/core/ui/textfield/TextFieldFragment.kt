@@ -82,49 +82,61 @@ class TextFieldFragment : BaseMvRxFragment() {
             }
 
             if (field == CreditCardEntryViewModel.CreditCardTextField.EXP_DATE) {
-                if (field == CreditCardEntryViewModel.CreditCardTextField.EXP_DATE) {
-                    val filterArray = arrayOfNulls<InputFilter>(1)
-                    filterArray[0] = InputFilter.LengthFilter(5)
-                    binding.inputField.filters = filterArray
+                val filterArray = arrayOfNulls<InputFilter>(1)
+                filterArray[0] = InputFilter.LengthFilter(5)
+                binding.inputField.filters = filterArray
 
-                    binding.inputField.addTextChangedListener(object : TextWatcher {
-                        override fun afterTextChanged(editable: Editable) {
-                            if (editable.isNotEmpty() && editable.length % 3 == 0) {
-                                val c = editable[editable.length - 1]
-                                if ('/' == c) {
-                                    editable.delete(editable.length - 1, editable.length)
-                                }
-                            }
-                            if (editable.isNotEmpty() && editable.length % 3 == 0) {
-                                val c = editable[editable.length - 1]
-                                if (Character.isDigit(c) && TextUtils.split(editable.toString(), "/").size <= 2) {
-                                    editable.insert(editable.length - 1, "/")
-                                }
+                binding.inputField.addTextChangedListener(object : TextWatcher {
+                    override fun afterTextChanged(editable: Editable) {
+                        if (editable.isNotEmpty() && editable.length % 3 == 0) {
+                            val c = editable[editable.length - 1]
+                            if ('/' == c) {
+                                editable.delete(editable.length - 1, editable.length)
                             }
                         }
+                        if (editable.isNotEmpty() && editable.length % 3 == 0) {
+                            val c = editable[editable.length - 1]
+                            if (Character.isDigit(c) && TextUtils.split(editable.toString(), "/").size <= 2) {
+                                editable.insert(editable.length - 1, "/")
+                            }
+                        }
+                    }
 
-                        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
-                        override fun onTextChanged(p0: CharSequence?, start: Int, removed: Int, added: Int) {}
-                    })
+                    override fun onTextChanged(p0: CharSequence?, start: Int, removed: Int, added: Int) {}
+                })
+            }
+            if (field != CreditCardEntryViewModel.CreditCardTextField.COUNTRY) {
+                binding.inputField.setOnFocusChangeListener { _, hasFocus ->
+                    if (hasFocus) {
+                        requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
+                    }
                 }
+            } else {
+                binding.inputField.isFocusable = false
+                binding.inputField.isFocusableInTouchMode = false
+                binding.inputField.setText("GERMANY")
             }
         }
-        binding.inputField.setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) {
-                requireActivity().window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE)
-            }
-        }
+
+
         binding.inputField.observeText { viewModel.onTextChanged(it.trim()) }
     }
 
     override fun onResume() {
         super.onResume()
-        binding.inputField.postDelayed({
-            binding.inputField.requestFocus()
-            val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.showSoftInput(binding.inputField, SHOW_IMPLICIT)
-        }, 500L)
+        withState(viewModel) { state ->
+            if (state.field != CreditCardEntryViewModel.CreditCardTextField.COUNTRY) {
+                binding.inputField.postDelayed({
+                    binding.inputField.requestFocus()
+                    val inputMethodManager = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.showSoftInput(binding.inputField, SHOW_IMPLICIT)
+                }, 500L)
+            } else {
+                requireActivity().hideSoftInput()
+            }
+        }
     }
 
     override fun onStop() {

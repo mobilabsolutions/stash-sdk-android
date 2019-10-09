@@ -24,5 +24,7 @@
     <color name="light_blue">#0a336f</color>
     <color name="bit_light_blue">#609df6</color>
     <color name="blueish_white">#b7d2fb</color>
+    <color name="red_white">#fff5f5</color>
+    <color name="error_red">#ba2525</color>
 
 </resources>

@@ -44,4 +44,12 @@ class CreditCardEntryController @Inject constructor(
     fun onCvvTextChanged(text: String) {
         _cvvChannel.offer(text)
     }
+
+    fun clearAll() {
+        _creditCardNumberChannel.offer("")
+        _iconResIdChannel.offer(-1)
+        _nameChannel.offer("")
+        _expDateChannel.offer("")
+        _cvvChannel.offer("")
+    }
 }
