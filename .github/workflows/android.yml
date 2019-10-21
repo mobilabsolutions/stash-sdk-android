@@ -13,5 +13,7 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+        DEV_PUBLISHABLE_KEY: ${{ secrets.DEV_PUBLISHABLE_KEY }}
+        DEV_BACKEND_URL: ${{ secrets.DEV_BACKEND_URL }} 
     - name: Build with Gradle
       run: ./gradlew build
