@@ -463,7 +463,7 @@ CreditCardData creditCardData = new CreditCardData.Builder()
         .setExpiryYear(2020)
         .build();
 
-UUID requestUUID = UUID.randomUUID();
+UUID requestUUID = UUID.randomUUID()
 
 registrationManager.registerCreditCard(creditCardData, requestUUID)
         .subscribe(
@@ -521,18 +521,18 @@ registrationManager.registerSepa(sepaData, requestUUID)
 ```java
 BillingData billingData = new BillingData.Builder()
          .setCity("Cologne")
-         .build();
+         .build()
 
 SepaData sepaData = new SepaData.Builder().
         .setBic("PBNKDEFF");
         .setIban("DE63123456791212121212");
         .setBillingData(billingData);
-        .build();
+        .build()
 
 
 RegistrationManager registrationManager = Stash.getRegistrationManager();
 
-UUID requestUUID = UUID.randomUUID();
+UUID requestUUID = UUID.randomUUID()
 
 registrationManager.registerSepa(sepaData, requestUUID)
         .subscribe(
