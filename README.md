@@ -201,6 +201,7 @@ val  configuration = StashConfiguration(
         integration = AdyenIntegration,
         testMode = true
 )
+
 Stash.initalize(applicationContext, configuration)
 ```
 
@@ -208,7 +209,7 @@ Stash.initalize(applicationContext, configuration)
 
 ```java
 
-StashConfiguration configuration = new StashConfiguration.Builder()
+var configuration = new StashConfiguration.Builder()
         .setPublishableKey("YourPublishableKey")
         .setEndpoint("https://payment-dev.mblb.net/api/")
         .setIntegration(AdyenIntegration.Companion)
@@ -238,15 +239,16 @@ Stash.initalize(applicationContext, configuration)
 
 ```java
 
-List<IntegrationToPaymentMapping> integrationList = new LinkedList<>();
-        integrationList.add(new IntegrationToPaymentMapping(BraintreeIntegration.Companion, PaymentMethodType.PAYPAL));
-        integrationList.add(new IntegrationToPaymentMapping(AdyenIntegration.Companion, PaymentMethodType.CC));
-        integrationList.add(new IntegrationToPaymentMapping(BsPayoneIntegration.Companion, PaymentMethodType.SEPA));
+var integrations = List.of(
+        new IntegrationToPaymentMapping(BraintreeIntegration.Companion, PaymentMethodType.PAYPAL),
+        new IntegrationToPaymentMapping(AdyenIntegration.Companion, PaymentMethodType.CC),
+        new IntegrationToPaymentMapping(BsPayoneIntegration.Companion, PaymentMethodType.SEPA)
+);
         
-StashConfiguration configuration = new StashConfiguration.Builder()
+var configuration = new StashConfiguration.Builder()
         .setPublishableKey("YourPublishableKey")
         .setEndpoint("https://payment-dev.mblb.net/api/")
-        .setIntegrations(integrationList)
+        .setIntegrations(integrations)
         .setTestMode(true)
         .build();
 
@@ -303,7 +305,7 @@ Java
 
 ```java
 
-RegistrationManager registrationManager = Stash.getRegistrationManager();
+var registrationManager = Stash.getRegistrationManager();
 registrationManager.registerPaymentMehodUsingUi(activity, PaymentMethodType.CC, null) 
         .subscribe(
                 paymentMethodAlias -> {
@@ -372,7 +374,7 @@ Stash.initalize(this, configuration)
 Java
 
 ```java
-PaymentUiConfiguration paymentUiConfiguration = new PaymentUiConfiguration.Builder()
+var paymentUiConfiguration = new PaymentUiConfiguration.Builder()
         .setTextColor(android.R.color.holo_orange_dark)
         .setBackgroundColor(android.R.color.holo_blue_dark)
         .setButtonColor(android.R.color.holo_purple)
@@ -381,7 +383,7 @@ PaymentUiConfiguration paymentUiConfiguration = new PaymentUiConfiguration.Build
         .setMediumEmphasisColor(R.color.unknown_blue)
         .build();
 
-StashConfiguration configuration = new StashConfiguration.Builder()
+var configuration = new StashConfiguration.Builder()
         .setPublishableKey("YourPublishableKey")
         .setEndpoint("https://payment-dev.mblb.net/api/")
         .setIntegration(AdyenIntegration.Companion)
@@ -450,12 +452,12 @@ registrationManager.registerCreditCard(creditCardData, requestUUID)
 ###### Java
 
 ```java
-BillingData billingData = new BillingData.Builder()
-                .setFirstName("Max")
-                .setLastName("Mustermann")
-                .build();
+var billingData = new BillingData.Builder()
+        .setFirstName("Max")
+        .setLastName("Mustermann")
+        .build();
 
-CreditCardData creditCardData = new CreditCardData.Builder()
+var creditCardData = new CreditCardData.Builder()
         .setNumber("123123123123")
         .setCvv("123")
         .setBillingData(billingData)
@@ -463,7 +465,7 @@ CreditCardData creditCardData = new CreditCardData.Builder()
         .setExpiryYear(2020)
         .build();
 
-UUID requestUUID = UUID.randomUUID();
+var requestUUID = UUID.randomUUID();
 
 registrationManager.registerCreditCard(creditCardData, requestUUID)
         .subscribe(
@@ -519,20 +521,19 @@ registrationManager.registerSepa(sepaData, requestUUID)
 ###### Java
 
 ```java
-BillingData billingData = new BillingData.Builder()
-         .setCity("Cologne")
-         .build();
+var billingData = new BillingData.Builder()
+    .setCity("Cologne")
+    .build();
 
-SepaData sepaData = new SepaData.Builder().
-        .setBic("PBNKDEFF");
-        .setIban("DE63123456791212121212");
-        .setBillingData(billingData);
-        .build();
+var sepaData = new SepaData.Builder().
+    .setBic("PBNKDEFF");
+    .setIban("DE63123456791212121212");
+    .setBillingData(billingData);
+    .build();
 
+var registrationManager = Stash.getRegistrationManager();
 
-RegistrationManager registrationManager = Stash.getRegistrationManager();
-
-UUID requestUUID = UUID.randomUUID();
+var requestUUID = UUID.randomUUID();
 
 registrationManager.registerSepa(sepaData, requestUUID)
         .subscribe(
@@ -571,9 +572,9 @@ registrationManager.registerPaymentMehodUsingUi(activity, idempotencyKey = regis
 
 Java
 ```java
-UUID registrationIdempotencyKey = UUID.randomUUID();
+var registrationIdempotencyKey = UUID.randomUUID();
 
-RegistrationManager registrationManager = Stash.getRegistrationManager();
+var registrationManager = Stash.getRegistrationManager();
 registrationManager.registerPaymentMehodUsingUi(activity, null, registrationIdempotencyKey) 
         .subscribe(
                 paymentAlias -> {
