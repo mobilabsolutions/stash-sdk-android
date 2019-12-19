@@ -592,4 +592,4 @@ A demo application is part of the project and is contained in `sample` module.
 
 ### Feedback
 
-The Stash! Android SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) to report any issue with the SDK, or to provide feedback.
+The Stash! Android SDK is in active development, we welcome your feedback! Please use [GitHub Issues](https://github.com/mobilabsolutions/payment-sdk-android-open/issues) or write us at stash@mobilabsolutions.com to report an issue or give a feedback.
